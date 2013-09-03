@@ -50,5 +50,6 @@ There's a few special files in the hierarchy.
 
 ## todo
 
-- add instalation of necessary powerline fonts
+- add instalation of necessary powerline fonts note: for some reason
+  menlo doesn't seem to work but Meslo LG S DZ 13 works fine.
 - add instalation of solarized
