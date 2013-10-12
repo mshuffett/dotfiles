@@ -1,1 +1,1 @@
-eval `dircolors dircolors.ansi-dark`
+eval `dircolors $ZSH/solarized/dircolors.ansi-dark`
