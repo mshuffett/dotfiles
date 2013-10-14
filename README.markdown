@@ -53,3 +53,14 @@ There's a few special files in the hierarchy.
 - add instalation of necessary powerline fonts note: for some reason
   menlo doesn't seem to work but Meslo LG S DZ 13 works fine.
 - add instalation of solarized
+- change editor to vim (or prompt << better)
+- setup ack
+- setup that jump command
+- make cross os support streamlined
+- integrate with gitflow
+- make git aliases in git take priority over oh-my-zsh git plugin
+- think about unifying this using a better framework or somehow making
+  everything more integrated
+- fix keyboard shortcuts
+- integrate updating janus and oh-my-zsh
+- add some <leader> conveniences like <leader>q
