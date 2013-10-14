@@ -66,3 +66,4 @@ There's a few special files in the hierarchy.
 - add more python support
 - add grc support (coloring) also in grc.zsh
 - make mac'y things more general
+- add zsh completions to git aliases ala oh-my-zsh
