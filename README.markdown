@@ -53,7 +53,6 @@ There's a few special files in the hierarchy.
 - add instalation of necessary powerline fonts note: for some reason
   menlo doesn't seem to work but Meslo LG S DZ 13 works fine.
 - add instalation of solarized
-- change editor to vim (or prompt << better)
 - setup ack
 - setup that jump command
 - make cross os support streamlined
@@ -65,3 +64,5 @@ There's a few special files in the hierarchy.
 - integrate updating janus and oh-my-zsh
 - possibly switch to more of a submodules approach
 - add more python support
+- add grc support (coloring) also in grc.zsh
+- make mac'y things more general
