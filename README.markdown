@@ -61,6 +61,7 @@ There's a few special files in the hierarchy.
 - make git aliases in git take priority over oh-my-zsh git plugin
 - think about unifying this using a better framework or somehow making
   everything more integrated
-- fix keyboard shortcuts
+- fix keyboard shortcuts for things like move word in zle
 - integrate updating janus and oh-my-zsh
-- add some <leader> conveniences like <leader>q
+- possibly switch to more of a submodules approach
+- add more python support
