@@ -7,6 +7,8 @@ Run this:
 ```sh
 git clone https://github.com/mshuffett/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
+git submodule init
+git submodule update
 sudo script/install # sudo for changing default shell
 script/bootstrap
 ```
