@@ -54,7 +54,6 @@ There's a few special files in the hierarchy.
   menlo doesn't seem to work but Meslo LG S DZ 13 works fine.
 - add instalation of solarized
 - setup ack
-- setup that jump command
 - make cross os support streamlined
 - integrate with gitflow
 - make git aliases in git take priority over oh-my-zsh git plugin
