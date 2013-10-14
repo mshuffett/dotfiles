@@ -7,7 +7,10 @@ noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 
-" Fast closing files
+" Fast closing/writing files
 noremap <leader>q :q<CR>
 noremap <leader>x :x<CR>
+noremap <leader>s :s<CR>
+" This overides some vimwiki settings
+noremap <leader>w :w<CR> 
 
