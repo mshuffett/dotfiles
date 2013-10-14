@@ -53,7 +53,6 @@ There's a few special files in the hierarchy.
 - add instalation of necessary powerline fonts note: for some reason
   menlo doesn't seem to work but Meslo LG S DZ 13 works fine.
 - add instalation of solarized
-- setup ack
 - make cross os support streamlined
 - integrate with gitflow
 - make git aliases in git take priority over oh-my-zsh git plugin
