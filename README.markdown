@@ -67,3 +67,6 @@ There's a few special files in the hierarchy.
 - add grc support (coloring) also in grc.zsh
 - make mac'y things more general
 - add zsh completions to git aliases ala oh-my-zsh
+- replace ack with ag?
+- come up with better solution to dependencies
+- possibly evaluate some of the other dotfiles frameworks
