@@ -52,8 +52,6 @@ There's a few special files in the hierarchy.
 
 ## todo
 
-- add instalation of necessary powerline fonts note: for some reason
-  menlo doesn't seem to work but Meslo LG S DZ 13 works fine.
 - add instalation of solarized
 - make cross os support streamlined
 - integrate with gitflow
@@ -70,3 +68,5 @@ There's a few special files in the hierarchy.
 - replace ack with ag?
 - come up with better solution to dependencies
 - possibly evaluate some of the other dotfiles frameworks
+- fix permissions for instalation
+- fix changing zsh to default
