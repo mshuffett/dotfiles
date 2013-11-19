@@ -79,7 +79,7 @@ source $ZSH/oh-my-zsh.sh
 typeset -U path
 path=(/home/mshuff/.local/bin /usr/local/bin "$path[@]")
 #bindkey -e
-export DEFAULT_USER=mshuff
+export DEFAULT_USER=michael
 
 # Ctrl-u: Deletes everything before cursor (u is on left)
 #bindkey '^u' backward-kill-line
