@@ -52,13 +52,12 @@ There's a few special files in the hierarchy.
 
 ## todo
 
-- add instalation of solarized
 - make cross os support streamlined
 - integrate with gitflow
 - make git aliases in git take priority over oh-my-zsh git plugin
 - think about unifying this using a better framework or somehow making
   everything more integrated
-- fix keyboard shortcuts for things like move word in zle
+- fix keyboard shortcuts for things like move word in zle for meta arrow
 - integrate updating janus and oh-my-zsh
 - possibly switch to more of a submodules approach
 - add more python support
@@ -67,6 +66,5 @@ There's a few special files in the hierarchy.
 - add zsh completions to git aliases ala oh-my-zsh
 - replace ack with ag?
 - come up with better solution to dependencies
-- possibly evaluate some of the other dotfiles frameworks
 - fix permissions for instalation
 - fix changing zsh to default
