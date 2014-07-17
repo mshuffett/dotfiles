@@ -109,3 +109,5 @@ bind P pipe-pane -o "cat >>~/#W.log" \; display "Toggled logging to ~/#W.log"
 
 # renumber windows when removing window or pane
 set-option -g renumber-windows on
+
+set-option -g default-command "/apollo/env/envImprovement/var/bin/zsh"

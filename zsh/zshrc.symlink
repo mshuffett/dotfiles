@@ -1,3 +1,10 @@
+ZSH_THEME="default"
+source /apollo/env/envImprovement/var/zshrc
+ZSH_THEME="agnoster"
+
+export PATH="$PATH:/apollo/env/SDETools/bin"
+export PATH="$PATH:/apollo/env/eclipse-4.2/bin"
+
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
 
@@ -41,6 +48,8 @@ unset config_files
 
 ####################### END holman's code #####################
 
+####################### BEGIN oh-my-zsh code #####################
+
 # Path to your oh-my-zsh configuration.
 ZSH=$HOME/.oh-my-zsh
 
@@ -68,10 +77,16 @@ ZSH_THEME="agnoster"
 export ZSH_TMUX_AUTOSTART=true
 export ZSH_TMUX_AUTOQUIT=false
 
-plugins=(git autojump tmux)
+# autojump
+[[ -s /home/shuffem/.autojump/etc/profile.d/autojump.sh ]] && source /home/shuffem/.autojump/etc/profile.d/autojump.sh
+# autoload -U compinit && compinit -u
+
+#plugins=(git autojump tmux)
+plugins=(git tmux)
 
 source $ZSH/oh-my-zsh.sh
 
+####################### END oh-my-zsh code #####################
 # Custom code
 
 # Path manipulation
@@ -89,8 +104,8 @@ export DEFAULT_USER=michael
 bindkey '^R' history-incremental-pattern-search-backward
 
 setopt extended_glob
-autoload -Uz compinit
-compinit
+# autoload -Uz compinit
+# compinit
 zstyle ':completion:*' menu select
 zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
 zstyle ':completion:*:warnings' format '%BSorry, no matches for: %d%b'
@@ -115,3 +130,16 @@ zle -N _history-incremental-preserving-pattern-search-backward
 bindkey "^R" _history-incremental-preserving-pattern-search-backward
 bindkey -M isearch "^R" history-incremental-pattern-search-backward
 bindkey "^S" history-incremental-pattern-search-forward
+
+## Go up 5 directories with u 5
+u () {
+    set -A ud
+    ud[1+${1-1}]=
+    cd ${(j:../:)ud}
+}
+
+## aliases for now
+alias ns='ninja-search'
+alias eclipse='eclipse &>/dev/null &'
+alias glog="git log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
+
