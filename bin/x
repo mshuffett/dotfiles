@@ -1,0 +1,7 @@
+#!/bin/env bash
+ 
+read -d "" stdin
+ 
+echo "$stdin" | xclip -in -selection primary
+echo "$stdin" | xclip -in -selection secondary
+echo "$stdin" | xclip -in -selection clipboard
