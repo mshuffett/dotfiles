@@ -5,11 +5,10 @@ export PATH="$PATH:/apollo/env/SDETools/bin"
 export PATH="$PATH:/apollo/env/eclipse-4.2/bin"
 export PATH="$PATH:/apollo/env/MLEnvImprovement/bin"
 
+####################### BEGIN holman's code #####################
+
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
-
-# your project folder that we can `c [tab]` to
-export PROJECTS=~/Code
 
 # use .localrc for SUPER SECRET CRAP that you don't
 # want in your public, versioned repo.
@@ -100,7 +99,6 @@ export DEFAULT_USER=shuffem
 # Ctrl-o: Deletes everything after cursor (o is on right)
     # (Commonly Ctrl-k)
 #bindkey '^o' kill-line
-bindkey '^R' history-incremental-pattern-search-backward
 
 setopt extended_glob
 # autoload -Uz compinit
