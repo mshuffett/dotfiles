@@ -1,0 +1,273 @@
+" First setup variable for tag list plugin
+let g:useNinjaTagList=1
+source /apollo/env/envImprovement/var/vimrc
+imap jk <esc>
+
+if has('vim_starting')
+    set nocompatible " Be iMproved
+
+    " Required:
+    set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+" Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+" Let NeoBundle manage NeoBundle
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+NeoBundle 'Shougo/vimproc', {
+            \ 'build' : {
+            \     'mac' : 'make -f make_mac.mak',
+            \     'unix' : 'make -f make_unix.mak',
+            \    },
+            \ }
+
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neomru.vim'
+NeoBundle 'kien/rainbow_parentheses.vim'
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'tpope/vim-fugitive'
+
+" Make very magic the default
+NeoBundle 'coot/EnchantedVim'
+NeoBundle 'coot/CRDispatcher'
+
+NeoBundle 'tpope/vim-surround'
+" NeoBundle 'Shougo/unite-outline'
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'xolox/vim-easytags'
+NeoBundle 'xolox/vim-misc'
+
+NeoBundle 'AndrewRadev/linediff.vim'
+NeoBundle 'mbbill/undotree'
+
+NeoBundle 'spf13/vim-autoclose'
+NeoBundle 'Lokaltog/vim-easymotion'
+
+" My Bundles here:
+" Refer to |:NeoBundle-examples|.
+" Note: You don't set neobundle setting in .gvimrc!
+
+call neobundle#end()
+
+" Required:
+filetype plugin indent on
+
+" If there are uninstalled bundles found on
+" startup,
+" this will conveniently prompt you to install
+" them.
+NeoBundleCheck
+
+" This lets you still see space in showcmd from http://superuser.com/a/693644/312157
+"map <Space> <Leader>
+let mapleader="\<SPACE>"
+set showcmd
+" For conflict
+let loaded_alternateFile = 1
+let DidEnhancedCommentify = 1
+
+" Rainbow Parens
+let g:rbpt_colorpairs = [
+   \ [ '13', '#6c71c4'],
+   \ [ '5',  '#d33682'],
+   \ [ '1',  '#dc322f'],
+   \ [ '9',  '#cb4b16'],
+   \ [ '3',  '#b58900'],
+   \ [ '2',  '#859900'],
+   \ [ '6',  '#2aa198'],
+   \ [ '4',  '#268bd2'],
+   \ ]
+
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+nmap <leader>nt :NERDTreeToggle<cr>
+
+" CtrlP
+nnoremap <leader>f :CtrlP<CR>
+nnoremap <leader>b :CtrlPBuffer<CR>
+" Make alignmaps not load because of conflicting keymap
+let g:loaded_alignmaps = "v3d"
+nnoremap <leader>m :CtrlPMRUFiles<CR>
+nnoremap <leader>d :CtrlPTag<CR>
+
+" Unite
+let g:unite_source_history_yank_enable = 1
+nnoremap <Leader>/ :<C-u>Unite -no-split -silent -buffer-name=ag grep:.<CR>
+nnoremap <leader>s :<C-u>Unite -no-split -quick-match buffer<cr>
+nnoremap <leader>y :<C-u>Unite -no-split -buffer-name=yank    history/yank<cr>
+" nnoremap <leader>f :<C-u>Unite -no-split -buffer-name=files -start-insert file_rec/async:!<cr>
+nnoremap <leader>r :<C-u>Unite -no-split -buffer-name=mru -start-insert file_mru<cr>
+nnoremap <leader>o :<C-u>Unite -no-split -buffer-name=outline -start-insert outline<cr>
+
+if executable('ag')
+    " Use ag in unite grep source.
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts =
+                \ '-i --line-numbers --nocolor --nogroup --hidden --ignore ' .
+                \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+    let g:unite_source_grep_recursive_opt = ''
+elseif executable('pt')
+    " Use pt in unite grep source.
+    " https://github.com/monochromegane/the_platinum_searcher
+    let g:unite_source_grep_command = 'pt'
+    let g:unite_source_grep_default_opts = '-i --nogroup --nocolor'
+    let g:unite_source_grep_recursive_opt = ''
+elseif executable('ack-grep')
+    " Use ack in unite grep source.
+    let g:unite_source_grep_command = 'ack-grep'
+    let g:unite_source_grep_default_opts =
+                \ '-i --no-heading --no-color -k -H'
+    let g:unite_source_grep_recursive_opt = ''
+endif
+
+" Custom mappings for the unite buffer
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+    " Play nice with supertab
+    " let b:SuperTabDisabled=1
+    " Enable navigation with control-j and control-k in insert mode
+    imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+    imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+    imap <silent><buffer><expr> <C-x> unite#do_action('split')
+    imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+    imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
+
+    nmap <buffer> <ESC> <Plug>(unite_exit)
+endfunction
+
+colorscheme solarized
+hi Normal ctermbg=NONE
+
+" Setup the status line to display the tagname, if the taglist plugin has been loaded
+autocmd VimEnter * try
+autocmd VimEnter *   call Tlist_Get_Tagname_By_Line()
+autocmd VimEnter *   set statusline=%f\ %y%{GetStatusEx()}[b:%n]\ [t:%{Tlist_Get_Tagname_By_Line()}]\ %m%r%=(%l/%L,%c%V)\ %P
+autocmd VimEnter *   map <silent> <Leader>tap :TlistAddFilesRecursive . *pm<CR>
+autocmd VimEnter * catch
+autocmd VimEnter * endt
+
+" Function for getting the file format and the encoding for the status line.
+function! GetStatusEx()
+    let str = ' [' . &fileformat
+    if has('multi_byte') && &fileencoding != ''
+        let str = str . ':' . &fileencoding
+    endif
+    let str = str . '] '
+    return str
+endfunction
+
+set timeout
+" set updatetime=500
+
+noremap <leader>q :q<CR>
+noremap <leader>w :w<CR>
+
+" Get rid of conflict
+map <Plug>IMAP_NOJumpForward <Plug>IMAP_JumpForward
+
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
+
+" CtrlP
+let g:ctrlp_working_path_mode = 'ra'
+
+noremap <leader>ev :e ~/.vimrc<CR>
+
+" linediff
+noremap \ldt :Linediff<CR>
+noremap \ldo :LinediffReset<CR>
+
+set number " enable line numbers
+
+autocmd BufRead,BufNewFile   *.ion set noet ci pi sts=0 sw=4 ts=4
+
+" Fix Regex
+let g:VeryMagic = 0 " (default is 1)
+let g:VeryMagicSubstitute = 1  " (default is 0)
+let g:VeryMagicGlobal = 1  " (default is 0)
+let g:VeryMagicVimGrep = 1  " (default is 0)
+let g:VeryMagicSearchArg = 1  " (default is 0, :edit +/{pattern}))
+let g:VeryMagicFunction = 1  " (default is 0, :fun /{pattern})
+let g:VeryMagicHelpgrep = 1  " (default is 0)
+let g:VeryMagicRange = 1  " (default is 0, search patterns in command ranges)
+let g:VeryMagicEscapeBackslashesInSearchArg = 1  " (default is 0, :edit +/{pattern}))
+let g:SortEditArgs = 1  " (default is 0, see below)
+nm / /\v
+nm ? ?\v
+
+" xclip
+map "+y :!xclip -f -sel clip<CR>
+map "+p :r!xclip -o -sel clip<CR>
+
+set history=1000
+
+noremap <leader>gs :Gstatus<CR>
+noremap <leader>gd :Gdiff<CR>
+noremap <leader>gb :Gblame<CR>
+
+" Whitespace at end of line
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
+" Remove trailing whitespace before write
+fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
+
+autocmd BufWritePre *.ion :call <SID>StripTrailingWhitespaces()
+
+" Make visual yank maintain cursor position
+vmap y ygv<Esc>
+
+" Keep visual mode selection after indenting
+vmap > >gv
+vmap < <gv
+
+" Let Y be from point to end of line
+nnoremap Y y$
+
+" Only search visually selected text
+vnoremap / <Esc>/\%V\v
+vnoremap ? <Esc>?\%V\v
+
+" Persistent undo
+if has("persistent_undo")
+    set undodir=/home/shuffem/.undodir/
+    set undofile
+endif
+
+nnoremap <leader>u :UndotreeToggle<CR>
+
+let g:yankring_paste_using_g = 0
+nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
+
+" Don't pair quotes in vim files
+let g:autoclose_vim_commentmode = 1
+
+let g:easytags_cmd = '/apollo/env/envImprovement/bin/ctags'
+
+" Jump to last line we were at
+:au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+
+function! ShowTodos()
+	setlocal errorformat=%f%*[\ ]%l%*[\ ]%m
+	cex system('sed "s/(.*)[[:space:]]*//"', system('sed "s/.\{9\}//"', system('grep TODO', system('egrep "Michael\|Not Committed"', system('xargs -n1 git blame -f -n -w', system('git grep -l TODO'))))))
+	setlocal errorformat<
+	copen
+endfunction
+nnoremap <leader>td :call ShowTodos()<CR>
