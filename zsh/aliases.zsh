@@ -12,3 +12,5 @@ alias lh='ls -a | egrep "^\."' # ls dotfiles only
 
 # Vim is slow
 alias vim='vim -X'
+
+alias tmux='tmux -2'

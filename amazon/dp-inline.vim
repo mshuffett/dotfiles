@@ -1,3 +1,6 @@
+" Author: shuffem@
+" Inlines all DP calls into the top of the file
+
 fun! InlineDP()
     let [start_line, start_col] = getpos(".")[1:2]
     let n = 0

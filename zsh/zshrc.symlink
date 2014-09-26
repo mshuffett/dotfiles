@@ -1,51 +1,8 @@
 ZSH_THEME="default"
 source /apollo/env/envImprovement/var/zshrc
 
-export PATH="$PATH:/apollo/env/SDETools/bin"
-export PATH="$PATH:/apollo/env/eclipse-4.2/bin"
-export PATH="$PATH:/apollo/env/MLEnvImprovement/bin"
-
-####################### BEGIN holman's code #####################
-
-# shortcut to this dotfiles path is $ZSH
-export ZSH=$HOME/.dotfiles
-
-# use .localrc for SUPER SECRET CRAP that you don't
-# want in your public, versioned repo.
-if [[ -a ~/.localrc ]]
-then
-  source ~/.localrc
-fi
-
-# all of our zsh files
-typeset -U config_files
-config_files=($ZSH/**/*.zsh)
-
-# load the path files
-for file in ${(M)config_files:#*/path.zsh}
-do
-  source $file
-done
-
-# load everything but the path and completion files
-for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
-do
-  source $file
-done
-
-# initialize autocomplete here, otherwise functions won't be loaded
-autoload -U compinit
-compinit
-
-# load every completion after autocomplete loads
-for file in ${(M)config_files:#*/completion.zsh}
-do
-  source $file
-done
-
-unset config_files
-
-####################### END holman's code #####################
+typeset -U path
+path=("$path[@]" /apollo/env/SDETools/bin /apollo/env/eclipse-4.2/bin /apollo/env/MLEnvImprovement/bin)
 
 ####################### BEGIN oh-my-zsh code #####################
 
@@ -75,11 +32,12 @@ COMPLETION_WAITING_DOTS="true"
 
 export ZSH_TMUX_AUTOSTART=true
 export ZSH_TMUX_AUTOQUIT=false
+export ZSH_TMUX_FIXTERM=false
 
 # autojump
 [[ -s /home/shuffem/.autojump/etc/profile.d/autojump.sh ]] && source /home/shuffem/.autojump/etc/profile.d/autojump.sh
-# autoload -U compinit && compinit -u
 
+alias tmux='tmux -2'
 plugins=(git autojump tmux zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
@@ -90,7 +48,7 @@ source $ZSH/oh-my-zsh.sh
 # Path manipulation
 # force path array to have unique values
 typeset -U path
-path=(/home/mshuff/.local/bin /usr/local/bin "$path[@]")
+path=(/home/shuffem/anaconda/bin /usr/local/bin "$path[@]")
 #bindkey -e
 export DEFAULT_USER=shuffem
 
@@ -135,10 +93,44 @@ u () {
     cd ${(j:../:)ud}
 }
 
-## aliases for now
-alias ns='ninja-search'
-alias eclipse='eclipse &>/dev/null &'
-alias glog="git log --graph --pretty=format:'%Cred%h%Creset %an: %s - %Creset %C(yellow)%d%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative"
-
 export TERMINFO=/apollo/env/envImprovement/var/terminfo
 
+####################### BEGIN holman's code #####################
+
+# shortcut to this dotfiles path is $ZSH
+export ZSH=$HOME/.dotfiles
+
+# use .localrc for SUPER SECRET CRAP that you don't
+# want in your public, versioned repo.
+if [[ -a ~/.localrc ]]
+then
+  source ~/.localrc
+fi
+
+# all of our zsh files
+typeset -U config_files
+config_files=($ZSH/**/*.zsh)
+
+# load the path files
+for file in ${(M)config_files:#*/path.zsh}
+do
+  source $file
+done
+
+# load everything but the path and completion files
+for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
+do
+  source $file
+done
+
+# initialize autocomplete here, otherwise functions won't be loaded
+autoload -U compinit
+compinit
+
+# load every completion after autocomplete loads
+for file in ${(M)config_files:#*/completion.zsh}
+do
+  source $file
+done
+
+unset config_files
