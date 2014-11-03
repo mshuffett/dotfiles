@@ -38,7 +38,7 @@ export ZSH_TMUX_FIXTERM=false
 [[ -s /home/shuffem/.autojump/etc/profile.d/autojump.sh ]] && source /home/shuffem/.autojump/etc/profile.d/autojump.sh
 
 alias tmux='tmux -2'
-plugins=(git autojump tmux zsh-syntax-highlighting)
+plugins=(git autojump tmux zsh-syntax-highlighting taskwarrior)
 
 source $ZSH/oh-my-zsh.sh
 

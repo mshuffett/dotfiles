@@ -30,6 +30,7 @@ NeoBundle 'Shougo/vimproc', {
 NeoBundle 'kien/rainbow_parentheses.vim'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-sleuth'
 
 " Make very magic the default
 NeoBundle 'coot/EnchantedVim'
@@ -197,6 +198,8 @@ noremap \ldt :Linediff<CR>
 noremap \ldo :LinediffReset<CR>
 
 set number " enable line numbers
+
+set sw=4 ts=4 si ai
 
 autocmd BufRead,BufNewFile   *.ion set noet ci pi sts=0 sw=4 ts=4
 
