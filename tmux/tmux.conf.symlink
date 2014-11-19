@@ -25,7 +25,7 @@ bind - split-window -v -c "#{pane_current_path}"
 # start in same directory
 bind c new-window -c "#{pane_current_path}"
 bind % split-window -h -c "#{pane_current_path}"
-bind \" split-window -c "#{pane_current_path}"
+bind '"' split-window -c "#{pane_current_path}"
 
 # vim / xmonad style bindings for pane movement
 bind -r h select-pane -L
@@ -50,7 +50,7 @@ set -g mouse-resize-pane off
 set -g mouse-select-window off
 
 # turn on 256 color support in tmux
-#set -g default-terminal "screen-256color"
+# set -g default-terminal "screen-256color"
 
 # fiddle with colors of status bar
 set -g status-fg white

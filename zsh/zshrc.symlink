@@ -1,8 +1,11 @@
+# disable control flow
+stty stop undef
+
 ZSH_THEME="default"
 source /apollo/env/envImprovement/var/zshrc
 
 typeset -U path
-path=("$path[@]" /apollo/env/SDETools/bin /apollo/env/eclipse-4.2/bin /apollo/env/MLEnvImprovement/bin)
+path=("$path[@]" /apollo/env/SDETools/bin /apollo/env/eclipse-4.2/bin /apollo/env/MLEnvImprovement/bin /apollo/env/PythonVirtualEnvironment/bin)
 
 ####################### BEGIN oh-my-zsh code #####################
 
@@ -94,6 +97,9 @@ u () {
 }
 
 export TERMINFO=/apollo/env/envImprovement/var/terminfo
+if [[ -z "$TERMCAP" ]] && [[ "$TERM" == "screen" ]]; then
+  export TERMCAP='Co#256:'
+fi
 
 ####################### BEGIN holman's code #####################
 

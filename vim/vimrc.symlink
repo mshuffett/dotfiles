@@ -1,6 +1,8 @@
 " First setup variable for tag list plugin
 let g:useNinjaTagList=1
 let g:yankring_replace_n_nkey="<M-P>"
+let complType="1"
+let g:ycm_server_keep_logfiles=1
 source /apollo/env/envImprovement/var/vimrc
 imap jk <esc>
 
@@ -31,6 +33,16 @@ NeoBundle 'kien/rainbow_parentheses.vim'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-sleuth'
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'klen/python-mode'
+
+" NeoBundle 'davidhalter/jedi-vim.git'
+NeoBundle 'Shougo/neosnippet.git'
+NeoBundle 'Shougo/neocomplcache.git'
+
+NeoBundle 'mattn/emmet-vim'
+let g:user_emmet_expandabbr_key = '<c-e>'
+let g:use_emmet_complete_tag = 1
 
 " Make very magic the default
 NeoBundle 'coot/EnchantedVim'
@@ -38,6 +50,8 @@ NeoBundle 'coot/CRDispatcher'
 
 NeoBundle 'tpope/vim-surround'
 " NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/neocomplcache.vim'
+" NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'xolox/vim-easytags'
 NeoBundle 'xolox/vim-misc'
@@ -72,6 +86,25 @@ filetype plugin indent on
 " this will conveniently prompt you to install
 " them.
 NeoBundleCheck
+
+" NEOCOMPLCACHE SETTINGS
+let g:neocomplcache_enable_at_startup = 1
+imap neosnippet#expandable() ? "(neosnippet_expand_or_jump)" : pumvisible() ?  "" : ""
+smap neosnippet#expandable() ? "(neosnippet_expand_or_jump)" :
+let g:neocomplcache_force_overwrite_completefunc = 1
+if !exists('g:neocomplcache_omni_functions')
+   let g:neocomplcache_omni_functions = {}
+endif
+if !exists('g:neocomplcache_force_omni_patterns')
+   let g:neocomplcache_force_omni_patterns = {}
+endif
+let g:neocomplcache_force_overwrite_completefunc = 1
+let g:neocomplcache_force_omni_patterns['python'] = '[^. t].w*'
+set ofu=syntaxcomplete#Complete
+au FileType python set omnifunc=pythoncomplete#Complete textwidth=0
+au FileType python let b:did_ftplugin = 1
+" Vim-jedi settings
+let g:jedi#popup_on_dot = 0
 
 " This lets you still see space in showcmd from http://superuser.com/a/693644/312157
 "map <Space> <Leader>
@@ -245,6 +278,7 @@ fun! <SID>StripTrailingWhitespaces()
 endfun
 
 autocmd BufWritePre *.ion :call <SID>StripTrailingWhitespaces()
+autocmd BufWritePre *.py :call <SID>StripTrailingWhitespaces()
 
 
 " Keep visual mode selection after indenting
@@ -281,7 +315,7 @@ let g:autoclose_vim_commentmode = 1
 let g:easytags_cmd = '/apollo/env/envImprovement/bin/ctags'
 
 " Jump to last line we were at
-:au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
 function! ShowTodos()
 	set errorformat+=%f%*[\ ]%l%*[\ ]%m
@@ -293,3 +327,10 @@ nnoremap <leader>td :call ShowTodos()<CR>
 
 ":noremap <silent> - :call EnhancedCommentify('no', 'comment')<CR>j
 ":noremap <silent> _ :call EnhancedCommentify('no', 'decomment')<CR>j
+
+" Work-around incomplete terminfo databases
+" " Particulalry useful when under `screen`, which may or may not be attached to
+" " a physical terminal capable of 256color mode.
+if match($TERMCAP, 'Co#256:') == 0 || match($TERMCAP, ':Co#256:') > 0
+   set t_Co=256
+endif
