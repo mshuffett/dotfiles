@@ -5,6 +5,9 @@ let complType="1"
 let g:ycm_server_keep_logfiles=1
 source /apollo/env/envImprovement/var/vimrc
 imap jk <esc>
+set fen
+au BufWinLeave ?* mkview
+au BufWinEnter ?* silent loadview
 
 if has('vim_starting')
     set nocompatible " Be iMproved
@@ -29,6 +32,8 @@ NeoBundle 'Shougo/vimproc', {
 
 " NeoBundle 'Shougo/unite.vim'
 " NeoBundle 'Shougo/neomru.vim'
+NeoBundle 'nathanaelkane/vim-indent-guides'
+
 NeoBundle 'kien/rainbow_parentheses.vim'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'tpope/vim-fugitive'
@@ -50,7 +55,6 @@ NeoBundle 'coot/CRDispatcher'
 
 NeoBundle 'tpope/vim-surround'
 " NeoBundle 'Shougo/unite-outline'
-NeoBundle 'Shougo/neocomplcache.vim'
 " NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'xolox/vim-easytags'
@@ -86,6 +90,9 @@ filetype plugin indent on
 " this will conveniently prompt you to install
 " them.
 NeoBundleCheck
+
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size = 1
 
 " NEOCOMPLCACHE SETTINGS
 let g:neocomplcache_enable_at_startup = 1
@@ -139,7 +146,7 @@ nnoremap <leader>b :CtrlPBuffer<CR>
 " Make alignmaps not load because of conflicting keymap
 let g:loaded_alignmaps = "v3d"
 nnoremap <leader>m :CtrlPMRUFiles<CR>
-nnoremap <leader>d :CtrlPTag<CR>
+nnoremap <leader>d :CtrlPBufTag<CR>
 
 " Unite
 "let g:unite_source_history_yank_enable = 1
