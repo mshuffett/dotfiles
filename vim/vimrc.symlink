@@ -6,8 +6,8 @@ let g:ycm_server_keep_logfiles=1
 source /apollo/env/envImprovement/var/vimrc
 imap jk <esc>
 set fen
-au BufWinLeave ?* mkview
-au BufWinEnter ?* silent loadview
+"au BufWinLeave ?* mkview
+"au BufWinEnter ?* silent loadview
 
 if has('vim_starting')
     set nocompatible " Be iMproved
