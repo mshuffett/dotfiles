@@ -7,7 +7,7 @@ alias g2s2="/apollo/env/iopmtools/bin/g2s2 -u  http://g2s2-repo-author-na.amazon
 alias g2s2cr="/apollo/env/iopmtools/bin/g2s2-post-review -u http://g2s2-repo-author-na.amazon.com/" #Code Review
 alias ns='ninja-search'
 alias eclipse='eclipse &>/dev/null &'
-alias dw='ssh ssof-fma-pool-6001.iad6.amazon.com'
+alias dw='ssh fma-gamma-na-6001.iad6.amazon.com'
 alias brazil-octane=/apollo/env/OctaneBrazilTools/bin/brazil-octane
 
 tiny() {
@@ -48,3 +48,13 @@ cdw() { cd /workplace/$USER/$1 } #Quickly go to a workspace. Auto-complete of wo
 envdetach() { brazil ws --detachEnvironment --alias $1 }
 
 dateToMillis() { TZ=UTC date +%s%3N --date="$(echo "$@" | sed 's/T/ /')" }
+
+alias bbp="brazil-build && brazil-build apollo-pkg"
+alias b3p="/apollo/env/BrazilThirdPartyTool/bin/brazil-third-party-tool"
+alias bre="brazil-runtime-execls/apollo/env/BrazilThirdPartyTool/bin/brazil-third-party-tool"
+alias bre="brazil-runtime-exec"
+alias octane="/apollo/env/OctaneBrazilTools/bin/brazil-octane"
+alias pytest="/apollo/env/OctaneBrazilTools/Binils/brazil-octane"
+alias pytest="brazil-test-exec python2.7 -m py.test"
+
+alias s3put=/apollo/env/envImprovement/bin/s3put

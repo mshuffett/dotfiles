@@ -1,9 +1,12 @@
-" First setup variable for tag list plugin
+" vim: set sw=4 ts=4 sts=4 et tw=78 foldlevel=0 foldmethod=marker spell:
+
+" envImprovement setup {{{
 let g:useNinjaTagList=1
 let g:yankring_replace_n_nkey="<M-P>"
 let complType="1"
 let g:ycm_server_keep_logfiles=1
 source /apollo/env/envImprovement/var/vimrc
+" }}}
 imap jk <esc>
 set fen
 "au BufWinLeave ?* mkview
@@ -16,7 +19,9 @@ if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
+" NeoBundle {{{
 " Required:
+" Note: You don't set neobundle setting in .gvimrc!
 call neobundle#begin(expand('~/.vim/bundle/'))
 
 " Let NeoBundle manage NeoBundle
@@ -39,6 +44,7 @@ NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-sleuth'
 NeoBundle 'tpope/vim-repeat'
+NeoBundle 'tpope/vim-abolish'
 NeoBundle 'klen/python-mode'
 
 " NeoBundle 'davidhalter/jedi-vim.git'
@@ -76,14 +82,11 @@ NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'jmcantrell/vim-diffchanges'
 NeoBundle 'vim-scripts/YankRing.vim'
 
-" My Bundles here:
-" Refer to |:NeoBundle-examples|.
-" Note: You don't set neobundle setting in .gvimrc!
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'wookiehangover/jshint.vim'
+
 
 call neobundle#end()
-
-" Required:
-filetype plugin indent on
 
 " If there are uninstalled bundles found on
 " startup,
@@ -91,10 +94,15 @@ filetype plugin indent on
 " them.
 NeoBundleCheck
 
+" }}}
+
+" Required:
+filetype plugin indent on
+
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
 
-" NEOCOMPLCACHE SETTINGS
+" NEOCOMPLCACHE SETTINGS {{{
 let g:neocomplcache_enable_at_startup = 1
 imap neosnippet#expandable() ? "(neosnippet_expand_or_jump)" : pumvisible() ?  "" : ""
 smap neosnippet#expandable() ? "(neosnippet_expand_or_jump)" :
@@ -110,6 +118,8 @@ let g:neocomplcache_force_omni_patterns['python'] = '[^. t].w*'
 set ofu=syntaxcomplete#Complete
 au FileType python set omnifunc=pythoncomplete#Complete textwidth=0
 au FileType python let b:did_ftplugin = 1
+" }}}
+
 " Vim-jedi settings
 let g:jedi#popup_on_dot = 0
 
@@ -148,7 +158,7 @@ let g:loaded_alignmaps = "v3d"
 nnoremap <leader>m :CtrlPMRUFiles<CR>
 nnoremap <leader>d :CtrlPBufTag<CR>
 
-" Unite
+" Unite {{{
 "let g:unite_source_history_yank_enable = 1
 "nnoremap <Leader>/ :<C-u>Unite -no-split -silent -buffer-name=ag grep:.<CR>
 "nnoremap <leader>s :<C-u>Unite -no-split -quick-match buffer<cr>
@@ -192,6 +202,7 @@ nnoremap <leader>d :CtrlPBufTag<CR>
 
     "nmap <buffer> <ESC> <Plug>(unite_exit)
 "endfunction
+" }}}
 
 colorscheme solarized
 hi Normal ctermbg=NONE
@@ -215,7 +226,6 @@ function! GetStatusEx()
 endfunction
 
 set timeout
-" set updatetime=500
 
 noremap <leader>q :q<CR>
 noremap <leader>w :w<CR>
@@ -259,17 +269,17 @@ nm / /\v
 nm ? ?\v
 
 " xclip
-map "+y :!xclip -f -sel clip<CR>
-map "+p :r!xclip -o -sel clip<CR>
+" map "+y :!xclip -f -sel clip<CR>
+" map "+p :r!xclip -o -sel clip<CR>
 
-set history=1000
+set history=10000
 
 noremap <leader>gs :Gstatus<CR>
 noremap <leader>gd :Gdiff<CR>
 noremap <leader>gb :Gblame<CR>
 
-" Whitespace at end of line
-highlight ExtraWhitespace ctermbg=red guibg=red
+" Trailing whitespace {{{
+highlight ExtraWhitespace ctermbg=red guibg=red 
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
@@ -286,7 +296,9 @@ endfun
 
 autocmd BufWritePre *.ion :call <SID>StripTrailingWhitespaces()
 autocmd BufWritePre *.py :call <SID>StripTrailingWhitespaces()
-
+autocmd BufWritePre *.xml :call <SID>StripTrailingWhitespaces()
+autocmd BufWritePre *.java :call <SID>StripTrailingWhitespaces()
+" }}}
 
 " Keep visual mode selection after indenting
 vmap > >gv
@@ -304,6 +316,7 @@ endfunction
 " Only search visually selected text
 vnoremap / <Esc>/\%V\v
 vnoremap ? <Esc>?\%V\v
+set smartcase
 
 " Persistent undo
 if has("persistent_undo")
@@ -341,3 +354,44 @@ nnoremap <leader>td :call ShowTodos()<CR>
 if match($TERMCAP, 'Co#256:') == 0 || match($TERMCAP, ':Co#256:') > 0
    set t_Co=256
 endif
+
+" Python {{{
+" ignore line too long errors
+let g:pymode_lint_ignore = "E501"
+" }}}
+
+set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo
+
+set wildignore+=*.pyc,*/.git/*,*/.hg/*,*/.svn/*
+
+" Search for selected text, forwards or backwards.
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+
+" Match tags in xml
+runtime! macros/matchit.vim
+
+" Autowrapping is annoying
+set tw=0
+
+" Sytastic {{{
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_javascript_checkers = ['jshint']
+"let g:syntastic_python_checkers = ['flake8']
+let g:syntastic_python_checkers = []
+" }}}
