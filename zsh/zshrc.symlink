@@ -52,7 +52,7 @@ source $ZSH/oh-my-zsh.sh
 # Path manipulation
 # force path array to have unique values
 typeset -U path
-path=(/home/shuffem/anaconda/bin /apollo/env/SDETools/bin /rhel5pdi/eclipse-4.4.2 /apollo/env/MLEnvImprovement/bin /usr/local/bin "$path[@]" /home/shuffem/anaconda/bin)
+path=(/home/shuffem/vim27/bin /home/shuffem/anaconda/bin /apollo/env/SDETools/bin /rhel5pdi/eclipse-4.4.2 /apollo/env/MLEnvImprovement/bin /usr/local/bin "$path[@]" /home/shuffem/anaconda/bin)
 
 #bindkey -e
 export DEFAULT_USER=shuffem
