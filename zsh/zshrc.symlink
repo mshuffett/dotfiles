@@ -1,8 +1,115 @@
+# disable control flow
+stty stop undef
+
+ZSH_THEME="default"
+source /apollo/env/envImprovement/var/zshrc
+
+####################### BEGIN oh-my-zsh code #####################
+
+# Path to your oh-my-zsh configuration.
+ZSH=$HOME/.oh-my-zsh
+
+# Set name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
+# Optionally, if you set this to "random", it'll load a random theme each
+# time that oh-my-zsh is loaded.
+ZSH_THEME="my-agnoster"
+
+# Uncomment following line if you want to disable command autocorrection
+# DISABLE_CORRECTION="true"
+
+# Uncomment following line if you want red dots to be displayed while waiting for completion
+COMPLETION_WAITING_DOTS="true"
+
+# Uncomment following line if you want to disable marking untracked files under
+# VCS as dirty. This makes repository status check for large repositories much,
+# much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+
+export ZSH_TMUX_AUTOSTART=true
+export ZSH_TMUX_AUTOQUIT=false
+export ZSH_TMUX_FIXTERM=false
+
+# autojump
+[[ -s /home/shuffem/.autojump/etc/profile.d/autojump.sh ]] && source /home/shuffem/.autojump/etc/profile.d/autojump.sh
+
+alias tmux='tmux -2'
+plugins=(git autojump tmux zsh-syntax-highlighting taskwarrior git-flow-avh)
+#
+# This is because the ZSH at Amazon doesn't like the auto update.
+# To run update manually run upgrade_oh_my_zsh
+DISABLE_AUTO_UPDATE=true
+
+source $ZSH/oh-my-zsh.sh
+
+####################### END oh-my-zsh code #####################
+# Custom code
+
+# Path manipulation
+# force path array to have unique values
+typeset -U path
+path=(/home/shuffem/vim27/bin /home/shuffem/anaconda/bin /apollo/env/SDETools/bin /rhel5pdi/eclipse-4.4.2 /apollo/env/MLEnvImprovement/bin /usr/local/bin "$path[@]" /home/shuffem/anaconda/bin)
+
+#bindkey -e
+export DEFAULT_USER=shuffem
+
+# Ctrl-u: Deletes everything before cursor (u is on left)
+#bindkey '^u' backward-kill-line
+# Ctrl-o: Deletes everything after cursor (o is on right)
+    # (Commonly Ctrl-k)
+#bindkey '^o' kill-line
+
+setopt extended_glob
+# autoload -Uz compinit
+# compinit
+zstyle ':completion:*' menu select
+zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
+zstyle ':completion:*:warnings' format '%BSorry, no matches for: %d%b'
+
+# setopt nohistverify
+# Report statistics on commands that take longer than 10 seconds
+REPORTTIME=10
+
+# allow c-r to be executed in middle of line
+# taken from http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
+autoload -Uz narrow-to-region
+function _history-incremental-preserving-pattern-search-backward
+{
+  local state
+  MARK=CURSOR  # magick, else multiple ^R don't work
+  narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
+  zle end-of-history
+  zle history-incremental-pattern-search-backward
+  narrow-to-region -R state
+}
+zle -N _history-incremental-preserving-pattern-search-backward
+bindkey "^R" _history-incremental-preserving-pattern-search-backward
+bindkey -M isearch "^R" history-incremental-pattern-search-backward
+bindkey "^S" history-incremental-pattern-search-forward
+
+## Go up 5 directories with u 5
+u () {
+    set -A ud
+    ud[1+${1-1}]=
+    cd ${(j:../:)ud}
+}
+
+export TERMINFO=/apollo/env/envImprovement/var/terminfo
+if [[ -z "$TERMCAP" ]] && [[ "$TERM" == "screen" ]]; then
+  export TERMCAP='Co#256:'
+fi
+
+bindkey "^[^[OC" forward-word
+bindkey "^[^[OD" backward-word
+
+####################### BEGIN holman's code #####################
+
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
-
-# your project folder that we can `c [tab]` to
-export PROJECTS=~/Code
 
 # use .localrc for SUPER SECRET CRAP that you don't
 # want in your public, versioned repo.
@@ -38,80 +145,9 @@ do
 done
 
 unset config_files
+export AWS_CREDENTIALS_ODIN=fma.analytics.team.AWSKeys
 
-####################### END holman's code #####################
+export LESS='-i'
 
-# Path to your oh-my-zsh configuration.
-ZSH=$HOME/.oh-my-zsh
-
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-ZSH_THEME="agnoster"
-
-# Uncomment following line if you want to disable command autocorrection
-# DISABLE_CORRECTION="true"
-
-# Uncomment following line if you want red dots to be displayed while waiting for completion
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment following line if you want to disable marking untracked files under
-# VCS as dirty. This makes repository status check for large repositories much,
-# much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-
-export ZSH_TMUX_AUTOSTART=true
-export ZSH_TMUX_AUTOQUIT=false
-
-plugins=(git autojump tmux)
-
-source $ZSH/oh-my-zsh.sh
-
-# Custom code
-
-# Path manipulation
-# force path array to have unique values
-typeset -U path
-path=(/home/mshuff/.local/bin /usr/local/bin "$path[@]")
-#bindkey -e
-export DEFAULT_USER=michael
-
-# Ctrl-u: Deletes everything before cursor (u is on left)
-#bindkey '^u' backward-kill-line
-# Ctrl-o: Deletes everything after cursor (o is on right)
-    # (Commonly Ctrl-k)
-#bindkey '^o' kill-line
-bindkey '^R' history-incremental-pattern-search-backward
-
-setopt extended_glob
-autoload -Uz compinit
-compinit
-zstyle ':completion:*' menu select
-zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
-zstyle ':completion:*:warnings' format '%BSorry, no matches for: %d%b'
-
-# setopt nohistverify
-# Report statistics on commands that take longer than 10 seconds
-REPORTTIME=10
-
-# allow c-r to be executed in middle of line
-# taken from http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
-autoload -Uz narrow-to-region
-function _history-incremental-preserving-pattern-search-backward
-{
-  local state
-  MARK=CURSOR  # magick, else multiple ^R don't work
-  narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
-  zle end-of-history
-  zle history-incremental-pattern-search-backward
-  narrow-to-region -R state
-}
-zle -N _history-incremental-preserving-pattern-search-backward
-bindkey "^R" _history-incremental-preserving-pattern-search-backward
-bindkey -M isearch "^R" history-incremental-pattern-search-backward
-bindkey "^S" history-incremental-pattern-search-forward
+# typeset -U PYTHONPATH
+# PYTHONPATH=("$PYTHONPATH[@]" /home/shuffem/.vim/bundle/ropevim)

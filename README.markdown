@@ -68,3 +68,4 @@ There's a few special files in the hierarchy.
 - come up with better solution to dependencies
 - fix permissions for instalation
 - fix changing zsh to default
+- integrate with zsh-syntax-highlighting
