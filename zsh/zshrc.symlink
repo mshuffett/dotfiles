@@ -2,7 +2,6 @@
 stty stop undef
 
 ZSH_THEME="default"
-source /apollo/env/envImprovement/var/zshrc
 
 ####################### BEGIN oh-my-zsh code #####################
 
@@ -34,11 +33,8 @@ export ZSH_TMUX_AUTOSTART=true
 export ZSH_TMUX_AUTOQUIT=false
 export ZSH_TMUX_FIXTERM=false
 
-# autojump
-[[ -s /home/shuffem/.autojump/etc/profile.d/autojump.sh ]] && source /home/shuffem/.autojump/etc/profile.d/autojump.sh
-
 alias tmux='tmux -2'
-plugins=(git autojump tmux zsh-syntax-highlighting taskwarrior git-flow-avh)
+plugins=(git autojump tmux zsh-syntax-highlighting git-flow-avh)
 #
 # This is because the ZSH at Amazon doesn't like the auto update.
 # To run update manually run upgrade_oh_my_zsh
@@ -52,10 +48,10 @@ source $ZSH/oh-my-zsh.sh
 # Path manipulation
 # force path array to have unique values
 typeset -U path
-path=(/home/shuffem/vim27/bin /home/shuffem/anaconda/bin /apollo/env/SDETools/bin /rhel5pdi/eclipse-4.4.2 /apollo/env/MLEnvImprovement/bin /usr/local/bin "$path[@]" /home/shuffem/anaconda/bin)
+path=(/home/shuffem/vim27/bin /usr/local/bin "$path[@]" /home/shuffem/anaconda/bin)
 
 #bindkey -e
-export DEFAULT_USER=shuffem
+export DEFAULT_USER=michael
 
 # Ctrl-u: Deletes everything before cursor (u is on left)
 #bindkey '^u' backward-kill-line
