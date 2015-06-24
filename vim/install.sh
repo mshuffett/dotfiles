@@ -1,6 +1,6 @@
 #!/bin/sh
-if command -v wget >/dev/null 2>&1; then
-  wget -q -O - "https://bit.ly/janus-bootstrap" | bash
-else
-  curl -Lo- "https://bit.ly/janus-bootstrap" | bash
-fi
+sudo apt-get install vim-gnome
+
+# Install neobundle
+curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh > /tmp/neo-install.sh
+sh /tmp/neo-install.sh
