@@ -1,12 +1,6 @@
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldlevel=0 foldmethod=marker spell:
 
-" envImprovement setup {{{
-let g:useNinjaTagList=1
-let g:yankring_replace_n_nkey="<M-P>"
-let complType="1"
-let g:ycm_server_keep_logfiles=1
-source /apollo/env/envImprovement/var/vimrc
-" }}}
+set bg=dark
 imap jk <esc>
 set fen
 "au BufWinLeave ?* mkview
