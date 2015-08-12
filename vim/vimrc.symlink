@@ -42,6 +42,7 @@ NeoBundle 'Shougo/vimproc', {
 NeoBundle 'bling/vim-airline'
 NeoBundle 'gotgenes/vim-yapif'
 
+NeoBundle 'tacahiroy/ctrlp-funky'
 NeoBundle 'kien/rainbow_parentheses.vim'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'tpope/vim-fugitive'
@@ -125,7 +126,8 @@ endif
 let g:neocomplcache_force_overwrite_completefunc = 1
 let g:neocomplcache_force_omni_patterns['python'] = '[^. t].w*'
 set ofu=syntaxcomplete#Complete
-au FileType python set omnifunc=pythoncomplete#Complete textwidth=0
+"au FileType python set omnifunc=pythoncomplete#Complete textwidth=0
+autocmd FileType python setlocal omnifunc=RopeCompleteFunc
 au FileType python let b:did_ftplugin = 1
 " }}}
 
@@ -278,8 +280,8 @@ nm / /\v
 nm ? ?\v
 
 " xclip
-" map "+y :!xclip -f -sel clip<CR>
-" map "+p :r!xclip -o -sel clip<CR>
+map "+y :!xclip -f -sel clip<CR>
+map "+p :r!xclip -o -sel clip<CR>
 
 set history=10000
 
@@ -398,7 +400,7 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+let g:syntastic_check_on_wq = 1
 let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_python_checkers = ['prospector']
 " }}}
@@ -414,3 +416,12 @@ let g:airline#extensions#tabline#enabled = 1
 set viewoptions-=options " without this line it saves all old key bindings etc.
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview 
+
+nnoremap <Leader>o :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+nnoremap <Leader>O :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+let g:ctrlp_funky_matchtype = 'path'
+let g:ctrlp_funky_syntax_highlight = 1
+
+
+let g:ropevim_autoimport_modules = ["os", "shutil", "sys"]
