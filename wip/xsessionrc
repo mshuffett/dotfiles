@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Load resources
+
+xrdb -merge .Xresources
+
+# Set up an icon tray
+stalonetray &
+
+# Fire up apps
+
+xscreensaver -no-splash &
+
+# Set background image with feh
+feh --bg-scale /usr/share/backgrounds/warty-final-ubuntu.png &
+
+# Start udiskie to handle media
+udiskie &
+
+if [ -x /usr/bin/nm-applet ] ; then
+   nm-applet --sm-disable &
+fi
+
+exec xmonad
