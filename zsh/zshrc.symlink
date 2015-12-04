@@ -143,7 +143,7 @@ done
 unset config_files
 export AWS_CREDENTIALS_ODIN=fma.analytics.team.AWSKeys
 
-export LESS='-i'
+export LESS='-iR'
 
 # typeset -U PYTHONPATH
 # PYTHONPATH=("$PYTHONPATH[@]" /home/shuffem/.vim/bundle/ropevim)

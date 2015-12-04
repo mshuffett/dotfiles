@@ -152,3 +152,5 @@ set-window-option -g clock-mode-colour green #green
 setw -g aggressive-resize on
 
 set -g history-limit 10000
+
+set -g default-terminal "screen-256color"
