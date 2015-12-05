@@ -5,7 +5,7 @@ fun! InlineDP()
     let [start_line, start_col] = getpos(".")[1:2]
     let n = 0
     let found = 0
-    let root_path = '/rhel5pdi/workplace/shuffem/metrics/src/FMADatapathQueries/src/'
+    let root_path = '/rhel5pdi/workplace/shuffem/FMADatapathQueries/src/FMADatapathQueries/src/'
     while n <= line("$")
         let line = getline(n)
         let col = match(line, '(define')

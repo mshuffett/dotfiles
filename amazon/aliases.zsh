@@ -1,3 +1,8 @@
+kverify() {
+    if (! klist -s); then
+        kinit -f
+    fi
+}
 alias bb="brazil-build"
 alias bbc="brazil-build clean"
 alias bcb="brazil-build clean && brazil-build"
@@ -6,7 +11,7 @@ alias ionpp=/apollo/env/G2S2CommandTools/bin/ion-pretty-print #pretty prints out
 alias g2s2="/apollo/env/G2S2CommandTools/bin/g2s2 -u https://g2s2-author.amazon.com/" #prod command
 alias g2s2cr="/apollo/env/G2S2CommandTools/bin/g2s2-post-review -u https://g2s2-author.amazon.com/" #Code Review
 alias ns='ninja-search'
-alias eclipse='eclipse &>/dev/null &'
+alias eclipse='kverify && eclipse &>/dev/null &'
 alias dw='ssh fma-gamma-na-6001.iad6.amazon.com'
 alias brazil-octane=/apollo/env/OctaneBrazilTools/bin/brazil-octane
 

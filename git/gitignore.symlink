@@ -41,3 +41,10 @@ Thumbs.db
 .ropeproject/
 .coverage
 tags
+coverage.xml
+htmlcov/
+
+.classpath
+.project
+.settings/
+sandbox/
