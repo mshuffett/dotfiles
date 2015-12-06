@@ -32,6 +32,5 @@ aa() {
 }
 
 # User defined aliases (with aa)
-=======
 alias mmv='noglob zmv -W'
 alias 'gdiff=git diff'
