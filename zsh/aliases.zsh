@@ -1,5 +1,3 @@
-#!/usr/bin/zsh
-
 if ((! $+ALIASES_FILE))
 then
     readonly ALIASES_FILE="/home/$USER/.dotfiles/zsh/aliases.zsh"
@@ -34,3 +32,6 @@ aa() {
 }
 
 # User defined aliases (with aa)
+=======
+alias mmv='noglob zmv -W'
+alias 'gdiff=git diff'

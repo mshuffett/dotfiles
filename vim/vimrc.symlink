@@ -36,9 +36,12 @@ NeoBundle 'Shougo/vimproc', {
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'carlosvillu/coffeScript-VIM-Snippets'
 NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'gabrielelana/vim-markdown'
+NeoBundle 'godlygeek/tabular'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'gotgenes/vim-yapif'
 
+NeoBundle 'tacahiroy/ctrlp-funky'
 NeoBundle 'kien/rainbow_parentheses.vim'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'tpope/vim-fugitive'
@@ -184,6 +187,12 @@ endif
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+let g:neocomplcache_force_overwrite_completefunc = 1
+let g:neocomplcache_force_omni_patterns['python'] = '[^. t].w*'
+set ofu=syntaxcomplete#Complete
+"au FileType python set omnifunc=pythoncomplete#Complete textwidth=0
+autocmd FileType python setlocal omnifunc=RopeCompleteFunc
+au FileType python let b:did_ftplugin = 1
 " }}}
 
 " Vim-jedi settings
@@ -335,8 +344,8 @@ nm / /\v
 nm ? ?\v
 
 " xclip
-" map "+y :!xclip -f -sel clip<CR>
-" map "+p :r!xclip -o -sel clip<CR>
+map "+y :!xclip -f -sel clip<CR>
+map "+p :r!xclip -o -sel clip<CR>
 
 set history=10000
 
@@ -423,7 +432,7 @@ endif
 let g:pymode_lint_ignore = "E501"
 " }}}
 
-set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo
+" set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo
 
 set wildignore+=*.pyc,*/.git/*,*/.hg/*,*/.svn/*
 
@@ -452,7 +461,7 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+let g:syntastic_check_on_wq = 1
 let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_python_checkers = ['prospector']
 " }}}
@@ -468,8 +477,6 @@ let g:airline#extensions#tabline#enabled = 1
 set viewoptions-=options " without this line it saves all old key bindings etc.
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview
-
-set ic
 
 " {{{ NeoSnippet
 " Plugin key-mappings.
@@ -489,4 +496,23 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+# }}}
+
+" {{{ CtrlPFunky
+nnoremap <Leader>o :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+nnoremap <Leader>O :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+let g:ctrlp_funky_matchtype = 'path'
+let g:ctrlp_funky_syntax_highlight = 1
+" }}}
+
+let g:ropevim_autoimport_modules = ["os", "shutil", "sys"]
+
+let g:easytags_async = 1
+
+set hlsearch
+" set foldlevelstart=99
+
+" {{{ Markdown
+let g:markdown_mapping_switch_status = '<Leader>x'
 " }}}
