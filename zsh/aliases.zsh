@@ -38,5 +38,7 @@ aa() {
 # User defined aliases (with aa)
 alias mmv='noglob zmv -W'
 alias et="vim /home/michael/.tmux.conf"
+alias st="source /home/michael/.tmux.conf"
 alias acs="apt-cache search"
 alias acs='apt-cache search'
+alias ac='apt-cache'
