@@ -1,6 +1,8 @@
+#!/usr/bin/zsh
+
 if ((! $+ALIASES_FILE))
 then
-    readonly ALIASES_FILE="/home/shuffem/.dotfiles/aliases.zsh"
+    readonly ALIASES_FILE="/home/$USER/.dotfiles/zsh/aliases.zsh"
 fi
 
 alias l=ls
@@ -19,15 +21,16 @@ alias tmux='tmux -2'
 
 aa() {
   local new_alias
+  [[ $1 == "alias" ]] && shift
   if (($# == 1)); then
     new_alias=$1
-  elif
-    (($# == 2)); then
-    new_alias="$1=$2"
   else
-    echo "Expected 1 or 2 args"
+    new_alias="$1=\"$@[2, -1]\""
   fi
-  echo "alias $new_alias" >> $ALIASES_FILE
+  local alias_line="alias $new_alias"
+  echo $alias_line >> $ALIASES_FILE
   alias $new_alias
+  echo "Added $alias_line to $ALIASES_FILE"
 }
-alias sag=sudo apt-get
+
+# User defined aliases (with aa)
