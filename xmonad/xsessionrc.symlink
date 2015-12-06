@@ -17,6 +17,9 @@ feh --bg-scale /usr/share/backgrounds/warty-final-ubuntu.png &
 # Start udiskie to handle media
 udiskie &
 
+# keyboard mouse control ctrl+;
+keynav &
+
 if [ -x /usr/bin/nm-applet ] ; then
    nm-applet --sm-disable &
 fi
