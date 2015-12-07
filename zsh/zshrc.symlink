@@ -130,7 +130,7 @@ antigen bundle autojump
 antigen bundle tmux
 antigen bundle git-flow-avh
 antigen bundle zsh-users/zsh-syntax-highlighting
-#POWERLEVEL9K_MODE='awesome-patched'
+POWERLEVEL9K_MODE='awesome-patched'
 export TERM="xterm-256color"
 #export POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
 #export POWERLEVEL9K_SHORTEN_DIR_LENGTH=3

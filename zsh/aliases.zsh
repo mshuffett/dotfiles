@@ -42,3 +42,4 @@ alias st="source /home/michael/.tmux.conf"
 alias acs="apt-cache search"
 alias acs='apt-cache search'
 alias ac='apt-cache'
+alias agi='_ apt-get install'
