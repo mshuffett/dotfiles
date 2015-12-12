@@ -116,6 +116,7 @@ export LESS='-iR'
 antigen use oh-my-zsh
 # antigen bundle github
 antigen bundle git
+antigen bundle fasd
 antigen bundle autojump
 antigen bundle tmux
 antigen bundle git-flow-avh
