@@ -200,7 +200,15 @@ function bind2maps () {
         zrcbindkey -M "$i" "$sequence" "$widget"
     done
 }
+# Load a few modules
+for mod in parameter complist deltochar mathfunc ; do
+    zmodload -i zsh/${mod} 2>/dev/null || print "Notice: no ${mod} available :("
+done && builtin unset -v mod
 
+# autoload zsh modules when they are referenced
+zmodload -a  zsh/stat    zstat
+zmodload -a  zsh/zpty    zpty
+zmodload -ap zsh/mapfile nd2maps
 typeset -A key
 key=(
     Home     "${terminfo[khome]}"
