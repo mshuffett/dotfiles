@@ -1,6 +1,6 @@
 # disable Ctrl+S control flow
 stty stop undef
-
+export TERM="xterm-256color"
 
 ####################### BEGIN oh-my-zsh code #####################
 
@@ -24,22 +24,16 @@ COMPLETION_WAITING_DOTS="true"
 # much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-
 export ZSH_TMUX_AUTOSTART=true
 export ZSH_TMUX_AUTOQUIT=false
 export ZSH_TMUX_FIXTERM=false
 
 alias tmux='tmux -2'
-#plugins=(git autojump tmux zsh-syntax-highlighting taskwarrior git-flow-avh zsh-syntax-highlighting)
-#
+
 # This is because the ZSH at Amazon doesn't like the auto update.
 # To run update manually run upgrade_oh_my_zsh
-DISABLE_AUTO_UPDATE=true
+# DISABLE_AUTO_UPDATE=true
 
-# source $ZSH/oh-my-zsh.sh
 ####################### END oh-my-zsh code #####################
 # Custom code
 
@@ -57,11 +51,6 @@ export DEFAULT_USER=michael
 #bindkey '^o' kill-line
 
 setopt extended_glob
-# autoload -Uz compinit
-# compinit
-zstyle ':completion:*' menu select
-zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
-zstyle ':completion:*:warnings' format '%BSorry, no matches for: %d%b'
 
 # setopt nohistverify
 # Report statistics on commands that take longer than 10 seconds
@@ -79,8 +68,8 @@ if [[ -z "$TERMCAP" ]] && [[ "$TERM" == "screen" ]]; then
   export TERMCAP='Co#256:'
 fi
 
-bindkey "^[^[OC" forward-word
-bindkey "^[^[OD" backward-word
+# bindkey "^[^[OC" forward-word
+# bindkey "^[^[OD" backward-word
 
 ####################### BEGIN holman's code #####################
 
@@ -131,24 +120,10 @@ antigen bundle tmux
 antigen bundle git-flow-avh
 antigen bundle zsh-users/zsh-syntax-highlighting
 POWERLEVEL9K_MODE='awesome-patched'
-export TERM="xterm-256color"
-#export POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
-#export POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
 antigen theme bhilburn/powerlevel9k powerlevel9k
 
-# typeset -U PYTHONPATH
-# PYTHONPATH=("$PYTHONPATH[@]" /home/shuffem/.vim/bundle/ropevim)
-
-# Use Vi, not Emacs, style editing
-# set editing-mode vi
-# Keymaps for when we're in command mode (e.g., after hitting ESC)
-# set keymap vi-command
-# bindkey -v
-# export KEYTIMEOUT=1
-#export TERM="xterm-256color"
 antigen apply
-# export SSH_CLIENT=""
 
 # {{{ allow c-r to be executed in middle of line
 # taken from http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
