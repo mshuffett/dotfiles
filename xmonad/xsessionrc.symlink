@@ -12,7 +12,7 @@ stalonetray &
 xscreensaver -no-splash &
 
 # Set background image with feh
-feh --bg-scale /usr/share/backgrounds/warty-final-ubuntu.png &
+feh --bg-scale ~/.dotfiles/wallpaper/TVDBMOt.png
 
 # Start udiskie to handle media
 udiskie &
