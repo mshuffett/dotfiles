@@ -45,7 +45,7 @@ DISABLE_AUTO_UPDATE=true
 
 # Path manipulation
 typeset -U path # force path array to have unique values
-path=(/home/shuffem/vim27/bin /usr/local/bin "$path[@]")
+path=(/home/shuffem/vim27/bin /usr/local/bin ~/lighttable-0.8.0-alpha-linux "$path[@]")
 
 #bindkey -e
 export DEFAULT_USER=michael
