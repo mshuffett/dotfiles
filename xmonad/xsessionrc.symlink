@@ -24,4 +24,7 @@ if [ -x /usr/bin/nm-applet ] ; then
    nm-applet --sm-disable &
 fi
 
+/usr/bin/VBoxClient --clipboard
+/usr/bin/VBoxClient --draganddrop
+
 exec xmonad
