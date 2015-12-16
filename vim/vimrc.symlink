@@ -91,6 +91,7 @@ NeoBundle 'tpope/vim-commentary'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'jmcantrell/vim-diffchanges'
 NeoBundle 'vim-scripts/YankRing.vim'
+NeoBundle 'gregsexton/gitv'
 
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'wookiehangover/jshint.vim'
