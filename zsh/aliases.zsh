@@ -21,18 +21,27 @@ alias vim='vim -X'
 alias tmux='tmux -2'
 alias mmv='noglob zmv -W'
 
+# Add alias
 aa() {
-    local alias_to_write
-    if (($# == 1))
-    then
-        alias_to_write="$1"
-    else
-        alias_to_write="$1=$2"
-    fi
-    local line="alias '$alias_to_write'" 
-    alias $alias_to_write
-    echo $line >> $ALIASES_FILE
-    echo "Wrote $line to $ALIASES_FILE"
+  local alias_name
+  local alias_command
+  local new_alias
+
+  [[ $1 == "alias" ]] && shift
+  if (($# == 1)); then
+    # split argument based on first =
+    IFS='=' read -r alias_name alias_command <<< $1
+  else
+    alias_name=$1
+    alias_command="$@[2, -1]"
+  fi
+
+  local cmd=alias
+
+  eval "$cmd $alias_name='$alias_command'"
+  local alias_line="$cmd $alias_name='$alias_command'"
+  echo $alias_line >> $ALIASES_FILE
+  echo "Added $alias_line to $ALIASES_FILE"
 }
 
 alias 'k=kinit -f'
@@ -43,3 +52,4 @@ alias '.....=cd .....'
 alias 'bws=brazil ws'
 alias 'bbr=brazil-recursive-cmd-parallel --allPackages brazil-build'
 alias 'gdiff=git diff'
+alias g2s2='k g2s2'
