@@ -44,7 +44,7 @@ aa() {
   echo "Added $alias_line to $ALIASES_FILE"
 }
 
-alias 'k=kinit -f'
+alias 'k=kverify'
 alias '..=cd ..'
 alias '...=cd ...'
 alias '....=cd ....'

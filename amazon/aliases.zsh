@@ -2,6 +2,9 @@ kverify() {
     if (! klist -s); then
         kinit -f
     fi
+    if (($# > 0)); then 
+        eval "$@[1, -1]"
+    fi
 }
 alias bb="brazil-build"
 alias bbc="brazil-build clean"
