@@ -439,3 +439,5 @@ set foldlevelstart=99
 " {{{ Markdown
 let g:markdown_mapping_switch_status = '<Leader>x'
 " }}}
+
+au BufRead,BufNewFile *.dp setfiletype ion
