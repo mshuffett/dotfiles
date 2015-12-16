@@ -1,3 +1,4 @@
+# vim: set sw=4 ts=4 sts=4 et tw=78 foldlevel=0 foldmethod=marker spell:
 # disable control flow
 stty stop undef
 
@@ -135,11 +136,19 @@ antigen bundle autojump
 antigen bundle tmux
 antigen bundle git-flow-avh
 antigen bundle zsh-users/zsh-syntax-highlighting
-#POWERLEVEL9K_MODE='awesome-patched'
 export TERM="xterm-256color"
 #export POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
 #export POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
+if [[ -n $SSH_CLIENT ]]; then
+  POWERLEVEL9K_MODE='awesome-patched'
+  # Output time, date, and a symbol from the "Awesome Powerline Font" set
+  POWERLEVEL9K_TIME_FORMAT="%D{%H:%M:%S \uE868  %d.%m.%y}"
+else
+  POWERLEVEL9K_MODE=''
+fi
+
+export SSH_CLIENT=""
 antigen theme bhilburn/powerlevel9k powerlevel9k
 
 # typeset -U PYTHONPATH
@@ -152,9 +161,7 @@ zstyle -e ':completion:*:*:*' hosts 'reply=($(cat /home/$USER/.hosts))'
 # set keymap vi-command
 # bindkey -v
 # export KEYTIMEOUT=1
-#export TERM="xterm-256color"
 antigen apply
-export SSH_CLIENT=""
 
 # {{{ allow c-r to be executed in middle of line
 # taken from http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
