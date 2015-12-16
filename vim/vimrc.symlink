@@ -1,5 +1,6 @@
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldlevel=0 foldmethod=marker spell:
 
+syntax on
 set bg=dark
 imap jk <esc>
 set fen
@@ -392,12 +393,12 @@ set smartcase
 
 " Persistent undo
 if has("persistent_undo")
-    set undodir=/home/shuffem/.undodir/
+    set undodir=/home/$USER/.undodir/
     set undofile
 endif
 
-nnoremap <leader>u :UndotreeToggle<CR>
 
+nnoremap <leader>u :UndotreeToggle<CR>
 let g:yankring_paste_using_g = 0
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
@@ -472,6 +473,7 @@ vnoremap @q :normal @q<CR>
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='molokai'
 
 " save folding and cursor on exit
 set viewoptions-=options " without this line it saves all old key bindings etc.
@@ -516,3 +518,5 @@ set hlsearch
 " {{{ Markdown
 let g:markdown_mapping_switch_status = '<Leader>x'
 " }}}
+
+au BufNewFile,BufRead *.lmx set filetype=xml
