@@ -32,9 +32,9 @@ aa() {
     alias_command="$@[2, -1]"
   fi
 
-  local cmd='alias'
+  local cmd=alias
 
-  eval $cmd "$alias_name=$alias_command"
+  eval "$cmd $alias_name='$alias_command'"
   local alias_line="$cmd $alias_name='$alias_command'"
   echo $alias_line >> $ALIASES_FILE
   echo "Added $alias_line to $ALIASES_FILE"
@@ -53,3 +53,4 @@ alias ags='acs'
 alias ev='vim /home/michael/.vimrc'
 
 alias -g ws='/c/Users/Michael/Dropbox/ws'
+alias ev='vim /home/michael/.vimrc'
