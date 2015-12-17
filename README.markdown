@@ -1,5 +1,3 @@
-# oh-j-man
-
 ## install
 
 Run this:
@@ -13,17 +11,8 @@ sudo script/install # sudo for changing default shell
 script/bootstrap
 ```
 
-This will first install janus and oh-my-zsh and then it will
-symlink the appropriate files in `.dotfiles` to your home directory.
-Everything is configured and tweaked within `~/.dotfiles`.
-
-The main file you'll want to change right off the bat is `zsh/zshrc.symlink`,
-which sets up a few paths that'll be different on your particular machine.
-
-`dot` is a simple script that installs some dependencies, sets sane OS X
-defaults, and so on. Tweak this script, and occasionally run `dot` from
-time to time to keep your environment fresh and up-to-date. You can find
-this script in `bin/`.
+## for me
+Feel free to fork these dotfiles, but I am primarily focusing on them for personal use for the time being, so YMMV.
 
 ## topical
 
@@ -49,23 +38,3 @@ There's a few special files in the hierarchy.
   your `$HOME`. This is so you can keep all of those versioned in your dotfiles
   but still keep those autoloaded files in your home directory. These get
   symlinked in when you run `script/bootstrap`.
-
-## todo
-
-- make cross os support streamlined
-- integrate with gitflow
-- make git aliases in git take priority over oh-my-zsh git plugin
-- think about unifying this using a better framework or somehow making
-  everything more integrated
-- fix keyboard shortcuts for things like move word in zle for meta arrow
-- integrate updating janus and oh-my-zsh
-- possibly switch to more of a submodules approach
-- add more python support
-- add grc support (coloring) also in grc.zsh
-- make mac'y things more general
-- add zsh completions to git aliases ala oh-my-zsh
-- replace ack with ag?
-- come up with better solution to dependencies
-- fix permissions for instalation
-- fix changing zsh to default
-- integrate with zsh-syntax-highlighting
