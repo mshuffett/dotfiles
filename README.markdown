@@ -6,12 +6,7 @@ These are my personal dotfiles, originally forked from [holman's dotfiles](https
 Run this:
 
 ```sh
-git clone https://github.com/mshuffett/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-git submodule init
-git submodule update
-sudo script/install # sudo for changing default shell
-script/bootstrap
+curl -sL https://github.com/mshuffett/dotfiles/raw/master/script/install_from_scratch | sh
 ```
 
 ## for me
