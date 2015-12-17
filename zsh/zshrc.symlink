@@ -1,7 +1,6 @@
-# disable control flow
+# disable Ctrl+S control flow
 stty stop undef
-
-ZSH_THEME="default"
+export TERM="xterm-256color"
 
 ####################### BEGIN oh-my-zsh code #####################
 
@@ -12,7 +11,7 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="my-agnoster"
+#ZSH_THEME="my-agnoster"
 
 # Uncomment following line if you want to disable command autocorrection
 # DISABLE_CORRECTION="true"
@@ -25,30 +24,22 @@ COMPLETION_WAITING_DOTS="true"
 # much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-
 export ZSH_TMUX_AUTOSTART=true
 export ZSH_TMUX_AUTOQUIT=false
 export ZSH_TMUX_FIXTERM=false
 
 alias tmux='tmux -2'
-plugins=(git autojump tmux zsh-syntax-highlighting git-flow-avh)
-#
+
 # This is because the ZSH at Amazon doesn't like the auto update.
 # To run update manually run upgrade_oh_my_zsh
-DISABLE_AUTO_UPDATE=true
-
-source $ZSH/oh-my-zsh.sh
+# DISABLE_AUTO_UPDATE=true
 
 ####################### END oh-my-zsh code #####################
 # Custom code
 
 # Path manipulation
-# force path array to have unique values
-typeset -U path
-path=(/home/shuffem/vim27/bin /usr/local/bin "$path[@]" /home/shuffem/anaconda/bin)
+typeset -U path # force path array to have unique values
+path=(/home/shuffem/vim27/bin /usr/local/bin ~/lighttable-0.8.0-alpha-linux "$path[@]")
 
 #bindkey -e
 export DEFAULT_USER=michael
@@ -60,32 +51,10 @@ export DEFAULT_USER=michael
 #bindkey '^o' kill-line
 
 setopt extended_glob
-# autoload -Uz compinit
-# compinit
-zstyle ':completion:*' menu select
-zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
-zstyle ':completion:*:warnings' format '%BSorry, no matches for: %d%b'
 
 # setopt nohistverify
 # Report statistics on commands that take longer than 10 seconds
 REPORTTIME=10
-
-# allow c-r to be executed in middle of line
-# taken from http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
-autoload -Uz narrow-to-region
-function _history-incremental-preserving-pattern-search-backward
-{
-  local state
-  MARK=CURSOR  # magick, else multiple ^R don't work
-  narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
-  zle end-of-history
-  zle history-incremental-pattern-search-backward
-  narrow-to-region -R state
-}
-zle -N _history-incremental-preserving-pattern-search-backward
-bindkey "^R" _history-incremental-preserving-pattern-search-backward
-bindkey -M isearch "^R" history-incremental-pattern-search-backward
-bindkey "^S" history-incremental-pattern-search-forward
 
 ## Go up 5 directories with u 5
 u () {
@@ -99,8 +68,8 @@ if [[ -z "$TERMCAP" ]] && [[ "$TERM" == "screen" ]]; then
   export TERMCAP='Co#256:'
 fi
 
-bindkey "^[^[OC" forward-word
-bindkey "^[^[OD" backward-word
+# bindkey "^[^[OC" forward-word
+# bindkey "^[^[OD" backward-word
 
 ####################### BEGIN holman's code #####################
 
@@ -131,8 +100,8 @@ do
 done
 
 # initialize autocomplete here, otherwise functions won't be loaded
-autoload -U compinit
-compinit
+# autoload -U compinit
+# compinit
 
 # load every completion after autocomplete loads
 for file in ${(M)config_files:#*/completion.zsh}
@@ -141,9 +110,39 @@ do
 done
 
 unset config_files
-export AWS_CREDENTIALS_ODIN=fma.analytics.team.AWSKeys
 
-export LESS='-i'
+export LESS='-iR'
 
-# typeset -U PYTHONPATH
-# PYTHONPATH=("$PYTHONPATH[@]" /home/shuffem/.vim/bundle/ropevim)
+antigen use oh-my-zsh
+# antigen bundle github
+antigen bundle git
+antigen bundle fasd
+antigen bundle autojump
+antigen bundle tmux
+antigen bundle git-flow-avh
+antigen bundle zsh-users/zsh-syntax-highlighting
+POWERLEVEL9K_MODE='awesome-patched'
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
+antigen theme bhilburn/powerlevel9k powerlevel9k
+
+antigen apply
+
+# {{{ allow c-r to be executed in middle of line
+# taken from http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
+autoload -Uz narrow-to-region
+function _history-incremental-preserving-pattern-search-backward
+{
+  local state
+  MARK=CURSOR  # magick, else multiple ^R don't work
+  narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
+  zle end-of-history
+  zle history-incremental-pattern-search-backward
+  narrow-to-region -R state
+}
+zle -N _history-incremental-preserving-pattern-search-backward
+bindkey "^R" _history-incremental-preserving-pattern-search-backward
+bindkey -M isearch "^R" history-incremental-pattern-search-backward
+bindkey "^S" history-incremental-pattern-search-forward
+# }}}
+
+setopt autocd

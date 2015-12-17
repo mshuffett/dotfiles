@@ -1,5 +1,6 @@
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldlevel=0 foldmethod=marker spell:
 
+syntax on
 set bg=dark
 imap jk <esc>
 set fen
@@ -33,21 +34,31 @@ NeoBundle 'Shougo/vimproc', {
 " NeoBundle 'Shougo/neomru.vim'
 
 
+NeoBundle 'wellle/targets.vim'
+NeoBundle 'tpope/vim-rsi'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'carlosvillu/coffeScript-VIM-Snippets'
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'gabrielelana/vim-markdown'
+NeoBundle 'godlygeek/tabular'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'gotgenes/vim-yapif'
 
+NeoBundle 'tacahiroy/ctrlp-funky'
 NeoBundle 'kien/rainbow_parentheses.vim'
 NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-sleuth'
 NeoBundle 'tpope/vim-repeat'
+NeoBundle 'guns/vim-sexp'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 " NeoBundle 'klen/python-mode'
 
 " NeoBundle 'davidhalter/jedi-vim.git'
-NeoBundle 'Shougo/neosnippet.git'
-NeoBundle 'Shougo/neocomplcache.git'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'Shougo/neocomplete'
 
 NeoBundle 'mattn/emmet-vim'
 let g:user_emmet_expandabbr_key = '<c-e>'
@@ -82,6 +93,9 @@ NeoBundle 'vim-scripts/YankRing.vim'
 
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'wookiehangover/jshint.vim'
+NeoBundle 'carlosvillu/coffeScript-VIM-Snippets'
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'digitaltoad/vim-jade'
 
 
 call neobundle#end()
@@ -105,21 +119,83 @@ au FileType python IndentGuidesEnable
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=gray ctermbg=0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=0
 
-" NEOCOMPLCACHE SETTINGS {{{
-let g:neocomplcache_enable_at_startup = 1
-imap neosnippet#expandable() ? "(neosnippet_expand_or_jump)" : pumvisible() ?  "" : ""
-smap neosnippet#expandable() ? "(neosnippet_expand_or_jump)" :
-let g:neocomplcache_force_overwrite_completefunc = 1
-if !exists('g:neocomplcache_omni_functions')
-   let g:neocomplcache_omni_functions = {}
+" NEOCOMPLETE SETTINGS {{{
+"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
 endif
-if !exists('g:neocomplcache_force_omni_patterns')
-   let g:neocomplcache_force_omni_patterns = {}
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
+" AutoComplPop like behavior.
+"let g:neocomplete#enable_auto_select = 1
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
 endif
+"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" For perlomni.vim setting.
+" https://github.com/c9s/perlomni.vim
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 let g:neocomplcache_force_overwrite_completefunc = 1
-let g:neocomplcache_force_omni_patterns['python'] = '[^. t].w*'
+" let g:neocomplcache_force_omni_patterns['python'] = '[^. t].w*'
 set ofu=syntaxcomplete#Complete
-au FileType python set omnifunc=pythoncomplete#Complete textwidth=0
+"au FileType python set omnifunc=pythoncomplete#Complete textwidth=0
+autocmd FileType python setlocal omnifunc=RopeCompleteFunc
 au FileType python let b:did_ftplugin = 1
 " }}}
 
@@ -272,8 +348,8 @@ nm / /\v
 nm ? ?\v
 
 " xclip
-" map "+y :!xclip -f -sel clip<CR>
-" map "+p :r!xclip -o -sel clip<CR>
+map "+y :!xclip -f -sel clip<CR>
+map "+p :r!xclip -o -sel clip<CR>
 
 set history=10000
 
@@ -282,7 +358,7 @@ noremap <leader>gd :Gdiff<CR>
 noremap <leader>gb :Gblame<CR>
 
 " Trailing whitespace {{{
-highlight ExtraWhitespace ctermbg=red guibg=red 
+highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
@@ -297,10 +373,7 @@ fun! <SID>StripTrailingWhitespaces()
     call cursor(l, c)
 endfun
 
-autocmd BufWritePre *.ion :call <SID>StripTrailingWhitespaces()
-autocmd BufWritePre *.py :call <SID>StripTrailingWhitespaces()
-autocmd BufWritePre *.xml :call <SID>StripTrailingWhitespaces()
-autocmd BufWritePre *.java :call <SID>StripTrailingWhitespaces()
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 " }}}
 
 " Keep visual mode selection after indenting
@@ -323,12 +396,12 @@ set smartcase
 
 " Persistent undo
 if has("persistent_undo")
-    set undodir=/home/shuffem/.undodir/
+    set undodir=/home/$USER/.undodir/
     set undofile
 endif
 
-nnoremap <leader>u :UndotreeToggle<CR>
 
+nnoremap <leader>u :UndotreeToggle<CR>
 let g:yankring_paste_using_g = 0
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
@@ -363,7 +436,7 @@ endif
 let g:pymode_lint_ignore = "E501"
 " }}}
 
-set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo
+" set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo
 
 set wildignore+=*.pyc,*/.git/*,*/.hg/*,*/.svn/*
 
@@ -392,7 +465,7 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+let g:syntastic_check_on_wq = 1
 let g:syntastic_javascript_checkers = ['jshint']
 let g:syntastic_python_checkers = ['prospector']
 " }}}
@@ -403,8 +476,50 @@ vnoremap @q :normal @q<CR>
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='molokai'
 
 " save folding and cursor on exit
 set viewoptions-=options " without this line it saves all old key bindings etc.
 autocmd BufWinLeave *.* mkview
-autocmd BufWinEnter *.* silent loadview 
+autocmd BufWinEnter *.* silent loadview
+
+" {{{ NeoSnippet
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
+" }}}
+
+" {{{ CtrlPFunky
+nnoremap <Leader>o :CtrlPFunky<Cr>
+" narrow the list down with a word under cursor
+nnoremap <Leader>O :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+let g:ctrlp_funky_matchtype = 'path'
+let g:ctrlp_funky_syntax_highlight = 1
+" }}}
+
+let g:ropevim_autoimport_modules = ["os", "shutil", "sys"]
+
+let g:easytags_async = 1
+
+set hlsearch
+" set foldlevelstart=99
+
+" {{{ Markdown
+let g:markdown_mapping_switch_status = '<Leader>x'
+" }}}
+
+au BufNewFile,BufRead *.lmx set filetype=xml

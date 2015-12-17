@@ -12,13 +12,19 @@ stalonetray &
 xscreensaver -no-splash &
 
 # Set background image with feh
-feh --bg-scale /usr/share/backgrounds/warty-final-ubuntu.png &
+feh --bg-scale ~/.dotfiles/wallpaper/TVDBMOt.png
 
 # Start udiskie to handle media
 udiskie &
 
+# keyboard mouse control ctrl+;
+keynav &
+
 if [ -x /usr/bin/nm-applet ] ; then
    nm-applet --sm-disable &
 fi
+
+/usr/bin/VBoxClient --clipboard
+/usr/bin/VBoxClient --draganddrop
 
 exec xmonad

@@ -18,6 +18,8 @@ main = do
         , modMask = mod4Mask     -- Rebind Mod to the Windows key
         } `additionalKeys`
         [ ((mod4Mask .|. shiftMask, xK_z), spawn "xscreensaver-command -lock; xset dpms force off")
-        , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
-        , ((0, xK_Print), spawn "scrot")
+        -- , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
+        -- , ((0, xK_Print), spawn "scrot")
+        , ((mod4Mask, xK_p), spawn "rofi -show run")
+        , ((mod1Mask, xK_space), spawn "rofi -show run")
         ]
