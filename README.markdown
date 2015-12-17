@@ -1,3 +1,6 @@
+## mshuffett does dotfiles
+These are my personal dotfiles, originally forked from [holman's dotfiles](https://github.com/holman/dotfiles) with major modifications. I am using oh-my-zsh and antigen as part of these dotfiles.
+
 ## install
 
 Run this:
