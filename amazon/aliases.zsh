@@ -11,7 +11,6 @@ alias bbc="brazil-build clean"
 alias bcb="brazil-build clean && brazil-build"
 alias b="brazil"
 alias ionpp=/apollo/env/G2S2CommandTools/bin/ion-pretty-print #pretty prints output of the next two commands
-alias g2s2="/apollo/env/G2S2CommandTools/bin/g2s2 -u https://g2s2-author.amazon.com/" #prod command
 alias g2s2cr="/apollo/env/G2S2CommandTools/bin/g2s2-post-review -u https://g2s2-author.amazon.com/" #Code Review
 alias ns='ninja-search'
 alias eclipse='kverify && eclipse &>/dev/null &'

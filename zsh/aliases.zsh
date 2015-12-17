@@ -52,4 +52,4 @@ alias '.....=cd .....'
 alias 'bws=brazil ws'
 alias 'bbr=brazil-recursive-cmd-parallel --allPackages brazil-build'
 alias 'gdiff=git diff'
-alias g2s2='k g2s2'
+alias g2s2="k /apollo/env/G2S2CommandTools/bin/g2s2 -u https://g2s2-author.amazon.com/" #prod command
