@@ -34,6 +34,8 @@ NeoBundle 'Shougo/vimproc', {
 " NeoBundle 'Shougo/neomru.vim'
 
 
+NeoBundle 'wellle/targets.vim'
+NeoBundle 'tpope/vim-rsi'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'carlosvillu/coffeScript-VIM-Snippets'
 NeoBundle 'pangloss/vim-javascript'
@@ -48,6 +50,7 @@ NeoBundle 'altercation/vim-colors-solarized'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-sleuth'
 NeoBundle 'tpope/vim-repeat'
+NeoBundle 'guns/vim-sexp'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 " NeoBundle 'klen/python-mode'
