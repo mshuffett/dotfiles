@@ -2,7 +2,7 @@ kverify() {
     if (! klist -s); then
         kinit -f
     fi
-    if (($# > 0)); then 
+    if (($# > 0)); then
         eval "$@[1, -1]"
     fi
 }
@@ -34,18 +34,18 @@ alias boot='export APOLLO_ENVIRONMENT_ROOT="$(brazil-bootstrap)" && echo "Overro
 ##########################################################
 ##                 Apollo Commands                      ##
 ##########################################################
- 
- 
+
+
 cdl() { cd "/apollo/env/$1/var/output/logs" }
- 
+
 cde() { cd "/apollo/env/$1" }
- 
+
 cdb() { cd "/apollo/env/$1/bin" }
- 
+
 act() { sudo /apollo/bin/runCommand -a Activate -e $1 }
- 
+
 deact() { sudo /apollo/bin/runCommand -a Deactivate -e $1 }
- 
+
 react() { sudo /apollo/bin/runCommand -a Deactivate -e $1 && sudo /apollo/bin/runCommand -a Activate -e $1 }
 
 envattach() { brazil ws --attachEnvironment --alias $1 }
@@ -58,10 +58,11 @@ dateToMillis() { TZ=UTC date +%s%3N --date="$(echo "$@" | sed 's/T/ /')" }
 
 alias bbp="brazil-build && brazil-build apollo-pkg"
 alias b3p="/apollo/env/BrazilThirdPartyTool/bin/brazil-third-party-tool"
-alias bre="brazil-runtime-execls/apollo/env/BrazilThirdPartyTool/bin/brazil-third-party-tool"
-alias bre="brazil-runtime-exec"
+alias bre="env -i brazil-runtime-exec"
 alias octane="/apollo/env/OctaneBrazilTools/bin/brazil-octane"
 alias pytest="/apollo/env/OctaneBrazilTools/Binils/brazil-octane"
 alias pytest="brazil-test-exec python2.7 -m py.test"
 
 alias s3put=/apollo/env/envImprovement/bin/s3put
+
+post-review() { kverify && /apollo/env/SDETools/bin/post-review $@ }

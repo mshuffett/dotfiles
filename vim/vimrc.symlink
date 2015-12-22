@@ -92,6 +92,7 @@ NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'jmcantrell/vim-diffchanges'
 NeoBundle 'vim-scripts/YankRing.vim'
 NeoBundle 'gregsexton/gitv'
+NeoBundle 'wellle/targets.vim'
 
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'wookiehangover/jshint.vim'
@@ -296,7 +297,7 @@ noremap <leader>gd :Gdiff<CR>
 noremap <leader>gb :Gblame<CR>
 
 " Trailing whitespace {{{
-highlight ExtraWhitespace ctermbg=red guibg=red 
+highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
@@ -311,11 +312,7 @@ fun! <SID>StripTrailingWhitespaces()
     call cursor(l, c)
 endfun
 
-autocmd BufWritePre *.ion :call <SID>StripTrailingWhitespaces()
-autocmd BufWritePre *.py :call <SID>StripTrailingWhitespaces()
-autocmd BufWritePre *.xml :call <SID>StripTrailingWhitespaces()
-autocmd BufWritePre *.java :call <SID>StripTrailingWhitespaces()
-autocmd BufWritePre Config :call <SID>StripTrailingWhitespaces()
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 " }}}
 
 " Keep visual mode selection after indenting
@@ -422,7 +419,7 @@ let g:airline#extensions#tabline#enabled = 1
 " save folding and cursor on exit
 set viewoptions-=options " without this line it saves all old key bindings etc.
 autocmd BufWinLeave *.* mkview
-autocmd BufWinEnter *.* silent loadview 
+autocmd BufWinEnter *.* silent loadview
 
 nnoremap <Leader>o :CtrlPFunky<Cr>
 " narrow the list down with a word under cursor
@@ -435,6 +432,7 @@ let g:ropevim_autoimport_modules = ["os", "shutil", "sys"]
 let g:easytags_async = 1
 
 set hlsearch
+nmap <Leader>/ :set hlsearch!
 set foldlevelstart=99
 
 " {{{ Markdown
@@ -442,3 +440,4 @@ let g:markdown_mapping_switch_status = '<Leader>x'
 " }}}
 
 au BufRead,BufNewFile *.dp setfiletype ion
+autocmd BufRead,BufNewFile   *.dp set et sts=0 sw=2 ts=2
