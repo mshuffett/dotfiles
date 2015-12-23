@@ -183,3 +183,6 @@ bindkey "^S" history-incremental-pattern-search-forward
 # }}}
 
 setopt autocd
+
+# hack because amazon aliases aren't completed properly after adding grml
+source ~/.dotfiles/amazon/completion.zsh
