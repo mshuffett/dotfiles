@@ -7,6 +7,7 @@ brew 'ack'
 brew 'ag'
 brew 'fontconfig'
 brew 'hub'
+brew 'tmux'
 
 cask 'adium'
 cask 'firefox'
