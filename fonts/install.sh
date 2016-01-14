@@ -1,4 +1,13 @@
-#!/usr/bin/zsh
+#!/usr/bin/env zsh
 
-mkdir -p ~/.fonts
-cp fonts/^install.sh /usr/share/fonts/opentype
+setopt extended_glob
+
+if [[ $(uname -s) == "Darwin" ]]; then
+	local font_dir=~/Library/Fonts
+else
+	local font_dir=~/.fonts
+fi
+
+mkdir -p $font_dir
+cp fonts/^install.sh $font_dir
+fc-cache -fv $font_dir
