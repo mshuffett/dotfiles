@@ -2015,7 +2015,7 @@ function prompt_grml-chroot_help () {
     <<__EOF0__
   prompt grml-chroot
 
-    This is a variation of the grml prompt, see: prompt -h grml
+    This is a variation of the grml prompt, see: jjprompt -h grml
 
     The main difference is the default value of the \`items' style. The rest
     behaves exactly the same. Here are the defaults for \`grml-chroot':
@@ -2372,49 +2372,49 @@ grml_prompt_fallback() {
     unset p0 p1
 }
 
-if zrcautoload promptinit && promptinit 2>/dev/null ; then
-    # Since we define the required functions in here and not in files in
-    # $fpath, we need to stick the theme's name into `$prompt_themes'
-    # ourselves, since promptinit does not pick them up otherwise.
-    prompt_themes+=( grml grml-chroot grml-large )
-    # Also, keep the array sorted...
-    prompt_themes=( "${(@on)prompt_themes}" )
-else
-    print 'Notice: no promptinit available :('
-    grml_prompt_fallback
-fi
+# if zrcautoload promptinit && promptinit 2>/dev/null ; then
+#     # Since we define the required functions in here and not in files in
+#     # $fpath, we need to stick the theme's name into `$prompt_themes'
+#     # ourselves, since promptinit does not pick them up otherwise.
+#     prompt_themes+=( grml grml-chroot grml-large )
+#     # Also, keep the array sorted...
+#     prompt_themes=( "${(@on)prompt_themes}" )
+# else
+#     print 'Notice: no promptinit available :('
+#     grml_prompt_fallback
+# fi
 
-if is437; then
-    # The prompt themes use modern features of zsh, that require at least
-    # version 4.3.7 of the shell. Use the fallback otherwise.
-    if [[ $GRML_DISPLAY_BATTERY -gt 0 ]]; then
-        zstyle ':prompt:grml:right:setup' items sad-smiley battery
-        add-zsh-hook precmd battery
-    fi
-    if [[ "$TERM" == dumb ]] ; then
-        zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" pre ''
-        zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" post ' '
-        for i in rc user path jobs history date time shell-level; do
-            zstyle ":prompt:grml(|-large|-chroot):*:items:$i" pre ''
-            zstyle ":prompt:grml(|-large|-chroot):*:items:$i" post ''
-        done
-        unset i
-        zstyle ':prompt:grml(|-large|-chroot):right:setup' use-rprompt false
-    elif (( EUID == 0 )); then
-        zstyle ':prompt:grml(|-large|-chroot):*:items:user' pre '%B%F{red}'
-    fi
+# if is437; then
+#     # The prompt themes use modern features of zsh, that require at least
+#     # version 4.3.7 of the shell. Use the fallback otherwise.
+#     if [[ $GRML_DISPLAY_BATTERY -gt 0 ]]; then
+#         zstyle ':prompt:grml:right:setup' items sad-smiley battery
+#         add-zsh-hook precmd battery
+#     fi
+#     if [[ "$TERM" == dumb ]] ; then
+#         zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" pre ''
+#         zstyle ":prompt:grml(|-large|-chroot):*:items:grml-chroot" post ' '
+#         for i in rc user path jobs history date time shell-level; do
+#             zstyle ":prompt:grml(|-large|-chroot):*:items:$i" pre ''
+#             zstyle ":prompt:grml(|-large|-chroot):*:items:$i" post ''
+#         done
+#         unset i
+#         zstyle ':prompt:grml(|-large|-chroot):right:setup' use-rprompt false
+#     elif (( EUID == 0 )); then
+#         zstyle ':prompt:grml(|-large|-chroot):*:items:user' pre '%B%F{red}'
+#     fi
 
-    # Finally enable one of the prompts.
-    if [[ -n $GRML_CHROOT ]]; then
-        prompt grml-chroot
-    elif [[ $GRMLPROMPT -gt 0 ]]; then
-        prompt grml-large
-    else
-        prompt grml
-    fi
-else
-    grml_prompt_fallback
-fi
+#     # Finally enable one of the prompts.
+#     if [[ -n $GRML_CHROOT ]]; then
+#         prompt grml-chroot
+#     elif [[ $GRMLPROMPT -gt 0 ]]; then
+#         prompt grml-large
+#     else
+#         prompt grml
+#     fi
+# else
+#     grml_prompt_fallback
+# fi
 
 # Terminal-title wizardry
 
