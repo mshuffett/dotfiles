@@ -20,3 +20,4 @@ alias grm="git status | grep deleted | awk '{\$1=\$2=\"\"; print \$0}' | \
            perl -pe 's/^[ \t]*//' | sed 's/ /\\\\ /g' | xargs git rm"
 alias gurm="git status --porcelain | sed -n '/^D /s/^D //p' | xargs git reset HEAD" # unstage all removed files
 alias gdag="git log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%ar%C(reset)%C(auto)%d%C(reset)%n%s' --date-order"
+alias gac='git add -A && git commit -m'
