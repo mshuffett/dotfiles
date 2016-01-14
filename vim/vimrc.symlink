@@ -14,6 +14,10 @@ if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
 
+if has('gui_running')
+  set guifont=SourceCodePro+Powerline+Awesome\ Regular:h12
+endif
+
 " NeoBundle {{{
 " Required:
 " Note: You don't set neobundle setting in .gvimrc!
@@ -82,7 +86,7 @@ NeoBundle 'AndrewRadev/linediff.vim'
 NeoBundle 'mbbill/undotree'
 
 NeoBundle 'spf13/vim-autoclose'
-NeoBundle 'python-rope/ropevim'
+" NeoBundle 'python-rope/ropevim'
 NeoBundle 'Lokaltog/vim-easymotion'
 
 NeoBundle 'tpope/vim-eunuch'
@@ -479,7 +483,7 @@ vnoremap @q :normal @q<CR>
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='molokai'
+let g:airline_theme='solarized'
 
 " save folding and cursor on exit
 set viewoptions-=options " without this line it saves all old key bindings etc.
@@ -514,7 +518,7 @@ let g:ctrlp_funky_matchtype = 'path'
 let g:ctrlp_funky_syntax_highlight = 1
 " }}}
 
-let g:ropevim_autoimport_modules = ["os", "shutil", "sys"]
+" let g:ropevim_autoimport_modules = ["os", "shutil", "sys"]
 
 let g:easytags_async = 1
 

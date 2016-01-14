@@ -45,7 +45,7 @@ typeset -U manpath # force path array to have unique values
 manpath=(/usr/local/opt/coreutils/libexec/gnuman "$manpath[@]")
 
 #bindkey -e
-export DEFAULT_USER=michael
+export DEFAULT_USER=shuffem
 
 # Ctrl-u: Deletes everything before cursor (u is on left)
 #bindkey '^u' backward-kill-line

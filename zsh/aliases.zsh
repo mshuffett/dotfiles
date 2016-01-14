@@ -54,3 +54,4 @@ alias ev='vim /home/michael/.vimrc'
 
 alias -g ws='/c/Users/Michael/Dropbox/ws'
 alias ev='vim /home/michael/.vimrc'
+alias vim=mvim
