@@ -5,6 +5,7 @@ tap 'homebrew/bundle'
 
 brew 'ack'
 brew 'ag'
+brew 'coreutils'
 brew 'fontconfig'
 brew 'hub'
 brew 'tmux'

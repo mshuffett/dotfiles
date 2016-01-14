@@ -9,6 +9,12 @@
 # https://gist.github.com/1280177
 # http://xorcode.com/guides/solarized-vim-eclipse-ubuntu/
 
+
+if ! command -v gconftool >/dev/null 2>&1; then
+	echo >&2 "gconftool not installed. skipping solarized installation."
+	exit 1
+fi
+
 if [ $# -eq 0 ]
 then
   COLOR="dark"

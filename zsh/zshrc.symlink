@@ -39,7 +39,10 @@ alias tmux='tmux -2'
 
 # Path manipulation
 typeset -U path # force path array to have unique values
-path=(/home/shuffem/vim27/bin /usr/local/bin ~/lighttable-0.8.0-alpha-linux "$path[@]")
+path=(/usr/local/opt/coreutils/libexec/gnubin /home/shuffem/vim27/bin /usr/local/bin ~/lighttable-0.8.0-alpha-linux "$path[@]")
+
+typeset -U manpath # force path array to have unique values
+manpath=(/usr/local/opt/coreutils/libexec/gnuman "$manpath[@]")
 
 #bindkey -e
 export DEFAULT_USER=michael
@@ -114,6 +117,7 @@ unset config_files
 export LESS='-iR'
 
 antigen use oh-my-zsh
+antigen bundle joel-porquet/zsh-dircolors-solarized.git
 # antigen bundle github
 antigen bundle git
 antigen bundle fasd
