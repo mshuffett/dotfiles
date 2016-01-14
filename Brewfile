@@ -5,6 +5,8 @@ tap 'homebrew/bundle'
 
 brew 'ack'
 brew 'ag'
+brew 'fontconfig'
+brew 'hub'
 
 cask 'adium'
 cask 'firefox'
