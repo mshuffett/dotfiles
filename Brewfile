@@ -9,6 +9,7 @@ brew 'coreutils'
 brew 'ctags'
 brew 'fontconfig'
 brew 'hub'
+brew 'tig'
 brew 'tmux'
 
 cask 'adium'
