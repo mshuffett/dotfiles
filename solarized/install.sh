@@ -11,8 +11,8 @@
 
 
 if ! command -v gconftool >/dev/null 2>&1; then
-	echo >&2 "gconftool not installed. skipping solarized installation."
-	exit 1
+  echo >&2 "gconftool not installed. skipping solarized installation."
+  exit 0
 fi
 
 if [ $# -eq 0 ]
