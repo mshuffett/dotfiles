@@ -39,10 +39,10 @@ alias tmux='tmux -2'
 
 # Path manipulation
 typeset -U path # force path array to have unique values
-path=(/usr/local/opt/coreutils/libexec/gnubin /home/shuffem/vim27/bin /usr/local/bin ~/lighttable-0.8.0-alpha-linux "$path[@]")
+path=(/usr/local/opt/coreutils/libexec/gnubin /home/shuffem/vim27/bin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin "$path[@]")
 
 typeset -U manpath # force path array to have unique values
-manpath=(/usr/local/opt/coreutils/libexec/gnuman "$manpath[@]")
+manpath=(/usr/local/opt/coreutils/libexec/gnuman /usr/local/man /usr/local/mysql/man /usr/local/git/man "$manpath[@]")
 
 #bindkey -e
 export DEFAULT_USER=shuffem

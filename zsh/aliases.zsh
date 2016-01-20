@@ -1,16 +1,11 @@
-if ((! $+ALIASES_FILE))
-then
-    readonly ALIASES_FILE="/home/$USER/.dotfiles/zsh/aliases.zsh"
-fi
-
 alias l=ls
 alias ll="ls -lh"
 alias dirs="dirs -v"
 alias sz="source ~/.zshrc"
 alias s="source ~/.zshrc"
-alias sa="source $ALIASES_FILE"
+alias sa="source ~/.dotfiles/zsh/aliases.zsh"
 alias ez="vim ~/.zshrc"
-alias ea="vim $ALIASES_FILE"
+alias ea="vim ~/.dotfiles/zsh/aliases.zsh"
 alias shuffle="perl -MList::Util -e 'print List::Util::shuffle <>'"
 alias reload!='. ~/.zshrc'
 alias lh='ls -a | egrep "^\."' # ls dotfiles only
@@ -36,22 +31,24 @@ aa() {
 
   eval "$cmd $alias_name='$alias_command'"
   local alias_line="$cmd $alias_name='$alias_command'"
-  echo $alias_line >> $ALIASES_FILE
-  echo "Added $alias_line to $ALIASES_FILE"
+  echo $alias_line >> ~/.dotfiles/zsh/aliases.zsh
+  echo "Added $alias_line to ~/.dotfiles/zsh/aliases.zsh"
 }
 
 
 # User defined aliases (with aa)
 alias mmv='noglob zmv -W'
-alias et="vim /home/michael/.tmux.conf"
-alias st="source /home/michael/.tmux.conf"
+alias et="vim ~/.tmux.conf"
+alias st="source ~/.tmux.conf"
 alias acs="apt-cache search"
 alias acs='apt-cache search'
 alias ac='apt-cache'
 alias agi='_ apt-get install'
 alias ags='acs'
-alias ev='vim /home/michael/.vimrc'
+alias ev='vim ~/.vimrc'
 
 alias -g ws='/c/Users/Michael/Dropbox/ws'
-alias ev='vim /home/michael/.vimrc'
+alias ev='vim ~/.vimrc'
 alias vim=mvim
+alias desk='ssh shuffem.desktop.amazon.com'
+alias desk='ssh shuffem.desktop.amazon.com'
