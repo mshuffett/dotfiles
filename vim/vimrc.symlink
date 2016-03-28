@@ -58,6 +58,7 @@ NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-sleuth'
 NeoBundle 'tpope/vim-repeat'
 NeoBundle 'guns/vim-sexp'
+NeoBundle 'justinmk/vim-sneak'
 NeoBundle 'tpope/vim-abolish'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 " NeoBundle 'klen/python-mode'
@@ -85,7 +86,8 @@ NeoBundle 'xolox/vim-misc'
 NeoBundle 'AndrewRadev/linediff.vim'
 NeoBundle 'mbbill/undotree'
 
-NeoBundle 'spf13/vim-autoclose'
+NeoBundle 'tpope/vim-endwise'
+" NeoBundle 'spf13/vim-autoclose'
 " NeoBundle 'python-rope/ropevim'
 NeoBundle 'Lokaltog/vim-easymotion'
 
@@ -403,7 +405,7 @@ set smartcase
 
 " Persistent undo
 if has("persistent_undo")
-    set undodir=/home/$USER/.undodir/
+    set undodir=/home/$USER/.undodir
     set undofile
 endif
 
@@ -479,7 +481,12 @@ let g:syntastic_python_checkers = ['prospector']
 
 " allow the . to execute once for each line of a visual selection
 vnoremap . :normal .<CR>
-vnoremap @q :normal @q<CR>
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -530,3 +537,7 @@ let g:markdown_mapping_switch_status = '<Leader>x'
 " }}}
 
 au BufNewFile,BufRead *.lmx set filetype=xml
+
+set ignorecase smartcase
+set relativenumber
+set number

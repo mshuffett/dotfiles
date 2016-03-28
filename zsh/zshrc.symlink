@@ -37,13 +37,6 @@ alias tmux='tmux -2'
 ####################### END oh-my-zsh code #####################
 # Custom code
 
-# Path manipulation
-typeset -U path # force path array to have unique values
-path=(/usr/local/opt/coreutils/libexec/gnubin /home/shuffem/vim27/bin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin "$path[@]")
-
-typeset -U manpath # force path array to have unique values
-manpath=(/usr/local/opt/coreutils/libexec/gnuman /usr/local/man /usr/local/mysql/man /usr/local/git/man "$manpath[@]")
-
 #bindkey -e
 export DEFAULT_USER=shuffem
 
@@ -78,6 +71,13 @@ fi
 
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
+
+# Path manipulation
+typeset -U path # force path array to have unique values
+path=(/usr/local/opt/coreutils/libexec/gnubin /home/shuffem/vim27/bin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /apollo/env/SDETools/bin "$path[@]")
+
+typeset -U manpath # force path array to have unique values
+manpath=(/usr/local/opt/coreutils/libexec/gnuman /usr/local/man /usr/local/mysql/man /usr/local/git/man "$manpath[@]")
 
 # use .localrc for SUPER SECRET CRAP that you don't
 # want in your public, versioned repo.
@@ -116,18 +116,29 @@ unset config_files
 
 export LESS='-iR'
 
+# eval "$(fasd --init auto)"
+
 antigen use oh-my-zsh
-antigen bundle joel-porquet/zsh-dircolors-solarized.git
-# antigen bundle github
+# antigen bundle joel-porquet/zsh-dircolors-solarized.git
 antigen bundle git
-antigen bundle fasd
-antigen bundle autojump
-antigen bundle tmux
+antigen bundle git-extras
+# antigen bundle tmux
 antigen bundle git-flow-avh
-antigen bundle zsh-users/zsh-syntax-highlighting
+
+# this is slow in tmux on macs
+# antigen bundle zsh-users/zsh-syntax-highlighting
+
+
 POWERLEVEL9K_MODE='awesome-patched'
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
+
+# if we're on a mac disable git segment since it seems very slow
+if [[ "$(uname -s)" == "Darwin" ]]
+then
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir)
+fi
 antigen theme bhilburn/powerlevel9k powerlevel9k
+# antigen bundle fasd
 
 antigen apply
 

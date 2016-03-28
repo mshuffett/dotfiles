@@ -1,0 +1,439 @@
+#!/usr/bin/perl
+use strict;
+use URI::Escape;
+use Cwd qw(realpath);
+
+# No args?  Exit with usage
+if ($#ARGV lt 0) {
+    printUsage();
+}
+
+# The last argument is all that matters currently, it's the host(s) or
+# one of two optional args
+my @args       = @ARGV;
+my $nirvanaArg = pop @args;    # ssh to the last argument
+
+# Check for the optional args: --help or --register-ssh-protocol
+if ($nirvanaArg eq "--help") {
+    printUsage();
+} elsif ($nirvanaArg eq "--register-ssh-protocol") {
+    print "Registering $0 as the Gnome ssh:// protocol handler\n";
+    my $fullpath = realpath($0);
+    system("gconftool-2 -s /desktop/gnome/url-handlers/ssh/command '" . $fullpath . " %s' --type String");
+    system("gconftool-2 -s /desktop/gnome/url-handlers/ssh/enabled --type Boolean true");
+    exit 0;
+}
+
+# Now the action starts, we have a host/ssh protocol
+my $sshArgs = join " ", @args;
+sshNirvana($nirvanaArg, $sshArgs);
+
+#
+# Main routine, ssh to the host or hosts and inject user's commands
+#
+sub sshNirvana {
+    my ($hostArg, $sshArgs) = @_;
+
+    # Extract the host, the path and any args:
+    my ($path, $args, $userinfo, @hosts) = parseUrl($hostArg);
+
+    # Path processing; unescape the specified pathname, then turn it into a 'cd' command with quotemeta() processing:
+    my $cdCmd = getCdCmdFromPath($path);
+
+    # Parameter processing:
+    my $params = parseSshProtocol($args);
+
+    # Command parameter(s):
+    my $userCmd = "";
+    if (defined $params->{cmd}) {
+        $userCmd = "set -x; " . join("; ", map { queryStringDecode($_) } @{ $params->{cmd} }) . "; set +x";
+    }
+
+    # Host parameter(s):
+    if (defined $params->{host}) {
+        push @hosts, map { queryStringDecode($_) } @{ $params->{host} };    # We're doing queryStringDecode for consistency
+    }
+
+    # Convert $userCmd into hex string:
+    my ($shell, $commandScript) = getFullCommandScript(($cdCmd || "") . $userCmd);
+    my $shellCmd = getShellCmd($shell);
+
+    # Set up the command line and rc file:
+    my $makeZshrc = q{ perl -e 'print pack \"H*\",\"} . $commandScript . q{\"' };    # The backslashes are for zsh
+    (my $MZV = $makeZshrc) =~ s/"/\\\\"/gs;
+
+    my $xTest = $ENV{"DISPLAY"};
+
+    if (($hosts[0] =~ /^bastion/)) {                                                 # Forward Authentication agent when ssh'ing to Bastions
+        $sshArgs = "-A $sshArgs";
+    }
+
+    # Some urls only give short hostnames; if it can't be resolved, try to look in other regions, otherwise, hope ssh can figure it out.
+    @hosts = map { findUnknownHosts($_) } @hosts;
+
+    my $style = "ssh";
+    my $cmdLine;
+
+    # Check if no X-Windows or user running it from command line
+    if (not defined $xTest or $xTest eq "" or -t STDIN) {
+        if (scalar @hosts gt 1) {
+            print "X-Windows not accessible and you've specified multiple hosts. Can only ssh to single host without X-Windows\n";
+            exit;
+        }
+        my $host = $hosts[0];
+        $cmdLine =
+            "ssh -2 -t $sshArgs "
+          . ($userinfo ? "$userinfo\@" : '') . "$host \""
+          . "export ZDOTDIR=/tmp/ssh-nirvana.$$; "
+          . "mkdir \\\$ZDOTDIR; "
+          . "$makeZshrc > \\\$ZDOTDIR/.zshrc; "
+          . "SSHN_SHELL_CMD='\$SSHN_SHELL_CMD' SSHN_CMD_SCRIPT='\$SSHN_CMD_SCRIPT'  exec $shellCmd" . "\"";
+    } else {
+
+        # Pick gnome-terminal by default, or terminator if found:
+        $style   = "gnome-terminal";
+        $cmdLine = "/usr/bin/gnome-terminal";
+        if (-e "/usr/bin/terminator") {
+            $cmdLine = "/usr/bin/terminator";
+            $style   = "terminator";
+        }
+
+        foreach my $host (@hosts) {
+            $cmdLine .= extendCommandLine($style, $userinfo, $host, $shellCmd, $MZV);
+        }
+    }
+
+    # We transformed the request into a command line, execute it
+    exec($cmdLine);
+
+    # Shouldn't get here
+    die("ssh-nirvana: the $style command failed to execute!");
+}
+
+# Parse argument string.
+# The hard part is deciding if spaces should be escaped.
+#     date +%F %T   -- desired command
+#     "ssh://myhost.com/?cmd=date +%F %T" -- this will fail if both spaces are treated the same
+#     "ssh://myhost.com/?cmd=date +%F%20%T" -- this works if %20 is converted then escaped with quotemeta()
+#     "ssh://myhost.com/?cmd=date %2B%F+%T" -- this works if + is converted then escaped with quotemeta()
+#     "ssh://myhost.com/?cmd=date %2B%25F+%25T" -- this is safer
+#     "ssh://myhost.com/?cmd=date+%2B%25F%20%25T" -- space and + = normal space, %20 = escaped space
+sub queryStringDecode {
+    my $in = $_[0];
+
+    $in =~ s/[+]/ /g;                                            # Plus signs turned into spaces, per w3 spec: http://www.w3.org/Addressing/URL/uri-spec.html
+    $in =~ s/%([0-9a-f][0-9a-f])/quotemeta(chr(hex($1)))/seg;    # Quotemeta anything that was uri-encoded
+
+    return $in;
+}
+
+sub getShellCmd {
+    my ($shell, $host) = @_;
+
+    # if the host is a bastion or fixed host, it probably doesn't have /bin/zsh
+    if ($host =~ /bastion\.*ec2\.amazon\.com/ || $host =~ /ec2\.substrate/ || $host =~ /aes0\.internal/) {
+        $shell = "/bin/bash";
+    }
+    if ($shell =~ /bash/) {
+        return "$shell --rcfile /tmp/ssh-nirvana.$$/.zshrc";
+    }
+    return $shell;
+}
+
+sub getFullCommandScript {
+    my ($userCmd)       = @_;
+    my $shell           = "/bin/zsh";
+    my $userLoginScript = readUserLoginScripts();
+    if ($userLoginScript =~ /\n#!/) {
+        ($shell) = ($userLoginScript =~ /\n#!(.*)/);
+    }
+    my $cmd = getBuiltinScript();
+    $cmd .= $userLoginScript;
+    $cmd .= $userCmd;
+
+    # Hex encoding:
+    $cmd =~ s/(.)/sprintf("%02x",ord($1))/egs;
+
+    return ($shell, $cmd);
+}
+
+sub parseSshProtocol {
+    my ($url) = @_;
+
+    my @fieldVals = split(/[&]/, $url);    # Break it on the '&' characters
+    my %params = ();
+    foreach my $fieldVal (@fieldVals) {
+
+        # Format is 'name=value', but value can have '=' in it.  Uri unencoding happens later.
+        if ($fieldVal !~ m/^([^=]+)=(.*)$/s) {
+            warn("Warning: skipped '$fieldVal' as it is not well-formed\n");
+            next;
+        }
+        push @{ $params{$1} }, $2;
+    }
+
+    return \%params;
+}
+
+#
+# Reads the user's login script. Can be either:
+#    $HOME/ssh-nirvana.rc
+#    $HOME/.ssh-nirvana.rc
+#
+sub readUserLoginScripts {
+    local $/ = undef;
+    my $script = "";
+    foreach my $pathToRc ($ENV{"HOME"} . "/ssh-nirvana.rc", $ENV{"HOME"} . "/.ssh-nirvana.rc") {
+        if (-f $pathToRc && open FILE, $pathToRc) {
+            $script .= "# From $pathToRc:\n";    # put debugging comment in new script
+            $script .= <FILE>;
+            close FILE;
+        } elsif (-d $pathToRc) {
+            my @files = <$pathToRc/*>;
+            foreach my $file (@files) {
+                if (open FILE, $file) {
+                    $script .= "# From $file:\n";    # put debugging comment in new script
+                    $script .= <FILE>;
+                    close FILE;
+                }
+            }
+        }
+    }
+    return $script;
+}
+
+#
+# Returns the built-in script, that gets injected to all ssh-nirvana sessions
+# Mainly contains Apollo env helper aliases
+#
+#        export PS1="%B[%{\e[0;31m%}%n%{\e[m%}@%B%{\e[0;36m%}%m%{\e[m%}:%{\e[1;37m%}%~%{\e[m%}]%b "
+#       PS1='[\\e[0;31m\\u\\e[m@\\e[0;36m\\h\\e[m:\\e[1;37m\\w\\e[m] '
+sub getBuiltinScript {
+    return <<END_OF_SCRIPT;
+
+    trap -- "if [ -n \\\"\$ZDOTDIR\\\" ]; then rm \$ZDOTDIR/.zshrc; rmdir \$ZDOTDIR; fi" EXIT;
+    if [ -d /apollo/env ]; then cd /apollo/env; fi
+    if [ -n "\$ZSH_NAME" ]; then
+       export PS1="%B[%{\e[0;31m%}%n%{\e[m%}@%B%{\e[0;36m%}`hostname | sed s/.amazon.com//`%{\e[m%}:%{\e[1;37m%}%~%{\e[m%}]%b "
+    else
+       PS1='[\\\\e[0;31m\\\\u\\\\e[m@\\\\e[0;36m`hostname | sed s/.amazon.com//`\\\\e[m:\\\\e[1;37m\\\\w\\\\e[m] '
+    fi
+
+    envs() {
+        if [ -d /apollo/env ]; then
+            echo
+            echo "Apollo Environments (run 'envs' to see this at anytime)"
+            echo -------
+            ls -1 /apollo/env | sed "s/^/apolloEnv /"
+            echo -------
+            echo
+        fi
+    }
+    apolloEnv() {
+        echo;
+        echo Settings for Apollo Environment: \$1;
+        export ENV=\$1;
+        export ENVR=/apollo/env/\$1;
+        export ENVL=\$ENVR/var/output/logs;
+        alias deact="apolloRunCommand Deactivate \$1"
+        alias act="apolloRunCommand Activate \$1"
+        alias react="deact; act"
+        alias cdl="cd /apollo/env/\$1/var/output/logs"
+        alias cdr="cd /apollo/env/\$1"
+        alias lsl="ls -1rt \$ENVL | tail -20 | sed 's#^#ENVL/#' | sed s:^:\\\$:"
+        alias ssh="ssh -2"
+        alias scp="scp -2"
+        alias envrun="/apollo/bin/env -e \$1"
+        echo -------
+        echo act: activates \$1, deact: deactivates, react: reactivates;
+        echo cdl: cd to log directory, cdr: cd to environment root
+        echo envrun: execute a binary/script within the environment
+        echo \\\$ENV is set to \$ENV, \\\$ENVR is set to \$ENVR
+        echo \\\$ENVL is set to \$ENVL; echo lsl: lists latest 20 log files, along with full pathname ready for copy/pasting
+        echo -------
+        echo
+        cd \$ENVR
+    }
+    apolloRunCommand() {
+        echo \$1 \$2 ...
+        echo ----------------------------------------------
+        sudo /apollo/bin/runCommand -a \$1 -e \$2
+    }
+    ssh-nirvana() {
+        host=\$1
+        SSHN_SHELL_CMD=`echo \$SSHN_SHELL_CMD | sed "s/nirvana.[0-9]*/nirvana.\$\$/"`
+	MAKE_ZSHRC_VAR="mkdir /tmp/ssh-nirvana.\$\$; echo \\\$(perl -MURI::Escape -e 'print uri_unescape(\\\$ARGV[0]);' '\$SSHN_CMD_SCRIPT') | sed 's/SSH"
+        MAKE_ZSHRC_VAR="\${MAKE_ZSHRC_VAR}_N_EOL/\\\\\\\\\\n/g' >/tmp/ssh-nirvana.\$\$/.zshrc"
+        /usr/bin/ssh -2 -t \$host "\$MAKE_ZSHRC_VAR; SSHN_SHELL_CMD='\$SSHN_SHELL_CMD' SSHN_CMD_SCRIPT='\$SSHN_CMD_SCRIPT' ZDOTDIR=/tmp/ssh-nirvana.\$\$ exec \$SSHN_SHELL_CMD"
+    }
+    envs
+
+END_OF_SCRIPT
+}
+
+sub parseUrl {
+    my $hostArg = $_[0];
+    if (!defined $hostArg) {
+        die("parseUrl called with no argument");
+    }
+
+    # Input validation and parsing for ssh://the-hostname.goes.here/the-path-goes-here?host=hostname2&host=hostname3&cmd=command
+    if (
+        $hostArg =~ m/^(?:ssh:\/\/)?      # The ssh: part (note ?: for no capturing)
+                        (?:([a-z0-9.-]+)\@)?          # $1 the userinfo part
+                        ([a-z0-9.-]+)                 # $2 The host part
+                        (\/[^?]*)?                    # $3 The path part, urlencoded
+                        (?:\?([^?]*))?                # $4 The host=hostA&host=hostB&cmd=cmd part (note ?: for no capturing)
+                        $/six
+      )
+    {
+        return ($3, $4, $1, $2);
+    }
+
+    # Input validation and parsing for the-hostname.goes.here:/the-path-goes-here?host=hostname2&host=hostname3&cmd=command
+    if (
+        $hostArg =~ m/^(?:([a-z0-9.-]+))\@            # $1 the userinfo part
+                        ([a-z0-9.-]+):                # $2 The host part
+                        ([^:?&]*)                     # $3 The path part, urlencoded
+                        (?:\?([^?]*))?                # $4 The host=hostA&host=hostB&cmd=cmd part (note ?: for no capturing)
+                        $/six
+      )
+    {
+        return ($3, $4, $1, $2);
+    }
+
+    die("$0: '$hostArg' doesn't match ssh://hostname/path?cmd=... or hostname:/pathname/?cmd=\n");
+}
+
+# Turn a pathname into a 'cd' command:
+sub getCdCmdFromPath {
+    my $path = $_[0];
+
+    # No pathname:
+    if (!defined $path) {
+        return undef;
+    }
+
+    #  Turn '+' and spaces into %20, see http://www.w3.org/Addressing/URL/uri-spec.html#sthz76-4
+    $path =~ s/[ +]/%20/g;
+    my $newpath = uri_unescape($path);    # Convert %xx to ascii
+
+    if ($newpath =~ m/^\/~\/(.*)$/s) {    # ssh://host/~/path
+        return "cd ~/" . quotemeta($1) . " ; ";
+    }
+
+    if ($newpath =~ m/^\/~([a-z0-9.-]+)\/(.*)$/si) {    # ssh://host/~user/path
+        return "cd ~$1/\Q$2\E ; ";
+    }
+
+    if ($newpath =~ m/^\/([.]\/.*)$/s) {                # ssh://host/./path
+        return "cd ~/\Q$1\E ; ";
+    }
+
+    return "cd \Q$newpath\E ; ";                        # ssh:/host/path
+}
+
+# Search domains for unknown hosts:
+sub findUnknownHosts {
+    my $host = $_[0];
+
+    # Already has a dot in the hostname, or is resolvable with /etc/resolv.conf search values:
+    if ($host =~ m/[.]/ or gethostbyname($host)) {
+        return $host;
+    }
+
+    # See if the hostname can be found in a region:
+    foreach my $region (qw(us-east-1 us-west-2 eu-west-1 ap-northeast-1 ap-southeast-1 ap-southeast-2 eu-central-1 cn-north-1 us-iso-east-1 us-west-1 us-gov-west-1)) {
+        my $t = "$host.$region.amazon.com";
+        if (gethostbyname($t)) {    # Found it!
+            $host = $t;
+            last;
+        }
+    }
+
+    # Return it whether or not it was found; the ssh config file may be able to figure something out:
+    return $host;
+}
+
+# For each host, append another set of parameters:
+sub extendCommandLine {
+    my ($style, $userinfo, $host, $shellCmd, $MZV) = @_;
+
+    if ($style eq "terminator") {
+        return " -e \""                                 # Outer quotes
+          . "ssh -2 -t "
+          . ($userinfo ? "$userinfo\@" : '')
+          . "$host \\\""                                # Inner quotes
+          . "export ZDOTDIR=/tmp/ssh-nirvana.$$; "
+          . "mkdir -p \\\\\\\$ZDOTDIR ;"
+          . "$MZV > \\\\\\\$ZDOTDIR/.zshrc;"
+          . "SSHN_SHELL_CMD='\$SSHN_SHELL_CMD' SSHN_CMD_SCRIPT='\$SSHN_CMD_SCRIPT' exec $shellCmd"
+          . "\\\""                                      # Inner quotes
+          . "\"";                                       # Outer quotes
+    }
+
+    if ($style eq "gnome-terminal") {
+        return " --tab -e \""                           # Outer quotes
+          . "ssh -2 -t "
+          . ($userinfo ? "$userinfo\@" : '')
+          . "$host \\\""                                # Inner quotes
+          . "export ZDOTDIR=/tmp/ssh-nirvana.$$; "
+          . "mkdir -p \\\\\\\$ZDOTDIR ;"
+          . "$MZV > \\\\\\\$ZDOTDIR/.zshrc; "
+          . "SSHN_SHELL_CMD='\$SSHN_SHELL_CMD' SSHN_CMD_SCRIPT='\$SSHN_CMD_SCRIPT' exec $shellCmd"
+          . "\\\""                                      # Inner quotes
+          . "\"";                                       # Outer quotes
+    }
+
+    die("extendCommandLine called with an unknown style '$style'");
+}
+
+sub printUsage {
+    print <<END_OF_USAGE;
+Usage: $0 [ssh options] <host | --help | --register-ssh-protocol | [ssh://]hostname[/path][?host=hostA&host=hostB&cmd=cmdA&cmd=cmdB]>
+
+Has 2 main uses:
+- as a wrapper around ssh to inject the contents of \$HOME/ssh-nirvana.rc into the remote host
+- an ssh protocol handler for launching ssh sessions from a browser
+  * See https://w.amazon.com/?SSHNirvana for how to configure this
+
+Takes the following options:
+--help                    Prints this message
+--register-ssh-protocol   Registers the script as the Gnome ssh protocol handler
+
+Typical usage is:
+    $0 <hostname>
+    e.g.  $0 i-interactive.amazon.com
+
+Any options passed before the hostname are passed through to 'ssh' itself, allowing you to pass through identify files, e.g. -i identity.pem.
+
+The hostname, host and cmd arguments are uri decoded. %xx escapes are converted to their ascii equivalents
+and then backslash-escaped.  The + character is turned into an unescaped space; use %2b for an actual +.
+
+  ssh-nirvana 'ssh://my-hostname-here.amazon.com/?cmd=echo+"Hello+World!"+|+xxd'
+  0000000: 4865 6c6c 6f20 576f 726c 6421 0a         Hello World!.
+
+  ssh-nirvana 'ssh://my-hostname-here.amazon.com/?cmd=echo+%22Hello+World!%22+|+xxd'
+  0000000: 2248 656c 6c6f 2057 6f72 6c64 2122 0a    "Hello World!".
+
+  ssh-nirvana 'ssh://my-hostname-here.amazon.com/?cmd=echo+Hello%20World%21+|+xxd'
+  0000000: 4865 6c6c 6f20 576f 726c 6421 0a         Hello World!.
+
+  ssh-nirvana 'ssh://my-hostname-here.amazon.com/?cmd=echo+"Hello%20World%21"+|+xxd'
+  0000000: 4865 6c6c 6f5c 2057 6f72 6c64 5c21 0a    Hello\ World\!.
+
+The path argument is uri decoded (+ represents space) and then every character is backslash-escaped.
+If the path starts with '/~/' or '/./', then it's relative to your home directory.
+If the path starts with '/~username/', then it's relative to that user's home directory.
+
+ssh-nirvana 'ssh://my-hostname-here.amazon.com/~/my+odd+bin?cmd=pwd'
+/home/my-username/my odd bin
+
+Note: You can put your commands into \$HOME/ssh-nirvana.rc (checked first) or \$HOME/.ssh-nirvana.rc (checked second)
+
+'bash' users: make the first line of your ssh-nirvana.rc be the following if you want to use 'bash' on the remote host:
+   #!/bin/bash
+END_OF_USAGE
+
+    exit 0;
+}
