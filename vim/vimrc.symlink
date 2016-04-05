@@ -317,6 +317,7 @@ set timeout
 
 noremap <leader>q :q<CR>
 noremap <leader>w :w<CR>
+noremap <leader>x :x<CR>
 
 " Get rid of conflict
 map <Plug>IMAP_NOJumpForward <Plug>IMAP_JumpForward
@@ -533,7 +534,7 @@ set hlsearch
 " set foldlevelstart=99
 
 " {{{ Markdown
-let g:markdown_mapping_switch_status = '<Leader>x'
+" let g:markdown_mapping_switch_status = '<Leader>x'
 " }}}
 
 au BufNewFile,BufRead *.lmx set filetype=xml
