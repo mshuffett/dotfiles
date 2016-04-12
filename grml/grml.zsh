@@ -644,7 +644,8 @@ REPORTTIME=5
 watch=(notme root)
 
 # automatically remove duplicates from these arrays
-typeset -U path cdpath fpath manpath
+# for some reason this line breaks my completion
+# typeset -U path cdpath fpath manpath
 
 # Load a few modules
 is4 && \

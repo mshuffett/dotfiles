@@ -6,7 +6,8 @@ kverify() {
         eval "$@[1, -1]"
     fi
 }
-alias bb="brazil-build"
+
+alias bb="kverify && brazil-build"
 alias bbc="brazil-build clean"
 alias bcb="brazil-build clean && brazil-build"
 alias b="brazil"

@@ -186,3 +186,5 @@ setopt autocd
 
 # hack because amazon aliases aren't completed properly after adding grml
 source ~/.dotfiles/amazon/completion.zsh
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
