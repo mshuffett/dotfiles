@@ -1,7 +1,12 @@
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldlevel=0 foldmethod=marker spell:
 
-syntax on
-set bg=dark
+" envImprovement setup {{{
+let g:useNinjaTagList=1
+let g:yankring_replace_n_nkey="<M-P>"
+let complType="1"
+let g:ycm_server_keep_logfiles=1
+source /apollo/env/envImprovement/var/vimrc
+" }}}
 imap jk <esc>
 set fen
 "au BufWinLeave ?* mkview
@@ -11,114 +16,85 @@ if has('vim_starting')
     set nocompatible " Be iMproved
 
     " Required:
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
+    set runtimepath-=/apollo/env/envImprovement/vim/amazon/Perforce
 endif
 
-if has('gui_running')
-  set guifont=SourceCodePro+Powerline+Awesome\ Regular:h12
-endif
-
-" NeoBundle {{{
 " Required:
-" Note: You don't set neobundle setting in .gvimrc!
-call neobundle#begin(expand('~/.vim/bundle/'))
+set runtimepath^=/home/shuffem/dein/repos/github.com/Shougo/dein.vim
 
-" Let NeoBundle manage NeoBundle
 " Required:
-NeoBundleFetch 'Shougo/neobundle.vim'
+call dein#begin(expand('/home/shuffem/dein'))
 
-NeoBundle 'Shougo/vimproc.vim', {
-			\ 'build' : {
-			\     'windows' : 'tools\\update-dll-mingw',
-			\     'cygwin' : 'make -f make_cygwin.mak',
-			\     'mac' : 'make',
-			\     'linux' : 'make',
-			\     'unix' : 'gmake',
-			\    },
-			\ }
+" Let dein manage dein
+" Required:
+call dein#add('Shougo/dein.vim')
 
-" NeoBundle 'Shougo/unite.vim'
-" NeoBundle 'Shougo/neomru.vim'
+" Add or remove your plugins here:
+call dein#add('Shougo/neosnippet.vim')
+call dein#add('Shougo/neosnippet-snippets')
 
+call dein#add('goldfeld/vim-seek')
+call dein#add('gabrielelana/vim-markdown')
+call dein#add('godlygeek/tabular')
+call dein#add('bling/vim-airline')
+call dein#add('gotgenes/vim-yapif')
 
-NeoBundle 'wellle/targets.vim'
-NeoBundle 'tpope/vim-rsi'
-NeoBundle 'kchmck/vim-coffee-script'
-NeoBundle 'carlosvillu/coffeScript-VIM-Snippets'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'gabrielelana/vim-markdown'
-NeoBundle 'godlygeek/tabular'
-NeoBundle 'bling/vim-airline'
-NeoBundle 'gotgenes/vim-yapif'
+call dein#add('tacahiroy/ctrlp-funky')
+call dein#add('kien/rainbow_parentheses.vim')
+call dein#add('altercation/vim-colors-solarized')
+call dein#add('tpope/vim-fugitive')
+call dein#add('tpope/vim-sleuth')
+call dein#add('tpope/vim-repeat')
+call dein#add('tpope/vim-abolish')
+call dein#add('nathanaelkane/vim-indent-guides')
 
-NeoBundle 'tacahiroy/ctrlp-funky'
-NeoBundle 'kien/rainbow_parentheses.vim'
-NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-sleuth'
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'guns/vim-sexp'
-NeoBundle 'justinmk/vim-sneak'
-NeoBundle 'tpope/vim-abolish'
-NeoBundle 'nathanaelkane/vim-indent-guides'
-" NeoBundle 'klen/python-mode'
+call dein#add('Shougo/neocomplcache.git')
 
-" NeoBundle 'davidhalter/jedi-vim.git'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
-NeoBundle 'Shougo/neocomplete'
-
-NeoBundle 'mattn/emmet-vim'
+call dein#add('mattn/emmet-vim')
 let g:user_emmet_expandabbr_key = '<c-e>'
 let g:use_emmet_complete_tag = 1
 
 " Make very magic the default
-NeoBundle 'coot/EnchantedVim'
-NeoBundle 'coot/CRDispatcher'
+call dein#add('coot/EnchantedVim')
+call dein#add('coot/CRDispatcher')
 
-NeoBundle 'tpope/vim-surround'
-" NeoBundle 'Shougo/unite-outline'
-" NeoBundle 'Valloric/YouCompleteMe'
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'xolox/vim-easytags'
-NeoBundle 'xolox/vim-misc'
+call dein#add('tpope/vim-surround')
+call dein#add('kien/ctrlp.vim')
+call dein#add('xolox/vim-easytags')
+call dein#add('xolox/vim-misc')
 
-NeoBundle 'AndrewRadev/linediff.vim'
-NeoBundle 'mbbill/undotree'
+call dein#add('AndrewRadev/linediff.vim')
+call dein#add('mbbill/undotree')
 
-NeoBundle 'tpope/vim-endwise'
-" NeoBundle 'spf13/vim-autoclose'
-" NeoBundle 'python-rope/ropevim'
-NeoBundle 'Lokaltog/vim-easymotion'
+call dein#add('spf13/vim-autoclose')
+call dein#add('python-rope/ropevim')
+call dein#add('Lokaltog/vim-easymotion')
 
-NeoBundle 'tpope/vim-eunuch'
+call dein#add('tpope/vim-eunuch')
 
-NeoBundle 'tpope/vim-unimpaired'
-" NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'tpope/vim-commentary'
-NeoBundle 'terryma/vim-multiple-cursors'
-NeoBundle 'jmcantrell/vim-diffchanges'
-NeoBundle 'vim-scripts/YankRing.vim'
+call dein#add('tpope/vim-unimpaired')
+call dein#add('tpope/vim-commentary')
+call dein#add('terryma/vim-multiple-cursors')
+call dein#add('jmcantrell/vim-diffchanges')
+call dein#add('vim-scripts/YankRing.vim')
+call dein#add('gregsexton/gitv')
+call dein#add('wellle/targets.vim')
 
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'wookiehangover/jshint.vim'
-NeoBundle 'carlosvillu/coffeScript-VIM-Snippets'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'digitaltoad/vim-jade'
+call dein#add('scrooloose/syntastic')
+call dein#add('wookiehangover/jshint.vim')
 
-
-call neobundle#end()
-
-" If there are uninstalled bundles found on
-" startup,
-" this will conveniently prompt you to install
-" them.
-NeoBundleCheck
-
-" }}}
+" Required:
+call dein#end()
 
 " Required:
 filetype plugin indent on
+
+" If you want to install not installed plugins on startup.
+if dein#check_install()
+    call dein#install()
+endif
+
+"End dein Scripts-------------------------
 
 let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
@@ -128,80 +104,19 @@ au FileType python IndentGuidesEnable
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=gray ctermbg=0
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=0
 
-" NEOCOMPLETE SETTINGS {{{
-"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+" NEOCOMPLCACHE SETTINGS {{{
+let g:neocomplcache_enable_at_startup = 1
+imap neosnippet#expandable() ? "(neosnippet_expand_or_jump)" : pumvisible() ?  "" : ""
+smap neosnippet#expandable() ? "(neosnippet_expand_or_jump)" :
 let g:neocomplcache_force_overwrite_completefunc = 1
-" let g:neocomplcache_force_omni_patterns['python'] = '[^. t].w*'
+if !exists('g:neocomplcache_omni_functions')
+   let g:neocomplcache_omni_functions = {}
+endif
+if !exists('g:neocomplcache_force_omni_patterns')
+   let g:neocomplcache_force_omni_patterns = {}
+endif
+let g:neocomplcache_force_overwrite_completefunc = 1
+let g:neocomplcache_force_omni_patterns['python'] = '[^. t].w*'
 set ofu=syntaxcomplete#Complete
 "au FileType python set omnifunc=pythoncomplete#Complete textwidth=0
 autocmd FileType python setlocal omnifunc=RopeCompleteFunc
@@ -317,7 +232,6 @@ set timeout
 
 noremap <leader>q :q<CR>
 noremap <leader>w :w<CR>
-noremap <leader>x :x<CR>
 
 " Get rid of conflict
 map <Plug>IMAP_NOJumpForward <Plug>IMAP_JumpForward
@@ -340,8 +254,6 @@ set number " enable line numbers
 
 set sw=4 ts=4 si ai
 
-autocmd BufRead,BufNewFile   *.ion set noet ci pi sts=0 sw=4 ts=4
-
 " Fix Regex
 let g:VeryMagic = 0 " (default is 1)
 let g:VeryMagicSubstitute = 1  " (default is 0)
@@ -358,8 +270,8 @@ nm / /\v
 nm ? ?\v
 
 " xclip
-map "+y :!xclip -f -sel clip<CR>
-map "+p :r!xclip -o -sel clip<CR>
+" map "+y :!xclip -f -sel clip<CR>
+" map "+p :r!xclip -o -sel clip<CR>
 
 set history=10000
 
@@ -406,12 +318,12 @@ set smartcase
 
 " Persistent undo
 if has("persistent_undo")
-    set undodir=/home/$USER/.undodir
+    set undodir=/home/shuffem/.undodir/
     set undofile
 endif
 
-
 nnoremap <leader>u :UndotreeToggle<CR>
+
 let g:yankring_paste_using_g = 0
 nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
@@ -482,63 +394,35 @@ let g:syntastic_python_checkers = ['prospector']
 
 " allow the . to execute once for each line of a visual selection
 vnoremap . :normal .<CR>
-xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
-
-function! ExecuteMacroOverVisualRange()
-  echo "@".getcmdline()
-  execute ":'<,'>normal @".nr2char(getchar())
-endfunction
+vnoremap @q :normal @q<CR>
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='solarized'
 
 " save folding and cursor on exit
 set viewoptions-=options " without this line it saves all old key bindings etc.
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview
 
-" {{{ NeoSnippet
-" Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-"imap <expr><TAB>
-" \ pumvisible() ? "\<C-n>" :
-" \ neosnippet#expandable_or_jumpable() ?
-" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" For conceal markers.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
-" }}}
-
-" {{{ CtrlPFunky
 nnoremap <Leader>o :CtrlPFunky<Cr>
 " narrow the list down with a word under cursor
 nnoremap <Leader>O :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
 let g:ctrlp_funky_matchtype = 'path'
 let g:ctrlp_funky_syntax_highlight = 1
-" }}}
 
-" let g:ropevim_autoimport_modules = ["os", "shutil", "sys"]
+let g:ropevim_autoimport_modules = ["os", "shutil", "sys"]
 
 let g:easytags_async = 1
 
 set hlsearch
-" set foldlevelstart=99
+nmap <Leader>/ :set hlsearch!
+set foldlevelstart=99
 
 " {{{ Markdown
-" let g:markdown_mapping_switch_status = '<Leader>x'
+let g:markdown_mapping_switch_status = '<Leader>x'
 " }}}
 
-au BufNewFile,BufRead *.lmx set filetype=xml
-
-set ignorecase smartcase
-set relativenumber
-set number
+au BufRead,BufNewFile *.dp setfiletype ion
+autocmd BufRead,BufNewFile *.dp set et sts=0 sw=2 ts=2
+autocmd BufRead,BufNewFile *.ion set et sts=0 sw=2 ts=2
+" autocmd BufRead,BufNewFile *.ion set noet ci pi sts=0 sw=4 ts=4
