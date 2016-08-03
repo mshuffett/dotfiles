@@ -161,3 +161,4 @@ bindkey "^S" history-incremental-pattern-search-forward
 # }}}
 
 setopt autocd
+export PATH=$PATH:/usr/local/bin  # MIDWAY PATH: Path changed for ssh

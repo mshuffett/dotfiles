@@ -51,5 +51,4 @@ alias -g ws='/c/Users/Michael/Dropbox/ws'
 alias ev='vim ~/.vimrc'
 alias vim=mvim
 alias desk='/usr/bin/ssh shuffem.desktop.amazon.com'
-alias ssh='ssh-nirvana'
 alias b='brazil'
