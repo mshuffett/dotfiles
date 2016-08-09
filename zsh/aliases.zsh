@@ -58,3 +58,5 @@ alias dp='k cd /rhel5pdi/workplace/shuffem/FMADatapathQueries/src/DatapathQueryL
 alias bbdp='cd /rhel5pdi/workplace/shuffem/FMADatapathQueries/src/DatapathQueryLauncher && bb && bb server'
 alias et='vim /home/shuffem/.tmux.conf'
 alias desk='ssh shuffem.desktop.amazon.com'
+alias ssh='ssh-nirvana'
+alias tree='tree -C'

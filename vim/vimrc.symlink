@@ -43,6 +43,7 @@ NeoBundle 'goldfeld/vim-seek'
 NeoBundle 'gabrielelana/vim-markdown'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'bling/vim-airline'
+NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'gotgenes/vim-yapif'
 " NeoBundle 'Shougo/vimshell.vim'
 
@@ -58,6 +59,7 @@ NeoBundle 'nathanaelkane/vim-indent-guides'
 
 " NeoBundle 'davidhalter/jedi-vim.git'
 NeoBundle 'Shougo/neosnippet.git'
+NeoBundle 'Shougo/neosnippet-snippets'
 NeoBundle 'Shougo/neocomplcache.git'
 
 NeoBundle 'mattn/emmet-vim'
@@ -79,17 +81,19 @@ NeoBundle 'AndrewRadev/linediff.vim'
 NeoBundle 'mbbill/undotree'
 
 NeoBundle 'spf13/vim-autoclose'
-NeoBundle 'python-rope/ropevim'
+" NeoBundle 'python-rope/ropevim'
 NeoBundle 'Lokaltog/vim-easymotion'
 
 NeoBundle 'tpope/vim-eunuch'
+" NeoBundle 'tpope/vim-sexp-mappings-for-regular-people'
+NeoBundle 'guns/vim-sexp'
 
 NeoBundle 'tpope/vim-unimpaired'
 " NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'tpope/vim-commentary'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'jmcantrell/vim-diffchanges'
-NeoBundle 'vim-scripts/YankRing.vim'
+" NeoBundle 'vim-scripts/YankRing.vim'
 NeoBundle 'gregsexton/gitv'
 NeoBundle 'wellle/targets.vim'
 
@@ -439,4 +443,7 @@ let g:markdown_mapping_switch_status = '<Leader>x'
 au BufRead,BufNewFile *.dp setfiletype ion
 autocmd BufRead,BufNewFile *.dp set et sts=0 sw=2 ts=2
 autocmd BufRead,BufNewFile *.ion set et sts=0 sw=2 ts=2
+autocmd BufRead,BufNewFile *.xml set et sts=0 sw=4 ts=4
 " autocmd BufRead,BufNewFile *.ion set noet ci pi sts=0 sw=4 ts=4
+
+:let maplocalleader = "\\"
