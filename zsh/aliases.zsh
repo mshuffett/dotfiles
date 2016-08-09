@@ -47,7 +47,6 @@ alias agi='_ apt-get install'
 alias ags='acs'
 alias ev='vim ~/.vimrc'
 
-alias -g ws='/c/Users/Michael/Dropbox/ws'
 alias ev='vim ~/.vimrc'
 alias vim=mvim
 alias desk='/usr/bin/ssh shuffem.desktop.amazon.com'

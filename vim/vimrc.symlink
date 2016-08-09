@@ -20,10 +20,10 @@ if has('vim_starting')
 endif
 
 " Required:
-set runtimepath^=/home/shuffem/dein/repos/github.com/Shougo/dein.vim
+set runtimepath^=/Users/shuffem/dein/repos/github.com/Shougo/dein.vim
 
 " Required:
-call dein#begin(expand('/home/shuffem/dein'))
+call dein#begin(expand('/Users/shuffem/dein'))
 
 " Let dein manage dein
 " Required:
@@ -67,7 +67,7 @@ call dein#add('AndrewRadev/linediff.vim')
 call dein#add('mbbill/undotree')
 
 call dein#add('spf13/vim-autoclose')
-call dein#add('python-rope/ropevim')
+" call dein#add('python-rope/ropevim')
 call dein#add('Lokaltog/vim-easymotion')
 
 call dein#add('tpope/vim-eunuch')
