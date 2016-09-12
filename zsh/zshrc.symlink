@@ -59,7 +59,6 @@ u () {
     cd ${(j:../:)ud}
 }
 
-export TERMINFO=/apollo/env/envImprovement/var/terminfo
 if [[ -z "$TERMCAP" ]] && [[ "$TERM" == "screen" ]]; then
   export TERMCAP='Co#256:'
 fi
