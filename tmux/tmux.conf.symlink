@@ -73,7 +73,6 @@ set -g message-bg colour22
 set -g message-attr bright
 
 # configure contents of status bar
-set -g status-utf8 on
 set -g status-left-length 40
 set -g status-left "#[fg=green]\"#S\""
 
@@ -150,7 +149,6 @@ set -g history-limit 10000
 
 # set -g default-terminal "screen-256color"
 
-set -g mouse-utf8 on
 set -g mouse on
 bind -n WheelUpPane   select-pane -t= \; copy-mode -e \; send-keys -M
 bind -n WheelDownPane select-pane -t= \;                 send-keys -M

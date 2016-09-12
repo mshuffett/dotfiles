@@ -10,10 +10,10 @@ if has('vim_starting')
 endif
 
 " Required:
-set runtimepath^=/Users/shuffem/dein/repos/github.com/Shougo/dein.vim
+set runtimepath^=/Users/shufm002/dein/repos/github.com/Shougo/dein.vim
 
 " Required:
-call dein#begin(expand('/Users/shuffem/dein'))
+call dein#begin(expand('/Users/shufm002/dein'))
 
 " Let dein manage dein
 " Required:
@@ -198,6 +198,7 @@ nnoremap <leader>d :CtrlPBufTag<CR>
 " }}}
 
 colorscheme solarized
+set bg=dark
 hi Normal ctermbg=NONE
 
 " Setup the status line to display the tagname, if the taglist plugin has been loaded
@@ -308,7 +309,7 @@ set smartcase
 
 " Persistent undo
 if has("persistent_undo")
-    set undodir=/home/shuffem/.undodir/
+    set undodir=/home/shufm002/.undodir/
     set undofile
 endif
 
@@ -414,3 +415,7 @@ au BufRead,BufNewFile *.dp setfiletype ion
 autocmd BufRead,BufNewFile *.dp set et sts=0 sw=2 ts=2
 autocmd BufRead,BufNewFile *.ion set et sts=0 sw=2 ts=2
 " autocmd BufRead,BufNewFile *.ion set noet ci pi sts=0 sw=4 ts=4
+
+if has('gui_running')
+  set guifont=SourceCodePro+Powerline+Awesome\ Regular:h11
+endif

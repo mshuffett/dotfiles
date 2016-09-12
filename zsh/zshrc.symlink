@@ -1,6 +1,6 @@
 # disable Ctrl+S control flow
 stty stop undef
-export TERM="xterm-256color"
+# export TERM="xterm-256color"
 
 ####################### BEGIN oh-my-zsh code #####################
 
@@ -30,15 +30,13 @@ export ZSH_TMUX_FIXTERM=false
 
 alias tmux='tmux -2'
 
-# This is because the ZSH at Amazon doesn't like the auto update.
-# To run update manually run upgrade_oh_my_zsh
-# DISABLE_AUTO_UPDATE=true
+DISABLE_AUTO_UPDATE=true
 
 ####################### END oh-my-zsh code #####################
 # Custom code
 
 #bindkey -e
-export DEFAULT_USER=shuffem
+export DEFAULT_USER=shufm002
 
 # Ctrl-u: Deletes everything before cursor (u is on left)
 #bindkey '^u' backward-kill-line
@@ -118,14 +116,14 @@ export LESS='-iR'
 # eval "$(fasd --init auto)"
 
 antigen use oh-my-zsh
-# antigen bundle joel-porquet/zsh-dircolors-solarized.git
+antigen bundle joel-porquet/zsh-dircolors-solarized.git
 antigen bundle git
 antigen bundle git-extras
-# antigen bundle tmux
+antigen bundle tmux
 antigen bundle git-flow-avh
 
 # this is slow in tmux on macs
-# antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-syntax-highlighting
 
 
 POWERLEVEL9K_MODE='awesome-patched'
@@ -137,7 +135,7 @@ then
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir)
 fi
 antigen theme bhilburn/powerlevel9k powerlevel9k
-# antigen bundle fasd
+antigen bundle fasd
 
 antigen apply
 
