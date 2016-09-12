@@ -1,12 +1,5 @@
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldlevel=0 foldmethod=marker spell:
 
-" envImprovement setup {{{
-let g:useNinjaTagList=1
-let g:yankring_replace_n_nkey="<M-P>"
-let complType="1"
-let g:ycm_server_keep_logfiles=1
-source /apollo/env/envImprovement/var/vimrc
-" }}}
 imap jk <esc>
 set fen
 "au BufWinLeave ?* mkview
@@ -14,9 +7,6 @@ set fen
 
 if has('vim_starting')
     set nocompatible " Be iMproved
-
-    " Required:
-    set runtimepath-=/apollo/env/envImprovement/vim/amazon/Perforce
 endif
 
 " Required:
@@ -329,8 +319,6 @@ nnoremap <expr> gp '`[' . strpart(getregtype(), 0, 1) . '`]'
 
 " Don't pair quotes in vim files
 let g:autoclose_vim_commentmode = 1
-
-let g:easytags_cmd = '/apollo/env/envImprovement/bin/ctags'
 
 " Jump to last line we were at
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
