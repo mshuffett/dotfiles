@@ -48,3 +48,5 @@ htmlcov/
 .project
 .settings/
 sandbox/
+
+.idea/

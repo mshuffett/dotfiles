@@ -28,7 +28,7 @@ export ZSH_TMUX_AUTOSTART=true
 export ZSH_TMUX_AUTOQUIT=false
 export ZSH_TMUX_FIXTERM=false
 
-alias tmux='tmux -2'
+# alias tmux='tmux -2'
 
 DISABLE_AUTO_UPDATE=true
 
@@ -71,7 +71,7 @@ export ZSH=$HOME/.dotfiles
 
 # Path manipulation
 typeset -U path # force path array to have unique values
-path=(/usr/local/opt/coreutils/libexec/gnubin /home/shuffem/vim27/bin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /apollo/env/SDETools/bin "$path[@]")
+path=($HOME/bin /usr/local/Cellar/python3/3.5.2_1/bin /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /apollo/env/SDETools/bin "$path[@]")
 
 typeset -U manpath # force path array to have unique values
 manpath=(/usr/local/opt/coreutils/libexec/gnuman /usr/local/man /usr/local/mysql/man /usr/local/git/man "$manpath[@]")
@@ -121,6 +121,7 @@ antigen bundle git
 antigen bundle git-extras
 antigen bundle tmux
 antigen bundle git-flow-avh
+antigen bundle docker
 
 # this is slow in tmux on macs
 antigen bundle zsh-users/zsh-syntax-highlighting
@@ -132,7 +133,7 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
 # if we're on a mac disable git segment since it seems very slow
 if [[ "$(uname -s)" == "Darwin" ]]
 then
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir)
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
 fi
 antigen theme bhilburn/powerlevel9k powerlevel9k
 antigen bundle fasd
@@ -159,3 +160,15 @@ bindkey "^S" history-incremental-pattern-search-forward
 
 setopt autocd
 export PATH=$PATH:/usr/local/bin  # MIDWAY PATH: Path changed for ssh
+
+typeset -u PYTHONPATH
+PYTHONPATH=(/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/lib/python2.7/site-packages /usr/local/lib/python2.7/site-packages)
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home
+HADOOP_VERSION=2.7.3
+HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.3
+HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
+
+EDITOR=macvim

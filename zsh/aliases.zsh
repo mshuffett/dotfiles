@@ -48,6 +48,15 @@ alias ags='acs'
 alias ev='vim ~/.vimrc'
 
 alias ev='vim ~/.vimrc'
-alias vim=mvim
+alias vim=macvim
 alias desk='/usr/bin/ssh shuffem.desktop.amazon.com'
 alias b='brazil'
+alias venv='source /Users/shufm002/venv/bin/activate'
+alias rsync='rsync -azP'
+alias term1='ssh n7cimaterm01.cloud.corp.dig.com'
+alias pytest='PYTHONPATH=~/ws/lib_python_wdprgms:. pytest'
+
+# latest docker image
+dl() {
+  docker image ls | awk -F, 'BEGIN {FS = "[ \t\n]+"} 1 < NR && NR < 3 {print $3}'
+}

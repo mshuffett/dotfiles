@@ -1,5 +1,12 @@
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldlevel=0 foldmethod=marker spell:
 
+set t_Co=256
+syntax on
+
+" Unfortunately I couldn't get smartcase to work with verymagic but ic works
+set ic
+" set scs
+
 imap jk <esc>
 set fen
 "au BufWinLeave ?* mkview
@@ -10,10 +17,10 @@ if has('vim_starting')
 endif
 
 " Required:
-set runtimepath^=/Users/shufm002/dein/repos/github.com/Shougo/dein.vim
+set runtimepath^=$HOME/dein/repos/github.com/Shougo/dein.vim
 
 " Required:
-call dein#begin(expand('/Users/shufm002/dein'))
+call dein#begin(expand($HOME . '/dein'))
 
 " Let dein manage dein
 " Required:
@@ -23,12 +30,20 @@ call dein#add('Shougo/dein.vim')
 call dein#add('Shougo/neosnippet.vim')
 call dein#add('Shougo/neosnippet-snippets')
 
+" Persistent Very Magic
+call dein#add('coot/CRDispatcher')
+call dein#add('coot/EnchantedVim')
+
+call dein#add('airblade/vim-rooter')
+call dein#add('scrooloose/nerdtree')
 call dein#add('goldfeld/vim-seek')
-call dein#add('gabrielelana/vim-markdown')
+call dein#add('plasticboy/vim-markdown')
 call dein#add('godlygeek/tabular')
-call dein#add('bling/vim-airline')
+call dein#add('vim-airline/vim-airline')
+call dein#add('vim-airline/vim-airline-themes')
 call dein#add('gotgenes/vim-yapif')
 
+call dein#add('mileszs/ack.vim')
 call dein#add('tacahiroy/ctrlp-funky')
 call dein#add('kien/rainbow_parentheses.vim')
 call dein#add('altercation/vim-colors-solarized')
@@ -56,7 +71,7 @@ call dein#add('xolox/vim-misc')
 call dein#add('AndrewRadev/linediff.vim')
 call dein#add('mbbill/undotree')
 
-call dein#add('spf13/vim-autoclose')
+" call dein#add('spf13/vim-autoclose')
 " call dein#add('python-rope/ropevim')
 call dein#add('Lokaltog/vim-easymotion')
 
@@ -246,7 +261,6 @@ set number " enable line numbers
 set sw=4 ts=4 si ai
 
 " Fix Regex
-let g:VeryMagic = 0 " (default is 1)
 let g:VeryMagicSubstitute = 1  " (default is 0)
 let g:VeryMagicGlobal = 1  " (default is 0)
 let g:VeryMagicVimGrep = 1  " (default is 0)
@@ -255,10 +269,8 @@ let g:VeryMagicFunction = 1  " (default is 0, :fun /{pattern})
 let g:VeryMagicHelpgrep = 1  " (default is 0)
 let g:VeryMagicRange = 1  " (default is 0, search patterns in command ranges)
 let g:VeryMagicEscapeBackslashesInSearchArg = 1  " (default is 0, :edit +/{pattern}))
-let g:SortEditArgs = 1  " (default is 0, see below)
+
 " TODO use easymotion for search
-nm / /\v
-nm ? ?\v
 
 " xclip
 " map "+y :!xclip -f -sel clip<CR>
@@ -309,7 +321,7 @@ set smartcase
 
 " Persistent undo
 if has("persistent_undo")
-    set undodir=/home/shufm002/.undodir/
+    set undodir=$HOME/.undodir/
     set undofile
 endif
 
@@ -384,9 +396,12 @@ let g:syntastic_python_checkers = ['prospector']
 " allow the . to execute once for each line of a visual selection
 vnoremap . :normal .<CR>
 vnoremap @q :normal @q<CR>
+vnoremap @w :normal @w<CR>
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+set laststatus=2
+let g:airline_theme='base16_solarized'
 
 " save folding and cursor on exit
 set viewoptions-=options " without this line it saves all old key bindings etc.
@@ -419,3 +434,13 @@ autocmd BufRead,BufNewFile *.ion set et sts=0 sw=2 ts=2
 if has('gui_running')
   set guifont=SourceCodePro+Powerline+Awesome\ Regular:h11
 endif
+
+au BufRead,BufNewFile *.hql setfiletype sql
+autocmd BufRead,BufNewFile *.hql set et sts=0 sw=2 ts=2
+
+" Have ag work with ack.vim
+let g:ackprg = 'ag --vimgrep --smart-case'
+cnoreabbrev ag Ack
+cnoreabbrev aG Ack
+cnoreabbrev Ag Ack
+cnoreabbrev AG Ack
