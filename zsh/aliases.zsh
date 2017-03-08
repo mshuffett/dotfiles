@@ -57,6 +57,11 @@ alias term1='ssh n7cimaterm01.cloud.corp.dig.com'
 alias pytest='PYTHONPATH=~/ws/lib_python_wdprgms:. pytest'
 
 # latest docker image
-dl() {
+dli() {
   docker image ls | awk -F, 'BEGIN {FS = "[ \t\n]+"} 1 < NR && NR < 3 {print $3}'
+}
+
+# latest docker container
+dlc() {
+  docker ps | awk -F, 'BEGIN {FS = "[ \t\n]{2,}"} 1 < NR && NR < 3 {print $7}'
 }
