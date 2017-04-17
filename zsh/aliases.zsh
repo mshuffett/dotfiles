@@ -65,3 +65,5 @@ dli() {
 dlc() {
   docker ps | awk -F, 'BEGIN {FS = "[ \t\n]{2,}"} 1 < NR && NR < 3 {print $7}'
 }
+alias db='docker build .'
+alias qn7='ssh qn7cimaterm01.cloud.corp.dig.com'

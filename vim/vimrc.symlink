@@ -438,9 +438,4 @@ endif
 au BufRead,BufNewFile *.hql setfiletype sql
 autocmd BufRead,BufNewFile *.hql set et sts=0 sw=2 ts=2
 
-" Have ag work with ack.vim
-let g:ackprg = 'ag --vimgrep --smart-case'
-cnoreabbrev ag Ack
-cnoreabbrev aG Ack
-cnoreabbrev Ag Ack
-cnoreabbrev AG Ack
+cnoreabbrev ack Ack

@@ -1,0 +1,4 @@
+--sort-files
+--color
+--ignore-dir=.idea/
+--smart-case
