@@ -24,12 +24,6 @@ COMPLETION_WAITING_DOTS="true"
 # much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-export ZSH_TMUX_AUTOSTART=true
-export ZSH_TMUX_AUTOQUIT=false
-export ZSH_TMUX_FIXTERM=false
-
-# alias tmux='tmux -2'
-
 DISABLE_AUTO_UPDATE=true
 
 ####################### END oh-my-zsh code #####################
@@ -119,7 +113,6 @@ antigen use oh-my-zsh
 antigen bundle joel-porquet/zsh-dircolors-solarized.git
 antigen bundle git
 antigen bundle git-extras
-antigen bundle tmux
 antigen bundle git-flow-avh
 antigen bundle docker
 
