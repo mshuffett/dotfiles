@@ -109,17 +109,17 @@ export LESS='-iR'
 
 # eval "$(fasd --init auto)"
 
-antigen use oh-my-zsh
-antigen bundle joel-porquet/zsh-dircolors-solarized.git
-antigen bundle git
-antigen bundle git-extras
-antigen bundle git-flow-avh
-antigen bundle docker
-antigen bundle pip
+export ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
 
-# this is slow in tmux on macs
-antigen bundle zsh-users/zsh-syntax-highlighting
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
+zplug "joel-porquet/zsh-dircolors-solarized"
+zplug "plugins/git", from:oh-my-zsh
+zplug "plugins/git-extras", from:oh-my-zsh
+zplug "plugins/docker", from:oh-my-zsh
+zplug "plugins/pip", from:oh-my-zsh
+zplug "zsh-users/zsh-syntax-highlighting"
 
 POWERLEVEL9K_MODE='awesome-patched'
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
@@ -129,11 +129,19 @@ if [[ "$(uname -s)" == "Darwin" ]]
 then
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
 fi
-antigen theme bhilburn/powerlevel9k powerlevel9k
-antigen bundle fasd
-antigen bundle Tarrasch/zsh-autoenv
+zplug "bhilburn/powerlevel9k", as:theme
+zplug "plugins/fasd", from:oh-my-zsh
+zplug "Tarrasch/zsh-autoenv"
 
-antigen apply
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+zplug load
 
 # {{{ allow c-r to be executed in middle of line
 # taken from http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
