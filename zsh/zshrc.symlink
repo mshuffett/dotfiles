@@ -107,7 +107,7 @@ unset config_files
 
 export LESS='-iR'
 
-# eval "$(fasd --init auto)"
+eval "$(fasd --init auto)"
 
 export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
@@ -119,7 +119,6 @@ zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/git-extras", from:oh-my-zsh
 zplug "plugins/docker", from:oh-my-zsh
 zplug "plugins/pip", from:oh-my-zsh
-zplug "zsh-users/zsh-syntax-highlighting"
 
 POWERLEVEL9K_MODE='awesome-patched'
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
@@ -130,11 +129,16 @@ then
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
 fi
 zplug "bhilburn/powerlevel9k", as:theme
-zplug "plugins/fasd", from:oh-my-zsh
+
+AUTOENV_FILE_ENTER=.autoenv.zsh
+AUTOENV_FILE_LEAVE=.autoenv.zsh
+AUTOENV_HANDLE_LEAVE=1
 zplug "Tarrasch/zsh-autoenv"
+zplug "changyuheng/zsh-interactive-cd"
+zplug "plugins/fasd", from:oh-my-zsh
 
 # Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
+if ! zplug check; then
     printf "Install? [y/N]: "
     if read -q; then
         echo; zplug install
@@ -176,5 +180,10 @@ HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
 
 EDITOR=macvim
 
-source ~/.iterm2_shell_integration.`basename $SHELL`
+# source ~/.iterm2_shell_integration.`basename $SHELL`
 eval $(env _PIPENV_COMPLETE=source-zsh pipenv)
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
+
+PIPENV_VENV_IN_PROJECT=true
