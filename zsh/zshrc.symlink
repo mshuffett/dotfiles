@@ -134,8 +134,14 @@ AUTOENV_FILE_ENTER=.autoenv.zsh
 AUTOENV_FILE_LEAVE=.autoenv.zsh
 AUTOENV_HANDLE_LEAVE=1
 zplug "Tarrasch/zsh-autoenv"
+zplug "djui/alias-tips"
+zplug "modules/git", from:prezto
 zplug "changyuheng/zsh-interactive-cd"
 zplug "plugins/fasd", from:oh-my-zsh
+zplug "zsh-users/zsh-autosuggestions", defer:2
+zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-history-substring-search", defer:3 # Should be loaded last.
+zplug "zsh-users/zsh-syntax-highlighting", defer:3 # Should be loaded 2nd last.
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check; then
@@ -184,6 +190,3 @@ EDITOR=macvim
 eval $(env _PIPENV_COMPLETE=source-zsh pipenv)
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
-
-PIPENV_VENV_IN_PROJECT=true
