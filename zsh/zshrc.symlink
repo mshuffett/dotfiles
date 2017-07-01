@@ -160,3 +160,6 @@ EDITOR=macvim
 eval $(env _PIPENV_COMPLETE=source-zsh pipenv)
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# https://github.com/DomT4/homebrew-autoupdate
+export HOMEBREW_NO_AUTO_UPDATE="1"
