@@ -135,7 +135,6 @@ AUTOENV_FILE_LEAVE=.autoenv.zsh
 AUTOENV_HANDLE_LEAVE=1
 zplug "Tarrasch/zsh-autoenv"
 zplug "djui/alias-tips"
-zplug "modules/git", from:prezto
 zplug "changyuheng/zsh-interactive-cd"
 zplug "plugins/fasd", from:oh-my-zsh
 zplug "zsh-users/zsh-autosuggestions", defer:2
