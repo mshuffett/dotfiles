@@ -1503,12 +1503,7 @@ bind2maps emacs viins       -- -s '^xi' insert-unicode-char
 
 # use the new *-pattern-* widgets for incremental history search
 if zrcgotwidget history-incremental-pattern-search-backward; then
-    for seq wid in '^r' history-incremental-pattern-search-backward \
-                   '^s' history-incremental-pattern-search-forward
-    do
-        bind2maps emacs viins vicmd -- -s $seq $wid
-    done
-    builtin unset -v seq wid
+    bind2maps emacs viins vicmd -- -s '^s' history-incremental-pattern-search-forward
 fi
 
 if zrcgotkeymap menuselect; then

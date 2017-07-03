@@ -1,6 +1,9 @@
 # disable Ctrl+S control flow
 stty stop undef
 # export TERM="xterm-256color"
+#
+export ZSH_VAR_LIB_DIR=$HOME/.var/lib/zsh
+[[ ! -d $ZSH_VAR_LIB_DIR ]] && mkdir -p $ZSH_VAR_LIB_DIR
 
 export DEFAULT_USER=shufm002
 
@@ -58,6 +61,10 @@ for file in ${(M)config_files:#*/path.zsh}
 do
   source $file
 done
+
+fpath=($ZSH/functions $fpath)
+
+autoload -U $ZSH/functions/*(:t)
 
 # load everything but the path and completion files
 for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
@@ -123,23 +130,7 @@ fi
 
 zplug load --verbose
 
-# {{{ allow c-r to be executed in middle of line
-# taken from http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
-autoload -Uz narrow-to-region
-function _history-incremental-preserving-pattern-search-backward
-{
-  local state
-  MARK=CURSOR  # magick, else multiple ^R don't work
-  narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
-  zle end-of-history
-  zle history-incremental-pattern-search-backward
-  narrow-to-region -R state
-}
-zle -N _history-incremental-preserving-pattern-search-backward
-bindkey "^R" _history-incremental-preserving-pattern-search-backward
-bindkey -M isearch "^R" history-incremental-pattern-search-backward
 bindkey "^S" history-incremental-pattern-search-forward
-# }}}
 
 setopt autocd
 export PATH=$PATH:/usr/local/bin  # MIDWAY PATH: Path changed for ssh
@@ -158,8 +149,6 @@ EDITOR=macvim
 
 # source ~/.iterm2_shell_integration.`basename $SHELL`
 eval $(env _PIPENV_COMPLETE=source-zsh pipenv)
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # https://github.com/DomT4/homebrew-autoupdate
 export HOMEBREW_NO_AUTO_UPDATE="1"
