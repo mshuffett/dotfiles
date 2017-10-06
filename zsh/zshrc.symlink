@@ -115,10 +115,9 @@ AUTOENV_HANDLE_LEAVE=1
 zplug "Tarrasch/zsh-autoenv"
 zplug "djui/alias-tips"
 zplug "zsh-users/zsh-completions"
-zplug "b4b4r07/enhancd", use:init.sh
-zplug "zsh-users/zsh-autosuggestions", defer:2
-zplug "zsh-users/zsh-syntax-highlighting", defer:3 # Should be loaded 2nd last.
-zplug "zsh-users/zsh-history-substring-search", defer:4 # Should be loaded last.
+zplug "zsh-users/zsh-autosuggestions", defer:1
+zplug "zsh-users/zsh-syntax-highlighting", defer:2 # Should be loaded 2nd last.
+zplug "zsh-users/zsh-history-substring-search", defer:3 # Should be loaded last.
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -152,3 +151,5 @@ eval $(env _PIPENV_COMPLETE=source-zsh pipenv)
 
 # https://github.com/DomT4/homebrew-autoupdate
 export HOMEBREW_NO_AUTO_UPDATE="1"
+
+export dev=1
