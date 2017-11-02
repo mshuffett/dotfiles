@@ -88,21 +88,23 @@ export LESS='-iR'
 
 eval "$(fasd --init auto)"
 
-export ZPLUG_HOME=/usr/local/opt/zplug
+export ZPLUG_HOME=/home/linuxbrew/.linuxbrew/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
-zplug "joel-porquet/zsh-dircolors-solarized"
+# zplug "joel-porquet/zsh-dircolors-solarized"
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/git-extras", from:oh-my-zsh
 zplug "plugins/docker", from:oh-my-zsh
 zplug "plugins/pip", from:oh-my-zsh
+zplug "plugins/virtualenv", from:oh-my-zsh
+zplug "plugins/virtualenvwrapper", from:oh-my-zsh
 
-POWERLEVEL9K_MODE='awesome-patched'
+POWERLEVEL9K_MODE='nerdfont-complete'
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs time)
 
-# if we're on a mac disable git segment since it seems very slow
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs virtualenv)
 if [[ "$(uname -s)" == "Darwin" ]]
 then
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
@@ -134,22 +136,15 @@ bindkey "^S" history-incremental-pattern-search-forward
 setopt autocd
 export PATH=$PATH:/usr/local/bin  # MIDWAY PATH: Path changed for ssh
 
-typeset -u PYTHONPATH
-PYTHONPATH=(/usr/local/lib/python2.7/site-packages)
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home
 HADOOP_VERSION=2.7.3
 HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.3
 HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
 
-EDITOR=macvim
-
 # source ~/.iterm2_shell_integration.`basename $SHELL`
-eval $(env _PIPENV_COMPLETE=source-zsh pipenv)
+# eval $(env _PIPENV_COMPLETE=source-zsh pipenv)
 
 # https://github.com/DomT4/homebrew-autoupdate
 export HOMEBREW_NO_AUTO_UPDATE="1"
-
-export dev=1
