@@ -29,10 +29,6 @@ if [[ $autoenv_event == 'enter' ]]; then
       fi
     fi
   }
-  autoload -U add-zsh-hook
-  add-zsh-hook chpwd _my_autoenv_venv_chpwd
-  _my_autoenv_venv_chpwd
-
   _my_autoenv_git_chpwd() {
     setopt localoptions extendedglob
     local git_rel_path=`git rev-parse --git-dir 2> /dev/null`
@@ -56,9 +52,13 @@ if [[ $autoenv_event == 'enter' ]]; then
       unset _ZSH_ACTIVATED_PROJECT
     fi
   }
-  add-zsh-hook chpwd _my_autoenv_git_chpwd
-  _my_autoenv_git_chpwd
+  autoload -U add-zsh-hook
+  # add-zsh-hook chpwd _my_autoenv_git_chpwd
+  # _my_autoenv_git_chpwd
+
+  add-zsh-hook chpwd _my_autoenv_venv_chpwd
+  _my_autoenv_venv_chpwd
 else
   add-zsh-hook -d chpwd _my_autoenv_venv_chpwd
-  add-zsh-hook -d chpwd _my_autoenv_git_chpwd
+  # add-zsh-hook -d chpwd _my_autoenv_git_chpwd
 fi

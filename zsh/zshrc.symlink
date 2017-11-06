@@ -109,6 +109,7 @@ if [[ "$(uname -s)" == "Darwin" ]]
 then
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
 fi
+export TERM="xterm-256color"
 zplug "bhilburn/powerlevel9k", as:theme
 
 AUTOENV_FILE_ENTER=.autoenv.zsh
@@ -122,14 +123,14 @@ zplug "zsh-users/zsh-syntax-highlighting", defer:2 # Should be loaded 2nd last.
 zplug "zsh-users/zsh-history-substring-search", defer:3 # Should be loaded last.
 
 # Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
+if ! zplug check; then
     printf "Install? [y/N]: "
     if read -q; then
         echo; zplug install
     fi
 fi
 
-zplug load --verbose
+zplug load
 
 bindkey "^S" history-incremental-pattern-search-forward
 
