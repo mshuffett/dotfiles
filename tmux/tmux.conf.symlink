@@ -35,6 +35,8 @@ bind -r l select-pane -R
 
 # vim / xmonad style bindings for window movement
 bind -r C-h select-window -t :-
+# hyper seems to treat C-h as BSpace
+bind -r BSpace select-window -t :-
 bind -r C-l select-window -t :+
 
 # shift-movement keys will resize panes
