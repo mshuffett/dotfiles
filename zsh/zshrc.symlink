@@ -1,51 +1,11 @@
 # disable Ctrl+S control flow
 stty stop undef
-export TERM="xterm-256color"
+# export TERM="xterm-256color"
+#
+export ZSH_VAR_LIB_DIR=$HOME/.var/lib/zsh
+[[ ! -d $ZSH_VAR_LIB_DIR ]] && mkdir -p $ZSH_VAR_LIB_DIR
 
-####################### BEGIN oh-my-zsh code #####################
-
-# Path to your oh-my-zsh configuration.
-ZSH=$HOME/.oh-my-zsh
-
-# Set name of the theme to load.
-# Look in ~/.oh-my-zsh/themes/
-# Optionally, if you set this to "random", it'll load a random theme each
-# time that oh-my-zsh is loaded.
-#ZSH_THEME="my-agnoster"
-
-# Uncomment following line if you want to disable command autocorrection
-# DISABLE_CORRECTION="true"
-
-# Uncomment following line if you want red dots to be displayed while waiting for completion
-COMPLETION_WAITING_DOTS="true"
-
-# Uncomment following line if you want to disable marking untracked files under
-# VCS as dirty. This makes repository status check for large repositories much,
-# much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-export ZSH_TMUX_AUTOSTART=true
-export ZSH_TMUX_AUTOQUIT=false
-export ZSH_TMUX_FIXTERM=false
-
-alias tmux='tmux -2'
-
-# This is because the ZSH at Amazon doesn't like the auto update.
-# To run update manually run upgrade_oh_my_zsh
-# DISABLE_AUTO_UPDATE=true
-
-####################### END oh-my-zsh code #####################
-# Custom code
-
-# Path manipulation
-typeset -U path # force path array to have unique values
-path=(/usr/local/opt/coreutils/libexec/gnubin /home/shuffem/vim27/bin /usr/local/bin ~/lighttable-0.8.0-alpha-linux "$path[@]")
-
-typeset -U manpath # force path array to have unique values
-manpath=(/usr/local/opt/coreutils/libexec/gnuman "$manpath[@]")
-
-#bindkey -e
-export DEFAULT_USER=michael
+export DEFAULT_USER=shufm002
 
 # Ctrl-u: Deletes everything before cursor (u is on left)
 #bindkey '^u' backward-kill-line
@@ -66,7 +26,6 @@ u () {
     cd ${(j:../:)ud}
 }
 
-export TERMINFO=/apollo/env/envImprovement/var/terminfo
 if [[ -z "$TERMCAP" ]] && [[ "$TERM" == "screen" ]]; then
   export TERMCAP='Co#256:'
 fi
@@ -78,6 +37,13 @@ fi
 
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
+
+# Path manipulation
+typeset -U path # force path array to have unique values
+path=($HOME/bin /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin "$path[@]")
+
+typeset -U manpath # force path array to have unique values
+manpath=(/usr/local/opt/coreutils/libexec/gnuman /usr/local/man /usr/local/mysql/man /usr/local/git/man "$manpath[@]")
 
 # use .localrc for SUPER SECRET CRAP that you don't
 # want in your public, versioned repo.
@@ -96,6 +62,10 @@ do
   source $file
 done
 
+fpath=($ZSH/functions $fpath)
+
+autoload -U $ZSH/functions/*(:t)
+
 # load everything but the path and completion files
 for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
 do
@@ -103,8 +73,8 @@ do
 done
 
 # initialize autocomplete here, otherwise functions won't be loaded
-# autoload -U compinit
-# compinit
+autoload -U compinit
+compinit
 
 # load every completion after autocomplete loads
 for file in ${(M)config_files:#*/completion.zsh}
@@ -116,37 +86,66 @@ unset config_files
 
 export LESS='-iR'
 
-antigen use oh-my-zsh
-antigen bundle joel-porquet/zsh-dircolors-solarized.git
-# antigen bundle github
-antigen bundle git
-antigen bundle fasd
-antigen bundle autojump
-antigen bundle tmux
-antigen bundle git-flow-avh
-antigen bundle zsh-users/zsh-syntax-highlighting
-POWERLEVEL9K_MODE='awesome-patched'
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status time)
-antigen theme bhilburn/powerlevel9k powerlevel9k
+eval "$(fasd --init auto)"
 
-antigen apply
+export ZPLUG_HOME=/home/linuxbrew/.linuxbrew/opt/zplug
+source $ZPLUG_HOME/init.zsh
 
-# {{{ allow c-r to be executed in middle of line
-# taken from http://chneukirchen.org/blog/archive/2013/03/10-fresh-zsh-tricks-you-may-not-know.html
-autoload -Uz narrow-to-region
-function _history-incremental-preserving-pattern-search-backward
-{
-  local state
-  MARK=CURSOR  # magick, else multiple ^R don't work
-  narrow-to-region -p "$LBUFFER${BUFFER:+>>}" -P "${BUFFER:+<<}$RBUFFER" -S state
-  zle end-of-history
-  zle history-incremental-pattern-search-backward
-  narrow-to-region -R state
-}
-zle -N _history-incremental-preserving-pattern-search-backward
-bindkey "^R" _history-incremental-preserving-pattern-search-backward
-bindkey -M isearch "^R" history-incremental-pattern-search-backward
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+
+# zplug "joel-porquet/zsh-dircolors-solarized"
+zplug "plugins/git", from:oh-my-zsh
+zplug "plugins/git-extras", from:oh-my-zsh
+zplug "plugins/docker", from:oh-my-zsh
+zplug "plugins/pip", from:oh-my-zsh
+zplug "plugins/virtualenv", from:oh-my-zsh
+zplug "plugins/virtualenvwrapper", from:oh-my-zsh
+
+POWERLEVEL9K_MODE='nerdfont-complete'
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs time)
+
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs virtualenv)
+if [[ "$(uname -s)" == "Darwin" ]]
+then
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
+fi
+export TERM="xterm-256color"
+zplug "bhilburn/powerlevel9k", as:theme
+
+AUTOENV_FILE_ENTER=.autoenv.zsh
+AUTOENV_FILE_LEAVE=.autoenv.zsh
+AUTOENV_HANDLE_LEAVE=1
+zplug "Tarrasch/zsh-autoenv"
+zplug "djui/alias-tips"
+zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-autosuggestions", defer:1
+zplug "zsh-users/zsh-syntax-highlighting", defer:2 # Should be loaded 2nd last.
+zplug "zsh-users/zsh-history-substring-search", defer:3 # Should be loaded last.
+
+# Install plugins if there are plugins that have not been installed
+if ! zplug check; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+zplug load
+
 bindkey "^S" history-incremental-pattern-search-forward
-# }}}
 
 setopt autocd
+export PATH=$PATH:/usr/local/bin  # MIDWAY PATH: Path changed for ssh
+
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home
+HADOOP_VERSION=2.7.3
+HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.3
+HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
+
+# source ~/.iterm2_shell_integration.`basename $SHELL`
+# eval $(env _PIPENV_COMPLETE=source-zsh pipenv)
+
+# https://github.com/DomT4/homebrew-autoupdate
+export HOMEBREW_NO_AUTO_UPDATE="1"

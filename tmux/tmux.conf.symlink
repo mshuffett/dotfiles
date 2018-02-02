@@ -35,6 +35,8 @@ bind -r l select-pane -R
 
 # vim / xmonad style bindings for window movement
 bind -r C-h select-window -t :-
+# hyper seems to treat C-h as BSpace
+bind -r BSpace select-window -t :-
 bind -r C-l select-window -t :+
 
 # shift-movement keys will resize panes
@@ -73,7 +75,6 @@ set -g message-bg colour22
 set -g message-attr bright
 
 # configure contents of status bar
-set -g status-utf8 on
 set -g status-left-length 40
 set -g status-left "#[fg=green]\"#S\""
 
@@ -91,8 +92,10 @@ bind Escape copy-mode
 unbind p
 bind p paste-buffer
 bind C-p run-shell "tmux set-buffer \"$(xclip -o)\"; tmux paste-buffer"
-bind -t vi-copy 'v' begin-selection
-bind -t vi-copy y copy-pipe 'xclip -in -selection clipboard'
+# bind -T vi-copy 'v' begin-selection
+# bind -T vi-copy 'y' copy-pipe 'xclip -in -selection clipboard'
+bind-key -Tcopy-mode-vi 'v' send -X begin-selection
+bind-key -Tcopy-mode-vi 'y' send -X copy-selection
 
 # xclip support (commented as this often doesn't make sense on remote servers)
 #bind C-c run-shell "tmux save-buffer - / xclip -i -sel clipboard"
@@ -144,13 +147,25 @@ set-option -g display-panes-colour brightred #orange
 # clock
 set-window-option -g clock-mode-colour green #green
 
-setw -g aggressive-resize on
-
 set -g history-limit 10000
 
 # set -g default-terminal "screen-256color"
 
-set -g mouse-utf8 on
-set -g mouse on
+# set -g mouse on
 bind -n WheelUpPane   select-pane -t= \; copy-mode -e \; send-keys -M
 bind -n WheelDownPane select-pane -t= \;                 send-keys -M
+
+# attempting to fix slow tmux
+# set -g status off
+
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-yank'
+
+# set -g @plugin 'tmux-plugins/tmux-resurrect'
+# set -g @plugin 'tmux-plugins/tmux-continuum'
+# set -g @continuum-restore 'on'
+
+run '~/.tmux/plugins/tpm/tpm'
+
+setw -g aggressive-resize on
+

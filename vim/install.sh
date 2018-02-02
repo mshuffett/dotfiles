@@ -1,6 +1,6 @@
 #!/bin/sh
-# sudo apt-get install vim-gnome
-
 # Install neobundle
-curl https://raw.githubusercontent.com/Shougo/neobundle.vim/master/bin/install.sh > /tmp/neo-install.sh
-sh /tmp/neo-install.sh
+curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/dein-install.sh
+sh /tmp/dein-install.sh ~/dein
+
+mkdir -p ~/.undodir
