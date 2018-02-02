@@ -6,7 +6,7 @@ These are my personal dotfiles, originally forked from [holman's dotfiles](https
 Run this:
 
 ```sh
-curl -sL https://github.com/mshuffett/dotfiles/raw/master/script/install_from_scratch | sh
+curl -sL https://github.com/mshuffett/dotfiles/raw/master/script/install_from_scratch | bash
 ```
 
 ## for me
