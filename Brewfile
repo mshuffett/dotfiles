@@ -15,6 +15,7 @@ brew 'tmux'
 brew 'fasd'
 brew 'ripgrep'
 brew 'pipenv'
+brew 'zplug'
 
 cask 'firefox'
 cask 'google-chrome'
