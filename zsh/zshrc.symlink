@@ -65,6 +65,9 @@ zplug "plugins/pip", from:oh-my-zsh
 zplug "plugins/virtualenv", from:oh-my-zsh
 zplug "plugins/virtualenvwrapper", from:oh-my-zsh
 
+# https://github.com/bhilburn/powerlevel9k/wiki/Stylizing-Your-Prompt
+# POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='black'
+POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='008'
 POWERLEVEL9K_MODE='nerdfont-complete'
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs virtualenv)
 if [[ "$(uname -s)" == "Darwin" ]]
