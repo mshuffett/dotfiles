@@ -40,7 +40,7 @@ export ZSH=$HOME/.dotfiles
 
 # Path manipulation
 typeset -U path # force path array to have unique values
-path=($HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin "$path[@]")
+path=(~/anaconda3/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin "$path[@]")
 
 typeset -U manpath # force path array to have unique values
 manpath=(/usr/local/opt/coreutils/libexec/gnuman /usr/local/man /usr/local/mysql/man /usr/local/git/man "$manpath[@]")
@@ -83,6 +83,7 @@ zplug "bhilburn/powerlevel9k", as:theme
 # zplug "Tarrasch/zsh-autoenv"
 zplug "djui/alias-tips"
 zplug "zsh-users/zsh-completions"
+zplug "esc/conda-zsh-completion"
 zplug "zsh-users/zsh-autosuggestions", defer:1
 zplug "zsh-users/zsh-syntax-highlighting", defer:2 # Should be loaded 2nd last.
 zplug "zsh-users/zsh-history-substring-search", defer:3 # Should be loaded last.
@@ -136,7 +137,7 @@ eval "$(fasd --init auto)"
 bindkey "^S" history-incremental-pattern-search-forward
 
 setopt autocd
-export PATH=$PATH:/usr/local/bin:~/anaconda3/bin  # MIDWAY PATH: Path changed for ssh
+export PATH=$PATH:/usr/local/bin  # MIDWAY PATH: Path changed for ssh
 
 # test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
@@ -150,4 +151,3 @@ HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
 
 # https://github.com/DomT4/homebrew-autoupdate
 export HOMEBREW_NO_AUTO_UPDATE="1"
-
