@@ -67,3 +67,6 @@ dlc() {
 alias db='docker build .'
 alias qn7='ssh qn7cimaterm01.cloud.corp.dig.com'
 alias pipenv='PIPENV_VENV_IN_PROJECT=1 pipenv'
+
+alias ls='/usr/local/bin/colorls -light -sort-dirs -report'
+alias lc='/usr/local/bin/colorls -tree -light'
