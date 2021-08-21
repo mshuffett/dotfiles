@@ -120,3 +120,4 @@ mfa() {
 }
 
 alias t='todoist --color'
+alias cat='ccat'
