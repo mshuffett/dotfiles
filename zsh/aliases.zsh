@@ -68,5 +68,55 @@ alias db='docker build .'
 alias qn7='ssh qn7cimaterm01.cloud.corp.dig.com'
 alias pipenv='PIPENV_VENV_IN_PROJECT=1 pipenv'
 
-alias ls='/usr/local/bin/colorls -light -sort-dirs -report'
-alias lc='/usr/local/bin/colorls -tree -light'
+alias ls='/usr/local/bin/colorls --sort-dirs --report'
+alias lc='/usr/local/bin/colorls --tree'
+alias sl='serverless'
+alias k='kubectl'
+alias dash='cd /Users/michael/ws/fleet-ops-dashboard'
+
+# https://stackoverflow.com/a/10660730/2069974
+rawurlencode() {
+  local string="${1}"
+  local strlen=${#string}
+  local encoded=""
+  local pos c o
+
+  for (( pos=0 ; pos<strlen ; pos++ )); do
+     c=${string:$pos:1}
+     case "$c" in
+        [-_.~a-zA-Z0-9] ) o="${c}" ;;
+        * )               printf -v o '%%%02x' "'$c"
+     esac
+     encoded+="${o}"
+  done
+  echo "${encoded}"    # You can either set a return variable (FASTER)
+  REPLY="${encoded}"   #+or echo the result (EASIER)... or both... :p
+}
+
+# Returns a string in which the sequences with percent (%) signs followed by
+# two hex digits have been replaced with literal characters.
+rawurldecode() {
+
+  # This is perhaps a risky gambit, but since all escape characters must be
+  # encoded, we can replace %NN with \xNN and pass the lot to printf -b, which
+  # will decode hex for us
+
+  printf -v REPLY '%b' "${1//%/\\x}" # You can either set a return variable (FASTER)
+
+  echo "${REPLY}"  #+or echo the result (EASIER)... or both... :p
+}
+
+mfa() {
+  local token="${1}"
+  unset AWS_ACCESS_KEY_ID
+  unset AWS_SECRET_ACCESS_KEY
+  unset AWS_SESSION_TOKEN
+
+  local creds=$(aws sts get-session-token --serial-number "arn:aws:iam::805463414252:mfa/Administrator" --token-code $token --output=json)
+  # TODO this should likely write to the creds file instead
+  export AWS_ACCESS_KEY_ID=$(echo $creds | jq -r ".Credentials.AccessKeyId")
+  export AWS_SECRET_ACCESS_KEY=$(echo $creds | jq -r ".Credentials.SecretAccessKey")
+  export AWS_SESSION_TOKEN=$(echo $creds | jq -r ".Credentials.SessionToken")
+}
+
+alias t='todoist --color'
