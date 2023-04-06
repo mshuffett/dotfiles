@@ -1,11 +1,21 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# zmodload zsh/zprof
+
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
 # disable Ctrl+S control flow
-stty stop undef
+# stty stop undef
 # export TERM="xterm-256color"
+#
 #
 export ZSH_VAR_LIB_DIR=$HOME/.var/lib/zsh
 [[ ! -d $ZSH_VAR_LIB_DIR ]] && mkdir -p $ZSH_VAR_LIB_DIR
-
-export DEFAULT_USER=shufm002
 
 # Ctrl-u: Deletes everything before cursor (u is on left)
 #bindkey '^u' backward-kill-line
@@ -38,9 +48,6 @@ fi
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/usr/local/google-cloud-sdk/path.zsh.inc' ]; then . '/usr/local/google-cloud-sdk/path.zsh.inc'; fi
-
 # Path manipulation
 typeset -U path # force path array to have unique values
 path=($HOME/.serverless/bin /Users/michael/opt/anaconda3/bin /usr/local/Cellar/node/13.11.0/bin ~/opt/anaconda3/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin $HOME/go/bin "$path[@]")
@@ -60,21 +67,56 @@ source "$GOPATH/src/github.com/sachaos/todoist/todoist_functions.sh"
 PROG=todoist source "$GOPATH/pkg/mod/github.com/urfave/cli@v1.20.0/autocomplete/zsh_autocomplete"
 
 
-# TODO may want to try https://github.com/zdharma/zinit here which is a more modern looking async version of zplug
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
-# Leads to significant speedup https://news.ycombinator.com/item?id=21281149
-touch $ZPLUG_LOADFILE
+### Added by Zinit's installer
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \
+        print -P "%F{160} The clone has failed.%f%b"
+fi
 
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
-# zplug "joel-porquet/zsh-dircolors-solarized" This was failing to load
-zplug "plugins/git", from:oh-my-zsh
-zplug "plugins/git-extras", from:oh-my-zsh
-zplug "plugins/docker", from:oh-my-zsh
-zplug "plugins/pip", from:oh-my-zsh
-zplug "plugins/virtualenv", from:oh-my-zsh
-zplug "plugins/virtualenvwrapper", from:oh-my-zsh
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
+
+### End of Zinit's installer chunk
+
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+export ENHANCD_FILTER="fzy"
+
+zinit wait lucid for \
+  OMZP::git \
+  OMZP::nvm \
+  OMZP::git-extras \
+  OMZP::docker \
+  OMZP::pip \
+  OMZP::virtualenv \
+  OMZP::virtualenvwrapper \
+  djui/alias-tips \
+  zsh-users/zsh-completions \
+  esc/conda-zsh-completion \
+  zsh-users/zsh-history-substring-search \
+  pick"init.sh" b4b4r07/enhancd
+
+zinit wait lucid for \
+ atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
+    zdharma-continuum/fast-syntax-highlighting \
+ blockf \
+    zsh-users/zsh-completions \
+ atload"!_zsh_autosuggest_start" \
+    zsh-users/zsh-autosuggestions
+
+# zplug "", defer:3 # Should be loaded last.
 
 # https://github.com/bhilburn/powerlevel9k/wiki/Stylizing-Your-Prompt
 # POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='black'
@@ -86,7 +128,6 @@ then
   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
 fi
 # export TERM="xterm-256color"
-# zplug "bhilburn/powerlevel9k", as:theme
 SPACESHIP_PROMPT_ADD_NEWLINE=true
 SPACESHIP_CHAR_SYMBOL=" \uf0e7"
 SPACESHIP_CHAR_PREFIX="\uf296"
@@ -95,30 +136,12 @@ SPACESHIP_CHAR_COLOR_SUCCESS="yellow"
 SPACESHIP_PROMPT_DEFAULT_PREFIX="$USER"
 SPACESHIP_PROMPT_FIRST_PREFIX_SHOW="true"
 SPACESHIP_USER_SHOW="true"
-zplug denysdovhan/spaceship-prompt, use:spaceship.zsh, from:github, as:theme
+# zplug denysdovhan/spaceship-prompt, use:spaceship.zsh, from:github, as:theme
 
 # AUTOENV_FILE_ENTER=.autoenv.zsh
 # AUTOENV_FILE_LEAVE=.autoenv.zsh
 # AUTOENV_HANDLE_LEAVE=1
 # zplug "Tarrasch/zsh-autoenv"
-zplug "djui/alias-tips"
-zplug "zsh-users/zsh-completions"
-zplug "esc/conda-zsh-completion"
-export ENHANCD_FILTER="fzy"
-zplug "b4b4r07/enhancd", use:init.sh
-zplug "zsh-users/zsh-autosuggestions", defer:1
-zplug "zsh-users/zsh-syntax-highlighting", defer:2 # Should be loaded 2nd last.
-zplug "zsh-users/zsh-history-substring-search", defer:3 # Should be loaded last.
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-
-zplug load
 
 # all of our zsh files
 typeset -U config_files
@@ -145,9 +168,6 @@ autoload -U compinit
 compinit
 
 # load every completion after autocomplete loads
-# The next line enables shell command completion for gcloud.
-if [ -f '/usr/local/google-cloud-sdk/completion.zsh.inc' ]; then . '/usr/local/google-cloud-sdk/completion.zsh.inc'; fi
-
 for file in ${(M)config_files:#*/completion.zsh}
 do
   source $file
@@ -188,24 +208,19 @@ export MapboxAccessToken=pk.eyJ1Ijoic3dpemVjIiwiYSI6ImNqcHdnaDR1MDB0bWozeG1tY28w
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/michael/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/michael/opt/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/michael/opt/anaconda3/etc/profile.d/conda.sh"
-    fi
-fi
-unset __conda_setup
+# __conda_setup="$('/Users/michael/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/Users/michael/opt/anaconda3/etc/profile.d/conda.sh" ]; then
+#         . "/Users/michael/opt/anaconda3/etc/profile.d/conda.sh"
+#     fi
+# fi
+# unset __conda_setup
 # <<< conda initialize <<<
 
 typeset -U path # force path array to have unique values
 path=(/opt/homebrew/bin $HOME/.serverless/bin /Users/michael/opt/anaconda3/bin /usr/local/Cellar/node/13.11.0/bin ~/opt/anaconda3/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin "$path[@]")
-
-conda activate python38
-
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 # AWS Completion
 complete -C '/usr/local/bin/aws_completer' aws
@@ -213,4 +228,31 @@ complete -C '/usr/local/bin/aws_completer' aws
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/local/bin/terraform terraform
 
+# conda activate py39
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/michael/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/michael/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/michael/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/michael/google-cloud-sdk/completion.zsh.inc'; fi
+
+export GITHUB_TOKEN=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
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
+jenv shell zulu64-17.0.4.1
+
+# Loade kubectl completions
+source <(kubectl completion zsh)
+
+# Utility for logging into EKS more easily
+eks-tok() { aws eks get-token --cluster "$1" | jq -r ".status.token" | pbcopy }
+
+# Fig post block. Keep at the bottom of this file.
+[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
+
+# zprof
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

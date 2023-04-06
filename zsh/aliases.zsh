@@ -121,3 +121,5 @@ mfa() {
 
 alias t='todoist --color'
 alias cat='ccat'
+alias k='kubectl'
+alias kc='kubectl'
