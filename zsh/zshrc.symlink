@@ -7,8 +7,6 @@ fi
 
 # zmodload zsh/zprof
 
-# Fig pre block. Keep at the top of this file.
-[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
 # disable Ctrl+S control flow
 # stty stop undef
 # export TERM="xterm-256color"
@@ -50,7 +48,7 @@ export ZSH=$HOME/.dotfiles
 
 # Path manipulation
 typeset -U path # force path array to have unique values
-path=($HOME/.serverless/bin /Users/michael/opt/anaconda3/bin /usr/local/Cellar/node/13.11.0/bin ~/opt/anaconda3/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin $HOME/go/bin "$path[@]")
+path=($HOME/.serverless/bin /Users/michael/miniconda3/bin /usr/local/Cellar/node/13.11.0/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin $HOME/go/bin "$path[@]")
 
 typeset -U manpath # force path array to have unique values
 manpath=(/usr/local/opt/coreutils/libexec/gnuman /usr/local/man /usr/local/mysql/man /usr/local/git/man "$manpath[@]")
@@ -90,8 +88,6 @@ zinit light-mode for \
 
 ### End of Zinit's installer chunk
 
-zinit ice depth=1; zinit light romkatv/powerlevel10k
-
 export ENHANCD_FILTER="fzy"
 
 zinit wait lucid for \
@@ -104,6 +100,7 @@ zinit wait lucid for \
   OMZP::virtualenvwrapper \
   djui/alias-tips \
   zsh-users/zsh-completions \
+  chr-fritz/docker-completion.zshplugin \
   esc/conda-zsh-completion \
   zsh-users/zsh-history-substring-search \
   pick"init.sh" b4b4r07/enhancd
@@ -120,22 +117,22 @@ zinit wait lucid for \
 
 # https://github.com/bhilburn/powerlevel9k/wiki/Stylizing-Your-Prompt
 # POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='black'
-POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='008'
-POWERLEVEL9K_MODE='nerdfont-complete'
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs virtualenv)
-if [[ "$(uname -s)" == "Darwin" ]]
-then
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
-fi
+# POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='008'
+# POWERLEVEL9K_MODE='nerdfont-complete'
+# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs virtualenv)
+# if [[ "$(uname -s)" == "Darwin" ]]
+# then
+#   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
+# fi
 # export TERM="xterm-256color"
-SPACESHIP_PROMPT_ADD_NEWLINE=true
-SPACESHIP_CHAR_SYMBOL=" \uf0e7"
-SPACESHIP_CHAR_PREFIX="\uf296"
-SPACESHIP_CHAR_SUFFIX=(" ")
-SPACESHIP_CHAR_COLOR_SUCCESS="yellow"
-SPACESHIP_PROMPT_DEFAULT_PREFIX="$USER"
-SPACESHIP_PROMPT_FIRST_PREFIX_SHOW="true"
-SPACESHIP_USER_SHOW="true"
+# SPACESHIP_PROMPT_ADD_NEWLINE=true
+# SPACESHIP_CHAR_SYMBOL=" \uf0e7"
+# SPACESHIP_CHAR_PREFIX="\uf296"
+# SPACESHIP_CHAR_SUFFIX=(" ")
+# SPACESHIP_CHAR_COLOR_SUCCESS="yellow"
+# SPACESHIP_PROMPT_DEFAULT_PREFIX="$USER"
+# SPACESHIP_PROMPT_FIRST_PREFIX_SHOW="true"
+# SPACESHIP_USER_SHOW="true"
 # zplug denysdovhan/spaceship-prompt, use:spaceship.zsh, from:github, as:theme
 
 # AUTOENV_FILE_ENTER=.autoenv.zsh
@@ -208,19 +205,21 @@ export MapboxAccessToken=pk.eyJ1Ijoic3dpemVjIiwiYSI6ImNqcHdnaDR1MDB0bWozeG1tY28w
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/Users/michael/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-# if [ $? -eq 0 ]; then
-#     eval "$__conda_setup"
-# else
-#     if [ -f "/Users/michael/opt/anaconda3/etc/profile.d/conda.sh" ]; then
-#         . "/Users/michael/opt/anaconda3/etc/profile.d/conda.sh"
-#     fi
-# fi
-# unset __conda_setup
+__conda_setup="$('/Users/michael/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/Users/michael/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/michael/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/Users/michael/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
 # <<< conda initialize <<<
 
 typeset -U path # force path array to have unique values
-path=(/opt/homebrew/bin $HOME/.serverless/bin /Users/michael/opt/anaconda3/bin /usr/local/Cellar/node/13.11.0/bin ~/opt/anaconda3/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin "$path[@]")
+path=(/opt/homebrew/bin $HOME/.serverless/bin /Users/michael/miniconda3/bin /usr/local/Cellar/node/13.11.0/bin ~/opt/anaconda3/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin "$path[@]")
 
 # AWS Completion
 complete -C '/usr/local/bin/aws_completer' aws
@@ -238,7 +237,7 @@ if [ -f '/Users/michael/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/michael
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/michael/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/michael/google-cloud-sdk/completion.zsh.inc'; fi
 
-export GITHUB_TOKEN=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
+# export GITHUB_TOKEN=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
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 jenv shell zulu64-17.0.4.1
@@ -249,10 +248,16 @@ source <(kubectl completion zsh)
 # Utility for logging into EKS more easily
 eks-tok() { aws eks get-token --cluster "$1" | jq -r ".status.token" | pbcopy }
 
-# Fig post block. Keep at the bottom of this file.
-[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
+export OPENAI_API_KEY="sk-T1HNJrQuWCPp1UHwiq2hJDo4msNVNuHKYKh2lrkL"
 
 # zprof
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+
+autoload -Uz compinit
+zstyle ':completion:*' menu select
+fpath+=~/.zfunc

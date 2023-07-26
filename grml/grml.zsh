@@ -3065,7 +3065,7 @@ deswap() {
 #       commandline to be send to it's own tab (needs vim7).
 if check_com vim; then
     vim() {
-        VIM_PLEASE_SET_TITLE='yes' command vim ${VIM_OPTIONS} "$@"
+        VIM_PLEASE_SET_TITLE='yes' command nvim ${VIM_OPTIONS} "$@"
     }
 fi
 

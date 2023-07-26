@@ -90,6 +90,7 @@ call dein#add('wookiehangover/jshint.vim')
 
 call dein#add('vim-scripts/Align')
 call dein#add('jphustman/SQLUtilities')
+call dein#add('dhruvasagar/vim-table-mode')
 
 " Required:
 call dein#end()
