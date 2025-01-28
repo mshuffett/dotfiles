@@ -125,3 +125,10 @@ alias k='kubectl'
 alias kc='kubectl'
 alias which='which -a'
 alias gpt='sgpt'
+alias airport='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
+
+
+alias gke-compose-prod="gcloud config configurations activate kubestack && gcloud container clusters get-credentials compose-prod-us-east4 --region=us-east4"
+alias gke-compose-stage="gcloud config configurations activate kubestack && gcloud container clusters get-credentials compose-stage-us-east1 --region=us-east1"
+alias gke-compose-ops="gcloud config configurations activate kubestack && gcloud container clusters get-credentials compose-ops-us-east1 --region=us-east1"
+alias p='pnpm'

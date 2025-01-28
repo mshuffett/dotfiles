@@ -2,3 +2,11 @@ sublime2/User/Package\ Control.sublime-settings
 sublime2/User/Package Control.last-run
 git/gitconfig.symlink
 cache/
+.aider*
+.history/
+.localrc
+.zsh_secrets_cache
+.env
+.env.*
+**/local.env
+.zsh_secrets

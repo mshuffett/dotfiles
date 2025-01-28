@@ -1,5 +1,8 @@
 ## mshuffett does dotfiles
+
 These are my personal dotfiles, originally forked from [holman's dotfiles](https://github.com/holman/dotfiles) with major modifications. I am using oh-my-zsh and antigen as part of these dotfiles.
+
+**Note:** This repository should be kept private as it contains sensitive configuration and paths.
 
 ## install
 
@@ -9,7 +12,39 @@ Run this:
 curl -sL https://github.com/mshuffett/dotfiles/raw/master/script/install_from_scratch | bash
 ```
 
+## Secrets Management
+
+This dotfiles repo uses 1Password CLI for secure secrets management. Here's how it works:
+
+### Setup
+
+1. Install 1Password CLI:
+
+```sh
+brew install --cask 1password-cli
+```
+
+2. First-time setup will prompt you to login to 1Password CLI when you open a new shell
+
+3. Secrets are then cached locally in `~/.zsh_secrets_cache` (gitignored)
+
+### Usage
+
+- Secrets are automatically loaded in new shell sessions
+- To refresh secrets from 1Password: run `refresh_secrets`
+- Secrets are stored in 1Password under the "Private" vault
+
+### Required 1Password Setup
+
+Store your secrets in 1Password with these paths:
+
+- `op://Private/GitHub/token`
+- `op://Private/OpenAI/api_key`
+- `op://Private/Anthropic/api_key`
+- `op://Private/Mapbox/access_token`
+
 ## for me
+
 Feel free to fork these dotfiles, but I am primarily focusing on them for personal use for the time being, so YMMV.
 
 ## topical

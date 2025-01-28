@@ -5,6 +5,42 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+## Secrets Management - load this early to ensure environment variables are available
+export ZSH_SECRETS_CACHE="$HOME/.zsh_secrets_cache"
+
+## Function to fetch and cache secrets from 1Password
+fetch_and_cache_secrets() {
+  # Ensure we're logged into 1Password CLI
+  if ! op account get > /dev/null 2>&1; then
+    echo "Please sign in to 1Password CLI..."
+    eval $(op signin)
+  fi
+  
+  # Create secrets cache
+  cat > "$ZSH_SECRETS_CACHE" <<EOL
+export GITHUB_TOKEN="$(op read 'op://Private/GitHub/token')"
+export OPENAI_API_KEY="$(op read 'op://Private/OpenAI API Key/api_key')"
+export ANTHROPIC_API_KEY="$(op read 'op://Private/Anthropic API Key/api_key')"
+export MAPBOX_ACCESS_TOKEN="$(op read 'op://Private/Mapbox Access Token/access_token')"
+EOL
+  
+  chmod 600 "$ZSH_SECRETS_CACHE"
+}
+
+## Load cached secrets or fetch if needed
+if [ ! -f "$ZSH_SECRETS_CACHE" ]; then
+  fetch_and_cache_secrets
+fi
+
+source "$ZSH_SECRETS_CACHE"
+
+# Add a function to refresh secrets if needed
+refresh_secrets() {
+  fetch_and_cache_secrets
+  source "$ZSH_SECRETS_CACHE"
+  echo "Secrets refreshed from 1Password!"
+}
+
 # zmodload zsh/zprof
 
 # disable Ctrl+S control flow
@@ -48,7 +84,7 @@ export ZSH=$HOME/.dotfiles
 
 # Path manipulation
 typeset -U path # force path array to have unique values
-path=($HOME/.serverless/bin /Users/michael/miniconda3/bin /usr/local/Cellar/node/13.11.0/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin $HOME/go/bin "$path[@]")
+path=($HOME/.serverless/bin /usr/local/go/bin $HOME/go/bin /Users/michael/miniconda3/bin /usr/local/Cellar/node/13.11.0/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin "$path[@]")
 
 typeset -U manpath # force path array to have unique values
 manpath=(/usr/local/opt/coreutils/libexec/gnuman /usr/local/man /usr/local/mysql/man /usr/local/git/man "$manpath[@]")
@@ -100,7 +136,8 @@ zinit wait lucid for \
   OMZP::virtualenvwrapper \
   djui/alias-tips \
   zsh-users/zsh-completions \
-  chr-fritz/docker-completion.zshplugin \
+  as"completion" has"docker" mv"completion/_docker -> _docker" docker/cli \
+  as"completion" has"docker-compose" mv"contrib/completion/zsh/_docker-compose -> _docker-compose" docker/compose \
   esc/conda-zsh-completion \
   zsh-users/zsh-history-substring-search \
   pick"init.sh" b4b4r07/enhancd
@@ -160,9 +197,18 @@ do
   source $file
 done
 
-# initialize autocomplete here, otherwise functions won't be loaded
-autoload -U compinit
-compinit
+# Add this near the top, after the instant prompt block but before other initializations
+# Disable Docker completion warnings
+# zstyle ':completion:*:*:docker:*' option-stacking yes
+# zstyle ':completion:*:*:docker-*:*' option-stacking yes
+
+# Move the compinit block earlier and modify it to suppress warnings
+autoload -Uz compinit
+if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
+  compinit -i # -i flag ignores insecure directories and files
+else
+  compinit -C -i
+fi
 
 # load every completion after autocomplete loads
 for file in ${(M)config_files:#*/completion.zsh}
@@ -197,8 +243,6 @@ export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 # added by travis gem
 [ -f /Users/michael/.travis/travis.sh ] && source /Users/michael/.travis/travis.sh
 
-export MapboxAccessToken=pk.eyJ1Ijoic3dpemVjIiwiYSI6ImNqcHdnaDR1MDB0bWozeG1tY28wcHVoM2UifQ.RxzaHH4i1_U32eiWoOc_jQ
-
 # tabtab source for packages
 # uninstall by removing these lines
 [[ -f ~/.config/tabtab/__tabtab.zsh ]] && . ~/.config/tabtab/__tabtab.zsh || true
@@ -219,7 +263,7 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 typeset -U path # force path array to have unique values
-path=(/opt/homebrew/bin $HOME/.serverless/bin /Users/michael/miniconda3/bin /usr/local/Cellar/node/13.11.0/bin ~/opt/anaconda3/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin "$path[@]")
+path=(~/.rye/shims /opt/homebrew/bin $HOME/.serverless/bin /Users/michael/miniconda3/bin ~/opt/anaconda3/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin "$path[@]")
 
 # AWS Completion
 complete -C '/usr/local/bin/aws_completer' aws
@@ -237,8 +281,7 @@ if [ -f '/Users/michael/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/michael
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/michael/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/michael/google-cloud-sdk/completion.zsh.inc'; fi
 
-# export GITHUB_TOKEN=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
-export PATH="$HOME/.jenv/bin:$PATH"
+export PATH="$HOME/.jenv/bin:/usr/local/go/bin:$PATH"
 eval "$(jenv init -)"
 jenv shell zulu64-17.0.4.1
 
@@ -247,8 +290,6 @@ source <(kubectl completion zsh)
 
 # Utility for logging into EKS more easily
 eks-tok() { aws eks get-token --cluster "$1" | jq -r ".status.token" | pbcopy }
-
-export OPENAI_API_KEY="sk-T1HNJrQuWCPp1UHwiq2hJDo4msNVNuHKYKh2lrkL"
 
 # zprof
 
@@ -261,3 +302,68 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 autoload -Uz compinit
 zstyle ':completion:*' menu select
 fpath+=~/.zfunc
+
+
+# pnpm
+export PNPM_HOME="/Users/michael/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+export DENO_INSTALL="/Users/michael/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
+# source "$HOME/.rye/env"
+
+# Initialize nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/zsh_completion" ] && source "$NVM_DIR/zsh_completion"  # This loads nvm zsh_completion
+
+# Place this after nvm initialization!
+autoload -U add-zsh-hook
+load-nvmrc() {
+  local node_version="$(nvm version)"
+  local nvmrc_path="$(nvm_find_nvmrc)"
+
+  if [ -n "$nvmrc_path" ]; then
+    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install > /dev/null 2>&1
+    elif [ "$nvmrc_node_version" != "$node_version" ]; then
+      nvm use > /dev/null 2>&1
+    fi
+  elif [ "$node_version" != "$(nvm version default)" ]; then
+    nvm use default > /dev/null 2>&1
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc > /dev/null 2>&1
+
+
+source "$HOME/.rye/env"
+
+# Add this before loading powerlevel10k to suppress the instant prompt warning
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
+# Docker completions setup
+if type docker &>/dev/null; then
+  # Load Docker completions from Docker Desktop location (macOS)
+  if [ -f /Applications/Docker.app/Contents/Resources/etc/docker.zsh-completion ]; then
+    ln -sf /Applications/Docker.app/Contents/Resources/etc/docker.zsh-completion /usr/local/share/zsh/site-functions/_docker
+  fi
+  if [ -f /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion ]; then
+    ln -sf /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion /usr/local/share/zsh/site-functions/_docker-compose
+  fi
+  
+  # Alternative locations for Docker completions
+  if [ ! -f /usr/local/share/zsh/site-functions/_docker ]; then
+    # Create directory if it doesn't exist
+    mkdir -p /usr/local/share/zsh/site-functions
+    
+    # Download completions if needed
+    curl -fLo /usr/local/share/zsh/site-functions/_docker https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker
+  fi
+fi

@@ -51,3 +51,7 @@ sandbox/
 .idea/
 
 *.swp
+
+# VS Code #
+###########
+.history/
