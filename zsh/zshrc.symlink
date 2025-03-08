@@ -1,369 +1,200 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# Personal Zsh configuration file. It is strongly recommended to keep all
+# shell customization and configuration (including exported environment
+# variables such as PATH) in this file or in files sourced from it.
+#
+# Documentation: https://github.com/romkatv/zsh4humans/blob/v5/README.md.
+
+# Periodic auto-update on Zsh startup: 'ask' or 'no'.
+# You can manually run `z4h update` to update everything.
+zstyle ':z4h:' auto-update      'no'
+# Ask whether to auto-update this often; has no effect if auto-update is 'no'.
+zstyle ':z4h:' auto-update-days '28'
+
+# Keyboard type: 'mac' or 'pc'.
+zstyle ':z4h:bindkey' keyboard  'mac'
+
+# Start tmux if not already in tmux.
+# Only start tmux if not already in tmux and not in cursor
+if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
+  zstyle ':z4h:' start-tmux command tmux -u new -A -D -t z4h
+else
+  zstyle ':z4h:' start-tmux       no
 fi
 
-## Secrets Management - load this early to ensure environment variables are available
-export ZSH_SECRETS_CACHE="$HOME/.zsh_secrets_cache"
+# Whether to move prompt to the bottom when zsh starts and on Ctrl+L.
+zstyle ':z4h:' prompt-at-bottom 'no'
 
-## Function to fetch and cache secrets from 1Password
-fetch_and_cache_secrets() {
-  # Ensure we're logged into 1Password CLI
-  if ! op account get > /dev/null 2>&1; then
-    echo "Please sign in to 1Password CLI..."
-    eval $(op signin)
-  fi
-  
-  # Create secrets cache
-  cat > "$ZSH_SECRETS_CACHE" <<EOL
+# Mark up shell's output with semantic information.
+zstyle ':z4h:' term-shell-integration 'yes'
+
+# Right-arrow key accepts one character ('partial-accept') from
+# command autosuggestions or the whole thing ('accept')?
+zstyle ':z4h:autosuggestions' forward-char 'accept'
+
+# Recursively traverse directories when TAB-completing files.
+zstyle ':z4h:fzf-complete' recurse-dirs 'no'
+
+# Enable direnv to automatically source .envrc files.
+zstyle ':z4h:direnv'         enable 'yes'
+# Show "loading" and "unloading" notifications from direnv.
+zstyle ':z4h:direnv:success' notify 'yes'
+
+# Enable ('yes') or disable ('no') automatic teleportation of z4h over
+# SSH when connecting to these hosts.
+zstyle ':z4h:ssh:example-hostname1'   enable 'yes'
+zstyle ':z4h:ssh:*.example-hostname2' enable 'no'
+# The default value if none of the overrides above match the hostname.
+zstyle ':z4h:ssh:*'                   enable 'no'
+
+# Send these files over to the remote host when connecting over SSH to the
+# enabled hosts.
+zstyle ':z4h:ssh:*' send-extra-files '~/.nanorc' '~/.env.zsh'
+
+# Clone additional Git repositories from GitHub.
+#
+# This doesn't do anything apart from cloning the repository and keeping it
+# up-to-date. Cloned files can be used after `z4h init`. This is just an
+# example. If you don't plan to use Oh My Zsh, delete this line.
+z4h install ohmyzsh/ohmyzsh || return
+
+# Install or update core components (fzf, zsh-autosuggestions, etc.) and
+# initialize Zsh. After this point console I/O is unavailable until Zsh
+# is fully initialized. Everything that requires user interaction or can
+# perform network I/O must be done above. Everything else is best done below.
+z4h init || return
+
+# Path and environment variables extracted from ~/.dotfiles/zsh/zshrc.symlink
+# Secrets Management
+export ZSH_SECRETS_CACHE="$HOME/.zsh_secrets_cache"
+if [ -f "$ZSH_SECRETS_CACHE" ]; then
+  source "$ZSH_SECRETS_CACHE"
+fi
+
+# Utility directories
+export ZSH=$HOME/.dotfiles
+export ZSH_VAR_LIB_DIR=$HOME/.var/lib/zsh
+[[ ! -d $ZSH_VAR_LIB_DIR ]] && mkdir -p $ZSH_VAR_LIB_DIR
+
+# Terminal settings
+export LESS='-iR'
+export GPG_TTY=$TTY
+
+# Programming languages and tools
+export NVM_DIR="$HOME/.nvm"
+export PNPM_HOME="/Users/michael/Library/pnpm"
+export DENO_INSTALL="/Users/michael/.deno"
+
+# Path configuration
+typeset -U path # force path array to have unique values
+path=(
+  ~/.rye/shims
+  /opt/homebrew/bin
+  $HOME/.serverless/bin
+  /Users/michael/miniconda3/bin
+  ~/opt/anaconda3/bin
+  $HOME/.jenv/bin
+  /usr/local/go/bin
+  $HOME/go/bin
+  $PNPM_HOME
+  $DENO_INSTALL/bin
+  $HOME/bin
+  /usr/bin
+  /usr/local/opt/coreutils/libexec/gnubin
+  /usr/local/bin
+  /usr/local/sbin
+  $HOME/.sfs
+  $ZSH/bin
+  /Applications/MiniZincIDE.app/Contents/Resources
+  /Users/michael/Library/Python/3.7/bin
+  $path
+)
+
+# Man path configuration
+typeset -U manpath
+manpath=(
+  /usr/local/opt/coreutils/libexec/gnuman
+  /usr/local/man
+  /usr/local/mysql/man
+  /usr/local/git/man
+  $manpath
+)
+
+# Source additional local files if they exist.
+z4h source ~/.env.zsh
+
+# Use additional Git repositories pulled in with `z4h install`.
+#
+# This is just an example that you should delete. It does nothing useful.
+z4h source ohmyzsh/ohmyzsh/lib/diagnostics.zsh  # source an individual file
+z4h load   ohmyzsh/ohmyzsh/plugins/emoji-clock  # load a plugin
+
+# Define key bindings.
+z4h bindkey undo Ctrl+/   Shift+Tab  # undo the last command line change
+z4h bindkey redo Option+/            # redo the last undone command line change
+
+z4h bindkey z4h-cd-back    Shift+Left   # cd into the previous directory
+z4h bindkey z4h-cd-forward Shift+Right  # cd into the next directory
+z4h bindkey z4h-cd-up      Shift+Up     # cd into the parent directory
+z4h bindkey z4h-cd-down    Shift+Down   # cd into a child directory
+
+# Autoload functions.
+autoload -Uz zmv
+
+# Define functions and completions.
+function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
+compdef _directories md
+
+# Additional useful functions from zshrc.symlink
+# Function to refresh secrets from 1Password
+refresh_secrets() {
+  if command -v op &> /dev/null; then
+    # Ensure we're logged into 1Password CLI
+    if ! op account get > /dev/null 2>&1; then
+      echo "Please sign in to 1Password CLI..."
+      eval $(op signin)
+    fi
+    
+    # Create secrets cache
+    cat > "$ZSH_SECRETS_CACHE" <<EOL
 export GITHUB_TOKEN="$(op read 'op://Private/GitHub/token')"
 export OPENAI_API_KEY="$(op read 'op://Private/OpenAI API Key/api_key')"
 export ANTHROPIC_API_KEY="$(op read 'op://Private/Anthropic API Key/api_key')"
 export MAPBOX_ACCESS_TOKEN="$(op read 'op://Private/Mapbox Access Token/access_token')"
 EOL
-  
-  chmod 600 "$ZSH_SECRETS_CACHE"
+    
+    chmod 600 "$ZSH_SECRETS_CACHE"
+    source "$ZSH_SECRETS_CACHE"
+    echo "Secrets refreshed from 1Password!"
+  else
+    echo "1Password CLI (op) not found. Please install it first."
+  fi
 }
 
-## Load cached secrets or fetch if needed
-if [ ! -f "$ZSH_SECRETS_CACHE" ]; then
-  fetch_and_cache_secrets
-fi
-
-source "$ZSH_SECRETS_CACHE"
-
-# Add a function to refresh secrets if needed
-refresh_secrets() {
-  fetch_and_cache_secrets
-  source "$ZSH_SECRETS_CACHE"
-  echo "Secrets refreshed from 1Password!"
+# Go up multiple directories with u [number]
+u() {
+  set -A ud
+  ud[1+${1-1}]=
+  cd ${(j:../:)ud}
 }
-
-# zmodload zsh/zprof
-
-# disable Ctrl+S control flow
-# stty stop undef
-# export TERM="xterm-256color"
-#
-#
-export ZSH_VAR_LIB_DIR=$HOME/.var/lib/zsh
-[[ ! -d $ZSH_VAR_LIB_DIR ]] && mkdir -p $ZSH_VAR_LIB_DIR
-
-# Ctrl-u: Deletes everything before cursor (u is on left)
-#bindkey '^u' backward-kill-line
-# Ctrl-o: Deletes everything after cursor (o is on right)
-    # (Commonly Ctrl-k)
-#bindkey '^o' kill-line
-
-setopt extended_glob
-
-# setopt nohistverify
-# Report statistics on commands that take longer than 10 seconds
-REPORTTIME=10
-
-## Go up 5 directories with u 5
-u () {
-    set -A ud
-    ud[1+${1-1}]=
-    cd ${(j:../:)ud}
-}
-
-if [[ -z "$TERMCAP" ]] && [[ "$TERM" == "screen" ]]; then
-  export TERMCAP='Co#256:'
-fi
-
-# bindkey "^[^[OC" forward-word
-# bindkey "^[^[OD" backward-word
-
-####################### BEGIN holman's code #####################
-
-# shortcut to this dotfiles path is $ZSH
-export ZSH=$HOME/.dotfiles
-
-# Path manipulation
-typeset -U path # force path array to have unique values
-path=($HOME/.serverless/bin /usr/local/go/bin $HOME/go/bin /Users/michael/miniconda3/bin /usr/local/Cellar/node/13.11.0/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin "$path[@]")
-
-typeset -U manpath # force path array to have unique values
-manpath=(/usr/local/opt/coreutils/libexec/gnuman /usr/local/man /usr/local/mysql/man /usr/local/git/man "$manpath[@]")
-
-# use .localrc for SUPER SECRET CRAP that you don't
-# want in your public, versioned repo.
-if [[ -a ~/.localrc ]]
-then
-  source ~/.localrc
-fi
-
-export GOPATH=$HOME/go
-source "$GOPATH/src/github.com/sachaos/todoist/todoist_functions.sh"
-PROG=todoist source "$GOPATH/pkg/mod/github.com/urfave/cli@v1.20.0/autocomplete/zsh_autocomplete"
-
-
-### Added by Zinit's installer
-if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
-    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
-    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
-    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
-        print -P "%F{33} %F{34}Installation successful.%f%b" || \
-        print -P "%F{160} The clone has failed.%f%b"
-fi
-
-source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
-
-# Load a few important annexes, without Turbo
-# (this is currently required for annexes)
-zinit light-mode for \
-    zdharma-continuum/zinit-annex-as-monitor \
-    zdharma-continuum/zinit-annex-bin-gem-node \
-    zdharma-continuum/zinit-annex-patch-dl \
-    zdharma-continuum/zinit-annex-rust
-
-### End of Zinit's installer chunk
-
-export ENHANCD_FILTER="fzy"
-
-zinit wait lucid for \
-  OMZP::git \
-  OMZP::nvm \
-  OMZP::git-extras \
-  OMZP::docker \
-  OMZP::pip \
-  OMZP::virtualenv \
-  OMZP::virtualenvwrapper \
-  djui/alias-tips \
-  zsh-users/zsh-completions \
-  as"completion" has"docker" mv"completion/_docker -> _docker" docker/cli \
-  as"completion" has"docker-compose" mv"contrib/completion/zsh/_docker-compose -> _docker-compose" docker/compose \
-  esc/conda-zsh-completion \
-  zsh-users/zsh-history-substring-search \
-  pick"init.sh" b4b4r07/enhancd
-
-zinit wait lucid for \
- atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
-    zdharma-continuum/fast-syntax-highlighting \
- blockf \
-    zsh-users/zsh-completions \
- atload"!_zsh_autosuggest_start" \
-    zsh-users/zsh-autosuggestions
-
-# zplug "", defer:3 # Should be loaded last.
-
-# https://github.com/bhilburn/powerlevel9k/wiki/Stylizing-Your-Prompt
-# POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='black'
-# POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='008'
-# POWERLEVEL9K_MODE='nerdfont-complete'
-# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir rbenv vcs virtualenv)
-# if [[ "$(uname -s)" == "Darwin" ]]
-# then
-#   POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv)
-# fi
-# export TERM="xterm-256color"
-# SPACESHIP_PROMPT_ADD_NEWLINE=true
-# SPACESHIP_CHAR_SYMBOL=" \uf0e7"
-# SPACESHIP_CHAR_PREFIX="\uf296"
-# SPACESHIP_CHAR_SUFFIX=(" ")
-# SPACESHIP_CHAR_COLOR_SUCCESS="yellow"
-# SPACESHIP_PROMPT_DEFAULT_PREFIX="$USER"
-# SPACESHIP_PROMPT_FIRST_PREFIX_SHOW="true"
-# SPACESHIP_USER_SHOW="true"
-# zplug denysdovhan/spaceship-prompt, use:spaceship.zsh, from:github, as:theme
-
-# AUTOENV_FILE_ENTER=.autoenv.zsh
-# AUTOENV_FILE_LEAVE=.autoenv.zsh
-# AUTOENV_HANDLE_LEAVE=1
-# zplug "Tarrasch/zsh-autoenv"
-
-# all of our zsh files
-typeset -U config_files
-config_files=($ZSH/**/*.zsh)
-
-# load the path files
-for file in ${(M)config_files:#*/path.zsh}
-do
-  source $file
-done
-
-fpath=($ZSH/functions $fpath)
-
-autoload -U $ZSH/functions/*(:t)
-
-# load everything but the path and completion files
-for file in ${${config_files:#*/path.zsh}:#*/completion.zsh}
-do
-  source $file
-done
-
-# Add this near the top, after the instant prompt block but before other initializations
-# Disable Docker completion warnings
-# zstyle ':completion:*:*:docker:*' option-stacking yes
-# zstyle ':completion:*:*:docker-*:*' option-stacking yes
-
-# Move the compinit block earlier and modify it to suppress warnings
-autoload -Uz compinit
-if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
-  compinit -i # -i flag ignores insecure directories and files
-else
-  compinit -C -i
-fi
-
-# load every completion after autocomplete loads
-for file in ${(M)config_files:#*/completion.zsh}
-do
-  source $file
-done
-source $(dirname $(gem which colorls))/tab_complete.sh
-
-unset config_files
-
-export LESS='-iR'
-
-eval "$(fasd --init auto)"
-
-bindkey "^S" history-incremental-pattern-search-forward
-
-setopt autocd
-
-JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_102.jdk/Contents/Home
-HADOOP_VERSION=2.7.3
-HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.3
-HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
-
-# https://github.com/DomT4/homebrew-autoupdate
-export HOMEBREW_NO_AUTO_UPDATE="1"
-
-source ~/.iterm2_shell_integration.zsh
-
-export SPARK_HOME='/Users/michael/pixiedust/bin/spark/spark-2.4.3-bin-hadoop2.7'
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-
-# added by travis gem
-[ -f /Users/michael/.travis/travis.sh ] && source /Users/michael/.travis/travis.sh
-
-# tabtab source for packages
-# uninstall by removing these lines
-[[ -f ~/.config/tabtab/__tabtab.zsh ]] && . ~/.config/tabtab/__tabtab.zsh || true
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/michael/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/michael/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/michael/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/michael/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-typeset -U path # force path array to have unique values
-path=(~/.rye/shims /opt/homebrew/bin $HOME/.serverless/bin /Users/michael/miniconda3/bin ~/opt/anaconda3/bin /usr/local/Cellar/ruby/2.5.0/bin /usr/local/Cellar/emacs/25.3/bin  $HOME/bin /usr/bin/ /usr/local/Cellar/python/2.7.12/bin /usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/Current/bin /usr/local/opt/coreutils/libexec/gnubin /usr/local/bin ~/lighttable-0.8.0-alpha-linux ./bin $HOME/.rbenv/shims /usr/local/bin /usr/local/sbin $HOME/.sfs $ZSH/bin /Applications/MiniZincIDE.app/Contents/Resources /Users/michael/Library/Python/3.7/bin /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin "$path[@]")
-
-# AWS Completion
-complete -C '/usr/local/bin/aws_completer' aws
-
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /usr/local/bin/terraform terraform
-
-# conda activate py39
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/michael/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/michael/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/michael/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/michael/google-cloud-sdk/completion.zsh.inc'; fi
-
-export PATH="$HOME/.jenv/bin:/usr/local/go/bin:$PATH"
-eval "$(jenv init -)"
-jenv shell zulu64-17.0.4.1
-
-# Loade kubectl completions
-source <(kubectl completion zsh)
 
 # Utility for logging into EKS more easily
-eks-tok() { aws eks get-token --cluster "$1" | jq -r ".status.token" | pbcopy }
-
-# zprof
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-zinit ice depth=1; zinit light romkatv/powerlevel10k
-
-
-autoload -Uz compinit
-zstyle ':completion:*' menu select
-fpath+=~/.zfunc
-
-
-# pnpm
-export PNPM_HOME="/Users/michael/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-export DENO_INSTALL="/Users/michael/.deno"
-export PATH="$DENO_INSTALL/bin:$PATH"
-# source "$HOME/.rye/env"
-
-# Initialize nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/zsh_completion" ] && source "$NVM_DIR/zsh_completion"  # This loads nvm zsh_completion
-
-# Place this after nvm initialization!
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install > /dev/null 2>&1
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use > /dev/null 2>&1
-    fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
-    nvm use default > /dev/null 2>&1
+eks-tok() { 
+  if command -v aws &> /dev/null && command -v jq &> /dev/null; then
+    aws eks get-token --cluster "$1" | jq -r ".status.token" | pbcopy 
+  else
+    echo "Required tools (aws cli or jq) not found."
   fi
 }
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc > /dev/null 2>&1
 
+# Define named directories: ~w <=> Windows home directory on WSL.
+[[ -z $z4h_win_home ]] || hash -d w=$z4h_win_home
 
-source "$HOME/.rye/env"
+# Define aliases.
+alias tree='tree -a -I .git'
 
-# Add this before loading powerlevel10k to suppress the instant prompt warning
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+# Add flags to existing aliases.
+alias ls="${aliases[ls]:-ls} -A"
 
-# Docker completions setup
-if type docker &>/dev/null; then
-  # Load Docker completions from Docker Desktop location (macOS)
-  if [ -f /Applications/Docker.app/Contents/Resources/etc/docker.zsh-completion ]; then
-    ln -sf /Applications/Docker.app/Contents/Resources/etc/docker.zsh-completion /usr/local/share/zsh/site-functions/_docker
-  fi
-  if [ -f /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion ]; then
-    ln -sf /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion /usr/local/share/zsh/site-functions/_docker-compose
-  fi
-  
-  # Alternative locations for Docker completions
-  if [ ! -f /usr/local/share/zsh/site-functions/_docker ]; then
-    # Create directory if it doesn't exist
-    mkdir -p /usr/local/share/zsh/site-functions
-    
-    # Download completions if needed
-    curl -fLo /usr/local/share/zsh/site-functions/_docker https://raw.githubusercontent.com/docker/cli/master/contrib/completion/zsh/_docker
-  fi
-fi
+# Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
+setopt glob_dots     # no special treatment for file names with a leading dot
+setopt no_auto_menu  # require an extra TAB press to open the completion menu
