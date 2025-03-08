@@ -132,3 +132,4 @@ alias gke-compose-prod="gcloud config configurations activate kubestack && gclou
 alias gke-compose-stage="gcloud config configurations activate kubestack && gcloud container clusters get-credentials compose-stage-us-east1 --region=us-east1"
 alias gke-compose-ops="gcloud config configurations activate kubestack && gcloud container clusters get-credentials compose-ops-us-east1 --region=us-east1"
 alias p='pnpm'
+alias kode="cd ~/ws/kode-ws && tsx ~/ws/anon-kode/src/entrypoints/cli.tsx --yolo"
