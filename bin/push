@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Simple Pushover notification script
+# Usage: push "message" [priority]
+# Priority: -2 (lowest), -1 (low), 0 (normal), 1 (high), 2 (emergency)
+
+PUSHOVER_TOKEN="${PUSHOVER_TOKEN:-au69uu9rkb38bj32o2imjzcdofe921}"
+PUSHOVER_USER="${PUSHOVER_USER:-uji7rih97iczo5fvfzsfhvrnzwb55i}"
+
+MESSAGE="${1:-Test notification}"
+PRIORITY="${2:-0}"
+
+# Build curl command
+CURL_CMD="curl -s"
+CURL_CMD="$CURL_CMD --form-string \"token=$PUSHOVER_TOKEN\""
+CURL_CMD="$CURL_CMD --form-string \"user=$PUSHOVER_USER\""
+CURL_CMD="$CURL_CMD --form-string \"message=$MESSAGE\""
+
+if [ "$PRIORITY" != "0" ]; then
+    CURL_CMD="$CURL_CMD --form-string \"priority=$PRIORITY\""
+fi
+
+# Add retry and expire for emergency priority
+if [ "$PRIORITY" = "2" ]; then
+    CURL_CMD="$CURL_CMD --form-string \"retry=30\""
+    CURL_CMD="$CURL_CMD --form-string \"expire=3600\""
+fi
+
+CURL_CMD="$CURL_CMD https://api.pushover.net/1/messages.json"
+
+# Execute and show result
+RESULT=$(eval $CURL_CMD)
+echo "$RESULT"
+
+# Check if successful
+if echo "$RESULT" | grep -q '"status":1'; then
+    echo "✓ Notification sent successfully"
+else
+    echo "✗ Failed to send notification"
+fi
