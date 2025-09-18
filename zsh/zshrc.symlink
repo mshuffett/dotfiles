@@ -4,6 +4,8 @@
 #
 # Documentation: https://github.com/romkatv/zsh4humans/blob/v5/README.md.
 
+export EDITOR=cursor
+
 # Periodic auto-update on Zsh startup: 'ask' or 'no'.
 # You can manually run `z4h update` to update everything.
 zstyle ':z4h:' auto-update      'no'
@@ -63,14 +65,43 @@ z4h install ohmyzsh/ohmyzsh || return
 # perform network I/O must be done above. Everything else is best done below.
 z4h init || return
 
-# Path and environment variables extracted from ~/.dotfiles/zsh/zshrc.symlink
-# Secrets Management
+# Secrets Management - load this early to ensure environment variables are available
 export ZSH_SECRETS_CACHE="$HOME/.zsh_secrets_cache"
-if [ -f "$ZSH_SECRETS_CACHE" ]; then
-  source "$ZSH_SECRETS_CACHE"
+
+# Function to fetch and cache secrets from 1Password
+fetch_and_cache_secrets() {
+  # Ensure we're logged into 1Password CLI
+  if ! op account get > /dev/null 2>&1; then
+    echo "Please sign in to 1Password CLI..."
+    eval $(op signin)
+  fi
+  
+  # Create secrets cache
+  cat > "$ZSH_SECRETS_CACHE" <<EOL
+export GITHUB_TOKEN="$(op read 'op://Private/GitHub/token')"
+export OPENAI_API_KEY="$(op read 'op://Private/OpenAI API Key/api_key')"
+export ANTHROPIC_API_KEY="$(op read 'op://Private/Anthropic API Key/api_key')"
+export MAPBOX_ACCESS_TOKEN="$(op read 'op://Private/Mapbox Access Token/access_token')"
+EOL
+  
+  chmod 600 "$ZSH_SECRETS_CACHE"
+}
+
+# Load cached secrets or fetch if needed
+if [ ! -f "$ZSH_SECRETS_CACHE" ]; then
+  fetch_and_cache_secrets
 fi
 
-# Utility directories
+source "$ZSH_SECRETS_CACHE"
+
+# Add a function to refresh secrets if needed
+refresh_secrets() {
+  fetch_and_cache_secrets
+  source "$ZSH_SECRETS_CACHE"
+  echo "Secrets refreshed from 1Password!"
+}
+
+# Utility directories and environment
 export ZSH=$HOME/.dotfiles
 export ZSH_VAR_LIB_DIR=$HOME/.var/lib/zsh
 [[ ! -d $ZSH_VAR_LIB_DIR ]] && mkdir -p $ZSH_VAR_LIB_DIR
@@ -78,16 +109,26 @@ export ZSH_VAR_LIB_DIR=$HOME/.var/lib/zsh
 # Terminal settings
 export LESS='-iR'
 export GPG_TTY=$TTY
+export REPORTTIME=10
 
 # Programming languages and tools
-export NVM_DIR="$HOME/.nvm"
 export PNPM_HOME="/Users/michael/Library/pnpm"
 export DENO_INSTALL="/Users/michael/.deno"
+export GOPATH=$HOME/go
+export SPARK_HOME='/Users/michael/pixiedust/bin/spark/spark-2.4.3-bin-hadoop2.7'
+export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
 
-# Path configuration
+# Hadoop configuration
+export HADOOP_VERSION=2.7.3
+export HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.3
+export HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
+
+# Homebrew settings
+export HOMEBREW_NO_AUTO_UPDATE="1"
+
+# Path configuration 
 typeset -U path # force path array to have unique values
 path=(
-  ~/.rye/shims
   /opt/homebrew/bin
   $HOME/.serverless/bin
   /Users/michael/miniconda3/bin
@@ -102,10 +143,15 @@ path=(
   /usr/local/opt/coreutils/libexec/gnubin
   /usr/local/bin
   /usr/local/sbin
+  /usr/local/Cellar/ruby/2.5.0/bin
+  /usr/local/Cellar/emacs/25.3/bin
+  ./bin
+  $HOME/.rbenv/shims
   $HOME/.sfs
   $ZSH/bin
   /Applications/MiniZincIDE.app/Contents/Resources
   /Users/michael/Library/Python/3.7/bin
+  /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin
   $path
 )
 
@@ -123,10 +169,11 @@ manpath=(
 z4h source ~/.env.zsh
 
 # Use additional Git repositories pulled in with `z4h install`.
-#
-# This is just an example that you should delete. It does nothing useful.
-z4h source ohmyzsh/ohmyzsh/lib/diagnostics.zsh  # source an individual file
-z4h load   ohmyzsh/ohmyzsh/plugins/emoji-clock  # load a plugin
+# z4h source ohmyzsh/ohmyzsh/lib/diagnostics.zsh  # source an individual file
+# z4h load   ohmyzsh/ohmyzsh/plugins/emoji-clock  # load a plugin
+
+# Load git plugin from Oh My Zsh (includes all git aliases)
+z4h load ohmyzsh/ohmyzsh/plugins/git
 
 # Define key bindings.
 z4h bindkey undo Ctrl+/   Shift+Tab  # undo the last command line change
@@ -143,32 +190,6 @@ autoload -Uz zmv
 # Define functions and completions.
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
-
-# Additional useful functions from zshrc.symlink
-# Function to refresh secrets from 1Password
-refresh_secrets() {
-  if command -v op &> /dev/null; then
-    # Ensure we're logged into 1Password CLI
-    if ! op account get > /dev/null 2>&1; then
-      echo "Please sign in to 1Password CLI..."
-      eval $(op signin)
-    fi
-    
-    # Create secrets cache
-    cat > "$ZSH_SECRETS_CACHE" <<EOL
-export GITHUB_TOKEN="$(op read 'op://Private/GitHub/token')"
-export OPENAI_API_KEY="$(op read 'op://Private/OpenAI API Key/api_key')"
-export ANTHROPIC_API_KEY="$(op read 'op://Private/Anthropic API Key/api_key')"
-export MAPBOX_ACCESS_TOKEN="$(op read 'op://Private/Mapbox Access Token/access_token')"
-EOL
-    
-    chmod 600 "$ZSH_SECRETS_CACHE"
-    source "$ZSH_SECRETS_CACHE"
-    echo "Secrets refreshed from 1Password!"
-  else
-    echo "1Password CLI (op) not found. Please install it first."
-  fi
-}
 
 # Go up multiple directories with u [number]
 u() {
@@ -189,12 +210,65 @@ eks-tok() {
 # Define named directories: ~w <=> Windows home directory on WSL.
 [[ -z $z4h_win_home ]] || hash -d w=$z4h_win_home
 
-# Define aliases.
-alias tree='tree -a -I .git'
+source ~/.dotfiles/zsh/aliases.zsh
 
-# Add flags to existing aliases.
-alias ls="${aliases[ls]:-ls} -A"
-
-# Set shell options: http://zsh.sourceforge.net/Doc/Release/Options.html.
+# Set shell options
 setopt glob_dots     # no special treatment for file names with a leading dot
 setopt no_auto_menu  # require an extra TAB press to open the completion menu
+setopt autocd        # cd into directory by typing directory name
+setopt extended_glob # Extended globbing
+
+# Google Cloud SDK
+if [ -f '/Users/michael/google-cloud-sdk/path.zsh.inc' ]; then 
+  source '/Users/michael/google-cloud-sdk/path.zsh.inc'
+fi
+if [ -f '/Users/michael/google-cloud-sdk/completion.zsh.inc' ]; then 
+  source '/Users/michael/google-cloud-sdk/completion.zsh.inc'
+fi
+
+source ~/.dotfiles/zsh/aliases.zsh
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-12.0.1.jdk/Contents/Home
+export PATH=$JAVA_HOME/bin:$PATH
+
+# add to ~/.zshrc
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Added by Windsurf
+export PATH="/Users/michael/.codeium/windsurf/bin:$PATH"
+
+# bun completions
+[ -s "/Users/michael/.bun/_bun" ] && source "/Users/michael/.bun/_bun"
+
+export TODOIST_API_TOKEN="743e38d195f7457d6a6b67fd0e4ad821a305122e"
+export SMITHERY_API_KEY="dca5d7d1-57bf-41b4-8329-340fdf22a158"
+eval "$(zoxide init zsh)"
+
+export PUSHOVER_TOKEN="au69uu9rkb38bj32o2imjzcdofe921"
+export PUSHOVER_USER_KEY="uji7rih97iczo5fvfzsfhvrnzwb55i"
+export TZ="America/Los_Angeles"
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/michael/.lmstudio/bin"
+# End of LM Studio CLI section
+
+# pnpm
+export PNPM_HOME="/Users/michael/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+
+# direnv hook
+eval "$(direnv hook zsh)"
+
+# fnm (Fast Node Manager)
+# Uses Node from .nvmrc/.node-version on cd; sets default otherwise
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
+  # Ensure old NVM bins don't shadow fnm-managed Node
+  path=(${path:#$HOME/.nvm/versions/*/bin})
+fi
+
+# >>> codex-cli defaults (added by assistant) >>>
+# Ensure Codex CLI uses web search and bypasses approvals + sandbox (DANGEROUS)
+if command -v codex >/dev/null 2>&1; then
+  alias codex='command codex --search --dangerously-bypass-approvals-and-sandbox'
+fi
+# <<< codex-cli defaults (added by assistant) <<<

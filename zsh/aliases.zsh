@@ -1,11 +1,11 @@
 alias l=ls
 alias ll="ls -lh"
 alias dirs="dirs -v"
-alias sz="source ~/.zshrc"
-alias s="source ~/.zshrc"
+alias sz="exec zsh"
+alias s="exec zsh"
 alias sa="source ~/.dotfiles/zsh/aliases.zsh"
-alias ez="vim ~/.zshrc"
-alias ea="vim ~/.dotfiles/zsh/aliases.zsh"
+alias ez="$EDITOR ~/.zshrc"
+alias ea="$EDITOR ~/.dotfiles/zsh/aliases.zsh"
 alias shuffle="perl -MList::Util -e 'print List::Util::shuffle <>'"
 alias reload!='. ~/.zshrc'
 alias lh='ls -a | egrep "^\."' # ls dotfiles only
@@ -38,16 +38,16 @@ aa() {
 
 # User defined aliases (with aa)
 alias mmv='noglob zmv -W'
-alias et="vim ~/.tmux.conf"
+alias et="$EDITOR ~/.tmux.conf"
 alias st="source ~/.tmux.conf"
 alias acs="apt-cache search"
 alias acs='apt-cache search'
 alias ac='apt-cache'
 alias agi='_ apt-get install'
 alias ags='acs'
-alias ev='vim ~/.vimrc'
+alias ev='$EDITOR ~/.vimrc'
 
-alias ev='vim ~/.vimrc'
+alias ev='$EDITOR ~/.vimrc'
 alias desk='/usr/bin/ssh shuffem.desktop.amazon.com'
 alias b='brazil'
 alias venv='source ~/venvs/mds_venv/bin/activate'
@@ -132,4 +132,16 @@ alias gke-compose-prod="gcloud config configurations activate kubestack && gclou
 alias gke-compose-stage="gcloud config configurations activate kubestack && gcloud container clusters get-credentials compose-stage-us-east1 --region=us-east1"
 alias gke-compose-ops="gcloud config configurations activate kubestack && gcloud container clusters get-credentials compose-ops-us-east1 --region=us-east1"
 alias p='pnpm'
-alias kode="cd ~/ws/kode-ws && tsx ~/ws/anon-kode/src/entrypoints/cli.tsx --yolo"
+alias kws="cd ~/ws/kode-ws && tsx ~/ws/anon-kode/src/entrypoints/cli.tsx --yolo"
+alias kode="tsx ~/ws/anon-kode/src/entrypoints/cli.tsx --yolo"
+alias ckw='cd /Users/michael/ws/kode-ws/'
+alias gs='git status --short --branch | sed "s/^## /🌿 /" | sed "s/^M/📝 /" | sed "s/^A/✨ /" | sed "s/^D/🗑️ /" | sed "s/^R/♻️ /" | sed "s/^??/❓ /"'
+
+# Define aliases.
+alias tree='tree -a -I .git'
+
+# Add flags to existing aliases.
+alias ls="${aliases[ls]:-ls} -A"
+alias claude="claude --dangerously-skip-permissions"
+alias c="claude --dangerously-skip-permissions"
+alias lg='lazygit'
