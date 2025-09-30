@@ -27,13 +27,14 @@ msg_count=$(jq -s 'length' "$transcript_path" 2>/dev/null || echo 0)
 
 # After 3+ messages, set title once
 if [ "$msg_count" -ge 3 ]; then
-  # Extract last 5 messages for context (limit size for API call)
-  context=$(jq -s '.[-5:] | map(select(.role and .content)) | map({role, content: (.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end)})' "$transcript_path" 2>/dev/null)
+  # Extract last 5 user/assistant messages for context (filter out system messages)
+  # Get only messages with role "user" or "assistant"
+  context=$(jq -s '[.[] | select(.role == "user" or .role == "assistant")] | .[-5:] | map({role, content: (.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end)})' "$transcript_path" 2>/dev/null)
 
   # Check if we have an API key
   if [ -z "$ANTHROPIC_API_KEY" ]; then
     # Fallback: use first 40 chars of last user message
-    title=$(jq -r '.[-1].content // "claude-session"' "$transcript_path" | tr '\n' ' ' | cut -c1-40)
+    title=$(jq -r '[.[] | select(.role == "user")] | .[-1].content // "claude-session"' "$transcript_path" | tr '\n' ' ' | cut -c1-40)
   else
     # Call Claude API to generate a concise title
     title=$(curl -s https://api.anthropic.com/v1/messages \
