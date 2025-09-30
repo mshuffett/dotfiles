@@ -9,12 +9,6 @@ input=$(cat)
 session_id=$(echo "$input" | jq -r '.session_id')
 transcript_path=$(echo "$input" | jq -r '.transcript_path')
 
-# Debug logging (uncomment to debug)
-# echo "DEBUG: session=$session_id, transcript=$transcript_path" >> /tmp/tmux-hook-debug.log
-# echo "DEBUG: transcript contents:" >> /tmp/tmux-hook-debug.log
-# cat "$transcript_path" >> /tmp/tmux-hook-debug.log 2>&1
-# echo "---" >> /tmp/tmux-hook-debug.log
-
 # Flag file to track if title was already set for this session
 flag_file="/tmp/claude-tmux-title-${session_id}"
 
@@ -28,14 +22,19 @@ if [ -z "$TMUX" ]; then
   exit 0
 fi
 
-# Count messages in transcript
-msg_count=$(jq -s 'length' "$transcript_path" 2>/dev/null || echo 0)
+# Count only user/assistant messages (not file snapshots or other entries)
+msg_count=$(jq -s '[.[] | select(.message.role == "user" or .message.role == "assistant")] | length' "$transcript_path" 2>/dev/null || echo 0)
+
+# Debug logging
+echo "DEBUG: session=$session_id, transcript=$transcript_path" >> /tmp/tmux-hook-debug.log
+echo "DEBUG: msg_count=$msg_count" >> /tmp/tmux-hook-debug.log
 
 # After 3+ messages, set title once
 if [ "$msg_count" -ge 3 ]; then
-  # Extract last 5 user/assistant messages for context (filter out system messages)
-  # Get only messages with message.role "user" or "assistant"
+  # Extract last 5 user/assistant messages for context
   context=$(jq -s '[.[] | select(.message.role == "user" or .message.role == "assistant")] | .[-5:] | map({role: .message.role, content: (.message.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end)})' "$transcript_path" 2>/dev/null)
+
+  echo "DEBUG: context=$context" >> /tmp/tmux-hook-debug.log
 
   # Check if we have an API key
   if [ -z "$ANTHROPIC_API_KEY" ]; then
@@ -55,6 +54,9 @@ if [ "$msg_count" -ge 3 ]; then
         ]
       }" | jq -r '.content[0].text // "claude-session"' | tr '\n' ' ' | head -c 50)
   fi
+
+  echo "DEBUG: title=$title" >> /tmp/tmux-hook-debug.log
+  echo "---" >> /tmp/tmux-hook-debug.log
 
   # Fallback if title is empty
   if [ -z "$title" ] || [ "$title" = "null" ]; then
