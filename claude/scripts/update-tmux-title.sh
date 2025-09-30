@@ -31,8 +31,8 @@ echo "DEBUG: msg_count=$msg_count" >> /tmp/tmux-hook-debug.log
 
 # After 3+ messages, set title once
 if [ "$msg_count" -ge 3 ]; then
-  # Extract last 5 user/assistant messages for context
-  context=$(jq -s '[.[] | select(.message.role == "user" or .message.role == "assistant")] | .[-5:] | map({role: .message.role, content: (.message.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end)})' "$transcript_path" 2>/dev/null)
+  # Extract last 5 user/assistant messages that have actual text content
+  context=$(jq -s '[.[] | select(.message.role == "user" or .message.role == "assistant") | {role: .message.role, content: (.message.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end)} | select((.content | length) > 0)] | .[-5:]' "$transcript_path" 2>/dev/null)
 
   echo "DEBUG: context=$context" >> /tmp/tmux-hook-debug.log
 
