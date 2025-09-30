@@ -9,6 +9,12 @@ input=$(cat)
 session_id=$(echo "$input" | jq -r '.session_id')
 transcript_path=$(echo "$input" | jq -r '.transcript_path')
 
+# Debug logging (uncomment to debug)
+# echo "DEBUG: session=$session_id, transcript=$transcript_path" >> /tmp/tmux-hook-debug.log
+# echo "DEBUG: transcript contents:" >> /tmp/tmux-hook-debug.log
+# cat "$transcript_path" >> /tmp/tmux-hook-debug.log 2>&1
+# echo "---" >> /tmp/tmux-hook-debug.log
+
 # Flag file to track if title was already set for this session
 flag_file="/tmp/claude-tmux-title-${session_id}"
 
@@ -28,13 +34,13 @@ msg_count=$(jq -s 'length' "$transcript_path" 2>/dev/null || echo 0)
 # After 3+ messages, set title once
 if [ "$msg_count" -ge 3 ]; then
   # Extract last 5 user/assistant messages for context (filter out system messages)
-  # Get only messages with role "user" or "assistant"
-  context=$(jq -s '[.[] | select(.role == "user" or .role == "assistant")] | .[-5:] | map({role, content: (.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end)})' "$transcript_path" 2>/dev/null)
+  # Get only messages with message.role "user" or "assistant"
+  context=$(jq -s '[.[] | select(.message.role == "user" or .message.role == "assistant")] | .[-5:] | map({role: .message.role, content: (.message.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end)})' "$transcript_path" 2>/dev/null)
 
   # Check if we have an API key
   if [ -z "$ANTHROPIC_API_KEY" ]; then
     # Fallback: use first 40 chars of last user message
-    title=$(jq -r '[.[] | select(.role == "user")] | .[-1].content // "claude-session"' "$transcript_path" | tr '\n' ' ' | cut -c1-40)
+    title=$(jq -r '[.[] | select(.message.role == "user")] | .[-1].message.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end // "claude-session"' "$transcript_path" | tr '\n' ' ' | cut -c1-40)
   else
     # Call Claude API to generate a concise title
     title=$(curl -s https://api.anthropic.com/v1/messages \
