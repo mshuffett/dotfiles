@@ -4,7 +4,7 @@ My name is Michael
 - Use biome as the linter
 - Don't estimate date timelines for tasks -- you are really bad at that, instead just do sequences or points.
 
-When using the Anthropic API use the model claude-opus-4-1-20250805 for difficult tasks or claude-sonnet-4-20250514 as the default model. Do not use claude 3 for anything
+When using the Anthropic API use the model claude-opus-4-1-20250805 for difficult tasks or claude-sonnet-4-5-20250929 as the default model. Do not use claude 3 for anything
 
 Use pnpm instead of npm.
 
@@ -17,3 +17,71 @@ When I ask you to notify me when a task is complete, use the `push` command:
 - `push "Task completed: [description]" 2` - sends an emergency notification (makes sound even on silent)
 
 The push command is available at ~/bin/push (symlinked from ~/.dotfiles/bin/push).
+
+## Image Generation
+Use the `generate-image` command to create images with OpenAI or Google Gemini:
+- `generate-image "prompt"` - generates a 1024x1024 image with OpenAI (default)
+- `generate-image "prompt" --provider gemini` - generates image with Google Gemini (nano-banana)
+- `generate-image "prompt" --size 1024x1536` - generates a portrait image
+- `generate-image "prompt" --output filename.png` - saves with specific filename
+- `generate-image "prompt" --url-only` - returns URL without downloading (OpenAI only)
+- `generate-image --help` - shows all available options
+
+**Providers:**
+- `openai` - OpenAI's DALL-E (gpt-image-1) - default
+- `gemini` - Google's Gemini 2.5 Flash Image (nano-banana/gemini-2.5-flash-image-preview)
+
+The command is available at ~/bin/generate-image (symlinked from ~/.dotfiles/bin/generate-image).
+
+**Environment variables:**
+- `OPENAI_API_KEY` - required for OpenAI provider
+- `GEMINI_API_KEY` - required for Gemini provider
+
+## Computer Use Agent
+IMPORTANT: Only use the computer use agent when I explicitly ask you to control my computer.
+
+There is a computer use agent available at `~/ws/claude-computer-use-mac/agent.py` that can control my Mac using Claude Sonnet 4.5 with the Computer Use API.
+
+**DO NOT:**
+- ❌ Proactively suggest or use the computer use agent
+- ❌ Run the agent without my explicit permission
+- ❌ Use `--live` mode without my confirmation
+
+**DO:**
+- ✅ Only use when I explicitly ask you to control my computer
+- ✅ Start in dry-run mode first (default) to show what will happen
+- ✅ Switch to `--live` mode only when I confirm
+
+**Usage:**
+```bash
+# Dry-run (safe, shows what will happen)
+cd ~/ws/claude-computer-use-mac && python agent.py "task description"
+
+# Live mode (actually controls computer)
+cd ~/ws/claude-computer-use-mac && python agent.py "task description" --live
+```
+
+**Example acceptable usage:**
+- Me: "Can you open Activity Monitor for me?"
+- You: Run the agent with my task
+
+**Example unacceptable usage:**
+- Me: "I need to check my memory usage"
+- You: DON'T automatically run the agent - just tell me how
+
+## Notes & Knowledge Management
+My primary notes system is located at `~/ws/everything-monorepo/notes/` and follows the PARA method:
+
+**Directory Structure:**
+- `+Inbox/` - New notes go here by default if not specified
+- `1-Projects/` - Active projects with defined outcomes
+- `2-Areas/` - Ongoing areas of responsibility (e.g., Agents, Strategy, System)
+- `3-Resources/` - Reference materials, templates, guides
+- `4-Archive/` - Completed or inactive items
+- `5-Tools/` - Scripts, automation, operational tools
+
+**Working with Notes:**
+- When working with the notes folder, cd into `~/ws/everything-monorepo/notes/` first
+- Always check the local `CLAUDE.md` in that folder for specific guidelines
+- New notes default to `+Inbox/` unless a specific location is requested
+- The notes folder has its own comprehensive CLAUDE.md with detailed processing rules
