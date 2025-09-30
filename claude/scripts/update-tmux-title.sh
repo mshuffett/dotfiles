@@ -8,7 +8,6 @@ input=$(cat)
 # Extract session ID and transcript path
 session_id=$(echo "$input" | jq -r '.session_id')
 transcript_path=$(echo "$input" | jq -r '.transcript_path')
-prompt=$(echo "$input" | jq -r '.prompt')
 
 # Flag file to track if title was already set for this session
 flag_file="/tmp/claude-tmux-title-${session_id}"
@@ -28,8 +27,32 @@ msg_count=$(jq -s 'length' "$transcript_path" 2>/dev/null || echo 0)
 
 # After 3+ messages, set title once
 if [ "$msg_count" -ge 3 ]; then
-  # Truncate prompt to 40 chars for title, remove newlines
-  title=$(echo "$prompt" | tr '\n' ' ' | cut -c1-40)
+  # Extract last 5 messages for context (limit size for API call)
+  context=$(jq -s '.[-5:] | map(select(.role and .content)) | map({role, content: (.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end)})' "$transcript_path" 2>/dev/null)
+
+  # Check if we have an API key
+  if [ -z "$ANTHROPIC_API_KEY" ]; then
+    # Fallback: use first 40 chars of last user message
+    title=$(jq -r '.[-1].content // "claude-session"' "$transcript_path" | tr '\n' ' ' | cut -c1-40)
+  else
+    # Call Claude API to generate a concise title
+    title=$(curl -s https://api.anthropic.com/v1/messages \
+      -H "x-api-key: $ANTHROPIC_API_KEY" \
+      -H "anthropic-version: 2023-06-01" \
+      -H "content-type: application/json" \
+      -d "{
+        \"model\": \"claude-sonnet-4-5-20250929\",
+        \"max_tokens\": 20,
+        \"messages\": [
+          {\"role\": \"user\", \"content\": \"Based on this conversation, generate a concise 3-5 word title that captures the main topic. Respond with ONLY the title, no quotes or punctuation:\\n\\n${context}\"}
+        ]
+      }" | jq -r '.content[0].text // "claude-session"' | tr '\n' ' ' | head -c 50)
+  fi
+
+  # Fallback if title is empty
+  if [ -z "$title" ] || [ "$title" = "null" ]; then
+    title="claude-session"
+  fi
 
   # Set tmux window title
   tmux rename-window "$title"
