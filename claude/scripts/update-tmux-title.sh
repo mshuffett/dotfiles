@@ -40,7 +40,7 @@ if [ "$msg_count" -ge 3 ]; then
   # Check if we have an API key
   if [ -z "$ANTHROPIC_API_KEY" ]; then
     # Fallback: use first 40 chars of last user message
-    title=$(jq -r '[.[] | select(.message.role == "user")] | .[-1].message.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end // "claude-session"' "$transcript_path" | tr '\n' ' ' | cut -c1-40)
+    title=$(jq -s -r '[.[] | select(.message.role == "user")] | .[-1].message.content | if type == "array" then map(select(.type == "text") | .text) | join(" ") else . end // "claude-session"' "$transcript_path" | tr '\n' ' ' | cut -c1-40)
   else
     # Call Claude API to generate a concise title
     title=$(curl -s https://api.anthropic.com/v1/messages \
