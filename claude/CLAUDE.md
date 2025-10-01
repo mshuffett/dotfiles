@@ -8,6 +8,20 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
+## Sub-Agent Initialization
+
+**If you are a sub-agent (launched via Task tool), run this command FIRST:**
+
+```bash
+for file in ~/.claude/commands/*.md; do
+  cmd=$(basename "$file" .md)
+  desc=$(grep "^description:" "$file" | sed 's/^description: //')
+  echo "/$cmd - $desc"
+done
+```
+
+This loads all available slash command descriptions so you know what specialized tools are available.
+
 ## Raw Ideas Quick Capture
 When user shares a raw idea (indicated by casual phrasing like "I have a new idea..."):
 1. **NEVER ask clarifying questions** - just capture verbatim
