@@ -53,6 +53,17 @@ The `TODOIST_API_TOKEN` environment variable is already configured in ~/.zshrc.
 No additional setup needed - just use `$TODOIST_API_TOKEN` in commands.
 
 ## Project IDs (Quick Reference)
+
+### PARA Structure Parents
+- **1-Projects**: 2359994569
+- **2-Areas**: 2359994572
+- **3-Resources**: 2359995015
+
+### Active Projects (under 1-Projects)
+- **🚢🏖️ Ship to Beach Dashboard**: 2360927142 (repo maintenance & improvements)
+- **🚢🏖️ Sprint Execution**: 2360927149 (actual sprint shipping work)
+
+### Other Projects
 - **Inbox**: 377445380
 - **A/Everything AI Backlog**: 2352252927
 - **Raise $10M for Everything AI**: 2352542594
