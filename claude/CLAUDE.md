@@ -8,6 +8,16 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
+## Raw Ideas Quick Capture
+When user shares a raw idea (indicated by casual phrasing like "I have a new idea..."):
+1. **NEVER ask clarifying questions** - just capture verbatim
+2. **Create note in `~/ws/everything-monorepo/notes/3-Resources/💡 Raw Ideas/`**
+3. **Filename format:** `YYYY-MM-DD-brief-title.md`
+4. **Use template:** `~/ws/everything-monorepo/notes/Templates/Raw Idea Template.md`
+5. **Scan for related ideas** across notes and link them
+6. **Send Obsidian URL** as markdown link when complete
+7. **Processing happens later** during reviews - not at capture time
+
 ## Notifications
 IMPORTANT: Only use the `push` command when I explicitly ask you to notify me. Do not proactively send notifications.
 
@@ -36,6 +46,43 @@ The command is available at ~/bin/generate-image (symlinked from ~/.dotfiles/bin
 **Environment variables:**
 - `OPENAI_API_KEY` - required for OpenAI provider
 - `GEMINI_API_KEY` - required for Gemini provider
+
+## Topical Documentation (Loaded on Demand)
+
+For features that are rarely used or topic-specific, documentation is loaded conditionally via slash commands or explicit triggers. This keeps the main CLAUDE.md file focused on frequently-used instructions.
+
+### Pattern for Topical Docs
+
+**Trigger Method**: Slash Commands (Recommended)
+- Store docs in `~/.claude/docs/[topic].md`
+- Create command in `~/.claude/commands/[topic].md` that loads docs
+- Command file includes instructions to ask for approval before dangerous operations
+
+**When to Use**:
+- Features used less than once per week
+- Long-running or system-altering operations
+- Complex workflows with extensive documentation
+- Optional tools or advanced features
+
+**Example**: Continuous runner is loaded via `/continuous` command, which reads `~/.claude/docs/continuous-runner.md`
+
+### Available Topical Commands
+
+- **`/continuous`** - Start continuous Claude runner with periodic check-ins (for long-running tasks)
+  - Only use when explicitly requested ("run continuously", "work overnight", etc.)
+  - Always asks for approval before starting
+  - See full docs: `~/.claude/docs/continuous-runner.md`
+
+### Creating New Topical Docs
+
+When adding new rarely-used features:
+
+1. Create documentation: `~/.claude/docs/[feature].md`
+2. Create slash command: `~/.claude/commands/[feature].md` with:
+   - `@~/.claude/docs/[feature].md` import
+   - Clear trigger conditions
+   - Approval protocol if needed
+3. Add to this list above with clear trigger description
 
 ## Computer Use Agent
 IMPORTANT: Only use the computer use agent when I explicitly ask you to control my computer.
