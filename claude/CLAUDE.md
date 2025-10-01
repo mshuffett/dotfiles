@@ -43,14 +43,15 @@ done
 This loads all available slash command descriptions so you know what specialized tools are available.
 
 ## Raw Ideas Quick Capture
-When user shares a raw idea (indicated by casual phrasing like "I have a new idea..."):
-1. **NEVER ask clarifying questions** - just capture verbatim
-2. **Create note in `~/ws/everything-monorepo/notes/3-Resources/💡 Raw Ideas/`**
-3. **Filename format:** `YYYY-MM-DD-brief-title.md`
-4. **Use template:** `~/ws/everything-monorepo/notes/Templates/Raw Idea Template.md`
-5. **Scan for related ideas** across notes and link them
-6. **Send Obsidian URL** as markdown link when complete
-7. **Processing happens later** during reviews - not at capture time
+
+**When user shares a raw idea** (casual phrasing like "I have a new idea...", "what if we...", "here's something I'm thinking about..."):
+- **Invoke `/idea` command** for full capture workflow
+- Key principle: **NEVER ask clarifying questions** - capture verbatim
+- Create note in `~/ws/everything-monorepo/notes/3-Resources/💡 Raw Ideas/`
+- Filename: `YYYY-MM-DD-brief-title.md`
+- Scan for related ideas and link them
+- Send Obsidian URL when complete
+- Processing happens later during reviews - not at capture time
 
 ## Notifications
 IMPORTANT: Only use the `push` command when I explicitly ask you to notify me. Do not proactively send notifications.
@@ -129,6 +130,10 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
 - **`/todoist`** - Todoist task management via REST API v2. Use when user asks to create tasks, work with Todoist, or process task lists. Includes API patterns, priority mapping, project IDs, and task creation examples.
   - **Trigger**: User asks to create tasks, mentions Todoist, or requests help with task organization
   - **Includes**: API examples, project IDs, bulk operations, processing guidelines
+
+- **`/idea`** - Raw idea quick capture workflow. Use when user shares a raw idea (casual phrasing like "I have a new idea..."). Captures ideas verbatim without clarifying questions, scans for related ideas, and generates Obsidian URL.
+  - **Trigger**: Casual idea sharing ("I have a new idea...", "what if we...", "here's something I'm thinking about...")
+  - **Includes**: Capture protocol, template structure, related idea scanning, Obsidian URL generation
 
 ### Creating New Commands
 
