@@ -171,9 +171,25 @@ description: Verbose, descriptive explanation of what it does, how it works, and
 - Reference information
 ```
 
-2. Add to "Available Commands" list above with the full description and trigger info
-3. **Commit to dotfiles**: `cd ~/.dotfiles && git add claude/ && git commit -m "Add [name] command" && git push`
-4. Commands auto-appear in slash command menu
+2. **Test with subagent** (for complex commands):
+   - Launch general-purpose subagent with Task tool
+   - Provide 3-5 realistic test scenarios
+   - Request roleplay responses and evaluation
+   - Ask for strengths, weaknesses, gaps, and improvement recommendations
+   - Implement improvements before finalizing
+
+3. Add to "Available Commands" list above with the full description and trigger info
+
+4. **Commit to dotfiles**: `cd ~/.dotfiles && git add claude/ && git commit -m "Add [name] command" && git push`
+
+5. Commands auto-appear in slash command menu
+
+**Why test with subagents:**
+- Catches ambiguities before real-world use
+- Validates practical usability through roleplay
+- Identifies missing context
+- Improves balance and completeness
+- See `/coach` command for example testing protocol
 
 ### Improving Existing Commands
 
