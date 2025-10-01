@@ -260,8 +260,17 @@ try:
     with open('$RESPONSE_FILE', 'r') as f:
         response = json.load(f)
 
-    # Gemini returns image in candidates[0].content.parts[1].inlineData.data
-    base64_image = response['candidates'][0]['content']['parts'][1]['inlineData']['data']
+    # Gemini returns image in candidates[0].content.parts - find the part with inlineData
+    parts = response['candidates'][0]['content']['parts']
+    base64_image = None
+    for part in parts:
+        if 'inlineData' in part:
+            base64_image = part['inlineData']['data']
+            break
+
+    if base64_image is None:
+        raise KeyError('No inlineData found in response')
+
     image_data = base64.b64decode(base64_image)
 
     with open('$OUTPUT', 'wb') as img_file:
