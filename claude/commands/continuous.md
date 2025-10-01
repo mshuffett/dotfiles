@@ -1,5 +1,5 @@
 ---
-description: Start continuous Claude runner with periodic check-ins
+description: Starts background runner that sends periodic check-ins (every 3 min) to keep Claude working on long-running tasks (2+ hours). Requires explicit approval before starting.
 ---
 
 # Continuous Runner Command

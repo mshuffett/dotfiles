@@ -55,7 +55,8 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
 
 **What's auto-loaded into context:**
 - Only the command name and `description` field from frontmatter
-- This keeps context clean - verbose docs aren't loaded until needed
+- The description should be VERBOSE and DESCRIPTIVE - clearly explain what it does, how it works, and when to use it
+- This keeps context clean - full command content isn't loaded until invoked
 
 **What loads on invocation:**
 - Full command file content when you type `/commandname`
@@ -63,10 +64,11 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
 
 **Files are version controlled:**
 - `~/.claude/commands/` → symlinked from `~/.dotfiles/claude/commands/`
+- **IMPORTANT**: Always commit changes to dotfiles repo after modifying commands or CLAUDE.md
 
 ### Available Commands
 
-- **`/continuous`** - Start continuous Claude runner with periodic check-ins
+- **`/continuous`** - Starts background runner that sends periodic check-ins (every 3 min) to keep Claude working on long-running tasks (2+ hours). Requires explicit approval before starting.
   - **Trigger**: Only when user explicitly requests continuous/overnight operation
   - **Includes**: Full documentation + mandatory approval protocol
 
@@ -75,7 +77,7 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
 1. Create `~/.claude/commands/[name].md`:
 ```markdown
 ---
-description: Brief description shown in context (keep under 80 chars)
+description: Verbose, descriptive explanation of what it does, how it works, and when to use it. Be specific and clear - this is what appears in Claude's context.
 ---
 
 # Command instructions for Claude
@@ -89,8 +91,9 @@ description: Brief description shown in context (keep under 80 chars)
 - Reference information
 ```
 
-2. Add to "Available Commands" list above with clear trigger description
-3. Commands auto-appear in slash command menu
+2. Add to "Available Commands" list above with the full description and trigger info
+3. **Commit to dotfiles**: `cd ~/.dotfiles && git add claude/ && git commit -m "Add [name] command" && git push`
+4. Commands auto-appear in slash command menu
 
 ## Computer Use Agent
 IMPORTANT: Only use the computer use agent when I explicitly ask you to control my computer.
