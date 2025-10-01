@@ -105,6 +105,22 @@ tags:
 
 **Return format**: `[YYYY-MM-DD-brief-title](obsidian://...)`
 
+#### 5. Commit and Push to Git
+
+**IMPORTANT**: Ideas must be committed to preserve them in git history.
+
+```bash
+cd ~/ws/everything-monorepo/notes
+git add "3-Resources/💡 Raw Ideas/YYYY-MM-DD-filename.md"
+git commit -m "Add raw idea: [brief description]"
+git push
+```
+
+**Commit message format**:
+- "Add raw idea: [brief description of the idea]"
+- Keep it concise (one line)
+- Example: "Add raw idea: autonomous agent queue for implementing ideas"
+
 ### What Happens Later
 
 **Processing happens during reviews - NOT at capture time:**
@@ -124,7 +140,8 @@ tags:
 2. Capture exact quote in "Raw Idea" section
 3. Search for related: fundraise, investor, automation notes
 4. Link to related ideas in Fundraise project
-5. Send Obsidian URL
+5. Generate Obsidian URL
+6. Commit and push to git
 
 **Response**: "Idea captured! [2025-10-01-automated-investor-matching](obsidian://...)"
 
@@ -138,7 +155,8 @@ tags:
 3. Note obvious components: idea → spec → plan → review
 4. Search for workflow, planning, review related notes
 5. Link to existing workflows (Todoist, Document Review)
-6. Send Obsidian URL
+6. Generate Obsidian URL
+7. Commit and push to git
 
 **Response**: "Idea captured! [2025-10-01-fleshed-out-ideas-workflow](obsidian://...)"
 
