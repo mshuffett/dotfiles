@@ -81,6 +81,7 @@ fetch_and_cache_secrets() {
 export GITHUB_TOKEN="$(op read 'op://Private/GitHub/token')"
 export OPENAI_API_KEY="$(op read 'op://Private/OpenAI API Key/api_key')"
 export ANTHROPIC_API_KEY="$(op read 'op://Private/Anthropic API Key/api_key')"
+export GEMINI_API_KEY="AIzaSyAt1TXqJHc9i4P8KWlrx586OF7g5Ir8tHw"
 export MAPBOX_ACCESS_TOKEN="$(op read 'op://Private/Mapbox Access Token/access_token')"
 EOL
   
@@ -199,12 +200,21 @@ u() {
 }
 
 # Utility for logging into EKS more easily
-eks-tok() { 
+eks-tok() {
   if command -v aws &> /dev/null && command -v jq &> /dev/null; then
-    aws eks get-token --cluster "$1" | jq -r ".status.token" | pbcopy 
+    aws eks get-token --cluster "$1" | jq -r ".status.token" | pbcopy
   else
     echo "Required tools (aws cli or jq) not found."
   fi
+}
+
+# Quick idea capture using Claude Code /idea command
+idea() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: idea <your idea text>"
+    return 1
+  fi
+  claude "/idea $*"
 }
 
 # Define named directories: ~w <=> Windows home directory on WSL.
