@@ -214,7 +214,7 @@ idea() {
     echo "Usage: idea <your idea text>"
     return 1
   fi
-  claude "/idea $*"
+  claude -p "/idea $*"
 }
 
 # Define named directories: ~w <=> Windows home directory on WSL.
