@@ -19,17 +19,17 @@ When I ask you to notify me when a task is complete, use the `push` command:
 The push command is available at ~/bin/push (symlinked from ~/.dotfiles/bin/push).
 
 ## Image Generation
-Use the `generate-image` command to create images with OpenAI or Google Gemini:
-- `generate-image "prompt"` - generates a 1024x1024 image with OpenAI (default)
-- `generate-image "prompt" --provider gemini` - generates image with Google Gemini (nano-banana)
+Use the `generate-image` command to create images with Google Gemini or OpenAI:
+- `generate-image "prompt"` - generates a 1024x1024 image with Gemini (default)
+- `generate-image "prompt" --provider openai` - generates image with OpenAI DALL-E 3
 - `generate-image "prompt" --size 1024x1536` - generates a portrait image
 - `generate-image "prompt" --output filename.png` - saves with specific filename
 - `generate-image "prompt" --url-only` - returns URL without downloading (OpenAI only)
 - `generate-image --help` - shows all available options
 
 **Providers:**
-- `openai` - OpenAI's DALL-E (gpt-image-1) - default
-- `gemini` - Google's Gemini 2.5 Flash Image (nano-banana/gemini-2.5-flash-image-preview)
+- `gemini` - Google's Gemini 2.5 Flash Image (nano-banana/gemini-2.5-flash-image-preview) - default
+- `openai` - OpenAI's DALL-E 3
 
 The command is available at ~/bin/generate-image (symlinked from ~/.dotfiles/bin/generate-image).
 
@@ -85,3 +85,28 @@ My primary notes system is located at `~/ws/everything-monorepo/notes/` and foll
 - Always check the local `CLAUDE.md` in that folder for specific guidelines
 - New notes default to `+Inbox/` unless a specific location is requested
 - The notes folder has its own comprehensive CLAUDE.md with detailed processing rules
+
+## Config File Management
+**Important:** Stray config files should be symlinked from `~/.dotfiles` for version control and tracking.
+
+**Pattern for new config files:**
+1. Move the config file to the appropriate location in `~/.dotfiles/`
+2. Create a symlink from the original location to the dotfiles location
+3. Commit and push to the dotfiles repo
+
+**Example:**
+```bash
+# Move config file
+mv ~/.some-app/config.json ~/.dotfiles/some-app/config.json
+
+# Create symlink
+ln -s ~/.dotfiles/some-app/config.json ~/.some-app/config.json
+
+# Commit and push
+cd ~/.dotfiles && git add some-app/ && git commit -m "Add some-app config" && git push
+```
+
+**Existing managed configs:**
+- `~/.claude/settings.json` → `~/.dotfiles/claude/settings.json`
+- `~/.claude/scripts/` → `~/.dotfiles/claude/scripts/`
+- `~/bin/` scripts → `~/.dotfiles/bin/`

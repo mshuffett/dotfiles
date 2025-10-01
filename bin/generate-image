@@ -9,8 +9,8 @@ set -e
 SIZE="1024x1024"
 OUTPUT=""
 URL_ONLY=false
-MODEL="gpt-image-1"
-PROVIDER="openai"
+MODEL=""
+PROVIDER="gemini"
 
 # Colors for output
 RED='\033[0;31m'
@@ -26,29 +26,29 @@ AI Image Generator
 Usage: generate-image "prompt" [options]
 
 Options:
-    -p, --provider PROVIDER  Provider to use: openai or gemini (default: openai)
+    -p, --provider PROVIDER  Provider to use: openai or gemini (default: gemini)
     -s, --size SIZE         Image size (default: 1024x1024)
                            Options: 1024x1024, 1024x1536, 1536x1024
     -o, --output FILE       Output filename (default: generated-image-TIMESTAMP.png)
-    -u, --url-only         Only output the URL, don't download the image
-    -m, --model MODEL      Model to use (default: gpt-image-1 for OpenAI,
+    -u, --url-only         Only output the URL, don't download the image (OpenAI only)
+    -m, --model MODEL      Model to use (default: dall-e-3 for OpenAI,
                            gemini-2.5-flash-image-preview for Gemini)
     -h, --help             Show this help message
 
 Examples:
     generate-image "A sunset over mountains"
-    generate-image "A red sports car" --provider gemini
+    generate-image "A red sports car" --provider openai
     generate-image "Abstract art" --output artwork.png
     generate-image "A cityscape" --provider openai --size 1024x1536
-    generate-image "A cute robot" --provider gemini
+    generate-image "A cute robot"
 
 Environment:
+    GEMINI_API_KEY must be set for Gemini provider (default)
     OPENAI_API_KEY must be set for OpenAI provider
-    GEMINI_API_KEY must be set for Gemini provider
 
 Providers:
-    openai - OpenAI's DALL-E (gpt-image-1)
-    gemini - Google's Gemini 2.5 Flash Image (nano-banana)
+    gemini - Google's Gemini 2.5 Flash Image (default)
+    openai - OpenAI's DALL-E 3
 
 EOF
 }
@@ -117,8 +117,8 @@ if [ "$PROVIDER" = "openai" ]; then
         exit 1
     fi
     # Set default model for OpenAI if not specified
-    if [ "$MODEL" = "gpt-image-1" ]; then
-        MODEL="gpt-image-1"
+    if [ -z "$MODEL" ]; then
+        MODEL="dall-e-3"
     fi
 elif [ "$PROVIDER" = "gemini" ]; then
     if [ -z "$GEMINI_API_KEY" ]; then
@@ -127,7 +127,7 @@ elif [ "$PROVIDER" = "gemini" ]; then
         exit 1
     fi
     # Set default model for Gemini if not specified
-    if [ "$MODEL" = "gpt-image-1" ]; then
+    if [ -z "$MODEL" ]; then
         MODEL="gemini-2.5-flash-image-preview"
     fi
 fi
