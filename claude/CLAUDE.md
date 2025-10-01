@@ -148,6 +148,10 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
   - **Trigger**: Casual idea sharing ("I have a new idea...", "what if we...", "here's something I'm thinking about...")
   - **Includes**: Capture protocol, template structure, related idea scanning, Obsidian URL generation
 
+- **`/coach`** - Ship to Beach Executive Coach - Direct, pattern-interrupting coaching focused on breaking 9-month analysis paralysis cycle. Recognizes systems thinking as avoidance, addresses permission problem (not capability problem), uses somatic Truth Gate checks. Zero tolerance for frameworks/planning - execution only. Accountability is simple and boring: "What did you ship?" Weekly check-ins on outcomes not strategy. Based on 692k word synthesis + advisor roundtable consensus (Dalio, Robbins, Colonna, Rabois, Altman). Ships from 70% clarity, not 95%. Single-threaded focus, public accountability, imperfect action.
+  - **Trigger**: User asks for coaching/check-in, exhibits analysis paralysis patterns, building frameworks instead of shipping, stuck on decisions, weekly accountability
+  - **Includes**: Pattern interrupt phrases, Truth Gate Ritual protocol, 30-day sprint framework, success criteria, advisor consensus, coaching session templates, hard confrontation tactics when needed
+
 ### Creating New Commands
 
 1. Create `~/.claude/commands/[name].md`:
