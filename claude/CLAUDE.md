@@ -158,10 +158,36 @@ description: Verbose, descriptive explanation of what it does, how it works, and
 **When you learn something new about a command's topic:**
 - **ADD** new patterns, examples, or best practices to the command file
 - **ENHANCE** existing sections with additional context and clarity
-- **DO NOT REMOVE** existing content unless explicitly told (prevents regressions)
+- **NEVER REMOVE** existing content without explicit user confirmation
 - **COMMIT** changes immediately: `cd ~/.dotfiles && git add claude/commands/ && git commit -m "Enhance /[name] command: [what you learned]" && git push`
 
 **Example**: If you discover a new Todoist API pattern, add it to `/todoist` command with context about when/why to use it.
+
+### CRITICAL: Removing Content from CLAUDE.md or Commands
+
+**Before removing ANY text from CLAUDE.md or command files:**
+
+1. **STOP and ask the user first** - Never remove content without explicit confirmation
+2. **Explain what you want to remove** - Quote the exact text
+3. **Explain WHY removal might be needed** - What problem does it solve?
+4. **Explain the RISK** - What context/memory might be lost?
+
+**Why this is critical:**
+- CLAUDE.md and commands are **your context and memory**
+- Removals affect **all future sessions**, not just the current one
+- What seems redundant now might prevent future mistakes
+- Users have carefully built this context over time
+- **Regressions are expensive** - you'll repeat solved problems
+
+**Only remove after user explicitly approves**, saying something like:
+- "Yes, remove that section"
+- "Go ahead and delete that"
+- "That's safe to remove"
+
+**Never remove based on:**
+- "This seems outdated" (it might still be relevant)
+- "This is redundant" (repetition aids learning)
+- "This could be shorter" (brevity isn't always better for context)
 
 ## Computer Use Agent
 IMPORTANT: Only use the computer use agent when I explicitly ask you to control my computer.
