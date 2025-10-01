@@ -47,7 +47,7 @@ The command is available at ~/bin/generate-image (symlinked from ~/.dotfiles/bin
 - `OPENAI_API_KEY` - required for OpenAI provider
 - `GEMINI_API_KEY` - required for Gemini provider
 
-## Slash Commands & Topical Documentation
+## Slash Commands
 
 Slash commands in `~/.claude/commands/` provide on-demand loading of specialized documentation and workflows.
 
@@ -63,12 +63,10 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
 
 **Files are version controlled:**
 - `~/.claude/commands/` → symlinked from `~/.dotfiles/claude/commands/`
-- `~/.claude/docs/` → symlinked from `~/.dotfiles/claude/docs/`
 
 ### Available Commands
 
 - **`/continuous`** - Start continuous Claude runner with periodic check-ins
-  - **Description**: "Start continuous Claude runner with periodic check-ins"
   - **Trigger**: Only when user explicitly requests continuous/overnight operation
   - **Includes**: Full documentation + mandatory approval protocol
 
@@ -80,9 +78,15 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
 description: Brief description shown in context (keep under 80 chars)
 ---
 
-# Full instructions and documentation here
-# Can use @~/.claude/docs/[name].md to import additional docs
-# Include trigger conditions and approval protocols
+# Command instructions for Claude
+
+## Protocol (if needed)
+- Approval workflows
+- Trigger conditions
+
+## Full Documentation
+- Usage examples
+- Reference information
 ```
 
 2. Add to "Available Commands" list above with clear trigger description
@@ -161,6 +165,5 @@ cd ~/.dotfiles && git add some-app/ && git commit -m "Add some-app config" && gi
 - `~/.claude/CLAUDE.md` → `~/.dotfiles/claude/CLAUDE.md`
 - `~/.claude/settings.json` → `~/.dotfiles/claude/settings.json`
 - `~/.claude/commands/` → `~/.dotfiles/claude/commands/`
-- `~/.claude/docs/` → `~/.dotfiles/claude/docs/`
 - `~/.claude/scripts/` → `~/.dotfiles/claude/scripts/`
 - `~/bin/` scripts → `~/.dotfiles/bin/`
