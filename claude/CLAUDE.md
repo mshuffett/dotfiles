@@ -47,42 +47,46 @@ The command is available at ~/bin/generate-image (symlinked from ~/.dotfiles/bin
 - `OPENAI_API_KEY` - required for OpenAI provider
 - `GEMINI_API_KEY` - required for Gemini provider
 
-## Topical Documentation (Loaded on Demand)
+## Slash Commands & Topical Documentation
 
-For features that are rarely used or topic-specific, documentation is loaded conditionally via slash commands or explicit triggers. This keeps the main CLAUDE.md file focused on frequently-used instructions.
+Slash commands in `~/.claude/commands/` provide on-demand loading of specialized documentation and workflows.
 
-### Pattern for Topical Docs
+### How Slash Commands Work
 
-**Trigger Method**: Slash Commands (Recommended)
-- Store docs in `~/.claude/docs/[topic].md`
-- Create command in `~/.claude/commands/[topic].md` that loads docs
-- Command file includes instructions to ask for approval before dangerous operations
+**What's auto-loaded into context:**
+- Only the command name and `description` field from frontmatter
+- This keeps context clean - verbose docs aren't loaded until needed
 
-**When to Use**:
-- Features used less than once per week
-- Long-running or system-altering operations
-- Complex workflows with extensive documentation
-- Optional tools or advanced features
+**What loads on invocation:**
+- Full command file content when you type `/commandname`
+- Can include protocols, documentation, approval workflows, etc.
 
-**Example**: Continuous runner is loaded via `/continuous` command, which reads `~/.claude/docs/continuous-runner.md`
+**Files are version controlled:**
+- `~/.claude/commands/` → symlinked from `~/.dotfiles/claude/commands/`
+- `~/.claude/docs/` → symlinked from `~/.dotfiles/claude/docs/`
 
-### Available Topical Commands
+### Available Commands
 
-- **`/continuous`** - Start continuous Claude runner with periodic check-ins (for long-running tasks)
-  - Only use when explicitly requested ("run continuously", "work overnight", etc.)
-  - Always asks for approval before starting
-  - See full docs: `~/.claude/docs/continuous-runner.md`
+- **`/continuous`** - Start continuous Claude runner with periodic check-ins
+  - **Description**: "Start continuous Claude runner with periodic check-ins"
+  - **Trigger**: Only when user explicitly requests continuous/overnight operation
+  - **Includes**: Full documentation + mandatory approval protocol
 
-### Creating New Topical Docs
+### Creating New Commands
 
-When adding new rarely-used features:
+1. Create `~/.claude/commands/[name].md`:
+```markdown
+---
+description: Brief description shown in context (keep under 80 chars)
+---
 
-1. Create documentation: `~/.claude/docs/[feature].md`
-2. Create slash command: `~/.claude/commands/[feature].md` with:
-   - `@~/.claude/docs/[feature].md` import
-   - Clear trigger conditions
-   - Approval protocol if needed
-3. Add to this list above with clear trigger description
+# Full instructions and documentation here
+# Can use @~/.claude/docs/[name].md to import additional docs
+# Include trigger conditions and approval protocols
+```
+
+2. Add to "Available Commands" list above with clear trigger description
+3. Commands auto-appear in slash command menu
 
 ## Computer Use Agent
 IMPORTANT: Only use the computer use agent when I explicitly ask you to control my computer.
@@ -154,6 +158,9 @@ cd ~/.dotfiles && git add some-app/ && git commit -m "Add some-app config" && gi
 ```
 
 **Existing managed configs:**
+- `~/.claude/CLAUDE.md` → `~/.dotfiles/claude/CLAUDE.md`
 - `~/.claude/settings.json` → `~/.dotfiles/claude/settings.json`
+- `~/.claude/commands/` → `~/.dotfiles/claude/commands/`
+- `~/.claude/docs/` → `~/.dotfiles/claude/docs/`
 - `~/.claude/scripts/` → `~/.dotfiles/claude/scripts/`
 - `~/bin/` scripts → `~/.dotfiles/bin/`
