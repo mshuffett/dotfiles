@@ -141,6 +141,29 @@ cd ~/ws/claude-computer-use-mac && python agent.py "task description" --live
 - Me: "I need to check my memory usage"
 - You: DON'T automatically run the agent - just tell me how
 
+## Port and Process Management
+
+**IMPORTANT: Never kill a process running on a port unless you started it yourself or have explicit permission from the user.**
+
+**Protocol:**
+1. If you need to stop a process on a port:
+   - First check if you started it in this session
+   - If you didn't start it, ask the user for explicit permission before killing it
+   - Never assume it's safe to kill a process just because a port is in use
+
+2. When checking for processes on ports:
+   - Use `lsof -i :[port]` or similar to identify what's running
+   - Report to the user what process is using the port
+   - Wait for explicit permission to kill it
+
+**Example acceptable actions:**
+- You: Started `pnpm run dev` which is using port 5173
+- You: Can kill that process later without asking
+
+**Example requiring permission:**
+- User: "Something is running on port 3000"
+- You: Check what's running, report findings, then ask: "Process X is running on port 3000. Would you like me to kill it?"
+
 ## Notes & Knowledge Management
 My primary notes system is located at `~/ws/everything-monorepo/notes/` and follows the PARA method:
 
