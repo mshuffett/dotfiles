@@ -63,12 +63,8 @@ No additional setup needed - just use `$TODOIST_API_TOKEN` in commands.
 - **🚢🏖️ Ship to Beach Dashboard**: 2360927142 (repo maintenance & improvements)
 - **🚢🏖️ Sprint Execution**: 2360927149 (actual sprint shipping work)
 
-### Other Projects
+### Default Project
 - **Inbox**: 377445380
-- **A/Everything AI Backlog**: 2352252927
-- **Raise $10M for Everything AI**: 2352542594
-- **A/Ideas 💡**: 2263875911
-- **Executive Eve 🤖**: 2350752890
 
 ## API Patterns & Limitations
 
