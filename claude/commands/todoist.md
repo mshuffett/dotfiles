@@ -1,0 +1,117 @@
+---
+description: Todoist task management via REST API v2. Use when user asks to create tasks, work with Todoist, or process task lists. Includes API patterns, priority mapping, project IDs, and task creation examples.
+---
+
+# Todoist Task Management
+
+## When to Use This Command
+- User explicitly asks to create a Todoist task
+- User requests help with Todoist task processing or organization
+- User mentions working with their task list or inbox
+- **DO NOT** create tasks proactively without user request
+
+## Maintaining This Command
+
+**When you learn something new about Todoist workflow:**
+- **ADD** new patterns, examples, or best practices to this file
+- **ENHANCE** existing sections with additional context
+- **DO NOT REMOVE** existing content (might cause regressions)
+- **COMMIT** changes to dotfiles immediately after updates
+- Document the learning in context (why it matters, when to use)
+
+## Creating Tasks (REST API v2)
+
+### Basic Task Creation
+```bash
+curl -X POST "https://api.todoist.com/rest/v2/tasks" \
+  -H "Authorization: Bearer $TODOIST_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "Task title",
+    "description": "Longer description with markdown support",
+    "priority": 4,
+    "project_id": "377445380"
+  }'
+```
+
+### Priority Levels
+- `4` = P1 (highest priority - red)
+- `3` = P2 (orange)
+- `2` = P3 (yellow)
+- `1` = P4 (normal, default - white)
+
+### Common Parameters
+- `content` (required) - Task title
+- `description` - Longer description with markdown support
+- `project_id` - Default: 377445380 (Inbox)
+- `due_string` - Natural language: "tomorrow", "next Monday", "Oct 15"
+- `due_date` - ISO format: "2025-10-15"
+- `labels` - Array of label IDs
+
+### Environment Variable
+The `TODOIST_API_TOKEN` environment variable is already configured in ~/.zshrc.
+No additional setup needed - just use `$TODOIST_API_TOKEN` in commands.
+
+## Project IDs (Quick Reference)
+- **Inbox**: 377445380
+- **A/Everything AI Backlog**: 2352252927
+- **Raise $10M for Everything AI**: 2352542594
+- **A/Ideas 💡**: 2263875911
+- **Executive Eve 🤖**: 2350752890
+
+## API Patterns & Limitations
+
+### Moving Tasks (Use Sync API v9, NOT REST v2)
+REST API v2 CANNOT move tasks between projects. Use Sync API:
+
+```bash
+curl -X POST "https://api.todoist.com/sync/v9/sync" \
+  -H "Authorization: Bearer $TODOIST_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sync_token": "*",
+    "commands": [{
+      "type": "item_move",
+      "uuid": "'$(uuidgen)'",
+      "args": {
+        "id": "TASK_ID",
+        "project_id": "NEW_PROJECT_ID"
+      }
+    }]
+  }'
+```
+
+### Removing Due Dates
+Use string `"no date"` (NOT null or empty):
+```bash
+curl -X POST "https://api.todoist.com/rest/v2/tasks/TASK_ID" \
+  -H "Authorization: Bearer $TODOIST_API_TOKEN" \
+  -d '{"due_string": "no date"}'
+```
+
+## Bulk Operations & Scripts
+
+For bulk operations, see scripts in:
+`~/ws/everything-monorepo/notes/5-Tools/Todoist/scripts/`
+
+- `check_inbox.sh` - Quick inbox status
+- `move_tasks.sh` - Bulk move between projects
+- `remove_dates.sh` - Bulk date removal
+
+## Task Processing Guidelines
+
+### Daily Task Limits
+- **Maximum 5-7 tasks per day** for optimal productivity
+- Tomorrow often gets overloaded (40-60 tasks) - need to triage
+
+### Task Categories
+1. **Wisdom/Philosophy** → Remove dates (timeless content)
+2. **Ideas** → Move to Ideas Backlog or Fun List
+3. **Delegated tasks** → Check assignee before processing
+4. **Vague reflections** → Often can be deleted
+
+## Reference Documentation
+Full workflow guides and learnings:
+- `~/ws/everything-monorepo/notes/5-Tools/Todoist/TODOIST_LEARNINGS.md`
+- `~/ws/everything-monorepo/notes/5-Tools/Todoist/workflow_guide.md`
+- `~/ws/everything-monorepo/notes/2-Areas/System/📋 Comprehensive Todoist Management Guidelines.md`

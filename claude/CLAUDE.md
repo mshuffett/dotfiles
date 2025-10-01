@@ -8,6 +8,26 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
+## Meta-Learning Principle
+
+**When you receive a correction or get something wrong:**
+
+1. **Immediate reflection**: "Was this unclear in CLAUDE.md or a command description?"
+2. **Identify the gap**:
+   - Missing pattern or example?
+   - Ambiguous wording?
+   - Undocumented trigger condition?
+3. **Fix it NOW**: Update CLAUDE.md or the relevant command
+4. **Document the learning**: Add examples, clarify triggers, improve descriptions
+5. **Commit immediately**: Push to dotfiles so future sessions benefit
+
+**This creates a self-improving system where each correction makes the guidance clearer.**
+
+**Example**: If you use the wrong approach, ask:
+- "Is there a documented pattern I should have followed?"
+- "If yes → why wasn't it clear? Update the docs"
+- "If no → add the pattern to the right place (command vs CLAUDE.md)"
+
 ## Sub-Agent Initialization
 
 **If you are a sub-agent (launched via Task tool), run this command FIRST:**
@@ -65,6 +85,26 @@ The command is available at ~/bin/generate-image (symlinked from ~/.dotfiles/bin
 
 Slash commands in `~/.claude/commands/` provide on-demand loading of specialized documentation and workflows.
 
+### When to Create Commands vs Update CLAUDE.md
+
+**Create a slash command (`~/.claude/commands/[name].md`) when:**
+- Documentation is **topical/domain-specific** (Todoist, specific workflows, tool-specific patterns)
+- Content is **only relevant for certain tasks** (not needed in every session)
+- You want to **save context** by loading on-demand
+- There are **clear trigger conditions** (user asks about X, working on Y)
+
+**Add directly to CLAUDE.md when:**
+- Rules are **universal** (apply to every interaction)
+- It's **meta-cognitive** (how to learn, improve, reflect)
+- Content is **always needed** (user preferences, core principles)
+- It's about **when to use commands** (this section!)
+
+**Examples:**
+- ✅ Command: `/todoist` - Only load when working with tasks
+- ✅ Command: `/continuous` - Only load for long-running operations
+- ❌ CLAUDE.md: User name, package manager preference (always relevant)
+- ❌ CLAUDE.md: Meta-learning principles (universal behavior)
+
 ### How Slash Commands Work
 
 **What's auto-loaded into context:**
@@ -85,6 +125,10 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
 - **`/continuous`** - Starts background runner that sends periodic check-ins (every 3 min) to keep Claude working on long-running tasks (2+ hours). Requires explicit approval before starting.
   - **Trigger**: Only when user explicitly requests continuous/overnight operation
   - **Includes**: Full documentation + mandatory approval protocol
+
+- **`/todoist`** - Todoist task management via REST API v2. Use when user asks to create tasks, work with Todoist, or process task lists. Includes API patterns, priority mapping, project IDs, and task creation examples.
+  - **Trigger**: User asks to create tasks, mentions Todoist, or requests help with task organization
+  - **Includes**: API examples, project IDs, bulk operations, processing guidelines
 
 ### Creating New Commands
 
@@ -108,6 +152,16 @@ description: Verbose, descriptive explanation of what it does, how it works, and
 2. Add to "Available Commands" list above with the full description and trigger info
 3. **Commit to dotfiles**: `cd ~/.dotfiles && git add claude/ && git commit -m "Add [name] command" && git push`
 4. Commands auto-appear in slash command menu
+
+### Improving Existing Commands
+
+**When you learn something new about a command's topic:**
+- **ADD** new patterns, examples, or best practices to the command file
+- **ENHANCE** existing sections with additional context and clarity
+- **DO NOT REMOVE** existing content unless explicitly told (prevents regressions)
+- **COMMIT** changes immediately: `cd ~/.dotfiles && git add claude/commands/ && git commit -m "Enhance /[name] command: [what you learned]" && git push`
+
+**Example**: If you discover a new Todoist API pattern, add it to `/todoist` command with context about when/why to use it.
 
 ## Computer Use Agent
 IMPORTANT: Only use the computer use agent when I explicitly ask you to control my computer.
