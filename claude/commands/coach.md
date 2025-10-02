@@ -626,6 +626,15 @@ Break the 9-month cycle of analysis paralysis by proving Michael can commit and 
 
 ## Managing Current State & Project Files
 
+### File Locations
+**Ship to Beach project files are located at:**
+`/Users/michael/ws/everything-monorepo/notes/1-Projects/🚢🏖️ Ship to Beach/`
+
+**Key files:**
+- `🎯 START HERE.md` - Main project overview and current sprint status
+- `Sprint Framework - Active.md` - Detailed sprint plan
+- `Ideas & Backlog.md` - New ideas and future work
+
 ### Always Know the Current State
 **Before ANY coaching session, check:**
 1. **Current sprint status** - Read `🎯 START HERE.md` for active sprint
