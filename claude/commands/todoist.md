@@ -68,6 +68,49 @@ No additional setup needed - just use `$TODOIST_API_TOKEN` in commands.
 
 ## API Patterns & Limitations
 
+### Python API Helper (Recommended for Scripting)
+**Use Python instead of curl + jq for complex operations:**
+
+```python
+import os
+import json
+import urllib.request
+
+token = os.environ.get('TODOIST_API_TOKEN')
+headers = {'Authorization': f'Bearer {token}'}
+
+def get_tasks(filter_str=None):
+    """Fetch tasks with optional filter"""
+    url = 'https://api.todoist.com/rest/v2/tasks'
+    if filter_str:
+        url += f'?filter={filter_str}'
+    req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req) as response:
+        return json.loads(response.read())
+
+def update_task(task_id, **kwargs):
+    """Update task with any parameters"""
+    url = f'https://api.todoist.com/rest/v2/tasks/{task_id}'
+    data = json.dumps(kwargs).encode('utf-8')
+    req = urllib.request.Request(url, data=data, headers={**headers, 'Content-Type': 'application/json'}, method='POST')
+    with urllib.request.urlopen(req) as response:
+        return json.loads(response.read())
+
+# Examples:
+tasks_today = get_tasks('today')
+tasks_tomorrow = get_tasks('tomorrow')
+all_tasks = get_tasks()
+
+# Filter in Python (more reliable than API filters)
+inbox_no_date = [t for t in all_tasks if t['project_id'] == '377445380' and t.get('due') is None]
+```
+
+**Why Python over curl + jq:**
+- jq has parsing issues with some Todoist API responses
+- Python's json library is more reliable
+- Easier to filter and process task data
+- No shell quoting/escaping headaches
+
 ### Moving Tasks (Use Sync API v9, NOT REST v2)
 REST API v2 CANNOT move tasks between projects. Use Sync API:
 
@@ -88,12 +131,39 @@ curl -X POST "https://api.todoist.com/sync/v9/sync" \
   }'
 ```
 
+**Python version (preferred):**
+```python
+def move_task(task_id, project_id):
+    """Move task to different project using Sync API"""
+    import uuid
+    url = 'https://api.todoist.com/sync/v9/sync'
+    data = json.dumps({
+        "sync_token": "*",
+        "commands": [{
+            "type": "item_move",
+            "uuid": str(uuid.uuid4()),
+            "args": {
+                "id": task_id,
+                "project_id": project_id
+            }
+        }]
+    }).encode('utf-8')
+    req = urllib.request.Request(url, data=data, headers={**headers, 'Content-Type': 'application/json'})
+    with urllib.request.urlopen(req) as response:
+        return json.loads(response.read())
+```
+
 ### Removing Due Dates
 Use string `"no date"` (NOT null or empty):
 ```bash
 curl -X POST "https://api.todoist.com/rest/v2/tasks/TASK_ID" \
   -H "Authorization: Bearer $TODOIST_API_TOKEN" \
   -d '{"due_string": "no date"}'
+```
+
+**Python version:**
+```python
+update_task(task_id, due_string="no date")
 ```
 
 ## Bulk Operations & Scripts
