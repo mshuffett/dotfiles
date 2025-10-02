@@ -206,6 +206,10 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
   - **Trigger**: User wants to improve a prompt/command/output-style, asks for prompt engineering help, wants to apply best practices
   - **Includes**: 10 best practices checklist, before/after examples, testing protocol, common patterns to fix, structured output format
 
+- **`/tmux-context`** - Creates a persistent tmux context pane using glow + entr for live-updating markdown display. Shows shared understanding and alignment. Supports multiple Claude instances with unique IDs. Only use when user explicitly requests it.
+  - **Trigger**: User explicitly asks for tmux context pane, persistent context display, or alignment tracking
+  - **Includes**: Window/pane detection, unique ID generation, glow+entr setup, context file template, update protocols, troubleshooting
+
 ### Creating New Commands
 
 1. Create `~/.claude/commands/[name].md`:
