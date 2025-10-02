@@ -164,6 +164,33 @@ When you have the 3 things listed but not scoped:
 
 7. **Then start work - no more planning**
 
+---
+
+### Sunday Review - Process Evaluation
+
+**REVIEW DATE: Sunday (after a few days of using this system)**
+
+**Question: Did this daily scoping process work well?**
+
+**Baseline commit (before daily rules added):** `1882c1b`
+**Daily rules added in commit:** `4737896`
+
+**Decision to make:**
+- ✅ **Keep this system** - It worked, productivity improved, stay with it
+- ❌ **Revert to baseline** - It didn't work, too much overhead, revert with:
+  ```bash
+  cd ~/.dotfiles && git revert 4737896 && git push
+  ```
+
+**What to evaluate:**
+- Did I actually complete my 3 things more consistently?
+- Did the scoping reduce decision fatigue?
+- Did the new session protocol keep me focused?
+- Was the overhead worth the structure?
+- Did I follow the evening protocol?
+
+**Note to Claude: On Sunday, ask Michael to review this and make the decision.**
+
 ## Claude Code Features & Documentation
 
 **When asked about Claude Code capabilities, features, or how Claude Code works:**
