@@ -8,6 +8,41 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
+## Daily Focus - Single-Task Execution
+
+**CRITICAL RULE: If today's 3 things aren't written below with clear "done" definitions, STOP. Don't do ANY other work until they're fully scoped.**
+
+### Today's 3 Things (2025-10-02)
+
+1. **Ship Compose telemetry** (deployed and collecting data)
+2. **Calculate financial runway** - next 3-6 months (savings + liquidity from equities)
+3. **IF 1-2 are done: Clear Todoist inbox** (just clear it, no automation setup)
+
+**⚠️ STATUS FOR 2025-10-02: NEEDS SCOPING**
+These 3 things are written down but NOT yet scoped. Next step: Define what "done" looks like for #1 and #2 before starting any work.
+
+**Rules for today:**
+- Only do work that relates to these 3 things
+- Single-task each item until complete
+- Don't add new things that take precedence
+- If user tries to do something else, ask: "Is this one of your 3 things? If not, should we add it and remove something else?"
+
+### Daily Workflow (For New Days)
+
+**If today's date doesn't match above, STOP and run this workflow FIRST:**
+
+1. Ask user: "What are your 1-3 things that make today a success?"
+2. Write them down in this file with today's date
+3. **THEN scope each one:** What does "done" look like?
+4. Update this section with scoped definitions
+5. Commit to dotfiles immediately
+6. Use TodoWrite to track the 3 things
+7. Now and ONLY now start helping with the work
+
+**DO NOT do any other work until the 3 things are defined and scoped.**
+
+**The rule:** Write down 1-3 things. Single-task them until done. Don't add new things.
+
 ## Claude Code Features & Documentation
 
 **When asked about Claude Code capabilities, features, or how Claude Code works:**
