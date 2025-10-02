@@ -41,6 +41,56 @@ Use pnpm instead of npm.
 - "If yes → why wasn't it clear? Update the docs"
 - "If no → add the pattern to the right place (command vs CLAUDE.md)"
 
+## Memory Update Protocol
+
+**When the user says "remember this", "always do X", "never do Y", or provides corrections/learnings:**
+
+### Automatic Decision Tree
+
+Ask yourself: Where should this information live?
+
+**1. Does it affect EVERY interaction?**
+- Keywords: "always", "never", "every time", "I am", "my name"
+- Examples: "Always call me Michael", "Never use npm (use pnpm)", "I prefer X over Y"
+- **Destination:** CLAUDE.md (Core User Information or relevant section)
+
+**2. Is it a universal behavioral rule?**
+- Keywords: "whenever you", "before you", "after you", "when working with"
+- Examples: "Always test commands with subagents", "Never remove content without asking"
+- **Destination:** CLAUDE.md (Meta-Learning, Protocols, or appropriate section)
+
+**3. Is it topical/domain-specific but only sometimes relevant?**
+- Keywords: topic names (Todoist, Git, Firebase, etc.)
+- Examples: "When using Todoist API, always...", "Git workflow should..."
+- **Destination:** Create or update slash command in `~/.claude/commands/[topic].md`
+
+**4. Is it a complete mode/personality shift?**
+- Keywords: "coach me", "be a", "act as", "respond like"
+- Examples: "Coach me on shipping", "Be a technical writer", "Act as analyst"
+- **Destination:** Output style in `~/.claude/output-styles/[name].md`
+
+**5. Is it project-specific?**
+- Keywords: specific project names, codebase details
+- Examples: "For Ship to Beach project...", "In this monorepo..."
+- **Destination:** Project CLAUDE.md or project-specific command
+
+### Implementation Steps
+
+When user provides information to remember:
+
+1. **Determine destination** using decision tree above
+2. **Inform the user**: "I'm adding this to [location] because [reason]"
+3. **Update the file** with properly formatted content
+4. **Commit immediately** with clear message
+5. **Confirm**: "Documented in [location]. This will apply to all future sessions."
+
+### When in Doubt
+
+**If unclear which destination:** Ask the user:
+"Should this apply to every interaction (CLAUDE.md) or only when working on [specific topic] (command)?"
+
+**Default rule:** If it contains "always" or "never" and affects behavior broadly → CLAUDE.md
+
 ## Sub-Agent Initialization
 
 **If you are a sub-agent (launched via Task tool), run this command FIRST:**
@@ -151,6 +201,10 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
 - **`/coach`** - Ship to Beach Executive Coach - Direct, pattern-interrupting coaching focused on breaking 9-month analysis paralysis cycle. Recognizes systems thinking as avoidance, addresses permission problem (not capability problem), uses somatic Truth Gate checks. Zero tolerance for frameworks/planning - execution only. Accountability is simple and boring: "What did you ship?" Weekly check-ins on outcomes not strategy. Based on 692k word synthesis + advisor roundtable consensus (Dalio, Robbins, Colonna, Rabois, Altman). Ships from 70% clarity, not 95%. Single-threaded focus, public accountability, imperfect action.
   - **Trigger**: User asks for coaching/check-in, exhibits analysis paralysis patterns, building frameworks instead of shipping, stuck on decisions, weekly accountability
   - **Includes**: Pattern interrupt phrases, Truth Gate Ritual protocol, 30-day sprint framework, success criteria, advisor consensus, coaching session templates, hard confrontation tactics when needed
+
+- **`/prompt-improve`** - Apply Claude 4 prompt engineering best practices to any prompt, command, or output style. Uses XML tags, examples, step-by-step reasoning, role-based prompting, and clear motivation. Tests improvements with subagent before finalizing. Helps iteratively improve existing prompts without starting from scratch.
+  - **Trigger**: User wants to improve a prompt/command/output-style, asks for prompt engineering help, wants to apply best practices
+  - **Includes**: 10 best practices checklist, before/after examples, testing protocol, common patterns to fix, structured output format
 
 ### Creating New Commands
 
