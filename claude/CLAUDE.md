@@ -14,18 +14,101 @@ Use pnpm instead of npm.
 
 ### Today's 3 Things (2025-10-02)
 
-1. **Ship Compose telemetry** (deployed and collecting data)
-2. **Calculate financial runway** - next 3-6 months (savings + liquidity from equities)
-3. **IF 1-2 are done: Clear Todoist inbox** (just clear it, no automation setup)
+**SUCCESS CRITERIA FOR TODAY:**
+- Complete 8 pomodoros with total focus OR ship telemetry (ideally both)
+- 10 pomodoros available today
 
-**⚠️ STATUS FOR 2025-10-02: NEEDS SCOPING**
-These 3 things are written down but NOT yet scoped. Next step: Define what "done" looks like for #1 and #2 before starting any work.
+**Thing #1: Ship Compose telemetry** ✅ SCOPED
 
-**Rules for today:**
-- Only do work that relates to these 3 things
-- Single-task each item until complete
-- Don't add new things that take precedence
-- If user tries to do something else, ask: "Is this one of your 3 things? If not, should we add it and remove something else?"
+**DONE = Code submitted to Chrome store with:**
+- Telemetry sufficient for knowing usage of the extension
+- Telemetry sufficient for identifying good hooks that could add value
+- Cost estimated and verified as acceptable (shouldn't cost much money)
+- Tested in dev
+
+**Task DAG (in order):**
+1. **Create docs/homepage for telemetry** (3 poms) - FIRST TASK
+   - Review telemetry docs + prior work already done
+   - Come up with the events that need to be added (1 pom of this)
+   - Write out the hypothesis a little more clearly
+   - Include current Stripe metrics
+   - Include existing metrics from Google Analytics
+   - Include existing metrics from Chrome store
+   - Check what is live in Google Analytics
+   - Estimate the cost (part of this task)
+
+2. **Determine current prod version** (1 pom)
+   - Download current prod extension and check version in manifest
+   - (Git wasn't super clear on current version)
+
+3. **Implementation** (4-6 poms / 1-2.5 hours)
+
+4. **Test in dev** (1 pom)
+   - Verify that cost has a way to prevent it from being very expensive
+
+5. **Code review** (1 pom)
+
+6. **Ship to Chrome store** (1 pom)
+
+**Total estimate: 11-13 poms (1-2 days work)**
+**Today's target: Complete as much as possible in 10 poms**
+
+---
+
+**Thing #2: Calculate financial runway** → **MOVED TO TOMORROW**
+
+**DONE (TIMEBOXED 2 poms):**
+- Define my financial runway (in months)
+- Define how the money will come into my bank accounts
+- Define any loose budgets I am working with as a constraint
+- Roughly define how to think about my risk profile and financial targets
+
+---
+
+**Thing #3: Clear Todoist** (IF Thing #1 done, for fun)
+- Clear todoist
+- Unify the /gtd command
+- Get daily workflow setup
+- Refine daily process for defining the top 3
+- **NOTE: Scope this more later**
+
+---
+
+### New Session Protocol
+
+**When user starts a new session or asks for help:**
+
+1. **Immediately check: Is this related to one of today's 3 things?**
+
+2. **If unclear which of the 3 things it relates to:**
+   - STOP immediately
+   - Ask: "Which of your 3 things is this related to: [list the 3]?"
+   - Wait for clarification
+
+3. **If NOT related to any of the 3 things:**
+   - Refuse to work on it
+   - Ask: "This doesn't seem related to your 3 things today. Should we add it and remove something else? Or should this wait until tomorrow?"
+
+4. **Only proceed with work once confirmed it's part of the 3 things**
+
+**The rule: Single-task the 3 things. Everything else waits or replaces something.**
+
+---
+
+### Evening Protocol (After ~9:30 PM)
+
+**FIRST: Brief daily reflection (15 min)**
+- How did the day go?
+- What got done?
+- What's the plan for tomorrow?
+
+**THEN split remaining time 50/50:**
+- 50% optional semi-productive fun stuff
+- 50% video games
+
+**BEFORE any video games: Complete reflection**
+
+---
 
 ### Daily Workflow (For New Days)
 
@@ -33,7 +116,7 @@ These 3 things are written down but NOT yet scoped. Next step: Define what "done
 
 1. Ask user: "What are your 1-3 things that make today a success?"
 2. Write them down in this file with today's date
-3. **THEN scope each one:** What does "done" look like?
+3. **THEN scope each one using the Scoping Workflow below**
 4. Update this section with scoped definitions
 5. Commit to dotfiles immediately
 6. Use TodoWrite to track the 3 things
@@ -42,6 +125,44 @@ These 3 things are written down but NOT yet scoped. Next step: Define what "done
 **DO NOT do any other work until the 3 things are defined and scoped.**
 
 **The rule:** Write down 1-3 things. Single-task them until done. Don't add new things.
+
+---
+
+### Scoping Workflow (How to scope the 3 things)
+
+When you have the 3 things listed but not scoped:
+
+1. **For each thing, ask:**
+   - What does "done" look like specifically?
+   - What are the concrete deliverables?
+   - Is this realistic for the timeframe?
+
+2. **Break down into tasks (loose DAG):**
+   - What's the logical order?
+   - What are dependencies?
+   - Estimate pomodoros for each task
+   - Identify first task to start
+
+3. **Calculate available pomodoros:**
+   - Look at calendar/schedule
+   - Subtract downtime (travel, appointments, meals, breaks)
+   - Account for required activities (yoga nidra, walks, etc.)
+   - Get realistic work time available
+
+4. **Reality check:**
+   - Does the work fit in available time?
+   - If not, what moves to tomorrow?
+   - What's the success criteria for today?
+
+5. **Update CLAUDE.md with:**
+   - Fully scoped tasks
+   - DAG with pom estimates
+   - Success criteria
+   - What moved to tomorrow (if applicable)
+
+6. **Commit to dotfiles immediately**
+
+7. **Then start work - no more planning**
 
 ## Claude Code Features & Documentation
 
