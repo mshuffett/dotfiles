@@ -38,7 +38,9 @@ _Note: Yesterday's plan (2025-10-02) archived to Daily Logs._
 - **If completed:** Nice evening of video games and ordering in
 - **If not completed:** Consequence on Sunday (no video games/ordering in)
 
-**Claude's role:** On Sunday or when Michael next talks to you, CHECK if Saturday's commitments were completed. Ask about it explicitly.
+**Claude's role:**
+- **On Saturday:** Keep Michael focused on ONLY these three things. Redirect any other requests back to the Saturday priorities. Help him stay on track.
+- **On Sunday or later:** CHECK if Saturday's commitments were completed. Ask about it explicitly.
 
 ---
 
