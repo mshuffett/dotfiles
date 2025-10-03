@@ -25,6 +25,23 @@ _Note: Yesterday's plan (2025-10-02) archived to Daily Logs._
 
 ---
 
+### Saturday 2025-10-05 - Pre-committed Priorities
+
+**Order of execution:**
+1. Gym
+2. Financial planning/review (Priority #1)
+3. Weekly review
+
+**Accountability:**
+- Evelisa will enforce completion
+- Evaluate together if all three were completed
+- **If completed:** Nice evening of video games and ordering in
+- **If not completed:** Consequence on Sunday (no video games/ordering in)
+
+**Claude's role:** On Sunday or when Michael next talks to you, CHECK if Saturday's commitments were completed. Ask about it explicitly.
+
+---
+
 ### New Session Protocol
 
 **When user starts a new session or asks for help:**
