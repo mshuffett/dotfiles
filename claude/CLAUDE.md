@@ -12,65 +12,16 @@ Use pnpm instead of npm.
 
 **CRITICAL RULE: If today's 3 things aren't written below with clear "done" definitions, STOP. Don't do ANY other work until they're fully scoped.**
 
-### Today's 3 Things (2025-10-02)
+### Today's 3 Things (2025-10-03)
 
-**SUCCESS CRITERIA FOR TODAY:**
-- Complete 8 pomodoros with total focus OR ship telemetry (ideally both)
-- 10 pomodoros available today
+**Taking it loose today - no rigid structure.**
 
-**Thing #1: Ship Compose telemetry** ✅ SCOPED
+Working on:
+- Continuing Compose exploration (with AI assistance)
+- Following interest-driven work
+- May revisit and define clearer goals later in the day
 
-**DONE = Code submitted to Chrome store with:**
-- Telemetry sufficient for knowing usage of the extension
-- Telemetry sufficient for identifying good hooks that could add value
-- Cost estimated and verified as acceptable (shouldn't cost much money)
-- Tested in dev
-
-**Task DAG (in order):**
-1. **Create docs/homepage for telemetry** (3 poms) - FIRST TASK
-   - Review telemetry docs + prior work already done
-   - Come up with the events that need to be added (1 pom of this)
-   - Write out the hypothesis a little more clearly
-   - Include current Stripe metrics
-   - Include existing metrics from Google Analytics
-   - Include existing metrics from Chrome store
-   - Check what is live in Google Analytics
-   - Estimate the cost (part of this task)
-
-2. **Determine current prod version** (1 pom)
-   - Download current prod extension and check version in manifest
-   - (Git wasn't super clear on current version)
-
-3. **Implementation** (4-6 poms / 1-2.5 hours)
-
-4. **Test in dev** (1 pom)
-   - Verify that cost has a way to prevent it from being very expensive
-
-5. **Code review** (1 pom)
-
-6. **Ship to Chrome store** (1 pom)
-
-**Total estimate: 11-13 poms (1-2 days work)**
-**Today's target: Complete as much as possible in 10 poms**
-
----
-
-**Thing #2: Calculate financial runway** → **MOVED TO TOMORROW**
-
-**DONE (TIMEBOXED 2 poms):**
-- Define my financial runway (in months)
-- Define how the money will come into my bank accounts
-- Define any loose budgets I am working with as a constraint
-- Roughly define how to think about my risk profile and financial targets
-
----
-
-**Thing #3: Clear Todoist** (IF Thing #1 done, for fun)
-- Clear todoist
-- Unify the /gtd command
-- Get daily workflow setup
-- Refine daily process for defining the top 3
-- **NOTE: Scope this more later**
+_Note: Yesterday's plan (2025-10-02) archived to Daily Logs._
 
 ---
 
@@ -119,13 +70,24 @@ Use pnpm instead of npm.
 2. Write them down in this file with today's date
 3. **THEN scope each one using the Scoping Workflow below**
 4. Update this section with scoped definitions
-5. Commit to dotfiles immediately
-6. Use TodoWrite to track the 3 things
-7. Now and ONLY now start helping with the work
+5. **Archive yesterday's plan** to `~/ws/everything-monorepo/notes/1-Projects/🚢🏖️ Ship to Beach/Daily Logs/YYYY-MM-DD.md`
+6. Commit both CLAUDE.md and the daily log to their respective repos
+7. Use TodoWrite to track the 3 things
+8. Now and ONLY now start helping with the work
 
 **DO NOT do any other work until the 3 things are defined and scoped.**
 
 **The rule:** Write down 1-3 things. Single-task them until done. Don't add new things.
+
+### Archiving Daily Plans
+
+When transitioning to a new day:
+1. **Copy the previous day's "Today's 3 Things" section** to a new file: `~/ws/everything-monorepo/notes/1-Projects/🚢🏖️ Ship to Beach/Daily Logs/YYYY-MM-DD.md`
+2. **Preserve the full plan** including task DAGs, estimates, and success criteria
+3. **Leave space for "Outcome"** section to be filled during reflection
+4. **Commit the daily log** to the notes repo: `cd ~/ws/everything-monorepo && git add notes/ && git commit -m "Daily log: YYYY-MM-DD" && git push`
+5. **Then update CLAUDE.md** with new day's plan
+6. **Commit CLAUDE.md** to dotfiles: `cd ~/.dotfiles && git add claude/ && git commit -m "Daily plan: YYYY-MM-DD" && git push`
 
 ---
 
