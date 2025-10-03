@@ -100,6 +100,7 @@ Use pnpm instead of npm.
 **FIRST: Brief daily reflection (15 min)**
 - How did the day go?
 - What got done?
+- Quick scan of Todoist items
 - What's the plan for tomorrow?
 
 **THEN split remaining time 50/50:**
