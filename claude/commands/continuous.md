@@ -118,14 +118,27 @@ tmux attach -t my-task
 
 ```
 claude-continuous {background|new-session} [pane_id] [session_name] [work_dir] [interval] {start|stop|status}
+                  $1                        $2        $3            $4        $5        $6
 ```
 
-- **Mode**: `background` (current session) or `new-session` (new tmux)
-- **pane_id**: Pane ID to monitor (default: auto-detect from $TMUX_PANE)
-- **session_name**: Name for tmux session (default: claude-continuous)
-- **work_dir**: Working directory (default: current directory)
-- **interval**: Seconds between check-ins (default: 180)
-- **Command**: start, stop, or status
+**⚠️ CRITICAL: Parameter Order Matters!**
+
+All 6 parameters must be provided in order. Use `""` for defaults:
+
+- **$1 Mode**: `background` (current session) or `new-session` (new tmux)
+- **$2 pane_id**: Pane ID to monitor (use `"$TMUX_PANE"` for background mode, `""` for new-session)
+- **$3 session_name**: Name for tmux session (use `""` for default "claude-continuous")
+- **$4 work_dir**: Working directory (use `""` for current directory)
+- **$5 interval**: Seconds between check-ins (use `180` for 3 minutes, `""` for default)
+- **$6 Command**: `start`, `stop`, or `status`
+
+**Common Mistake:**
+```bash
+❌ claude-continuous background "" "" 180 start     # WRONG! Skips work_dir
+✅ PANE_ID=$TMUX_PANE nohup claude-continuous background "$PANE_ID" "" "" 180 start > /dev/null 2>&1 &
+```
+
+If you skip a parameter, all following parameters shift positions and the script breaks!
 
 ## Logs
 
