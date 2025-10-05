@@ -119,7 +119,8 @@ run_background() {
 
         # Send check-in to the Claude pane (even if user switched windows)
         log "Sending check-in #$iteration to pane $CLAUDE_PANE"
-        tmux send-keys -t "$CLAUDE_PANE" "⏰ Auto-check-in #$iteration (runtime: ${runtime_mins}m) - Continue working on current task." Enter
+        tmux send-keys -t "$CLAUDE_PANE" "⏰ Auto-check-in #$iteration (runtime: ${runtime_mins}m) - Continue working on current task."
+        tmux send-keys -t "$CLAUDE_PANE" Enter
 
         log "Runtime: ${runtime_mins} minutes | Iteration: $iteration"
 
