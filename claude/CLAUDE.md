@@ -186,6 +186,18 @@ When you have the 3 things listed but not scoped:
 - Session files are in JSONL format with conversation history
 - Current session can be identified by most recent modification time
 
+## GitHub Repository Context
+
+**When referencing external GitHub repositories, ALWAYS include:**
+- ⭐ Star count
+- 📝 Total commit count (or commit activity indicator)
+- 📅 Date of most recent commit
+
+This helps assess repo maturity, activity level, and community adoption.
+
+**Example format:**
+"[username/repo] (⭐ 1.2k, 500+ commits, last updated 2 days ago)"
+
 ## Meta-Learning Principle
 
 **When you receive a correction or get something wrong:**
