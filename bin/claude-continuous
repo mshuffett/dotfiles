@@ -7,9 +7,10 @@ set -e
 
 # Configuration
 MODE="${1:-background}"  # "background" or "new-session"
-SESSION_NAME="${2:-claude-continuous}"
-WORK_DIR="${3:-$(pwd)}"
-CHECK_INTERVAL="${4:-180}"  # 3 minutes default
+PANE_ID="${2}"  # Optional: specific pane ID to monitor
+SESSION_NAME="${3:-claude-continuous}"
+WORK_DIR="${4:-$(pwd)}"
+CHECK_INTERVAL="${5:-180}"  # 3 minutes default
 LOG_FILE="$WORK_DIR/claude_continuous.log"
 
 # Initialize log
@@ -90,8 +91,15 @@ run_background() {
         exit 1
     fi
 
-    # Capture the pane ID where this script was launched (where Claude is running)
-    CLAUDE_PANE=$(tmux display-message -p '#{pane_id}')
+    # Use provided pane ID, or fall back to TMUX_PANE env var, or detect current pane
+    if [ -n "$PANE_ID" ]; then
+        CLAUDE_PANE="$PANE_ID"
+    elif [ -n "$TMUX_PANE" ]; then
+        CLAUDE_PANE="$TMUX_PANE"
+    else
+        CLAUDE_PANE=$(tmux display-message -p '#{pane_id}')
+    fi
+
     CURRENT_SESSION=$(tmux display-message -p '#{session_name}')
 
     log "===== Starting Continuous Runner (Background Mode) ====="
@@ -179,7 +187,7 @@ cleanup() {
 
 # Main execution
 main() {
-    local command="${5:-start}"
+    local command="${6:-start}"
 
     case "$command" in
         start)
@@ -215,27 +223,28 @@ main() {
         *)
             echo "Claude Continuous Runner"
             echo ""
-            echo "Usage: $0 {background|new-session} [session_name] [work_dir] [interval] {start|stop|status}"
+            echo "Usage: $0 {background|new-session} [pane_id] [session_name] [work_dir] [interval] {start|stop|status}"
             echo ""
             echo "Modes:"
             echo "  background   - Run in current session (no new tmux session needed)"
             echo "  new-session  - Create new tmux session for Claude"
             echo ""
             echo "Arguments:"
+            echo "  pane_id      - Pane ID to monitor (default: auto-detect from \$TMUX_PANE)"
             echo "  session_name - Name for tmux session (default: claude-continuous)"
             echo "  work_dir     - Working directory (default: current directory)"
             echo "  interval     - Seconds between check-ins (default: 180)"
             echo ""
             echo "Examples:"
-            echo "  # Run in background (current session)"
-            echo "  nohup $0 background \"\" \"\" 180 start > /dev/null 2>&1 &"
+            echo "  # Run in background (auto-detect pane)"
+            echo "  PANE_ID=\$TMUX_PANE nohup $0 background \"\$PANE_ID\" \"\" \"\" 180 start > /dev/null 2>&1 &"
             echo ""
             echo "  # Create new session"
-            echo "  $0 new-session my-task /path/to/project 180 start"
+            echo "  $0 new-session \"\" my-task /path/to/project 180 start"
             echo ""
             echo "  # Check status"
-            echo "  $0 background \"\" \"\" \"\" status"
-            echo "  $0 new-session my-task /path/to/project 180 status"
+            echo "  $0 background \"\" \"\" \"\" \"\" status"
+            echo "  $0 new-session \"\" my-task /path/to/project 180 status"
             exit 1
             ;;
     esac

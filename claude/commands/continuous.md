@@ -21,11 +21,11 @@ When user requests continuous operation, you MUST follow this protocol:
 
 3. **If user says NO**:
    - Explain how they can start it manually
-   - Show the command: `nohup claude-continuous background "" "" 180 start > /dev/null 2>&1 &`
+   - Show the command: `PANE_ID=$TMUX_PANE nohup claude-continuous background "$PANE_ID" "" "" 180 start > /dev/null 2>&1 &`
    - Do NOT run anything
 
 4. **If user says YES**:
-   - Run: `nohup claude-continuous background "" "" 180 start > /dev/null 2>&1 &`
+   - Run: `PANE_ID=$TMUX_PANE nohup claude-continuous background "$PANE_ID" "" "" 180 start > /dev/null 2>&1 &`
    - Confirm it started with the PID
    - Remind them: "View logs with: tail -f claude_continuous.log"
 
@@ -60,11 +60,11 @@ Keeps Claude running with periodic check-ins (default: every 3 minutes) and auto
 Runs in the current Claude session. Captures the pane ID where Claude is running at startup, then sends check-ins to that specific pane using `tmux send-keys`. This works even if you switch to other tmux windows - check-ins always go to the correct Claude pane.
 
 ```bash
-# Start in background
-nohup claude-continuous background "" "" 180 start > /dev/null 2>&1 &
+# Start in background (captures current pane ID)
+PANE_ID=$TMUX_PANE nohup claude-continuous background "$PANE_ID" "" "" 180 start > /dev/null 2>&1 &
 
 # Check status
-claude-continuous background "" "" "" status
+claude-continuous background "" "" "" "" status
 
 # Stop
 pkill -f "claude-continuous.*background"
@@ -79,14 +79,14 @@ tail -f claude_continuous.log
 Creates a separate tmux session with a new Claude instance.
 
 ```bash
-# Start new session
-claude-continuous new-session my-task /path/to/dir 180 start
+# Start new session (pane_id not needed for new-session mode)
+claude-continuous new-session "" my-task /path/to/dir 180 start
 
 # Check status
-claude-continuous new-session my-task /path/to/dir 180 status
+claude-continuous new-session "" my-task /path/to/dir 180 status
 
 # Stop
-claude-continuous new-session my-task /path/to/dir 180 stop
+claude-continuous new-session "" my-task /path/to/dir 180 stop
 
 # Attach to session
 tmux attach -t my-task
@@ -117,10 +117,11 @@ tmux attach -t my-task
 ## Arguments
 
 ```
-claude-continuous {background|new-session} [session_name] [work_dir] [interval] {start|stop|status}
+claude-continuous {background|new-session} [pane_id] [session_name] [work_dir] [interval] {start|stop|status}
 ```
 
 - **Mode**: `background` (current session) or `new-session` (new tmux)
+- **pane_id**: Pane ID to monitor (default: auto-detect from $TMUX_PANE)
 - **session_name**: Name for tmux session (default: claude-continuous)
 - **work_dir**: Working directory (default: current directory)
 - **interval**: Seconds between check-ins (default: 180)
