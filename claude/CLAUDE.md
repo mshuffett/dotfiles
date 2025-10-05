@@ -198,6 +198,30 @@ This helps assess repo maturity, activity level, and community adoption.
 **Example format:**
 "[username/repo] (⭐ 1.2k, 500+ commits, last updated 2 days ago)"
 
+## Pull Requests
+
+**When the user asks to create a pull request, use the `gh` command:**
+
+```bash
+# Create PR with interactive prompts
+gh pr create
+
+# Create PR with title and body
+gh pr create --title "Title" --body "Description"
+
+# Create PR filling from template
+gh pr create --fill
+
+# Create PR to specific base branch
+gh pr create --base develop --head feature-branch
+```
+
+**Best practices:**
+- Use `gh pr create --fill` to auto-populate from commits
+- Include test results in PR description
+- Reference related issues with `Fixes #123` or `Closes #456`
+- For complex PRs, use `--web` to open browser for detailed formatting
+
 ## Meta-Learning Principle
 
 **When you receive a correction or get something wrong:**
