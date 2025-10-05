@@ -51,7 +51,8 @@ send_checkin() {
     local window_num
     window_num=$(tmux list-windows -t "$SESSION_NAME" -F '#{window_index}' | head -1)
 
-    tmux send-keys -t "$SESSION_NAME:$window_num" "Status check #$iteration: Continue working on current task." Enter
+    tmux send-keys -t "$SESSION_NAME:$window_num" "Status check #$iteration: Continue working on current task."
+    tmux send-keys -t "$SESSION_NAME:$window_num" Enter
     log "Check-in #$iteration sent"
 }
 
@@ -110,7 +111,8 @@ run_background() {
 
         # Send check-in to the Claude pane (even if user switched windows)
         log "Sending check-in #$iteration to pane $CLAUDE_PANE"
-        tmux send-keys -t "$CLAUDE_PANE" "⏰ Auto-check-in #$iteration (runtime: ${runtime_mins}m) - Continue working on current task." Enter
+        tmux send-keys -t "$CLAUDE_PANE" "⏰ Auto-check-in #$iteration (runtime: ${runtime_mins}m) - Continue working on current task."
+        tmux send-keys -t "$CLAUDE_PANE" Enter
 
         log "Runtime: ${runtime_mins} minutes | Iteration: $iteration"
 
