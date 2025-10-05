@@ -54,8 +54,10 @@ Keeps Claude running with periodic check-ins (default: every 3 minutes) and auto
 
 **Two Modes:**
 
-### 1. Background Mode (Recommended)
-Runs in the current Claude session. Auto-check-ins keep the conversation active.
+### 1. Background Mode (Default - Use This for Active Sessions)
+**When to use:** User asks to run continuously within an existing Claude conversation.
+
+Runs in the current Claude session. Captures the pane ID where Claude is running at startup, then sends check-ins to that specific pane using `tmux send-keys`. This works even if you switch to other tmux windows - check-ins always go to the correct Claude pane.
 
 ```bash
 # Start in background
@@ -71,7 +73,9 @@ pkill -f "claude-continuous.*background"
 tail -f claude_continuous.log
 ```
 
-### 2. New Session Mode
+### 2. New Session Mode (For Separate Claude Instances)
+**When to use:** User wants a completely separate Claude instance running independently.
+
 Creates a separate tmux session with a new Claude instance.
 
 ```bash

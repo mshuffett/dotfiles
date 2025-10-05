@@ -89,11 +89,12 @@ run_background() {
         exit 1
     fi
 
+    # Capture the pane ID where this script was launched (where Claude is running)
+    CLAUDE_PANE=$(tmux display-message -p '#{pane_id}')
     CURRENT_SESSION=$(tmux display-message -p '#{session_name}')
-    CURRENT_WINDOW=$(tmux display-message -p '#{window_index}')
 
     log "===== Starting Continuous Runner (Background Mode) ====="
-    log "Monitoring: $CURRENT_SESSION:$CURRENT_WINDOW"
+    log "Monitoring pane: $CLAUDE_PANE (session: $CURRENT_SESSION)"
     log "Check interval: ${CHECK_INTERVAL}s"
     log "Working directory: $WORK_DIR"
     log "======================================"
@@ -101,22 +102,20 @@ run_background() {
     while true; do
         iteration=$((iteration + 1))
 
-        # Send self-check-in to current session
-        log "Sending self-check-in #$iteration"
-
         # Calculate runtime
         local current_time
         current_time=$(date +%s)
         local runtime=$((current_time - start_time))
         local runtime_mins=$((runtime / 60))
 
+        # Send check-in to the Claude pane (even if user switched windows)
+        log "Sending check-in #$iteration to pane $CLAUDE_PANE"
+        tmux send-keys -t "$CLAUDE_PANE" "⏰ Auto-check-in #$iteration (runtime: ${runtime_mins}m) - Continue working on current task." Enter
+
         log "Runtime: ${runtime_mins} minutes | Iteration: $iteration"
 
         # Wait for next check-in
         sleep "$CHECK_INTERVAL"
-
-        # This message will appear in this Claude session after sleep
-        echo "⏰ Auto-check-in #$iteration (runtime: ${runtime_mins}m) - Continue working on current task."
     done
 }
 
