@@ -43,7 +43,7 @@
 # resize-overlay-duration = 4s 200ms
 
 # Theme configuration
-theme = Night Owl
+theme = palenight
 
 # Font
 font-family = FiraCode Nerd Font Mono
