@@ -40,7 +40,9 @@ complete_task(task_id)
 **Why this matters:**
 - User stores rich content in comments (ChatGPT conversations, Claude artifacts, images, detailed notes)
 - Processing without comments = losing critical context
-- Example: "nice orb for waycraft" had 12 comments with multiple links to artifacts, conversations, and image generation examples
+- **IMAGES can have empty content field** - must check comment['attachment'] separately!
+- Example: "nice orb for waycraft" had 12 comments with 6 PNG images + multiple links to artifacts and conversations
+- Missing images = losing visual design references and generated content
 
 ## Maintaining This Command
 
@@ -130,6 +132,27 @@ def get_comments(task_id):
     req = urllib.request.Request(url, headers=headers)
     with urllib.request.urlopen(req) as response:
         return json.loads(response.read())
+
+def extract_attachments_from_comments(comments):
+    """Extract all attachments (images, files) from comments
+
+    Returns list of attachments with type, url, and metadata
+    CRITICAL: Always check comment['attachment'] - images may have empty content!
+    """
+    attachments = []
+    for comment in comments:
+        if comment.get('attachment'):
+            att = comment['attachment']
+            attachments.append({
+                'type': att.get('resource_type', 'unknown'),
+                'url': att.get('file_url') or att.get('image') or att.get('url'),
+                'filename': att.get('file_name'),
+                'size': att.get('file_size'),
+                'dimensions': f"{att.get('image_width')}x{att.get('image_height')}" if att.get('image_width') else None,
+                'title': att.get('title'),
+                'description': att.get('description')
+            })
+    return attachments
 
 def add_comment(task_id, content):
     """Add comment to task (e.g., link to where content was moved)"""
