@@ -12,7 +12,21 @@ Use pnpm instead of npm.
 
 **CRITICAL RULE: If today's 3 things aren't written below with clear "done" definitions, STOP. Don't do ANY other work until they're fully scoped.**
 
-_Today's 3 things not yet defined for current session._
+### Sunday, October 6, 2025
+
+**Today's 3 Things:**
+
+1. **💰 Finances & Runway Review**
+   - **Done when**: Cash flow reviewed, runway calculated, next quarter budget planned
+   - See: [Financial Runway Planning](obsidian://open?vault=notes&file=1-Projects%2F%F0%9F%92%B0%20Financial%20Runway%20Planning%2FREADME)
+
+2. **📊 Weekly Review**
+   - **Done when**: Inboxes cleared, all projects reviewed, next week planned
+   - Following standard weekly review protocol
+
+3. **✨ Waycraft Dreaming & Scoping**
+   - **Done when**: Vision documented, key features scoped, direction decided
+   - Exploring what Waycraft could become
 
 ---
 
