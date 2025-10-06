@@ -17,8 +17,14 @@ zstyle ':z4h:bindkey' keyboard  'mac'
 
 # Start tmux if not already in tmux.
 # Only start tmux if not already in tmux and not in cursor
+# For Ghostty: Quick Terminal gets its own tmux session
 if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
-  zstyle ':z4h:' start-tmux command tmux -u new -A -D -t z4h
+  # Quick Terminal (typically smaller than 30 lines) gets "quick" session
+  if [[ "$TERM_PROGRAM" == "ghostty" && $(tput lines) -lt 30 ]]; then
+    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t quick
+  else
+    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t z4h
+  fi
 else
   zstyle ':z4h:' start-tmux       no
 fi
@@ -214,7 +220,7 @@ idea() {
     echo "Usage: idea <your idea text>"
     return 1
   fi
-  claude -p "/idea $*"
+  command claude --dangerously-skip-permissions -p "/idea $*"
 }
 
 # Define named directories: ~w <=> Windows home directory on WSL.
@@ -264,6 +270,11 @@ export PATH="$PATH:/Users/michael/.lmstudio/bin"
 # pnpm
 export PNPM_HOME="/Users/michael/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
+
+# Night Owl ls colors (matching Ghostty theme)
+export LSCOLORS="Gxfxcxdxbxegedabagacad"
+export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43:fi=00"
+export CLICOLOR=1
 
 # direnv hook
 eval "$(direnv hook zsh)"
