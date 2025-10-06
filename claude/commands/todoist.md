@@ -10,6 +10,38 @@ description: Todoist task management via REST API v2. Use when user asks to crea
 - User mentions working with their task list or inbox
 - **DO NOT** create tasks proactively without user request
 
+## CRITICAL RULE: Always Read Comments
+
+**⚠️ ALWAYS READ TASK COMMENTS BEFORE PROCESSING**
+
+When processing tasks (inbox cleanup, moving tasks, categorizing, etc.):
+1. **ALWAYS fetch and read comments** for each task before making decisions
+2. **Comments contain critical context** - links, images, detailed notes, follow-up info
+3. **Never process tasks without checking comments first**
+4. **When creating idea notes or moving content, capture ALL comment content**
+5. **Before completing a task, add a comment** with link to where content was moved (Obsidian URL, etc.)
+
+**Example workflow:**
+```python
+# Get task
+task = get_task(task_id)
+
+# ALWAYS get comments
+comments = get_comments(task_id)
+
+# Process with full context from both task description AND comments
+process_task_with_context(task, comments)
+
+# Add link before completing
+add_comment(task_id, f"Moved to: {obsidian_link}")
+complete_task(task_id)
+```
+
+**Why this matters:**
+- User stores rich content in comments (ChatGPT conversations, Claude artifacts, images, detailed notes)
+- Processing without comments = losing critical context
+- Example: "nice orb for waycraft" had 12 comments with multiple links to artifacts, conversations, and image generation examples
+
 ## Maintaining This Command
 
 **When you learn something new about Todoist workflow:**
@@ -89,6 +121,24 @@ def get_tasks(filter_str=None):
     if filter_str:
         url += f'?filter={filter_str}'
     req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req) as response:
+        return json.loads(response.read())
+
+def get_comments(task_id):
+    """Fetch all comments for a task - ALWAYS use this before processing"""
+    url = f'https://api.todoist.com/rest/v2/comments?task_id={task_id}'
+    req = urllib.request.Request(url, headers=headers)
+    with urllib.request.urlopen(req) as response:
+        return json.loads(response.read())
+
+def add_comment(task_id, content):
+    """Add comment to task (e.g., link to where content was moved)"""
+    url = 'https://api.todoist.com/rest/v2/comments'
+    data = json.dumps({
+        'task_id': task_id,
+        'content': content
+    }).encode('utf-8')
+    req = urllib.request.Request(url, data=data, headers={**headers, 'Content-Type': 'application/json'}, method='POST')
     with urllib.request.urlopen(req) as response:
         return json.loads(response.read())
 
@@ -228,11 +278,13 @@ For bulk operations, see scripts in:
 
 #### Collaboration Protocol
 
-1. **Propose categories** for each batch of tasks
-2. **Get user confirmation** before executing
-3. **Process in batches** for efficiency
-4. **Track progress** with TodoWrite
-5. **Document learnings** in this command file
+1. **ALWAYS read comments** for each task before categorizing (see CRITICAL RULE above)
+2. **Propose categories** for each batch of tasks with full context from descriptions AND comments
+3. **Get user confirmation** before executing
+4. **Process in batches** for efficiency
+5. **Comment on tasks** with links to where content was moved (before completing)
+6. **Track progress** with TodoWrite
+7. **Document learnings** in this command file
 
 #### Decision Criteria
 
