@@ -391,6 +391,69 @@ src/components/chat/
 - ❌ Unclear if it's permanent vs. work-in-progress → Clarify the purpose and location
 - ❌ No clear audience or use case → Define the purpose first
 
+### Documentation Best Practices:
+
+1. **Make coupling explicit and bidirectional**
+   - When Doc A references Doc B, Doc B should reference Doc A back
+   - Add "Related Documentation" or "See Also" sections
+   - Example:
+     ```markdown
+     ## Related Documentation
+     - [Architecture Overview](./architecture.md) - System design context
+     - [API Reference](./api-reference.md) - Technical implementation details
+     ```
+   - This makes maintenance clear: if you update one, you know what else is affected
+
+2. **Use consistent linking patterns**
+   - Always use relative paths for internal docs: `./other-doc.md` or `../folder/doc.md`
+   - Include section anchors when relevant: `./api.md#authentication`
+   - Link to specific line numbers for code references: `src/app.ts:42`
+
+3. **Keep docs close to what they document**
+   - Component docs → same directory as component
+   - API docs → near the API implementation
+   - Architecture docs → root or `docs/` for system-wide view
+
+4. **Version decision logs and investigations**
+   - Date work-in-progress docs: `2025-10-05-websocket-investigation.md`
+   - Include context: what question were you answering?
+   - Link to related code changes or issues
+
+5. **Use frontmatter for metadata**
+   ```markdown
+   ---
+   status: draft | active | archived
+   created: 2025-10-05
+   updated: 2025-10-05
+   related: [architecture.md, api-reference.md]
+   ---
+   ```
+
+6. **Table of contents for long docs**
+   - Add TOC for docs over ~200 lines
+   - Link to sections with anchors
+   - Keep TOC updated when adding sections
+
+7. **Code examples should be testable**
+   - Include working code snippets, not pseudocode
+   - Reference actual files when possible
+   - Keep examples updated with code changes
+
+8. **Separate "what" from "why"**
+   - Code comments explain "what" (implementation details)
+   - Documentation explains "why" (decisions, trade-offs, context)
+   - Link between them when they're coupled
+
+9. **Maintain a docs changelog**
+   - For permanent docs, note significant updates
+   - Include date and what changed
+   - Link to related PRs or issues if applicable
+
+10. **Single source of truth**
+    - Each piece of information should live in ONE place
+    - Everything else links to it
+    - When you find duplication, consolidate and add links
+
 ## Notifications
 IMPORTANT: Only use the `push` command when I explicitly ask you to notify me. Do not proactively send notifications.
 
