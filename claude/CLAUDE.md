@@ -12,35 +12,7 @@ Use pnpm instead of npm.
 
 **CRITICAL RULE: If today's 3 things aren't written below with clear "done" definitions, STOP. Don't do ANY other work until they're fully scoped.**
 
-### Today's 3 Things (2025-10-03)
-
-**Taking it loose today - no rigid structure.**
-
-Working on:
-- Continuing Compose exploration (with AI assistance)
-- Following interest-driven work
-- May revisit and define clearer goals later in the day
-
-_Note: Yesterday's plan (2025-10-02) archived to Daily Logs._
-
----
-
-### Saturday 2025-10-05 - Pre-committed Priorities
-
-**Order of execution:**
-1. Gym
-2. Financial planning/review (Priority #1)
-3. Weekly review
-
-**Accountability:**
-- Evelisa will enforce completion
-- Evaluate together if all three were completed
-- **If completed:** Nice evening of video games and ordering in
-- **If not completed:** Consequence on Sunday (no video games/ordering in)
-
-**Claude's role:**
-- **On Saturday:** Keep Michael focused on ONLY these three things. Redirect any other requests back to the Saturday priorities. Help him stay on track.
-- **On Sunday or later:** CHECK if Saturday's commitments were completed. Ask about it explicitly.
+_Today's 3 things not yet defined for current session._
 
 ---
 
