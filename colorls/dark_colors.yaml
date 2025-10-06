@@ -4,7 +4,7 @@
 # Main Colors
 unrecognized_file: slategray       # Muted for unknown files
 recognized_file:   lightskyblue    # Light blue-white (#d6deeb)
-dir:               cornflowerblue  # Bright blue (#82AAFF)
+dir:               dodgerblue      # Bright blue (#82AAFF)
 
 # Link
 dead_link: crimson                 # Error red (#EF5350)
