@@ -71,14 +71,13 @@ if [ "$msg_count" -ge 3 ]; then
     title="claude-session"
   fi
 
-  # Capture the current tmux window and pane at the time of this hook execution
-  # This prevents race conditions when switching windows
-  current_window=$(tmux display-message -p '#I')
-  current_pane=$(tmux display-message -p '#D')
+  # Use TMUX_PANE env var to target the correct pane even if user switched windows
+  # TMUX_PANE is set when Claude starts and doesn't change
+  claude_pane="${TMUX_PANE}"
+  claude_window=$(tmux display-message -t "$claude_pane" -p '#I')
 
-  # Set tmux window title, targeting the specific window
-  # Use -t to target the exact window we captured
-  tmux rename-window -t "$current_window" "$title"
+  # Set tmux window title, targeting Claude's window specifically
+  tmux rename-window -t "$claude_window" "$title"
 
   # Create flag file so we don't update again this session
   touch "$flag_file"
