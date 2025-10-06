@@ -1,0 +1,29 @@
+#!/bin/bash
+# Short URL creator using is.gd service
+
+if [ -z "$1" ]; then
+  echo "Usage: short <url>"
+  echo ""
+  echo "Examples:"
+  echo "  short https://example.com/very/long/url"
+  echo "  short https://drive.google.com/file/d/1a_n2Km-P_ly0GQ1JdUjlkywyDtQ3Xncn/view"
+  exit 1
+fi
+
+URL="$1"
+
+# Create short URL using is.gd
+SHORT_URL=$(curl -s "https://is.gd/create.php?format=simple&url=${URL}")
+
+if [ $? -eq 0 ] && [ -n "$SHORT_URL" ]; then
+  echo "$SHORT_URL"
+
+  # Copy to clipboard if available
+  if command -v pbcopy &> /dev/null; then
+    echo -n "$SHORT_URL" | pbcopy
+    echo "(copied to clipboard)" >&2
+  fi
+else
+  echo "Error: Failed to create short URL" >&2
+  exit 1
+fi
