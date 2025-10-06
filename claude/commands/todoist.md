@@ -66,6 +66,10 @@ No additional setup needed - just use `$TODOIST_API_TOKEN` in commands.
 ### Default Project
 - **Inbox**: 377445380
 
+### User IDs
+- **Michael (you)**: 486423
+- **Michelle (assistant)**: 42258732
+
 ## API Patterns & Limitations
 
 ### Python API Helper (Recommended for Scripting)
@@ -186,6 +190,75 @@ For bulk operations, see scripts in:
 2. **Ideas** → Move to Ideas Backlog or Fun List
 3. **Delegated tasks** → Check assignee before processing
 4. **Vague reflections** → Often can be deleted
+
+### Task Categorization Workflow (Collaborative Process)
+
+**CRITICAL**: Always collaborate with user before executing bulk changes. This is a learning process.
+
+#### Category Framework
+
+**Articles & References:**
+- Links to read → Clip to `3-Resources/Articles/` in Obsidian
+- Books to read → Add to `3-Resources/Reading List.md`
+- Videos to watch → Note reference or clip transcript if valuable
+
+**Ideas (Future Work):**
+- Product ideas → `3-Resources/💡 Raw Ideas/` with full context
+- Business opportunities → Raw Ideas
+- Feature requests → Raw Ideas
+- "What if..." → Raw Ideas
+- "It would be cool..." → Raw Ideas
+
+**Journal (Self/Feelings):**
+- Personal reflections → `2-Areas/Journal/`
+- How I'm feeling/working → Journal
+- Processing emotions → Journal
+- Life philosophy → Journal
+
+**Projects:**
+- Grouped related tasks → Create Obsidian project folder + Todoist project
+- Financial planning → Combine into single planning note
+- Event planning → Dedicated project space
+
+**Completable Tasks:**
+- Recurring habits → Just complete them
+- Link-only tasks (e.g., "NOW sprint") → Complete
+- Already done items → Complete
+- Review completed → Complete
+
+#### Collaboration Protocol
+
+1. **Propose categories** for each batch of tasks
+2. **Get user confirmation** before executing
+3. **Process in batches** for efficiency
+4. **Track progress** with TodoWrite
+5. **Document learnings** in this command file
+
+#### Decision Criteria
+
+**Ideas vs Journal:**
+- Ideas = new things to work on
+- Journal = about self, how you're working/feeling
+
+**Keep vs Complete:**
+- Has future value = Keep (maybe move/defer)
+- Already done/outdated = Complete
+- Vague with no context = Ask user
+
+**Assign to Assistant:**
+- Admin tasks (e.g., researching deals, comparing options)
+- Add context in comments
+- Move to A/Admin 💼 project (2331010777)
+
+#### Common Patterns
+
+**Financial tasks** → Group into project with combined note
+**Event ideas** → Project folder with planning note
+**Links without context** → Clip to Articles or complete
+**Reflections** → Journal or delete if processed
+**Questions** → Usually Ideas or complete if answered
+
+**Remember**: Build confidence through iteration. Start collaborative, become more autonomous as patterns are confirmed.
 
 ## Reference Documentation
 Full workflow guides and learnings:
