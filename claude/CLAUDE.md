@@ -8,6 +8,17 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
+## Tool Preferences
+
+**For searching and file operations, use the specialized tools:**
+- **Glob tool** - For finding files by pattern (NOT `find` or `ls` commands)
+- **Grep tool** - For searching file contents (NOT bash `grep` or `rg` commands)
+- **Read tool** - For reading files (NOT `cat`, `head`, `tail`)
+- **Edit tool** - For editing files (NOT `sed`, `awk`)
+- **Write tool** - For creating files (NOT `echo >` or heredocs)
+
+These tools are faster, optimized, and provide better results than bash equivalents.
+
 ## Daily Focus - Single-Task Execution
 
 **CRITICAL RULE: If today's 3 things aren't written below with clear "done" definitions, STOP. Don't do ANY other work until they're fully scoped.**
