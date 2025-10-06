@@ -271,9 +271,9 @@ export PATH="$PATH:/Users/michael/.lmstudio/bin"
 export PNPM_HOME="/Users/michael/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 
-# Night Owl ls colors (matching Ghostty theme)
+# Custom ls colors (teal, light blue, yellow-green, coral, lavender)
 export LSCOLORS="Gxfxcxdxbxegedabagacad"
-export LS_COLORS="di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43:fi=00"
+export LS_COLORS="di=1;38;5;111:ln=38;5;147:so=38;5;43:pi=38;5;149:ex=1;38;5;149:bd=38;5;111:cd=38;5;147:su=38;5;210:sg=38;5;210:tw=1;38;5;43:ow=1;38;5;43:fi=00"
 export CLICOLOR=1
 
 # direnv hook
