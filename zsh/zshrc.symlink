@@ -234,6 +234,17 @@ setopt no_auto_menu  # require an extra TAB press to open the completion menu
 setopt autocd        # cd into directory by typing directory name
 setopt extended_glob # Extended globbing
 
+# History options (best practices)
+setopt SHARE_HISTORY              # Share history between all sessions immediately
+setopt HIST_EXPIRE_DUPS_FIRST     # Expire duplicates first when trimming
+setopt HIST_IGNORE_DUPS           # Don't record consecutive duplicates
+setopt HIST_IGNORE_ALL_DUPS       # Delete old duplicate entries from history
+setopt HIST_FIND_NO_DUPS          # Don't display duplicates when searching
+setopt HIST_IGNORE_SPACE          # Don't record commands starting with space
+setopt HIST_SAVE_NO_DUPS          # Don't write duplicates to history file
+setopt HIST_VERIFY                # Show command before running from history
+setopt EXTENDED_HISTORY           # Save timestamp and duration
+
 # Google Cloud SDK
 if [ -f '/Users/michael/google-cloud-sdk/path.zsh.inc' ]; then 
   source '/Users/michael/google-cloud-sdk/path.zsh.inc'
