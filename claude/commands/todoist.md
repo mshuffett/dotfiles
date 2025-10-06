@@ -302,12 +302,22 @@ For bulk operations, see scripts in:
 #### Collaboration Protocol
 
 1. **ALWAYS read comments** for each task before categorizing (see CRITICAL RULE above)
-2. **Propose categories** for each batch of tasks with full context from descriptions AND comments
-3. **Get user confirmation** before executing
-4. **Process in batches** for efficiency
-5. **Comment on tasks** with links to where content was moved (before completing)
-6. **Track progress** with TodoWrite
-7. **Document learnings** in this command file
+2. **Check for attachments** - images/files may have empty content (use extract_attachments_from_comments())
+3. **Propose categories** for each batch of tasks with full context from descriptions AND comments
+4. **Get user confirmation** before executing
+5. **Process in batches** for efficiency
+6. **Add Todoist URLs to Obsidian notes** - Include `todoist:` field in frontmatter with task URL
+7. **Comment on tasks** with links to where content was moved (before completing)
+8. **Track progress** with TodoWrite
+9. **Document learnings** in this command file
+
+**Todoist URL Format**: `https://app.todoist.com/app/task/{task_id}`
+
+**Why include Todoist URLs in Obsidian:**
+- Creates bidirectional links between systems
+- Easy access to original task context and comments
+- Maintains audit trail of where ideas came from
+- Allows checking task history and discussion
 
 #### Decision Criteria
 
