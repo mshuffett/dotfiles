@@ -1,5 +1,4 @@
 alias l=ls
-alias ll="ls -lh"
 alias dirs="dirs -v"
 alias sz="exec zsh"
 alias s="exec zsh"
@@ -40,13 +39,10 @@ aa() {
 alias mmv='noglob zmv -W'
 alias et="$EDITOR ~/.tmux.conf"
 alias st="source ~/.tmux.conf"
-alias acs="apt-cache search"
 alias acs='apt-cache search'
 alias ac='apt-cache'
 alias agi='_ apt-get install'
 alias ags='acs'
-alias ev='$EDITOR ~/.vimrc'
-
 alias ev='$EDITOR ~/.vimrc'
 alias desk='/usr/bin/ssh shuffem.desktop.amazon.com'
 alias b='brazil'
@@ -68,8 +64,9 @@ alias db='docker build .'
 alias qn7='ssh qn7cimaterm01.cloud.corp.dig.com'
 alias pipenv='PIPENV_VENV_IN_PROJECT=1 pipenv'
 
-alias ls='/usr/local/bin/colorls --sort-dirs --report'
-alias lc='/usr/local/bin/colorls --tree'
+alias ls='eza --icons --group-directories-first'
+alias ll='eza -lh --icons --git --group-directories-first'
+alias lc='eza --tree --icons'
 alias sl='serverless'
 alias k='kubectl'
 alias dash='cd /Users/michael/ws/fleet-ops-dashboard'
@@ -120,7 +117,7 @@ mfa() {
 }
 
 alias t='todoist --color'
-alias cat='ccat'
+alias cat='bat'
 alias k='kubectl'
 alias kc='kubectl'
 alias which='which -a'
