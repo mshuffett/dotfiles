@@ -1,0 +1,47 @@
+# Night Owl color scheme for colorls
+# Based on Night Owl VSCode theme by Sarah Drasner
+
+# Main Colors
+unrecognized_file: slategray       # Muted for unknown files
+recognized_file:   lightskyblue    # Light blue-white (#d6deeb)
+dir:               cornflowerblue  # Bright blue (#82AAFF)
+
+# Link
+dead_link: crimson                 # Error red (#EF5350)
+link:      mediumturquoise         # Teal/cyan (#7fdbca)
+
+# special files
+socket:    mediumseagreen          # Teal-green
+blockdev:  mediumseagreen
+chardev:   mediumseagreen
+
+# Access Modes
+write:     navajowhite             # Peach/string color (#ecc48d)
+read:      yellowgreen             # Variable color (#c5e478)
+exec:      mediumorchid            # Purple/keyword (#c792ea)
+no_access: indianred               # Muted red
+
+# Age
+day_old:     mediumspringgreen
+hour_old:    greenyellow
+no_modifier: seagreen
+
+# File Size
+file_large:  coral                 # Orange (#F78C6C)
+file_medium: sandybrown            # Medium orange
+file_small:  navajowhite           # Light peach
+
+# Random
+report: white
+user:   navajowhite
+tree:   mediumturquoise
+empty:  gold
+error:  crimson
+normal: slategray
+
+# Git
+addition:     yellowgreen          # Variable green (#c5e478)
+modification: sandybrown           # Orange-ish
+deletion:     crimson              # Error red
+untracked:    coral                # Number orange (#F78C6C)
+unchanged:    mediumseagreen       # Teal-green
