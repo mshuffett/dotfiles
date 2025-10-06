@@ -152,7 +152,7 @@ set -g history-limit 10000
 
 # set -g default-terminal "screen-256color"
 
-# set -g mouse on
+set -g mouse on
 bind -n WheelUpPane   select-pane -t= \; copy-mode -e \; send-keys -M
 bind -n WheelDownPane select-pane -t= \;                 send-keys -M
 
