@@ -163,16 +163,17 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'kylepeeler/tmux-nightowl'
 
+# Night Owl theme configuration
+set -g @nightowl-show-battery true
+set -g @nightowl-show-network false
+set -g @nightowl-show-weather false
+set -g @nightowl-border-contrast true
+
 # set -g @plugin 'tmux-plugins/tmux-resurrect'
 # set -g @plugin 'tmux-plugins/tmux-continuum'
 # set -g @continuum-restore 'on'
 
 run '~/.tmux/plugins/tpm/tpm'
-
-# Custom Night Owl window styling (applied after plugin)
-set-window-option -g window-status-format "#[fg=#82aaff,bg=#0b2942] #I #[fg=#d6deeb]#W "
-set-window-option -g window-status-current-format "#[fg=#011627,bg=#82aaff,bold] #I #[fg=#011627,bg=#c792ea]#W "
-set-window-option -g window-status-separator ""
 
 setw -g aggressive-resize on
 
