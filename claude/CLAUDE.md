@@ -317,6 +317,50 @@ This loads all available slash command descriptions so you know what specialized
 - Send Obsidian URL when complete
 - Processing happens later during reviews - not at capture time
 
+## Documentation Creation Guidelines
+
+**BEFORE creating any new documentation file:**
+
+1. **Check the root README first**
+   - Read the project's `README.md` to understand existing documentation structure
+   - Look for links to existing docs - avoid duplicating content
+   - Understand the doc organization pattern (if any)
+
+2. **Ensure discoverability**
+   - New docs MUST be linked from the root `README.md` or another discoverable location
+   - Don't create orphaned doc files that users can't find
+   - If adding a doc category, update README navigation
+
+3. **Make docs self-contained**
+   - Someone should be able to read the file **from scratch** and understand:
+     - What is this doc about?
+     - Why does it exist?
+     - When should I read it?
+   - Include context at the top - don't assume readers know the backstory
+   - Use descriptive titles and introductory paragraphs
+
+4. **Avoid duplication**
+   - Don't create `DESIGN.md`, `ARCHITECTURE.md`, `TESTING.md` if similar content exists elsewhere
+   - If you need to add content, enhance existing docs instead of creating new ones
+   - Ask: "Does a doc for this topic already exist?"
+
+5. **Ask before creating**
+   - If unsure whether a new doc is needed, ask the user first
+   - Propose where it would live and how it would be linked
+   - Get approval for the structure before writing
+
+**When NOT to create docs:**
+- ❌ Don't proactively create docs without being asked
+- ❌ Don't create docs just to "document your work" unless explicitly requested
+- ❌ Don't create README files in subdirectories without checking if they're needed
+- ❌ Don't duplicate information that's already in the root README or other docs
+
+**When to create docs:**
+- ✅ User explicitly asks for documentation
+- ✅ Adding a new feature that needs usage instructions
+- ✅ Creating a new section/module that needs explanation
+- ✅ User asks you to "document this" or "add docs for X"
+
 ## Notifications
 IMPORTANT: Only use the `push` command when I explicitly ask you to notify me. Do not proactively send notifications.
 
