@@ -18,28 +18,40 @@ All projects use the `.worktrees/` directory (gitignored) for feature branches.
 
 ### Creating a Worktree
 
+**CRITICAL: NEVER modify the main repository when creating a worktree (no git checkout, no git pull, no branch switching).**
+
+The main repository may have active work, uncommitted changes, or be used by other Claude instances.
+
 ```bash
-# From the main repository directory (NOT already in a worktree)
-git checkout main
-git pull origin main
+# From the main repository directory
+# DO NOT checkout or pull - work with current state
 
-# Create feature branch
-git checkout -b feature/descriptive-name
+# Create worktree with new branch directly (recommended)
+git worktree add .worktrees/feature-name -b feature/descriptive-name
 
-# Create worktree for the feature
-git worktree add .worktrees/feature-name feature/descriptive-name
+# OR create worktree from existing branch
+git worktree add .worktrees/feature-name existing-branch-name
 
-# Navigate to worktree
+# Navigate to worktree BEFORE doing any git operations
 cd .worktrees/feature-name
 
+# NOW you can safely pull, merge, etc. in the worktree
+git pull origin develop  # or whatever base branch you need
+
 # Copy environment files if needed (they're not in git)
-cp ../../app-name/.env.local app-name/.env.local
+cp ../../.env.local .env.local  # Use relative path from worktree
 
 # Install dependencies
 pnpm install
 
 # Work in the worktree, NOT the main repository
 ```
+
+**Why this matters:**
+- Main repository may have uncommitted work
+- Other Claude instances may be using it
+- Switching branches in main disrupts active development
+- Pulling in main can cause merge conflicts that affect everyone
 
 ### Managing Worktrees
 
@@ -68,34 +80,38 @@ git branch -d feature/descriptive-name
 
 **MULTIPLE AGENTS MAY BE WORKING SIMULTANEOUSLY**
 
-1. **NEVER modify the main branch directly** - Always create feature branches
-2. **NEVER stash changes on the main branch** - This disrupts other agents' work
+1. **NEVER modify the main repository when creating worktrees** - No checkout, no pull, no branch switching
+2. **NEVER stash changes on the main repository** - This disrupts other agents' work
 3. **ALWAYS use worktrees for feature development** - Keep the main repository clean
-4. **CHECK before switching branches** - Use `git status` to ensure you won't lose work
+4. **NEVER checkout or pull in main repo** - Create worktree first, then pull inside it
 5. **COMMUNICATE through commits** - Use clear commit messages so other agents understand changes
 
 ### Rules for Main Repository Directory
 
-- Keep it on `main` branch whenever possible
+- **NEVER** run `git checkout` - it disrupts active work
+- **NEVER** run `git pull` - may cause conflicts with uncommitted changes
+- **NEVER** switch branches - use worktrees instead
 - Don't make changes directly - use worktrees
 - Don't stash changes here - it affects all agents
-- If you must work here, create a feature branch first
+- Create worktrees with `git worktree add .worktrees/name -b branch-name` directly
 
 ## Project-Specific Examples
 
 ### waycraft-monorepo
 
 ```bash
-# From main repository
-git checkout main
-git pull origin main
-git checkout -b feature/audio-comm
+# From main repository (DO NOT checkout or pull here)
+# Create worktree with new branch directly
+git worktree add .worktrees/audio-comm -b feature/audio-comm
 
-# Create worktree
-git worktree add .worktrees/audio-comm feature/audio-comm
-
-# Navigate and setup
+# Navigate to worktree
 cd .worktrees/audio-comm
+
+# NOW safe to pull from base branch
+git fetch origin main
+git merge origin/main
+
+# Setup environment
 cp ../../orb-demo-next/.env.local orb-demo-next/.env.local
 pnpm i
 ```
@@ -103,25 +119,32 @@ pnpm i
 ### vibe-coding-platform
 
 ```bash
-# From main repo (NOT in worktree)
-git checkout main
-git pull origin main
-git checkout -b feature/sandbox-improvements
+# From main repo (DO NOT checkout or pull here)
+# Create worktree with new branch directly
+git worktree add .worktrees/sandbox -b feature/sandbox-improvements
 
-# Create worktree
-git worktree add .worktrees/sandbox feature/sandbox-improvements
+# Navigate to worktree
 cd .worktrees/sandbox
+
+# NOW safe to pull from base branch
+git fetch origin develop
+git merge origin/develop
+
+# Install dependencies
 pnpm install
 ```
 
 ### everything-monorepo / container-ux-worktree
 
 ```bash
-# Create worktree for a feature branch
+# Create worktree with new branch directly (recommended)
 git worktree add .worktrees/feature-name -b feature-branch-name
 
 # Or use an existing branch
 git worktree add .worktrees/feature-name existing-branch-name
+
+# Navigate to worktree before any other operations
+cd .worktrees/feature-name
 ```
 
 ## Working with Issues
@@ -129,21 +152,19 @@ git worktree add .worktrees/feature-name existing-branch-name
 Standard pattern for GitHub issues:
 
 ```bash
-# From main repository
-git checkout main
-git pull origin main
-
-# Create feature branch for the issue
-git checkout -b feature/issue-{number}-brief-description
-
-# Create worktree
-git worktree add .worktrees/issue-{number} feature/issue-{number}-brief-description
+# From main repository (DO NOT checkout or pull here)
+# Create worktree with new branch directly
+git worktree add .worktrees/issue-{number} -b feature/issue-{number}-brief-description
 
 # Navigate to worktree
 cd .worktrees/issue-{number}
 
+# NOW safe to fetch and merge base branch
+git fetch origin develop  # or main, depending on project
+git merge origin/develop
+
 # Copy .env files from main working directory (not from git)
-cp /full/path/to/main/repo/app/.env.local app/.env.local
+cp ../../.env.local .env.local  # Use relative path
 
 # Install dependencies
 pnpm i
