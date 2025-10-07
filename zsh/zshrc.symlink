@@ -4,7 +4,7 @@
 #
 # Documentation: https://github.com/romkatv/zsh4humans/blob/v5/README.md.
 
-export EDITOR=cursor
+export EDITOR=zed
 
 # Periodic auto-update on Zsh startup: 'ask' or 'no'.
 # You can manually run `z4h update` to update everything.
@@ -282,9 +282,9 @@ export PATH="$PATH:/Users/michael/.lmstudio/bin"
 export PNPM_HOME="/Users/michael/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
 
-# Custom ls colors (teal, light blue, yellow-green, coral, lavender)
-export LSCOLORS="Gxfxcxdxbxegedabagacad"
-export LS_COLORS="di=1;38;5;111:ln=38;5;147:so=38;5;43:pi=38;5;149:ex=1;38;5;149:bd=38;5;111:cd=38;5;147:su=38;5;210:sg=38;5;210:tw=1;38;5;43:ow=1;38;5;43:fi=00"
+# Palenight ls colors
+export LSCOLORS="Gxfxcxdxcxegedabagacad"
+export LS_COLORS="di=1;38;5;111:ln=38;5;117:so=38;5;221:pi=38;5;221:ex=1;38;5;114:bd=38;5;111:cd=38;5;117:su=38;5;204:sg=38;5;204:tw=1;38;5;117:ow=1;38;5;117:fi=00"
 export CLICOLOR=1
 
 # direnv hook
