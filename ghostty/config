@@ -74,8 +74,8 @@ font-size = 13
 # Enable ligatures (on by default, but explicit for clarity)
 font-feature = +calt
 
-# Quick Terminal - Press Cmd+` to toggle drop-down terminal
-keybind = global:cmd+grave_accent=toggle_quick_terminal
+# Quick Terminal - Press Ctrl+` to toggle drop-down terminal
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
 
 # Shell Integration - enhanced features
 shell-integration-features = cursor,sudo,title
