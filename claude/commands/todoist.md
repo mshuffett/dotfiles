@@ -10,6 +10,29 @@ description: Todoist task management via REST API v2. Use when user asks to crea
 - User mentions working with their task list or inbox
 - **DO NOT** create tasks proactively without user request
 
+## CRITICAL RULE: Process ALL Tasks at Once
+
+**⚠️ NEVER stop partway through task processing**
+
+When the user asks to "process my tasks" or "help with my todoist":
+1. **Fetch ALL tasks** (overdue, today, inbox, etc.)
+2. **Present ALL tasks** with numbered IDs for easy reference
+3. **Get user instructions** for ALL tasks in one interaction
+4. **Process ALL tasks** based on those instructions
+5. **Do NOT stop after processing a subset** - complete the full list
+
+**Why this matters:**
+- User expects all tasks to be processed in one session
+- Stopping partway creates confusion and extra work
+- Forces user to ask "why didn't you finish?"
+- Breaks workflow momentum
+
+**Example of WRONG behavior:**
+- Process T1-T7, stop, ask "what about the rest?"
+
+**Example of CORRECT behavior:**
+- Fetch all tasks → Get instructions for all → Process all → Report completion
+
 ## CRITICAL RULE: Always Read Comments
 
 **⚠️ ALWAYS READ TASK COMMENTS BEFORE PROCESSING**
