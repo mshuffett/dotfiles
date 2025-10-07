@@ -158,6 +158,32 @@ pnpm i
 - Always use full paths when copying .env files to avoid confusion
 - The user will explicitly request work to be done in a specific worktree
 
+## TODO List Tracking
+
+**IMPORTANT: When creating a worktree, add it to the TODO list to track which worktree you're working in.**
+
+```json
+{
+  "content": "Working in worktree: .worktrees/feature-name (branch: feature/branch-name)",
+  "status": "in_progress",
+  "activeForm": "Working in worktree .worktrees/feature-name"
+}
+```
+
+This helps you:
+- Remember which worktree you're working in
+- Avoid committing to the wrong branch
+- Track when to clean up the worktree
+
+**When done with the worktree:**
+```json
+{
+  "content": "Clean up worktree: .worktrees/feature-name",
+  "status": "completed",
+  "activeForm": "Cleaning up worktree .worktrees/feature-name"
+}
+```
+
 ## When to Use Worktrees
 
 **Use worktrees when:**
