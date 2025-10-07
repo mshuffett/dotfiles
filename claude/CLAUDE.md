@@ -638,6 +638,12 @@ cd ~/ws/claude-computer-use-mac && python agent.py "task description" --live
 - User: "Something is running on port 3000"
 - You: Check what's running, report findings, then ask: "Process X is running on port 3000. Would you like me to kill it?"
 
+## iCloud Drive
+
+**Location:** `/Users/michael/Library/Mobile Documents/com~apple~CloudDocs/`
+
+This follows the PARA method structure (similar to notes folder).
+
 ## Notes & Knowledge Management
 My primary notes system is located at `~/ws/everything-monorepo/notes/` and follows the PARA method:
 
@@ -646,7 +652,7 @@ My primary notes system is located at `~/ws/everything-monorepo/notes/` and foll
 - `1-Projects/` - Active projects with defined outcomes
 - `2-Areas/` - Ongoing areas of responsibility (e.g., Agents, Strategy, System)
 - `3-Resources/` - Reference materials, templates, guides
-- `4-Archive/` - Completed or inactive items
+- `4-Archives/` - Completed or inactive items
 - `5-Tools/` - Scripts, automation, operational tools
 
 **Working with Notes:**
