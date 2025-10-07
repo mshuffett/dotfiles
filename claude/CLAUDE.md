@@ -19,6 +19,17 @@ Use pnpm instead of npm.
 
 These tools are faster, optimized, and provide better results than bash equivalents.
 
+## Git Worktrees
+
+**CRITICAL: ALWAYS use `/worktrees` command when creating or working with worktrees.**
+
+The `/worktrees` command documents the standard pattern:
+- Uses `.worktrees/` subdirectory (NOT sibling directories like `../project-name-worktree`)
+- Ensures consistent workflow across all projects
+- Provides complete setup and cleanup instructions
+
+**Before creating any worktree, invoke `/worktrees` to review the correct pattern.**
+
 ## Daily Focus - Single-Task Execution
 
 **CRITICAL RULE: If today's 3 things aren't written below with clear "done" definitions, STOP. Don't do ANY other work until they're fully scoped.**
