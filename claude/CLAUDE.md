@@ -8,6 +8,37 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
+## Development Philosophy
+
+**Prefer Test-Driven Development (TDD) where possible.**
+
+- ✅ **DO**: Write failing tests first, then implement code to make them pass
+- ✅ **DO**: Use TDD for bug fixes - write tests that demonstrate the bug, then fix it
+- ✅ **DO**: Use TDD for new features - define expected behavior through tests first
+- ✅ **DO**: Focus tests on behavior and outcomes, not implementation details
+- ❌ **DON'T**: Skip tests for complex logic or critical paths
+- ❌ **DON'T**: Write implementation first then add tests as an afterthought
+
+**When to use TDD:**
+- Bug fixes (write test showing the bug, fix until test passes)
+- Data persistence logic (repositories, database operations)
+- Business logic (services, utilities)
+- API integrations with clear contracts
+- Critical user flows
+
+**When TDD may not apply:**
+- Quick prototypes or spikes
+- UI experimentation with unclear requirements
+- Simple configuration changes
+
+**Example TDD workflow:**
+1. Write failing test describing desired behavior
+2. Run test to confirm it fails
+3. Write minimal code to make test pass
+4. Run test to confirm it passes
+5. Refactor if needed
+6. Commit with tests included
+
 ## Tool Preferences
 
 **For searching and file operations, use the specialized tools:**
@@ -229,6 +260,25 @@ gh pr create --base develop --head feature-branch
 - Include test results in PR description
 - Reference related issues with `Fixes #123` or `Closes #456`
 - For complex PRs, use `--web` to open browser for detailed formatting
+
+**IMPORTANT: Always check for merge conflicts before creating PR:**
+1. After creating a PR branch and pushing, fetch and merge latest from base branch
+2. Resolve any conflicts before the PR is created
+3. Check for conflicts caused by formatters (biome, prettier) - these are common
+4. Run tests after resolving conflicts to ensure everything still works
+5. Push the conflict resolution before notifying the user
+
+**Example workflow:**
+```bash
+# After pushing your branch
+git fetch origin develop
+git merge origin/develop
+# Resolve conflicts if any
+git add -A && git commit -m "Resolve merge conflicts"
+git push
+# Now create PR
+gh pr create --base develop ...
+```
 
 ## Meta-Learning Principle
 
