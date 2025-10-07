@@ -61,6 +61,30 @@ The `/worktrees` command documents the standard pattern:
 
 **Before creating any worktree, invoke `/worktrees` to review the correct pattern.**
 
+## Git Stash Safety Protocol
+
+**CRITICAL: NEVER use `git stash` on unfamiliar files without asking the user first.**
+
+**When encountering modified files:**
+1. **STOP** - Do not automatically stash
+2. **Check** - Are these files you modified during this session, or are they unfamiliar?
+3. **If unfamiliar** - Ask the user: "There are modified files I'm not familiar with: [list files]. What would you like me to do?"
+4. **If familiar** - Only then is it safe to stash
+
+**Why this matters:**
+- The user may have uncommitted work in progress
+- Stashing can hide important changes
+- Always safer to ask than to assume
+
+**Example safe workflow:**
+```bash
+# DON'T do this automatically:
+git stash && git pull && git stash pop
+
+# DO this instead:
+# See modified files, ask user if unfamiliar
+```
+
 ## Daily Focus - Single-Task Execution
 
 **CRITICAL RULE: If today's 3 things aren't written below with clear "done" definitions, STOP. Don't do ANY other work until they're fully scoped.**
@@ -260,6 +284,7 @@ gh pr create --base develop --head feature-branch
 - Include test results in PR description
 - Reference related issues with `Fixes #123` or `Closes #456`
 - For complex PRs, use `--web` to open browser for detailed formatting
+- **NEVER use `--squash`** - maintain original commits with `gh pr merge 11 --merge --delete-branch`
 
 **IMPORTANT: Always check for merge conflicts before creating PR:**
 1. After creating a PR branch and pushing, fetch and merge latest from base branch
