@@ -1,0 +1,19 @@
+model = "gpt-5-codex"
+model_reasoning_effort = "medium"
+
+[projects]
+[projects."/Users/michael/ws/everything-monorepo"]
+trust_level = "trusted"
+
+[projects."/Users/michael/ws/waycraft-monorepo"]
+trust_level = "trusted"
+
+[projects."/Users/michael/ws"]
+trust_level = "trusted"
+
+[mcp_servers]
+[mcp_servers.context7]
+command = "/opt/homebrew/bin/fnm"
+args = ["exec", "--using", "v22.19.0", "pnpm", "dlx", "@upstash/context7-mcp", "--api-key", "ctx7sk-a8c26491-cb59-40af-b5a3-1a2aa81cd628"]
+startup_timeout_sec = 30
+transport = "stdio"
