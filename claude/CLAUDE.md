@@ -1,7 +1,6 @@
 My name is Michael
 - The current year is 2025
 - Prefer the vercel AI SDK to using the provider SDKs directly but when using the Vercel AI SDK refer to the docs online and examples rather than relying on your memory of the API.
-- When calling AI providers from TypeScript, default to the Vercel AI SDK implementations and pull type definitions directly from the official docs or Context7 before coding.
 - Use biome as the linter
 - Don't estimate date timelines for tasks -- you are really bad at that, instead just do sequences or points. Rather than week-based estimates, describe effort with point counts or enumerated steps.
 
@@ -26,10 +25,14 @@ Use pnpm instead of npm.
 - Use Context7 to retrieve official documentation before relying on memory; favor primary sources whenever possible.
 - Prime unfamiliar or time-sensitive work with an immediate web search using the runtime's fastest search capability so research happens up front rather than late in execution.
 
+## AI Provider Integrations
+
+- When writing TypeScript that calls AI providers, default to the Vercel AI SDK and copy type definitions from official docs or Context7 before implementing anything custom.
+
 ## Runtime Reference Map
 
 - This file lives at `~/.claude/CLAUDE.md` (symlinked from `~/.dotfiles/claude/CLAUDE.md`). Keep the symlink intact so Claude Code sessions read the dotfiles version.
-- Codex CLI reads layered `AGENTS.md` files (global `~/agents.md`, then repo/project-specific files). Whenever you update this document, audit the matching `AGENTS.md` entries so both runtimes stay in sync.
+- Codex CLI reads layered `AGENTS.md` files (global `~/agents.md`, then repo/project-specific files). The global file is symlinked alongside this document in dotfiles—keep the contents mirrored when you update one.
 - Project-specific `CLAUDE.md` or `AGENTS.md` files may override these rules; always read the file in the project root before applying instructions.
 
 ## Personal Anchors
@@ -71,13 +74,8 @@ Use pnpm instead of npm.
 
 ## Tool Preferences
 
-- Default to modern CLI utilities (`rg`, `fd`, `bat`, `jq`, etc.) for file and text operations; prefer these over slower legacy commands.
-<!-- CLAUDE -->
-- In Claude Code, prefer the dedicated tools (Glob, Grep, Read, Edit, Write, todo helper) because they provide faster, context-aware access.
-<!-- /CLAUDE -->
-<!-- CODEX -->
-- Inside Codex CLI, rely on the shell equivalents and stay inside sandbox/approval rules.
-<!-- /CODEX -->
+- Reach for the runtime's built-in helpers first (Claude: Glob, Grep, Read, Edit, Write, Todo/Plan; Codex: plan, read, write, apply_patch). Keep them active during multi-step work.
+- When you must drop to shell commands, use modern CLI utilities (`rg`, `fd`, `bat`, `jq`, etc.) instead of legacy options, and observe sandbox/approval rules.
 
 ## Git Worktrees
 
@@ -378,9 +376,9 @@ gh pr create --base develop ...
 
 **Example**: If you use the wrong approach, ask:
 - "Is there a documented pattern I should have followed?"
-- "If yes → why wasn't it clear? Update the docs or command frontmatter immediately"
-- "If no → add the pattern to the right place (command vs CLAUDE.md)"
-- "Did the user already tell me a preference (e.g., \"I prefer X\" or \"please fix it\") or report a failing test? If so, update this file or the relevant command so it never slips again."
+- "If yes → why wasn't it clear? Update the docs or command frontmatter immediately before continuing."
+- "If no → add the pattern to the right place (command vs CLAUDE.md)."
+- "Did the user express a preference (e.g., \"I prefer X\", \"please fix it\") or report a failing test? Pause and update this file or the relevant command right away so it never slips again."
 
 **Mistake Log Protocol**
 - Log repeatable mistakes in the `## Mistake Log` section (keep the entries concise and roll them up once resolved).
@@ -439,7 +437,7 @@ When user provides information to remember:
 
 ## Mistake Log
 
-- _Open item_: Record todo-helper setup immediately for any multi-step work (added Oct 9, 2025). Guardrail: new "Executing Multi-Step Work" section + runtime notes.
+- _Open item_: Multi-step work was started without launching a structured plan/todo (Oct 9, 2025). Guardrail: new "Executing Multi-Step Work" section plus runtime-specific notes.
 
 Keep this list short; roll resolved items into the relevant instruction and delete the entry once the guardrail proves reliable.
 
@@ -514,6 +512,7 @@ The command is available at ~/bin/generate-image (symlinked from ~/.dotfiles/bin
 ## Slash Commands
 
 Slash command markdown files in `~/.claude/commands/` act as both executable commands and topical reference packets.
+- Treat each command file as conditional context: whenever the topic surfaces (even without a `/name` prompt), open the file and follow it.
 
 <!-- CLAUDE -->
 - When `/name` is invoked, Claude automatically loads `~/.claude/commands/name.md` and executes it through the slash-command tool. Keep frontmatter (`allowed-tools`, `model`, etc.) accurate so the correct tools stay enabled.
@@ -522,7 +521,7 @@ Slash command markdown files in `~/.claude/commands/` act as both executable com
 - In Codex CLI sessions, treat `/name` as an instruction to open `~/.claude/commands/name.md` manually and follow it as a reference workflow.
 <!-- /CODEX -->
 - Use `<!-- CLAUDE -->` and `<!-- CODEX -->` markers inside command files when guidance differs across runtimes, and keep both variants in sync.
-- Keep Codex's layered `AGENTS.md` instructions aligned with these command files so both runtimes reflect the same intent.
+- Keep Codex's layered `AGENTS.md` instructions aligned with these command files so both runtimes reflect the same intent. When you refine a workflow, update the command file, its description, and this section together so triggers stay obvious.
 
 ### When to Create Commands vs Update CLAUDE.md
 
@@ -530,7 +529,7 @@ Slash command markdown files in `~/.claude/commands/` act as both executable com
 - Knowledge is **topical/domain-specific** and best recalled on demand (Todoist, worktree workflow, etc.)
 - The information should be triggered by a phrase, slash command, or moment in the workflow ("when user asks about X", "before working on Y")
 - The content is too detailed for CLAUDE.md but needs to be remembered reliably
-- You can capture a crisp `description:` frontmatter explaining when to invoke it; backfill descriptions for existing commands whenever you refine their triggers
+- You can capture a crisp `description:` frontmatter explaining when to invoke it; backfill descriptions for existing commands whenever you refine their triggers and note the phrases that should cause you to open it.
 
 **Add directly to CLAUDE.md when:**
 - Rules are **universal** (apply to every interaction)
