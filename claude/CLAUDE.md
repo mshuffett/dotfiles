@@ -130,6 +130,7 @@ git stash && git pull && git stash pop
      3. Hold the conversation, staying aware of guardrails ("don't rabbit hole/don't dim").
      4. Capture immediate notes and action items, route follow-ups to the right system.
      5. Re-ground with affirmation/Memento Mori after the catch-up to transition into evening.
+   - **End-of-day check:** Follow up with Michael to reflect on how the catch-up went and capture any follow-up actions.
 
 **Guardrails & Anchors:**
 - Don’t rabbit hole.
