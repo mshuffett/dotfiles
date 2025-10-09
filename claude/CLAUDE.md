@@ -11,14 +11,14 @@ Use pnpm instead of npm.
 
 ## Executing Multi-Step Work
 
-- When a task has more than one step, immediately open the active runtime's todo helper and capture the checklist; update it after every step so progress stays visible.
-- Keep the checklist aligned with "Today's 3 Things" but treat it as its own execution tracker for the task at hand.
+- When a task has more than one step, immediately spin up the runtime's structured planning tool and capture every subtask; keep it updated after each step so progress stays visible.
+- Keep the plan aligned with "Today's 3 Things" but treat it as its own execution tracker for the task at hand.
 
 <!-- CLAUDE -->
-- In Claude Code sessions, call the environment's built-in todo helper (TodoWrite); keep it visible while you work so every step is tracked.
+- In Claude Code sessions, call the built-in todo helper (TodoWrite) and leave it pinned while you work so every subtask stays in view.
 <!-- /CLAUDE -->
 <!-- CODEX -->
-- In Codex CLI sessions, emulate the todo helper by maintaining an explicit checklist in your responses or a scratch file; update it after each step until the task is done.
+- In Codex CLI sessions, use the plan tool to document the task sequence. Update the plan as steps complete; if the plan tool is unavailable, maintain the checklist explicitly in your responses.
 <!-- /CODEX -->
 
 ## Research & Documentation
