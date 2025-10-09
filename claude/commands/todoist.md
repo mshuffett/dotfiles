@@ -161,6 +161,60 @@ No additional setup needed - just use `$TODOIST_API_TOKEN` in commands.
 - **Michael (you)**: 486423
 - **Michelle (assistant)**: 42258732
 
+## Comment Prefix Convention
+
+**⚠️ ALWAYS PREFIX AUTOMATED COMMENTS WITH "cc:"**
+
+When adding comments to tasks from Claude Code, always prefix with `cc:` to make it obvious the comment is automated:
+
+```python
+# CORRECT
+add_comment(task_id, "cc: Moved to Raw Ideas project")
+add_comment(task_id, "cc: Completed during inbox processing")
+
+# WRONG
+add_comment(task_id, "Moved to Raw Ideas project")
+```
+
+**Why this matters:**
+- Makes it immediately clear which comments are from Claude vs human
+- Helps with audit trails and debugging
+- Prevents confusion about who did what
+- Standard convention across all automation
+
+**The `cc:` prefix is the default** in all CLI tools and should be used in all Python scripts.
+
+## Todoist CLI Toolkit (In Development)
+
+**Requirements Document:** `~/ws/everything-monorepo/notes/+Inbox/Todoist-CLI-Toolkit-Requirements.md`
+
+A Unix-philosophy CLI toolkit is being designed to replace repetitive custom Python scripts:
+
+**Vision:**
+- Composable commands (`td-tasks`, `td-complete`, `td-move`, etc.)
+- Pipeable like standard Unix tools
+- Works with `jq`, `grep`, `fzf`, `xargs`
+- Consistent `cc:` prefix handling
+- Well-documented with man pages
+
+**Example usage (future):**
+```bash
+# Query and pipe
+td-tasks --inbox | td-filter --has-label "idea" | td-move --to-project "Raw Ideas"
+
+# Complete with comment
+td-tasks --overdue | td-complete --from-json --comment "cc: Batch completed"
+
+# Integration with fzf
+td-tasks --today | td-format table | fzf | td-complete
+```
+
+**Current approach until CLI is ready:**
+- Use custom Python scripts (see patterns below)
+- Follow "cc:" prefix convention manually
+- Document learnings in this file
+- Reuse patterns when possible
+
 ## API Patterns & Limitations
 
 ### Python API Helper (Recommended for Scripting)
@@ -211,9 +265,18 @@ def extract_attachments_from_comments(comments):
             })
     return attachments
 
-def add_comment(task_id, content):
-    """Add comment to task (e.g., link to where content was moved)"""
+def add_comment(task_id, content, prefix="cc: "):
+    """Add comment to task with 'cc:' prefix by default
+
+    Args:
+        task_id: Task ID to add comment to
+        content: Comment text
+        prefix: Prefix for comment (default: "cc: ")
+    """
     url = 'https://api.todoist.com/rest/v2/comments'
+    # Add prefix if content doesn't already start with it
+    if prefix and not content.startswith(prefix):
+        content = prefix + content
     data = json.dumps({
         'task_id': task_id,
         'content': content
