@@ -8,6 +8,23 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
+## Executing Multi-Step Work
+
+- When a task has more than one step, immediately open the active runtime's todo helper and capture the checklist; update it after every step so progress stays visible.
+- Keep the checklist aligned with "Today's 3 Things" but treat it as its own execution tracker for the task at hand.
+
+<!-- CLAUDE -->
+- In Claude Code sessions, use the environment's todo helper (via the available slash command) and keep it pinned while you work.
+<!-- /CLAUDE -->
+<!-- CODEX -->
+- In Codex CLI sessions, emulate the todo helper by maintaining an explicit checklist in your responses or a scratch file; update it after each step until the task is done.
+<!-- /CODEX -->
+
+## Research & Documentation
+
+- Use Context7 to retrieve official documentation before relying on memory; favor primary sources whenever possible.
+- Prime unfamiliar or time-sensitive work with an immediate web search (`web.run`) so research happens up front rather than late in execution.
+
 ## Personal Anchors
 
 - **Affirmation:** "I trust my truth and act from it." Use at the start of focus blocks and whenever decisions feel wobbly.
@@ -47,14 +64,13 @@ Use pnpm instead of npm.
 
 ## Tool Preferences
 
-**For searching and file operations, use the specialized tools:**
-- **Glob tool** - For finding files by pattern (NOT `find` or `ls` commands)
-- **Grep tool** - For searching file contents (NOT bash `grep` or `rg` commands)
-- **Read tool** - For reading files (NOT `cat`, `head`, `tail`)
-- **Edit tool** - For editing files (NOT `sed`, `awk`)
-- **Write tool** - For creating files (NOT `echo >` or heredocs)
-
-These tools are faster, optimized, and provide better results than bash equivalents.
+- Default to modern CLI utilities (`rg`, `fd`, `ls`, `sed`, etc.) for file and text operations; prefer these over slower legacy commands.
+<!-- CLAUDE -->
+- When running inside Claude Code, favor the dedicated tools (Glob, Grep, Read, Edit, Write, and the todo helper) because they provide faster, context-aware access.
+<!-- /CLAUDE -->
+<!-- CODEX -->
+- Inside Codex CLI, those dedicated tools are unavailable; rely on the shell equivalents and follow sandbox/approval rules.
+<!-- /CODEX -->
 
 ## Git Worktrees
 
@@ -478,7 +494,16 @@ The command is available at ~/bin/generate-image (symlinked from ~/.dotfiles/bin
 
 ## Slash Commands
 
-Slash commands in `~/.claude/commands/` provide on-demand loading of specialized documentation and workflows.
+Slash command markdown files in `~/.claude/commands/` act as both executable commands and topical reference packets.
+
+<!-- CLAUDE -->
+- When `/name` is invoked, Claude automatically loads `~/.claude/commands/name.md` and executes it through the slash-command tool. Keep frontmatter (`allowed-tools`, `model`, etc.) accurate so the correct tools stay enabled.
+<!-- /CLAUDE -->
+<!-- CODEX -->
+- In Codex CLI sessions, treat `/name` as an instruction to open `~/.claude/commands/name.md` manually and follow it as a reference workflow.
+<!-- /CODEX -->
+- Use `<!-- CLAUDE -->` and `<!-- CODEX -->` markers inside command files when guidance differs across runtimes, and keep both variants in sync.
+- Keep Codex's layered `AGENTS.md` instructions aligned with these command files so both runtimes reflect the same intent.
 
 ### When to Create Commands vs Update CLAUDE.md
 
@@ -551,11 +576,11 @@ description: Verbose, descriptive explanation of what it does, how it works, and
 
 # Command instructions for Claude
 
-## Protocol (if needed)
+### Protocol (if needed)
 - Approval workflows
 - Trigger conditions
 
-## Full Documentation
+### Full Documentation
 - Usage examples
 - Reference information
 ```
@@ -615,7 +640,6 @@ description: Verbose, descriptive explanation of what it does, how it works, and
 - "This seems outdated" (it might still be relevant)
 - "This is redundant" (repetition aids learning)
 - "This could be shorter" (brevity isn't always better for context)
-
 ## Computer Use Agent
 IMPORTANT: Only use the computer use agent when I explicitly ask you to control my computer.
 
