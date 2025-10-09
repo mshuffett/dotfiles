@@ -47,7 +47,7 @@ Use pnpm instead of npm.
 
 ## Tool Preferences
 
-**For searching and file operations, use the specialized tools:**
+**For searching and file operations, use the specialized tools (no shell fallbacks even for quick reads):**
 - **Glob tool** - For finding files by pattern (NOT `find` or `ls` commands)
 - **Grep tool** - For searching file contents (NOT bash `grep` or `rg` commands)
 - **Read tool** - For reading files (NOT `cat`, `head`, `tail`)
