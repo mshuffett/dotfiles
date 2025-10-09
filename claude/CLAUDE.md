@@ -2,11 +2,38 @@ My name is Michael
 - The current year is 2025
 - Prefer the vercel AI SDK to using the provider SDKs directly but when using the Vercel AI SDK refer to the docs online and examples rather than relying on your memory of the API.
 - Use biome as the linter
-- Don't estimate date timelines for tasks -- you are really bad at that, instead just do sequences or points.
+- Don't estimate date timelines for tasks -- you are really bad at that, instead just do sequences or points. Rather than week-based estimates, describe effort with point counts or enumerated steps.
 
 When using the Anthropic API use the model claude-opus-4-1-20250805 for difficult tasks or claude-sonnet-4-5-20250929 as the default model. Do not use claude 3 for anything
 
 Use pnpm instead of npm.
+
+## Executing Multi-Step Work
+
+- When a task has more than one step, immediately spin up the runtime's structured planning tool and capture every subtask; keep it updated after each step so progress stays visible.
+- Keep the plan aligned with "Today's 3 Things" but treat it as its own execution tracker for the task at hand.
+
+<!-- CLAUDE -->
+- In Claude Code sessions, call the built-in todo helper (TodoWrite) and leave it pinned while you work so every subtask stays in view.
+<!-- /CLAUDE -->
+<!-- CODEX -->
+- In Codex CLI sessions, use the plan tool to document the task sequence. Update the plan as steps complete; if the plan tool is unavailable, maintain the checklist explicitly in your responses.
+<!-- /CODEX -->
+
+## Research & Documentation
+
+- Use Context7 to retrieve official documentation before relying on memory; favor primary sources whenever possible.
+- Prime unfamiliar or time-sensitive work with an immediate web search using the runtime's fastest search capability so research happens up front rather than late in execution.
+
+## AI Provider Integrations
+
+- When writing TypeScript that calls AI providers, default to the Vercel AI SDK and copy type definitions from official docs or Context7 before implementing anything custom.
+
+## Runtime Reference Map
+
+- This file lives at `~/.claude/CLAUDE.md` (symlinked from `~/.dotfiles/claude/CLAUDE.md`). Keep the symlink intact so Claude Code sessions read the dotfiles version.
+- Codex CLI reads layered `AGENTS.md` files (global `~/agents.md`, then repo/project-specific files). The global file is symlinked alongside this document in dotfiles—keep the contents mirrored when you update one.
+- Project-specific `CLAUDE.md` or `AGENTS.md` files may override these rules; always read the file in the project root before applying instructions.
 
 ## Personal Anchors
 
@@ -47,14 +74,8 @@ Use pnpm instead of npm.
 
 ## Tool Preferences
 
-**For searching and file operations, use the specialized tools:**
-- **Glob tool** - For finding files by pattern (NOT `find` or `ls` commands)
-- **Grep tool** - For searching file contents (NOT bash `grep` or `rg` commands)
-- **Read tool** - For reading files (NOT `cat`, `head`, `tail`)
-- **Edit tool** - For editing files (NOT `sed`, `awk`)
-- **Write tool** - For creating files (NOT `echo >` or heredocs)
-
-These tools are faster, optimized, and provide better results than bash equivalents.
+- Reach for the runtime's built-in helpers first (Claude: Glob, Grep, Read, Edit, Write, Todo/Plan; Codex: plan, read, write, apply_patch). Keep them active during multi-step work.
+- When you must drop to shell commands, use modern CLI utilities (`rg`, `fd`, `bat`, `jq`, etc.) instead of legacy options, and observe sandbox/approval rules.
 
 ## Git Worktrees
 
@@ -355,8 +376,14 @@ gh pr create --base develop ...
 
 **Example**: If you use the wrong approach, ask:
 - "Is there a documented pattern I should have followed?"
-- "If yes → why wasn't it clear? Update the docs"
-- "If no → add the pattern to the right place (command vs CLAUDE.md)"
+- "If yes → why wasn't it clear? Update the docs or command frontmatter immediately before continuing."
+- "If no → add the pattern to the right place (command vs CLAUDE.md)."
+- "Did the user express a preference (e.g., \"I prefer X\", \"please fix it\") or report a failing test? Pause and update this file or the relevant command right away so it never slips again."
+
+**Mistake Log Protocol**
+- Log repeatable mistakes in the `## Mistake Log` section (keep the entries concise and roll them up once resolved).
+- Each log entry should capture the trigger, what went wrong, and the guardrail you added.
+- Review the log before starting new work; prune items once the guardrail has proven solid across multiple sessions.
 
 ## Memory Update Protocol
 
@@ -407,6 +434,12 @@ When user provides information to remember:
 "Should this apply to every interaction (CLAUDE.md) or only when working on [specific topic] (command)?"
 
 **Default rule:** If it contains "always" or "never" and affects behavior broadly → CLAUDE.md
+
+## Mistake Log
+
+- _Open item_: Multi-step work was started without launching a structured plan/todo (Oct 9, 2025). Guardrail: new "Executing Multi-Step Work" section plus runtime-specific notes.
+
+Keep this list short; roll resolved items into the relevant instruction and delete the entry once the guardrail proves reliable.
 
 ## Sub-Agent Initialization
 
@@ -478,21 +511,32 @@ The command is available at ~/bin/generate-image (symlinked from ~/.dotfiles/bin
 
 ## Slash Commands
 
-Slash commands in `~/.claude/commands/` provide on-demand loading of specialized documentation and workflows.
+Slash command markdown files in `~/.claude/commands/` act as both executable commands and topical reference packets.
+- Treat each command file as conditional context: whenever the topic surfaces (even without a `/name` prompt), open the file and follow it.
+
+<!-- CLAUDE -->
+- When `/name` is invoked, Claude automatically loads `~/.claude/commands/name.md` and executes it through the slash-command tool. Keep frontmatter (`allowed-tools`, `model`, etc.) accurate so the correct tools stay enabled.
+<!-- /CLAUDE -->
+<!-- CODEX -->
+- In Codex CLI sessions, treat `/name` as an instruction to open `~/.claude/commands/name.md` manually and follow it as a reference workflow.
+<!-- /CODEX -->
+- Use `<!-- CLAUDE -->` and `<!-- CODEX -->` markers inside command files when guidance differs across runtimes, and keep both variants in sync.
+- Keep Codex's layered `AGENTS.md` instructions aligned with these command files so both runtimes reflect the same intent. When you refine a workflow, update the command file, its description, and this section together so triggers stay obvious.
 
 ### When to Create Commands vs Update CLAUDE.md
 
 **Create a slash command (`~/.claude/commands/[name].md`) when:**
-- Documentation is **topical/domain-specific** (Todoist, specific workflows, tool-specific patterns)
-- Content is **only relevant for certain tasks** (not needed in every session)
-- You want to **save context** by loading on-demand
-- There are **clear trigger conditions** (user asks about X, working on Y)
+- Knowledge is **topical/domain-specific** and best recalled on demand (Todoist, worktree workflow, etc.)
+- The information should be triggered by a phrase, slash command, or moment in the workflow ("when user asks about X", "before working on Y")
+- The content is too detailed for CLAUDE.md but needs to be remembered reliably
+- You can capture a crisp `description:` frontmatter explaining when to invoke it; backfill descriptions for existing commands whenever you refine their triggers and note the phrases that should cause you to open it.
 
 **Add directly to CLAUDE.md when:**
 - Rules are **universal** (apply to every interaction)
 - It's **meta-cognitive** (how to learn, improve, reflect)
 - Content is **always needed** (user preferences, core principles)
 - It's about **when to use commands** (this section!)
+- You discover a user preference that should apply immediately across runtimes
 
 **Examples:**
 - ✅ Command: `/todoist` - Only load when working with tasks
@@ -551,11 +595,11 @@ description: Verbose, descriptive explanation of what it does, how it works, and
 
 # Command instructions for Claude
 
-## Protocol (if needed)
+### Protocol (if needed)
 - Approval workflows
 - Trigger conditions
 
-## Full Documentation
+### Full Documentation
 - Usage examples
 - Reference information
 ```
@@ -615,7 +659,6 @@ description: Verbose, descriptive explanation of what it does, how it works, and
 - "This seems outdated" (it might still be relevant)
 - "This is redundant" (repetition aids learning)
 - "This could be shorter" (brevity isn't always better for context)
-
 ## Computer Use Agent
 IMPORTANT: Only use the computer use agent when I explicitly ask you to control my computer.
 
