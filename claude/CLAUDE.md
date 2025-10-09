@@ -8,6 +8,12 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
+## Personal Anchors
+
+- **Affirmation:** "I trust my truth and act from it." Use at the start of focus blocks and whenever decisions feel wobbly.
+- **Perspective:** Keep Memento Mori in mind to stay grounded in what matters now, especially before visioning or coding.
+- **Energy Cue:** Treat alertness and energy at 90/100 as the baseline check before diving into work.
+
 ## Development Philosophy
 
 **Prefer Test-Driven Development (TDD) where possible.**
@@ -87,23 +93,49 @@ git stash && git pull && git stash pop
 
 ## Daily Focus - Single-Task Execution
 
+### Session Overrides
+- **October 9, 2025:** Today's 3 things are confirmed and locked; do not prompt for additional reminders or checks.
+
 **CRITICAL RULE: If today's 3 things aren't written below with clear "done" definitions, STOP. Don't do ANY other work until they're fully scoped.**
 
-### Sunday, October 6, 2025
+### Thursday, October 9, 2025
+
+**Focus Windows:** Morning block before the 12:15 team sync, afternoon block after the sync (adjust if extended/in-person follow-up happens), early evening block before departing for the 7:00 dinner.
 
 **Today's 3 Things:**
 
-1. **💰 Finances & Runway Review**
-   - **Done when**: Cash flow reviewed, runway calculated, next quarter budget planned
-   - See: [Financial Runway Planning](obsidian://open?vault=notes&file=1-Projects%2F%F0%9F%92%B0%20Financial%20Runway%20Planning%2FREADME)
+1. **Waycraft Daily Driver Immersion**
+   - **Done when**: A working note saved at `1-Projects/🚢🏖️ Ship to Beach/Waycraft Daily Driver Plan.md` captures (a) the core intention for living inside Waycraft/Everything AI today, (b) the friction log from prior attempts, (c) the objectives and structure you want going into the 12:15 team sync, and (d) the specific rituals/experiments you will run during today's focus windows. The note closes with one commitment you'll act on immediately after the sync.
+   - **Sequence:**
+     1. Arrival ritual: affirmation, Memento Mori check-in, energy check at 90.
+     2. Review existing Waycraft/Everything AI dashboards and note any friction or gaps keeping it from being the daily driver.
+     3. Draft meeting objectives, agenda points, and desired outcomes for the 12:15 team sync (include questions for the team that feed the catch-up with Alton/Natasha).
+     4. Define the rituals/experiments you'll run in each focus window to stay inside Waycraft tools, and note blockers requiring follow-up.
+     5. Save the working note and flag the immediate post-sync commitment.
 
-2. **📊 Weekly Review**
-   - **Done when**: Inboxes cleared, all projects reviewed, next week planned
-   - Following standard weekly review protocol
+2. **XIAO Seeed ESP Wi-Fi Debugging**
+   - **Done when**: The XIAO-based camera server connects (or attempts to connect) with instrumented logs captured, results summarized, and the current status documented in the Waycraft Daily Driver note (or a linked hardware log). Success looks like either (a) reliable Wi-Fi connection with IP noted and steps reproducible, or (b) a clear reproduction of the failure with captured serial logs, configuration snapshots, and prioritized next experiments to run.
+   - **Sequence:**
+     1. Gather context: search notes for "XIAO", list prior configs/firmware flashes, and identify suspected changes since the last successful IP.
+     2. Set up the hardware bench (power, USB, serial monitor) and confirm camera server sketch and board package versions.
+     3. Run at least two controlled connection attempts (baseline + one variable change) while capturing serial output and environment details.
+     4. Compare results against the prior successful run, isolate likely regression points, and adjust code/config as needed.
+     5. Summarize findings, decisions, and next actions in the working note (with links to any new code/tests).
 
-3. **✨ Waycraft Dreaming & Scoping**
-   - **Done when**: Vision documented, key features scoped, direction decided
-   - Exploring what Waycraft could become
+3. **Catch-Up with Alton & Natasha**
+   - **Done when**: The catch-up happens with a shared intention anchored beforehand, agenda/structure prepared, and a quick note captured afterward (e.g., in `2-Areas/People/Alton.md` and `2-Areas/People/Natasha.md`) listing key decisions, emotions, and follow-ups. Any new tasks are pushed to Todoist or queued for processing.
+   - **Sequence:**
+     1. Draft the intention statement and agenda prompts (tie back to the Waycraft daily-driver goal and team sync outcomes).
+     2. Confirm logistics (time, location, any materials to bring) before the engagement.
+     3. Hold the conversation, staying aware of guardrails ("don't rabbit hole/don't dim").
+     4. Capture immediate notes and action items, route follow-ups to the right system.
+     5. Re-ground with affirmation/Memento Mori after the catch-up to transition into evening.
+
+**Guardrails & Anchors:**
+- Don’t rabbit hole.
+- Don’t dim.
+- Re-ground with the affirmation and Memento Mori perspective whenever focus wavers.
+- Hold alertness and energy around 90 before major work blocks.
 
 ---
 
