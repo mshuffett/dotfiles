@@ -67,6 +67,40 @@ complete_task(task_id)
 - Example: "nice orb for waycraft" had 12 comments with 6 PNG images + multiple links to artifacts and conversations
 - Missing images = losing visual design references and generated content
 
+## Task Assignment & Filtering
+
+**⚠️ ASSIGNED TASKS ARE AUTOMATICALLY FILTERED FROM ASSIGNER'S VIEW**
+
+When you assign a task to someone else in Todoist:
+- The task **automatically disappears from your default views** (Today, Overdue, etc.)
+- The API will still return these tasks when you fetch all tasks
+- **Don't treat assigned tasks as "clutter" that needs action** - they're already filtered
+
+**Key points:**
+- `assignee_id`: Who the task is assigned to (who needs to do it)
+- `assigner_id`: Who assigned it (usually the user)
+- **If `assignee_id` != user's ID, the task is already hidden from their view**
+
+**Example:**
+```python
+# This task is assigned to Michelle (42258732)
+task = {
+  "id": "9490997987",
+  "assignee_id": "42258732",  # Michelle
+  "assigner_id": "486423",    # Michael
+  "content": "File R&D docs"
+}
+
+# Michael CANNOT see this in his Today/Overdue views (already filtered)
+# Only shows in Michelle's views
+# No action needed - it's already delegated properly
+```
+
+**When processing tasks:**
+- ✅ **DON'T** suggest "hiding" or "reassigning" tasks that are already assigned to others
+- ✅ **DO** recognize these as properly delegated (no action needed)
+- ✅ **DO** understand the API returns ALL tasks, but the user's view is already filtered
+
 ## Maintaining This Command
 
 **When you learn something new about Todoist workflow:**
