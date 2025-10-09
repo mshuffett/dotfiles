@@ -1,8 +1,9 @@
 My name is Michael
 - The current year is 2025
 - Prefer the vercel AI SDK to using the provider SDKs directly but when using the Vercel AI SDK refer to the docs online and examples rather than relying on your memory of the API.
+- When calling AI providers from TypeScript, default to the Vercel AI SDK implementations and pull type definitions directly from the official docs or Context7 before coding.
 - Use biome as the linter
-- Don't estimate date timelines for tasks -- you are really bad at that, instead just do sequences or points.
+- Don't estimate date timelines for tasks -- you are really bad at that, instead just do sequences or points. Rather than week-based estimates, describe effort with point counts or enumerated steps.
 
 When using the Anthropic API use the model claude-opus-4-1-20250805 for difficult tasks or claude-sonnet-4-5-20250929 as the default model. Do not use claude 3 for anything
 
@@ -14,7 +15,7 @@ Use pnpm instead of npm.
 - Keep the checklist aligned with "Today's 3 Things" but treat it as its own execution tracker for the task at hand.
 
 <!-- CLAUDE -->
-- In Claude Code sessions, use the environment's todo helper (via the available slash command) and keep it pinned while you work.
+- In Claude Code sessions, call the environment's built-in todo helper (TodoWrite); keep it visible while you work so every step is tracked.
 <!-- /CLAUDE -->
 <!-- CODEX -->
 - In Codex CLI sessions, emulate the todo helper by maintaining an explicit checklist in your responses or a scratch file; update it after each step until the task is done.
@@ -23,7 +24,13 @@ Use pnpm instead of npm.
 ## Research & Documentation
 
 - Use Context7 to retrieve official documentation before relying on memory; favor primary sources whenever possible.
-- Prime unfamiliar or time-sensitive work with an immediate web search (`web.run`) so research happens up front rather than late in execution.
+- Prime unfamiliar or time-sensitive work with an immediate web search using the runtime's fastest search capability so research happens up front rather than late in execution.
+
+## Runtime Reference Map
+
+- This file lives at `~/.claude/CLAUDE.md` (symlinked from `~/.dotfiles/claude/CLAUDE.md`). Keep the symlink intact so Claude Code sessions read the dotfiles version.
+- Codex CLI reads layered `AGENTS.md` files (global `~/agents.md`, then repo/project-specific files). Whenever you update this document, audit the matching `AGENTS.md` entries so both runtimes stay in sync.
+- Project-specific `CLAUDE.md` or `AGENTS.md` files may override these rules; always read the file in the project root before applying instructions.
 
 ## Personal Anchors
 
@@ -64,12 +71,12 @@ Use pnpm instead of npm.
 
 ## Tool Preferences
 
-- Default to modern CLI utilities (`rg`, `fd`, `ls`, `sed`, etc.) for file and text operations; prefer these over slower legacy commands.
+- Default to modern CLI utilities (`rg`, `fd`, `bat`, `jq`, etc.) for file and text operations; prefer these over slower legacy commands.
 <!-- CLAUDE -->
-- When running inside Claude Code, favor the dedicated tools (Glob, Grep, Read, Edit, Write, and the todo helper) because they provide faster, context-aware access.
+- In Claude Code, prefer the dedicated tools (Glob, Grep, Read, Edit, Write, todo helper) because they provide faster, context-aware access.
 <!-- /CLAUDE -->
 <!-- CODEX -->
-- Inside Codex CLI, those dedicated tools are unavailable; rely on the shell equivalents and follow sandbox/approval rules.
+- Inside Codex CLI, rely on the shell equivalents and stay inside sandbox/approval rules.
 <!-- /CODEX -->
 
 ## Git Worktrees
@@ -371,8 +378,14 @@ gh pr create --base develop ...
 
 **Example**: If you use the wrong approach, ask:
 - "Is there a documented pattern I should have followed?"
-- "If yes → why wasn't it clear? Update the docs"
+- "If yes → why wasn't it clear? Update the docs or command frontmatter immediately"
 - "If no → add the pattern to the right place (command vs CLAUDE.md)"
+- "Did the user already tell me a preference (e.g., \"I prefer X\" or \"please fix it\") or report a failing test? If so, update this file or the relevant command so it never slips again."
+
+**Mistake Log Protocol**
+- Log repeatable mistakes in the `## Mistake Log` section (keep the entries concise and roll them up once resolved).
+- Each log entry should capture the trigger, what went wrong, and the guardrail you added.
+- Review the log before starting new work; prune items once the guardrail has proven solid across multiple sessions.
 
 ## Memory Update Protocol
 
@@ -423,6 +436,12 @@ When user provides information to remember:
 "Should this apply to every interaction (CLAUDE.md) or only when working on [specific topic] (command)?"
 
 **Default rule:** If it contains "always" or "never" and affects behavior broadly → CLAUDE.md
+
+## Mistake Log
+
+- _Open item_: Record todo-helper setup immediately for any multi-step work (added Oct 9, 2025). Guardrail: new "Executing Multi-Step Work" section + runtime notes.
+
+Keep this list short; roll resolved items into the relevant instruction and delete the entry once the guardrail proves reliable.
 
 ## Sub-Agent Initialization
 
@@ -508,16 +527,17 @@ Slash command markdown files in `~/.claude/commands/` act as both executable com
 ### When to Create Commands vs Update CLAUDE.md
 
 **Create a slash command (`~/.claude/commands/[name].md`) when:**
-- Documentation is **topical/domain-specific** (Todoist, specific workflows, tool-specific patterns)
-- Content is **only relevant for certain tasks** (not needed in every session)
-- You want to **save context** by loading on-demand
-- There are **clear trigger conditions** (user asks about X, working on Y)
+- Knowledge is **topical/domain-specific** and best recalled on demand (Todoist, worktree workflow, etc.)
+- The information should be triggered by a phrase, slash command, or moment in the workflow ("when user asks about X", "before working on Y")
+- The content is too detailed for CLAUDE.md but needs to be remembered reliably
+- You can capture a crisp `description:` frontmatter explaining when to invoke it; backfill descriptions for existing commands whenever you refine their triggers
 
 **Add directly to CLAUDE.md when:**
 - Rules are **universal** (apply to every interaction)
 - It's **meta-cognitive** (how to learn, improve, reflect)
 - Content is **always needed** (user preferences, core principles)
 - It's about **when to use commands** (this section!)
+- You discover a user preference that should apply immediately across runtimes
 
 **Examples:**
 - ✅ Command: `/todoist` - Only load when working with tasks
