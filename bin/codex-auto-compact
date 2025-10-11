@@ -1,0 +1,53 @@
+#!/bin/bash
+# // Global AGENTS.md was read
+# Codex Auto-Compact Runner
+# Maintains Codex context hygiene by issuing /compact at regular intervals
+
+set -euo pipefail
+
+PANE_ID="${1:-${TMUX_PANE:-}}"
+WORK_DIR="${2:-$(pwd)}"
+COMPACT_INTERVAL="${3:-900}"
+LOG_FILE="$WORK_DIR/codex_auto_compact.log"
+CONTEXT_LINES=80
+
+log() {
+	printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$1" | tee -a "$LOG_FILE"
+}
+
+if [[ -z "$PANE_ID" ]]; then
+	echo "ERROR: tmux pane ID is required. Pass it explicitly or run inside tmux." >&2
+	exit 1
+fi
+
+if [[ ! -p /dev/stdout ]]; then
+	touch "$LOG_FILE"
+fi
+
+log "===== Starting Codex Auto-Compact Runner ====="
+log "Pane: $PANE_ID"
+log "Interval: ${COMPACT_INTERVAL}s"
+log "Work dir: $WORK_DIR"
+log "=============================================="
+
+trap 'log "Shutting down Codex Auto-Compact"; exit 0' INT TERM
+
+while true; do
+	SNAPSHOT=$(tmux capture-pane -p -t "$PANE_ID" -S -"$CONTEXT_LINES" || true)
+	if [[ -n "$SNAPSHOT" ]]; then
+		CONTEXT_LINE=$(printf '%s\n' "$SNAPSHOT" | grep -E '[0-9]+% context left' | tail -n 1 || true)
+		if [[ -n "$CONTEXT_LINE" ]]; then
+			log "Context snapshot: $CONTEXT_LINE"
+		else
+			log "Context snapshot: (no context meter detected in last $CONTEXT_LINES lines)"
+		fi
+	else
+		log "WARNING: Unable to capture tmux pane $PANE_ID"
+	fi
+
+	tmux send-keys -t "$PANE_ID" "/compact"
+	tmux send-keys -t "$PANE_ID" Enter
+	log "Issued /compact command"
+
+	sleep "$COMPACT_INTERVAL"
+done
