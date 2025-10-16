@@ -173,8 +173,8 @@ set -g @plugin 'christoomey/vim-tmux-navigator'
 set -g status-style "bg=#292d3e,fg=#bfc7d5"
 set -g window-status-style "fg=#697098,bg=#292d3e"
 set -g window-status-current-style "fg=#82aaff,bg=#292d3e,bold"
-set -g pane-border-style "fg=#697098"
-set -g pane-active-border-style "fg=#c792ea"
+set -g pane-border-style "fg=#434758"                    # Dimmer gray for inactive
+set -g pane-active-border-style "fg=#82aaff,bg=default" # Bright blue for active (same as status bar)
 set -g message-style "bg=#292d3e,fg=#c3e88d"
 
 set -g @plugin 'tmux-plugins/tmux-resurrect'
