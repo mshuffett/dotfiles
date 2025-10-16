@@ -15,7 +15,10 @@ set -g pane-base-index 1
 bind r source-file ~/.tmux.conf \; display "Reloaded tmux config file."
 
 # bind / to show custom cheatsheet (? still shows default tmux bindings)
-bind / display-popup -E -w 80% -h 80% "cat ~/.dotfiles/tmux/cheatsheet.txt && read"
+# Uses display-popup if tmux 3.2+, fallback to new-window for older versions
+bind / if-shell "tmux -V | awk '{exit !($2 >= 3.2)}'" \
+  "display-popup -E -w 80% -h 80% 'cat ~/.dotfiles/tmux/cheatsheet.txt && read'" \
+  "new-window 'cat ~/.dotfiles/tmux/cheatsheet.txt && read'"
 
 # pass through a ctrl-a if you press it twice
 bind C-a send-prefix
