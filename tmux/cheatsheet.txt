@@ -17,11 +17,12 @@
 ║  Ctrl+a -    Horizontal split               │  Ctrl+a J      Resize down               │  Space ff       Find files (Telescope)                      ║
 ║  Ctrl+h/j/k/l Navigate panes (no prefix!)   │  Ctrl+a K      Resize up                 │  Space fw       Find word/grep in files                     ║
 ║  Ctrl+a h/j/k/l Navigate panes (w/ prefix)  │  Ctrl+a L      Resize right              │  Space th       Change theme (56 themes!)                   ║
-║  Ctrl+a z    Zoom/unzoom pane (fullscreen)  │                (all are repeatable)      │  Ctrl+n         Toggle file tree (nvim-tree)                ║
-║  Ctrl+a x    Kill current pane              │                                          │  Ctrl+h/j/k/l   Navigate splits (seamless with tmux!)      ║
-║  Ctrl+a r    Reload tmux config             │                                          │  :vsplit        Vertical split in nvim                      ║
-║  Ctrl+a /    Show this cheatsheet           │                                          │  :split         Horizontal split in nvim                    ║
-║  Ctrl+a ?    Show all tmux keybindings      │                                          │  Space x        Close buffer                                ║
+║  Ctrl+a M    Pull pane from another session │                (all are repeatable)      │  Ctrl+n         Toggle file tree (nvim-tree)                ║
+║  Ctrl+a z    Zoom/unzoom pane (fullscreen)  │                                          │  Ctrl+h/j/k/l   Navigate splits (seamless with tmux!)      ║
+║  Ctrl+a x    Kill current pane              │                                          │  :vsplit        Vertical split in nvim                      ║
+║  Ctrl+a r    Reload tmux config             │                                          │  :split         Horizontal split in nvim                    ║
+║  Ctrl+a /    Show this cheatsheet           │                                          │  Space x        Close buffer                                ║
+║  Ctrl+a ?    Show all tmux keybindings      │                                          │                                                             ║
 ╠═════════════════════════════════════════════╧══════════════════════════════════════════╧═════════════════════════════════════════════════════════════╣
 ║ WORKFLOW TIPS                                                                                                                                         ║
 ╠═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣
