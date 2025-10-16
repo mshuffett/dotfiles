@@ -65,31 +65,6 @@ set -g default-terminal "xterm-256color"
 # True color support for Ghostty and modern terminals
 set -ga terminal-overrides ",xterm-256color:Tc"
 
-# Palenight colors (older syntax for compatibility)
-set -g status-fg colour189     # #bfc7d5
-set -g status-bg colour236     # #292d3e
-
-# fiddle with colors of inactive windows
-setw -g window-status-fg colour60   # #697098
-setw -g window-status-bg colour236  # #292d3e
-setw -g window-status-attr dim
-
-# change color of active window
-setw -g window-status-current-fg colour111  # #82aaff
-setw -g window-status-current-bg colour236  # #292d3e
-setw -g window-status-current-attr bright
-
-# set color of regular and active panes
-set -g pane-border-fg colour60       # #697098
-set -g pane-border-bg default
-set -g pane-active-border-fg colour141  # #c792ea
-set -g pane-active-border-bg default
-
-# set color of command line
-set -g message-fg colour114      # #c3e88d
-set -g message-bg colour236      # #292d3e
-set -g message-attr bright
-
 # configure contents of status bar
 set -g status-left-length 100
 set -g status-right-length 100
