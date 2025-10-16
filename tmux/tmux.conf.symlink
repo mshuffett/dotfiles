@@ -94,11 +94,11 @@ set -g message-attr bright
 set -g status-left-length 100
 set -g status-right-length 100
 
-# Left: Current session + all available sessions
-set -g status-left "#[fg=colour114,bold]#S #[fg=colour60,nobold]│ #(~/.dotfiles/tmux/scripts/tmux-sessions.sh)"
+# Left: Prefix indicator + current session + all available sessions
+set -g status-left "#{?client_prefix,#[fg=colour204]● ,#[fg=colour60]○ }#[fg=colour114,bold]#S #[fg=colour60,nobold]│ #(~/.dotfiles/tmux/scripts/tmux-sessions.sh)"
 
-# Right: Hints + pane info + time
-set -g status-right "#[fg=colour60]tn/ts • C-a / help • C-a z zoom #[fg=colour141]│ #[fg=colour114]#{window_panes} panes │ %d %b %R"
+# Right: Zoom indicator + hints + window/pane info + time
+set -g status-right "#{?window_zoomed_flag,#[fg=colour204]🔍 ZOOM ,}#[fg=colour60]tn/ts • C-a / #[fg=colour141]│ #[fg=colour114]#{session_windows}w #{window_panes}p │ %d %b %R"
 
 set -g status-justify centre
 set -g status-interval 5  # Update every 5 seconds to show session changes
