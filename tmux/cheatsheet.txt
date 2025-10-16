@@ -1,5 +1,5 @@
 ╔══════════════════════════════════════════════════════════════════════╗
-║                    TMUX + NVIM CHEATSHEET                            ║
+║              TMUX + NVIM CHEATSHEET (Ctrl+a / to show)               ║
 ╠══════════════════════════════════════════════════════════════════════╣
 ║ SESSION MANAGEMENT                                                   ║
 ╠══════════════════════════════════════════════════════════════════════╣
@@ -21,6 +21,8 @@
 ║  Ctrl+a z           Zoom/unzoom current pane (fullscreen toggle)     ║
 ║  Ctrl+a x           Kill current pane                                ║
 ║  Ctrl+a r           Reload tmux config                               ║
+║  Ctrl+a /           Show this cheatsheet                             ║
+║  Ctrl+a ?           Show all tmux keybindings (default)              ║
 ╠══════════════════════════════════════════════════════════════════════╣
 ║ TMUX WINDOWS                                                         ║
 ╠══════════════════════════════════════════════════════════════════════╣

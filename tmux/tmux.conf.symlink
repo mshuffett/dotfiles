@@ -14,8 +14,8 @@ set -g pane-base-index 1
 # bind r to reloading the config file
 bind r source-file ~/.tmux.conf \; display "Reloaded tmux config file."
 
-# bind ? to show cheatsheet
-bind ? display-popup -E -w 80% -h 80% "cat ~/.dotfiles/tmux/cheatsheet.txt && read"
+# bind / to show custom cheatsheet (? still shows default tmux bindings)
+bind / display-popup -E -w 80% -h 80% "cat ~/.dotfiles/tmux/cheatsheet.txt && read"
 
 # pass through a ctrl-a if you press it twice
 bind C-a send-prefix
