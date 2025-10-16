@@ -1,15 +1,15 @@
 ╔═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
 ║                                              TMUX + NVIM CHEATSHEET (Ctrl+a / to show)                                                                ║
 ╠═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣
-║ SESSION MANAGEMENT                          │ TMUX WINDOWS                             │ TMUX COPY MODE (vim-style)                                  ║
+║ SESSION MANAGEMENT                          │ TMUX WINDOWS                             │ TMUX BUFFERS & COPY MODE (vim-style)                        ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
 ║  tn <name>   Create/attach named session    │  Ctrl+a c      Create new window         │  Ctrl+a Escape  Enter copy mode                             ║
-║  ts          Interactive session picker     │  Ctrl+a ,      Rename window             │  Space          Start selection                             ║
-║  ts <name>   Switch to specific session     │  Ctrl+a n      Next window               │  Enter          Copy selection                              ║
-║  tl          List all sessions              │  Ctrl+a p      Previous window           │  Ctrl+a p       Paste                                       ║
-║  tk <name>   Kill session                   │  Ctrl+a 0-9    Jump to window number     │  q              Exit copy mode                              ║
-║  Ctrl+a d    Detach from session            │  Ctrl+a C-l    Next window (repeat)      │                                                             ║
-║  Ctrl+a s    Native tmux session menu       │  Ctrl+a BSpace Previous window           │                                                             ║
+║  ts          Interactive session picker     │  Ctrl+a ,      Rename window             │  v              Start selection                             ║
+║  ts <name>   Switch to specific session     │  Ctrl+a n      Next window               │  y              Yank/copy selection                         ║
+║  tl          List all sessions              │  Ctrl+a p      Previous window           │  A              Append to buffer (accumulate)               ║
+║  tk <name>   Kill session                   │  Ctrl+a 0-9    Jump to window number     │  Ctrl+a p       Paste from buffer                           ║
+║  Ctrl+a d    Detach from session            │  Ctrl+a C-l    Next window (repeat)      │  Ctrl+a = or b  Choose buffer (interactive)                 ║
+║  Ctrl+a s    Native tmux session menu       │  Ctrl+a BSpace Previous window           │  Ctrl+a B       Save buffer to file                         ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
 ║ TMUX PANES (Prefix = Ctrl+a)                │ PANE RESIZING                            │ NVCHAD (Leader = Space)                                     ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
@@ -17,7 +17,7 @@
 ║  Ctrl+a -    Horizontal split               │  Ctrl+a J      Resize down               │  Space ff       Find files (Telescope)                      ║
 ║  Ctrl+h/j/k/l Navigate panes (no prefix!)   │  Ctrl+a K      Resize up                 │  Space fw       Find word/grep in files                     ║
 ║  Ctrl+a h/j/k/l Navigate panes (w/ prefix)  │  Ctrl+a L      Resize right              │  Space th       Change theme (56 themes!)                   ║
-║  Ctrl+a M    Pull pane from another session │                (all are repeatable)      │  Ctrl+n         Toggle file tree (nvim-tree)                ║
+║  Ctrl+a M    Pull pane from another session │  Ctrl+a E      Equalize all panes       │  Ctrl+n         Toggle file tree (nvim-tree)                ║
 ║  Ctrl+a z    Zoom/unzoom pane (fullscreen)  │                                          │  Ctrl+h/j/k/l   Navigate splits (seamless with tmux!)      ║
 ║  Ctrl+a x    Kill current pane              │                                          │  :vsplit        Vertical split in nvim                      ║
 ║  Ctrl+a r    Reload tmux config             │                                          │  :split         Horizontal split in nvim                    ║

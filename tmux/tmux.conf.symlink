@@ -60,6 +60,9 @@ bind -r J resize-pane -D 5
 bind -r K resize-pane -U 5
 bind -r L resize-pane -R 5
 
+# Equalize pane sizes
+bind E select-layout tiled \; display "Panes equalized"
+
 # Interactive join-pane (pull pane from another session/window)
 bind M choose-tree -s "join-pane -h -s '%%'"
 
@@ -96,6 +99,12 @@ bind C-p run-shell "tmux set-buffer \"$(xclip -o)\"; tmux paste-buffer"
 # bind -T vi-copy 'y' copy-pipe 'xclip -in -selection clipboard'
 bind-key -Tcopy-mode-vi 'v' send -X begin-selection
 bind-key -Tcopy-mode-vi 'y' send -X copy-selection
+bind-key -Tcopy-mode-vi 'A' send -X append-selection-and-cancel
+
+# Buffer management
+set -g buffer-limit 1000  # Keep last 1000 copies
+bind b choose-buffer -Z   # Interactive buffer picker (Ctrl+a b)
+bind B save-buffer ~/tmux-buffer-$(date +%Y%m%d-%H%M%S).txt \; display "Buffer saved to ~/tmux-buffer-*.txt"
 
 # xclip support (commented as this often doesn't make sense on remote servers)
 #bind C-c run-shell "tmux save-buffer - / xclip -i -sel clipboard"
