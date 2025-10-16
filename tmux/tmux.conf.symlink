@@ -14,6 +14,9 @@ set -g pane-base-index 1
 # bind r to reloading the config file
 bind r source-file ~/.tmux.conf \; display "Reloaded tmux config file."
 
+# bind ? to show cheatsheet
+bind ? display-popup -E -w 80% -h 80% "cat ~/.dotfiles/tmux/cheatsheet.txt && read"
+
 # pass through a ctrl-a if you press it twice
 bind C-a send-prefix
 
@@ -85,10 +88,11 @@ set -g message-bg colour236      # #292d3e
 set -g message-attr bright
 
 # configure contents of status bar
-set -g status-left-length 40
-set -g status-left "#[fg=colour114]\"#S\""  # #c3e88d green
+set -g status-left-length 50
+set -g status-right-length 80
+set -g status-left "#[fg=colour114]\"#S\" #[fg=colour60]| C-a | split • - split"  # session + hints
 
-set -g status-right "#[fg=colour114] #h | %d %b %R"  # #c3e88d green
+set -g status-right "#[fg=colour60]tn/ts/tl • C-h/j/k/l nav • C-a z zoom #[fg=colour114] %d %b %R"  # hints + time
 
 set -g status-justify centre
 setw -g monitor-activity on
