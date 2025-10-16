@@ -54,25 +54,6 @@ bind -r C-h select-window -t :-
 bind -r BSpace select-window -t :-
 bind -r C-l select-window -t :+
 
-# Unified global window switching (Alt+h / Alt+l, no prefix needed)
-bind-key -n 'M-h' select-window -t :-
-bind-key -n 'M-l' select-window -t :+
-
-# Alternative: Also support Alt+n and Alt+p for next/previous
-bind-key -n 'M-n' select-window -t :+
-bind-key -n 'M-p' select-window -t :-
-
-# Direct pane selection with Alt+number (no prefix needed)
-bind-key -n 'M-1' select-pane -t 1
-bind-key -n 'M-2' select-pane -t 2
-bind-key -n 'M-3' select-pane -t 3
-bind-key -n 'M-4' select-pane -t 4
-bind-key -n 'M-5' select-pane -t 5
-bind-key -n 'M-6' select-pane -t 6
-bind-key -n 'M-7' select-pane -t 7
-bind-key -n 'M-8' select-pane -t 8
-bind-key -n 'M-9' select-pane -t 9
-
 # shift-movement keys will resize panes
 bind -r H resize-pane -L 5
 bind -r J resize-pane -D 5
@@ -96,7 +77,7 @@ set -g status-right-length 100
 set -g status-left "#{?client_prefix,#[fg=colour204]● ,#[fg=colour60]○ }#[fg=colour114,bold]#S #[fg=colour60,nobold]│ #(~/.dotfiles/tmux/scripts/tmux-sessions.sh)"
 
 # Right: Zoom indicator + hints + system stats + window/pane info + time
-set -g status-right "#{?window_zoomed_flag,#[fg=colour204]🔍 ZOOM ,}#[fg=colour60]Opt-h/l:win Opt-1-9:pane • C-a /:help q:panes f:hints • C-a M/s/w/? #[fg=colour141]│ #[fg=colour114]💻 CPU:#{cpu_percentage} 🧠 RAM:#{ram_percentage} #{battery_icon}#{battery_percentage} │ #{session_windows}w #{window_panes}p │ %d %b %R"
+set -g status-right "#{?window_zoomed_flag,#[fg=colour204]🔍 ZOOM ,}#[fg=colour60]C-h/j/k/l • C-a //q/f • C-a M/s/w/? #[fg=colour141]│ #[fg=colour114]#{cpu_percentage} #{ram_percentage} #{battery_icon}#{battery_percentage} │ #{session_windows}w #{window_panes}p │ %d %b %R"
 
 set -g status-justify centre
 set -g status-interval 5  # Update every 5 seconds to show session changes
