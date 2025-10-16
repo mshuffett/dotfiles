@@ -16,9 +16,10 @@ bind r source-file ~/.tmux.conf \; display "Reloaded tmux config file."
 
 # bind / to show custom cheatsheet (? still shows default tmux bindings)
 # Uses display-popup if tmux 3.2+, fallback to new-window for older versions
+# Uses less for navigation (j/k, arrows, /, q to quit)
 bind / if-shell "tmux -V | awk '{exit !($2 >= 3.2)}'" \
-  "display-popup -E -w 80% -h 80% 'cat ~/.dotfiles/tmux/cheatsheet.txt && read'" \
-  "new-window 'cat ~/.dotfiles/tmux/cheatsheet.txt && read'"
+  "display-popup -E -w 95% -h 90% 'less -R ~/.dotfiles/tmux/cheatsheet.txt'" \
+  "new-window 'less -R ~/.dotfiles/tmux/cheatsheet.txt'"
 
 # pass through a ctrl-a if you press it twice
 bind C-a send-prefix
