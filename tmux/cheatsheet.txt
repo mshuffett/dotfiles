@@ -22,7 +22,8 @@
 ║  Ctrl+h/j/k/l Navigate panes (no prefix!)   │  Ctrl+a K      Resize up                 │  Space fw       Find word/grep in files                     ║
 ║  Ctrl+a h/j/k/l Navigate panes (w/ prefix)  │  Ctrl+a L      Resize right              │  Space th       Change theme (56 themes!)                   ║
 ║  Ctrl+a M    Pull pane from another session │  Ctrl+a q      Show pane numbers        │  Ctrl+n         Toggle file tree (nvim-tree)                ║
-║  Ctrl+a z    Zoom/unzoom pane (fullscreen)  │  Ctrl+a E      Cycle layouts            │  Ctrl+h/j/k/l   Navigate splits (seamless with tmux!)      ║
+║  Ctrl+a z    Zoom/unzoom pane (fullscreen)  │  Opt+1-9       Jump to pane 1-9         │  Ctrl+h/j/k/l   Navigate splits (seamless with tmux!)      ║
+║  Ctrl+a ;    Toggle last pane              │  Ctrl+a E      Cycle layouts            │  Opt+h/l        Previous/next window (no prefix!)           ║
 ║  Ctrl+a x    Kill current pane              │  Ctrl+a Alt+5  Equalize (tiled)         │  :vsplit        Vertical split in nvim                      ║
 ║  Ctrl+a r    Reload tmux config             │  Ctrl+a Alt+1  Even horizontal           │  :split         Horizontal split in nvim                    ║
 ║  Ctrl+a /    Show this cheatsheet           │  Ctrl+a Alt+2  Even vertical             │  Space x        Close buffer                                ║
@@ -33,6 +34,8 @@
 ║  • Create project sessions: tn my-project                                                                                                             ║
 ║  • Each session has independent window layouts                                                                                                        ║
 ║  • Use Ctrl+h/j/k/l everywhere for seamless navigation between nvim splits and tmux panes                                                             ║
+║  • Quick pane jumping: Opt+1 through Opt+9 to jump directly to panes (Opt = Alt = Option key on Mac)                                                 ║
+║  • Quick window switching: Opt+h/l for previous/next window without prefix (faster than Ctrl+a n/p)                                                   ║
 ║  • Zoom pane for focus: Ctrl+a z (perfect for full-screen coding, then unzoom to see other panes)                                                     ║
 ║  • Statusline indicators: ● = prefix active, ○ = prefix inactive, 🔍 ZOOM = pane is zoomed                                                            ║
 ║  • Quick copy: Ctrl+a f shows hints on paths/URLs - type letters to copy instantly                                                                    ║
