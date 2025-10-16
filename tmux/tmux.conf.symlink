@@ -184,6 +184,10 @@ set -g pane-border-style "fg=#434758"                    # Dimmer gray for inact
 set -g pane-active-border-style "fg=#82aaff,bg=default" # Bright blue for active (same as status bar)
 set -g message-style "bg=#292d3e,fg=#c3e88d"
 
+# Pane border status - shows pane number and current command
+set -g pane-border-status top
+set -g pane-border-format " #[bold]#{?pane_active,#[fg=#82aaff] ▶ ,#[fg=#697098]   }#[fg=default]#{pane_index} #[fg=#c3e88d]#{pane_current_command} "
+
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 
