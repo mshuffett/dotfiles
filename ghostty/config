@@ -77,8 +77,8 @@ font-feature = +calt
 # Quick Terminal - Press Ctrl+` to toggle drop-down terminal
 keybind = global:ctrl+grave_accent=toggle_quick_terminal
 
-# Quick Terminal Size - 50% height, 1080px max width (centered)
-quick-terminal-size = 50%,1080px
+# Quick Terminal Size - 30% height, 70% width
+quick-terminal-size = 30%,70%
 
 # Shell Integration - enhanced features
 shell-integration-features = cursor,sudo,title
@@ -104,4 +104,4 @@ focus-follows-mouse = true
 keybind = cmd+shift+p=toggle_command_palette
 
 # Shift+Enter sends newline (for Claude Code)
-keybind = shift+return=text:\n
+keybind = shift+enter=text:\x1b\r
