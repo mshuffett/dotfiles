@@ -76,8 +76,8 @@ set -g status-right-length 100
 # Left: Prefix indicator + current session + all available sessions
 set -g status-left "#{?client_prefix,#[fg=colour204]● ,#[fg=colour60]○ }#[fg=colour114,bold]#S #[fg=colour60,nobold]│ #(~/.dotfiles/tmux/scripts/tmux-sessions.sh)"
 
-# Right: Zoom indicator + hints + window/pane info + time
-set -g status-right "#{?window_zoomed_flag,#[fg=colour204]🔍 ZOOM ,}#[fg=colour60]tn/ts • C-a //q • C-a M/s/w/? #[fg=colour141]│ #[fg=colour114]#{session_windows}w #{window_panes}p │ %d %b %R"
+# Right: Zoom indicator + hints + system stats + window/pane info + time
+set -g status-right "#{?window_zoomed_flag,#[fg=colour204]🔍 ZOOM ,}#[fg=colour60]tn/ts • C-a //q/f • C-a M/s/w/? #[fg=colour141]│ #[fg=colour114]#{cpu_percentage} #{ram_percentage} #{battery_icon}#{battery_percentage} │ #{session_windows}w #{window_panes}p │ %d %b %R"
 
 set -g status-justify centre
 set -g status-interval 5  # Update every 5 seconds to show session changes
@@ -169,6 +169,13 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'christoomey/vim-tmux-navigator'
 
+# Enhanced functionality plugins
+set -g @plugin 'sainnhe/tmux-fzf'              # Fuzzy finder for tmux
+set -g @plugin 'Morantron/tmux-fingers'        # Quick copy with hints
+set -g @plugin 'tmux-plugins/tmux-open'        # Open files/URLs from tmux
+set -g @plugin 'tmux-plugins/tmux-cpu'         # CPU/RAM percentage
+set -g @plugin 'tmux-plugins/tmux-battery'     # Battery status
+
 # Palenight theme colors
 set -g status-style "bg=#292d3e,fg=#bfc7d5"
 set -g window-status-style "fg=#697098,bg=#292d3e"
@@ -187,6 +194,14 @@ set -g @resurrect-strategy-nvim 'session'     # Restore nvim sessions
 # Continuum settings
 set -g @continuum-restore 'on'                # Auto-restore on tmux start
 set -g @continuum-save-interval '15'          # Auto-save every 15 minutes
+
+# tmux-fzf settings
+set -g @tmux-fzf-launch-key 'C-f'             # Ctrl+a Ctrl+f to launch
+
+# tmux-fingers settings
+set -g @fingers-key 'f'                        # Ctrl+a f to activate hints
+set -g @fingers-compact-hints 0                # Full hints, not compact
+set -g @fingers-hint-format "#[fg=yellow,bold]%s"  # Yellow hints
 
 run '~/.tmux/plugins/tpm/tpm'
 
