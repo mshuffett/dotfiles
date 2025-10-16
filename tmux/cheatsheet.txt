@@ -11,18 +11,20 @@
 ║  Ctrl+a d    Detach from session            │  Ctrl+a C-l    Next window (repeat)      │  Ctrl+a = or b  Choose buffer (interactive)                 ║
 ║  Ctrl+a s    Native tmux session menu       │  Ctrl+a BSpace Previous window           │  Ctrl+a B       Save buffer to file                         ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
+║ SESSION PERSISTENCE (auto-saves every 15min)                │ Ctrl+a Ctrl+s   Manual save  │ Ctrl+a Ctrl+r   Manual restore                              ║
+╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
 ║ TMUX PANES (Prefix = Ctrl+a)                │ PANE RESIZING                            │ NVCHAD (Leader = Space)                                     ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
 ║  Ctrl+a |    Vertical split                 │  Ctrl+a H      Resize left               │  Space ch       Show full NvChad cheatsheet                 ║
 ║  Ctrl+a -    Horizontal split               │  Ctrl+a J      Resize down               │  Space ff       Find files (Telescope)                      ║
 ║  Ctrl+h/j/k/l Navigate panes (no prefix!)   │  Ctrl+a K      Resize up                 │  Space fw       Find word/grep in files                     ║
 ║  Ctrl+a h/j/k/l Navigate panes (w/ prefix)  │  Ctrl+a L      Resize right              │  Space th       Change theme (56 themes!)                   ║
-║  Ctrl+a M    Pull pane from another session │  Ctrl+a E      Equalize all panes       │  Ctrl+n         Toggle file tree (nvim-tree)                ║
-║  Ctrl+a z    Zoom/unzoom pane (fullscreen)  │                                          │  Ctrl+h/j/k/l   Navigate splits (seamless with tmux!)      ║
-║  Ctrl+a x    Kill current pane              │                                          │  :vsplit        Vertical split in nvim                      ║
-║  Ctrl+a r    Reload tmux config             │                                          │  :split         Horizontal split in nvim                    ║
-║  Ctrl+a /    Show this cheatsheet           │                                          │  Space x        Close buffer                                ║
-║  Ctrl+a ?    Show all tmux keybindings      │                                          │                                                             ║
+║  Ctrl+a M    Pull pane from another session │  Ctrl+a q      Show pane numbers        │  Ctrl+n         Toggle file tree (nvim-tree)                ║
+║  Ctrl+a z    Zoom/unzoom pane (fullscreen)  │  Ctrl+a E      Cycle layouts            │  Ctrl+h/j/k/l   Navigate splits (seamless with tmux!)      ║
+║  Ctrl+a x    Kill current pane              │  Ctrl+a Alt+5  Equalize (tiled)         │  :vsplit        Vertical split in nvim                      ║
+║  Ctrl+a r    Reload tmux config             │  Ctrl+a Alt+1  Even horizontal           │  :split         Horizontal split in nvim                    ║
+║  Ctrl+a /    Show this cheatsheet           │  Ctrl+a Alt+2  Even vertical             │  Space x        Close buffer                                ║
+║  Ctrl+a ?    Show all tmux keybindings      │  (See C-a ? for all layouts)            │                                                             ║
 ╠═════════════════════════════════════════════╧══════════════════════════════════════════╧═════════════════════════════════════════════════════════════╣
 ║ WORKFLOW TIPS                                                                                                                                         ║
 ╠═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣
