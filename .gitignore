@@ -10,3 +10,4 @@ cache/
 .env.*
 **/local.env
 .zsh_secrets
+.worktrees/
