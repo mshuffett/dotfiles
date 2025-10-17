@@ -434,91 +434,46 @@ cd ~/ws/claude-computer-use-mac && python agent.py "task description" --live
 - User: "Something is running on port 3000"
 - You: Check what's running, report findings, then ask: "Process X is running on port 3000. Would you like me to kill it?"
 
-## Test Debugging Protocol
+## Test Debugging Principle
 
-**CRITICAL: When tests fail, INVESTIGATE immediately - don't just report the failure.**
+**CRITICAL: When tests fail, INVESTIGATE the root cause - don't just report the failure.**
 
-### The Efficient Debugging Path
+### Universal Debugging Approach
 
-**When a test times out or fails:**
+1. **Identify WHAT failed** - Read the error message carefully
+   - Which assertion failed?
+   - Which element/resource was missing?
+   - What was the actual vs expected value?
 
-1. **Identify WHAT is missing** (not just that it failed)
-   - Look at the error: which element/selector timed out?
-   - Example: "waiting for getByTestId('model-selector')" → model-selector is missing
+2. **Create minimal reproduction** - Simplify to isolate the issue
+   - Remove complexity
+   - Test one thing at a time
+   - Verify assumptions
 
-2. **Create a minimal debug test IMMEDIATELY**
-   ```typescript
-   test("debug: check what elements exist", async ({ page }) => {
-     await page.goto("http://localhost:3000/");
-     const testIds = await page.locator("[data-testid]").all();
-     for (const el of testIds) {
-       console.log(await el.getAttribute("data-testid"));
-     }
-   });
-   ```
+3. **Find WHERE the issue originates**
+   - Search codebase for related code
+   - Check if component/function exists
+   - Verify it's imported and used correctly
 
-3. **Find WHERE the element should be**
-   - Search for the testid in components: `grep -r "data-testid.*model-selector" components`
-   - Check if component exists but isn't imported/used
-   - Check if element is conditionally rendered
+4. **Determine WHY it's failing**
+   - Code changed but tests didn't?
+   - Test expectations outdated?
+   - Environment/cache issue?
+   - Missing dependency?
 
-4. **Determine WHY it's missing**
-   - Component not rendered?
-   - Element hidden/not visible?
-   - Component refactored but tests not updated?
-   - Dev server serving stale/cached code?
+5. **Fix and verify**
+   - Fix root cause
+   - Run simplest test first
+   - Add to project CLAUDE.md if project-specific
 
-5. **Fix root cause**
-   - Add missing testid
-   - Update test expectations
-   - Restart dev server if needed
-   - Run simplest test first to verify fix
+### Meta-Learning Integration
 
-### Common Pitfalls (Learn from mistakes)
+**After fixing ANY test failure:**
+- Document project-specific patterns in project CLAUDE.md
+- Update this file only if the pattern is universal
+- Commit learnings immediately
 
-**❌ What NOT to do:**
-- Don't just report "tests are failing" without investigating
-- Don't assume tests are correct - check if code changed
-- Don't forget that Playwright may reuse a stale dev server
-- Don't try complex tests before simple ones
-
-**✅ What TO do:**
-- Always check what elements ARE on the page (not just what's missing)
-- Search codebase to find where element should be defined
-- Kill stale dev servers: check `lsof -i :3000` and kill if needed
-- Start with simplest possible test (just check element exists)
-- Use background test watchers for fast feedback
-
-### Test Watcher Pattern
-
-**When debugging or developing with tests:**
-
-1. **Start with simplest test** - just check page loads and element exists
-2. **Use test watcher in background** - get immediate feedback on changes
-3. **Playwright webServer caching** - remember to kill stale dev servers
-
-```bash
-# Kill any stale dev server first
-lsof -i :3000 | grep node | awk '{print $2}' | xargs kill
-
-# Run simplest test first
-export PLAYWRIGHT=True && pnpm exec playwright test debug-test.test.ts
-
-# For watching during development, use project test:watch if available
-# Or run tests on file changes with a simple loop
-```
-
-### Integration with Meta-Learning
-
-**After resolving a test debugging session:**
-
-1. **What was the actual problem?** (missing testid, stale server, renamed component)
-2. **What was the efficient path?** (debug test → find component → add testid)
-3. **What did I do wrong?** (assumed tests were correct, didn't investigate)
-4. **Update this protocol** if you discovered a new debugging pattern
-5. **Commit immediately** to save the learning
-
-This protocol prevents repeating the same debugging mistakes across sessions.
+**Project-specific test details belong in project CLAUDE.md, not here.**
 
 ## iCloud Drive
 
