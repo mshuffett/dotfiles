@@ -80,8 +80,8 @@ set -g status-right-length 80
 # Left: Prefix indicator + current session + all available sessions
 set -g status-left "#{?client_prefix,#[fg=colour204]● ,#[fg=colour60]○ }#[fg=colour114,bold]#S #[fg=colour60,nobold]│ #(~/.dotfiles/tmux/scripts/tmux-sessions.sh)"
 
-# Right: Zoom indicator + hints + system stats + window/pane info + time
-set -g status-right "#{?window_zoomed_flag,#[fg=colour204]🔍 ZOOM ,}#[fg=colour60]C-h/j/k/l • C-a //q/f/s/w • C-a Space/M/C-f/? #[fg=colour141]│ #[fg=colour114]💻 #{cpu_percentage} 🧠 #{ram_percentage} #{battery_icon}#{battery_percentage} │ #{session_windows}w #{window_panes}p │ %d %b %R"
+# Right: Zoom indicator + hints + system stats + time
+set -g status-right "#{?window_zoomed_flag,#[fg=colour204]🔍 ZOOM ,}#[fg=colour60]C-h/j/k/l • C-a //q/f/s/w • C-a Space/M/C-f/? #[fg=colour141]│ #[fg=colour114]💻 #{cpu_percentage} 🧠 #{ram_percentage} #{battery_icon}#{battery_percentage} │ %d %b %R"
 
 set -g status-justify centre
 set -g window-status-separator ""
