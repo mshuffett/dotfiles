@@ -75,8 +75,8 @@ set -ga terminal-overrides ",xterm-256color:Tc"
 
 # configure contents of status bar
 # Keep left and right equal length for proper centering
-set -g status-left-length 60
-set -g status-right-length 60
+set -g status-left-length 80
+set -g status-right-length 80
 
 # Left: Prefix indicator + current session
 set -g status-left "#{?client_prefix,#[fg=colour204]● ,#[fg=colour60]○ }#[fg=colour114,bold]#S"
