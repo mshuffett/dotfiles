@@ -15,8 +15,19 @@ zstyle ':z4h:' auto-update-days '28'
 # Keyboard type: 'mac' or 'pc'.
 zstyle ':z4h:bindkey' keyboard  'mac'
 
-# Disable z4h's tmux integration - we'll start tmux manually at the end of .zshrc
-zstyle ':z4h:' start-tmux no
+# Start tmux if not already in tmux.
+# Only start tmux if not already in tmux and not in cursor
+# For Ghostty: Quick Terminal gets its own tmux session
+if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
+  # Quick Terminal (typically smaller than 30 lines) gets "quick" session
+  if [[ "$TERM_PROGRAM" == "ghostty" && $(tput lines) -lt 30 ]]; then
+    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t quick
+  else
+    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t z4h
+  fi
+else
+  zstyle ':z4h:' start-tmux       no
+fi
 
 # Whether to move prompt to the bottom when zsh starts and on Ctrl+L.
 zstyle ':z4h:' prompt-at-bottom 'no'
@@ -367,26 +378,4 @@ else
 fi
 export CLAUDE_CODE_OAUTH_TOKEN="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"
 
-# Auto-start tmux manually (without exec, so shell stays alive on detach)
-# Only start tmux if not already in tmux and not in cursor
-if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
-  echo "DEBUG: Not in tmux or cursor"
-  # Ensure we have a proper TTY before starting tmux
-  if [[ -t 0 ]]; then
-    echo "DEBUG: stdin is a TTY"
-  else
-    echo "DEBUG: stdin is NOT a TTY"
-  fi
-
-  if [[ -t 0 && -t 1 && -t 2 ]]; then
-    echo "DEBUG: All TTY checks passed, starting tmux..."
-    # Quick Terminal (typically smaller than 30 lines) gets "quick" session
-    if [[ "$TERM_PROGRAM" == "ghostty" && $(tput lines 2>/dev/null || echo 50) -lt 30 ]]; then
-      exec tmux -u new -A -t quick
-    else
-      exec tmux -u new -A -t z4h
-    fi
-  else
-    echo "DEBUG: TTY check failed, not starting tmux"
-  fi
-fi
+source /Users/michael/.config/broot/launcher/bash/br

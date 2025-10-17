@@ -63,9 +63,9 @@ bind -r L resize-pane -R 5
 # Interactive join-pane (pull pane from another session/window) - uses tmux-fzf with preview
 bind M run-shell -b "~/.tmux/plugins/tmux-fzf/scripts/pane.sh join"
 
-# Replace default session/window pickers with tmux-fzf versions (with preview)
-bind s run-shell -b "~/.tmux/plugins/tmux-fzf/scripts/session.sh switch"
-bind w run-shell -b "~/.tmux/plugins/tmux-fzf/scripts/window.sh switch"
+# Use native tmux tree views in popups (revert from tmux-fzf)
+bind s display-popup -E -w 80% -h 80% "tmux choose-tree -Zs"
+bind w display-popup -E -w 80% -h 80% "tmux choose-tree -Zw"
 
 
 # turn on 256 color support in tmux
