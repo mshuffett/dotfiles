@@ -193,6 +193,20 @@ set -g @tmux2k-show-left-sep
 set -g @tmux2k-show-right-sep
 set -g @tmux2k-border-contrast true
 
+# Palenight color customization for tmux2k
+set -g @tmux2k-bg-main '#292d3e'        # Palenight background
+set -g @tmux2k-bg-alt '#434758'         # Darker gray for contrast
+set -g @tmux2k-text '#bfc7d5'           # Light text
+set -g @tmux2k-blue '#82aaff'           # Palenight blue
+set -g @tmux2k-purple '#c792ea'         # Palenight purple
+set -g @tmux2k-green '#c3e88d'          # Palenight green
+set -g @tmux2k-yellow '#ffcb6b'         # Palenight yellow
+set -g @tmux2k-red '#ff5370'            # Palenight red
+set -g @tmux2k-orange '#f78c6c'         # Palenight orange
+set -g @tmux2k-gray '#697098'           # Dimmed gray
+set -g @tmux2k-pane-active-border '#82aaff'  # Blue for active pane
+set -g @tmux2k-pane-border '#434758'    # Gray for inactive pane
+
 # Explicitly disable pane border status
 set -g pane-border-status off
 
