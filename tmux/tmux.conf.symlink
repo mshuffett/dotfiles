@@ -83,10 +83,10 @@ set -g status-left-length 300
 set -g status-right-length 300
 
 # Left: Prefix indicator + current session + all available sessions
-set -g status-left "#{?client_prefix,#[fg=colour204]● ,#[fg=colour60]○ }#[fg=colour114,bold]#S #[fg=colour60,nobold]│ #(~/.dotfiles/tmux/scripts/tmux-sessions.sh)"
+set -g status-left "#[fg=#292d3e,bg=#82aaff,bold] #{?client_prefix,⚡,❖} #[fg=#82aaff,bg=#434758] #[fg=#bfc7d5,bg=#434758] #S #[fg=#434758,bg=#292d3e] #[fg=#697098] #(~/.dotfiles/tmux/scripts/tmux-sessions.sh)"
 
 # Right: Zoom indicator + hints + system stats + time
-set -g status-right "#{?window_zoomed_flag,#[fg=colour204]🔍 ZOOM ,}#[fg=colour60]C-a //q/f/s/w • C-a Space/M/C-f/? #[fg=colour141]│ #[fg=colour114]💻 #{cpu_percentage} 🧠 #{ram_percentage} #{battery_icon} #{battery_percentage} │ %d %b %R"
+set -g status-right "#{?window_zoomed_flag,#[fg=#ff5370]🔍 ,}#[fg=#697098]C-a //q/f/s/w • C-a Space/M/C-f/? #[fg=#434758,bg=#292d3e] #[fg=#c3e88d,bg=#434758] 💻 #{cpu_percentage} #[fg=#82aaff] 🧠 #{ram_percentage} #[fg=#ffcb6b]#{battery_icon} #{battery_percentage} #[fg=#82aaff,bg=#434758] #[fg=#292d3e,bg=#82aaff,bold] %d %b %R "
 
 set -g status-justify absolute-centre
 set -g window-status-separator ""
@@ -188,11 +188,13 @@ set -g @plugin 'tmux-plugins/tmux-battery'     # Battery status
 
 # Palenight theme colors
 set -g status-style "bg=#292d3e,fg=#bfc7d5"
-set -g window-status-style "fg=#697098,bg=#292d3e"
-set -g window-status-current-style "fg=#82aaff,bg=#292d3e,bold"
 set -g pane-border-style "fg=#434758"                    # Dimmer gray for inactive
 set -g pane-active-border-style "fg=#82aaff,bg=default" # Bright blue for active (same as status bar)
 set -g message-style "bg=#292d3e,fg=#c3e88d"
+
+# Window status styling with powerline separators
+set -g window-status-format "#[fg=#697098,bg=#292d3e] #I:#W#{?window_flags,#{window_flags}, } "
+set -g window-status-current-format "#[fg=#292d3e,bg=#82aaff] #[fg=#292d3e,bg=#82aaff,bold]#I:#W#{?window_flags,#{window_flags}, } #[fg=#82aaff,bg=#292d3e]"
 
 # Explicitly disable pane border status
 set -g pane-border-status off
