@@ -15,19 +15,8 @@ zstyle ':z4h:' auto-update-days '28'
 # Keyboard type: 'mac' or 'pc'.
 zstyle ':z4h:bindkey' keyboard  'mac'
 
-# Start tmux if not already in tmux.
-# Only start tmux if not already in tmux and not in cursor
-# For Ghostty: Quick Terminal gets its own tmux session
-if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
-  # Quick Terminal (typically smaller than 30 lines) gets "quick" session
-  if [[ "$TERM_PROGRAM" == "ghostty" && $(tput lines) -lt 30 ]]; then
-    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t quick
-  else
-    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t z4h
-  fi
-else
-  zstyle ':z4h:' start-tmux       no
-fi
+# Disable z4h's tmux integration - we'll start tmux manually at the end of .zshrc
+zstyle ':z4h:' start-tmux no
 
 # Whether to move prompt to the bottom when zsh starts and on Ctrl+L.
 zstyle ':z4h:' prompt-at-bottom 'no'
@@ -71,42 +60,43 @@ z4h install ohmyzsh/ohmyzsh || return
 # perform network I/O must be done above. Everything else is best done below.
 z4h init || return
 
+# TODO: Migrated 1Password vault - need to update vault references below
 # Secrets Management - load this early to ensure environment variables are available
-export ZSH_SECRETS_CACHE="$HOME/.zsh_secrets_cache"
-
-# Function to fetch and cache secrets from 1Password
-fetch_and_cache_secrets() {
-  # Ensure we're logged into 1Password CLI
-  if ! op account get > /dev/null 2>&1; then
-    echo "Please sign in to 1Password CLI..."
-    eval $(op signin)
-  fi
-  
-  # Create secrets cache
-  cat > "$ZSH_SECRETS_CACHE" <<EOL
-export GITHUB_TOKEN="$(op read 'op://Private/GitHub/token')"
-export OPENAI_API_KEY="$(op read 'op://Private/OpenAI API Key/api_key')"
-export ANTHROPIC_API_KEY="$(op read 'op://Private/Anthropic API Key/api_key')"
-export GEMINI_API_KEY="AIzaSyAt1TXqJHc9i4P8KWlrx586OF7g5Ir8tHw"
-export MAPBOX_ACCESS_TOKEN="$(op read 'op://Private/Mapbox Access Token/access_token')"
-EOL
-  
-  chmod 600 "$ZSH_SECRETS_CACHE"
-}
-
-# Load cached secrets or fetch if needed
-if [ ! -f "$ZSH_SECRETS_CACHE" ]; then
-  fetch_and_cache_secrets
-fi
-
-source "$ZSH_SECRETS_CACHE"
-
-# Add a function to refresh secrets if needed
-refresh_secrets() {
-  fetch_and_cache_secrets
-  source "$ZSH_SECRETS_CACHE"
-  echo "Secrets refreshed from 1Password!"
-}
+# export ZSH_SECRETS_CACHE="$HOME/.zsh_secrets_cache"
+#
+# # Function to fetch and cache secrets from 1Password
+# fetch_and_cache_secrets() {
+#   # Ensure we're logged into 1Password CLI
+#   if ! op account get > /dev/null 2>&1; then
+#     echo "Please sign in to 1Password CLI..."
+#     eval $(op signin)
+#   fi
+#
+#   # Create secrets cache
+#   cat > "$ZSH_SECRETS_CACHE" <<EOL
+# # export GITHUB_TOKEN="$(op read 'op://Private/GitHub/token')"  # Disabled - gh uses token from ~/.config/gh/hosts.yml with proper scopes
+# export OPENAI_API_KEY="$(op read 'op://Private/OpenAI API Key/api_key')"
+# export ANTHROPIC_API_KEY="$(op read 'op://Private/Anthropic API Key/api_key')"
+# export GEMINI_API_KEY="AIzaSyAt1TXqJHc9i4P8KWlrx586OF7g5Ir8tHw"
+# export MAPBOX_ACCESS_TOKEN="$(op read 'op://Private/Mapbox Access Token/access_token')"
+# EOL
+#
+#   chmod 600 "$ZSH_SECRETS_CACHE"
+# }
+#
+# # Load cached secrets or fetch if needed
+# if [ ! -f "$ZSH_SECRETS_CACHE" ]; then
+#   fetch_and_cache_secrets
+# fi
+#
+# source "$ZSH_SECRETS_CACHE"
+#
+# # Add a function to refresh secrets if needed
+# refresh_secrets() {
+#   fetch_and_cache_secrets
+#   source "$ZSH_SECRETS_CACHE"
+#   echo "Secrets refreshed from 1Password!"
+# }
 
 # Utility directories and environment
 export ZSH=$HOME/.dotfiles
@@ -117,6 +107,10 @@ export ZSH_VAR_LIB_DIR=$HOME/.var/lib/zsh
 export LESS='-iR'
 export GPG_TTY=$TTY
 export REPORTTIME=10
+
+# Disable XON/XOFF flow control so Ctrl-S can be used as a keybinding
+# Without this, Ctrl-S freezes the terminal (Ctrl-Q unfreezes)
+stty -ixon 2>/dev/null
 
 # Programming languages and tools
 export PNPM_HOME="/Users/michael/Library/pnpm"
@@ -203,6 +197,59 @@ u() {
   set -A ud
   ud[1+${1-1}]=
   cd ${(j:../:)ud}
+}
+
+# Tmux session management helpers
+# Create or attach to a named session
+tn() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: tn <session-name>"
+    echo "Creates a new tmux session or attaches to existing one"
+    return 1
+  fi
+  tmux new -A -s "$1"
+}
+
+# Switch to a different session
+ts() {
+  if [[ $# -eq 0 ]]; then
+    # Interactive session selection with fzf
+    local session
+    session=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | fzf --height=40% --reverse)
+    [[ -n "$session" ]] && tmux switch-client -t "$session"
+  else
+    tmux switch-client -t "$1"
+  fi
+}
+
+# List all tmux sessions
+tl() {
+  tmux list-sessions
+}
+
+# Kill a tmux session
+tk() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: tk <session-name>"
+    return 1
+  fi
+  tmux kill-session -t "$1"
+}
+
+# Show tmux/nvim cheatsheet
+thelp() {
+  if [[ -n "$TMUX" ]]; then
+    # Inside tmux: show in a popup (if tmux 3.2+) or new window
+    tmux_version=$(tmux -V | cut -d' ' -f2)
+    if [[ $(echo "$tmux_version >= 3.2" | bc 2>/dev/null || echo 0) -eq 1 ]]; then
+      tmux display-popup -E -w 80% -h 80% "less ~/.dotfiles/tmux/cheatsheet.txt"
+    else
+      tmux new-window "less ~/.dotfiles/tmux/cheatsheet.txt"
+    fi
+  else
+    # Outside tmux: just display
+    less ~/.dotfiles/tmux/cheatsheet.txt
+  fi
 }
 
 # Utility for logging into EKS more easily
@@ -304,3 +351,30 @@ if command -v codex >/dev/null 2>&1; then
   alias codex='command codex --search --dangerously-bypass-approvals-and-sandbox'
 fi
 # <<< codex-cli defaults (added by assistant) <<<
+
+# Configure git pager: cat in Cursor (non-interactive), delta or bat in terminal
+if [[ -n "$CURSOR_AGENT" ]]; then
+  export GIT_PAGER=cat
+else
+  # Use delta if available, otherwise bat, otherwise less with better defaults
+  if command -v delta &> /dev/null; then
+    export GIT_PAGER="delta"
+  elif command -v bat &> /dev/null; then
+    export GIT_PAGER="bat --style=plain --paging=always"
+  else
+    export GIT_PAGER="less -FRX"
+  fi
+fi
+export CLAUDE_CODE_OAUTH_TOKEN="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"
+
+# Auto-start tmux manually (without exec, so shell stays alive on detach)
+# Only start tmux if not already in tmux and not in cursor
+if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" && -o interactive && -t 0 ]]; then
+  # Quick Terminal (typically smaller than 30 lines) gets "quick" session
+  if [[ "$TERM_PROGRAM" == "ghostty" && $(tput lines) -lt 30 ]]; then
+    tmux -u new -A -t quick 2>&1
+  else
+    tmux -u new -A -t z4h 2>&1
+  fi
+  # When you detach, execution continues here and shell stays alive
+fi
