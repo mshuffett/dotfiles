@@ -189,16 +189,16 @@ set -g @tmux2k-icons-only false
 set -g @tmux2k-military-time true
 set -g @tmux2k-show-powerline true
 set -g @tmux2k-refresh-rate 5
-set -g @tmux2k-left-plugins "git cpu ram"
-set -g @tmux2k-right-plugins "battery network time"
+set -g @tmux2k-left-plugins "session git cpu ram"
+set -g @tmux2k-right-plugins "battery time"
 set -g @tmux2k-show-left-icon session
 
 # Plugin-specific colors for better visibility
-set -g @tmux2k-git-colors "blue black"
+set -g @tmux2k-session-colors "blue black"
+set -g @tmux2k-git-colors "purple black"
 set -g @tmux2k-cpu-colors "green black"
-set -g @tmux2k-ram-colors "purple black"
+set -g @tmux2k-ram-colors "orange black"
 set -g @tmux2k-battery-colors "yellow black"
-set -g @tmux2k-network-colors "orange black"
 set -g @tmux2k-time-colors "blue black"
 
 # Explicitly disable pane border status
