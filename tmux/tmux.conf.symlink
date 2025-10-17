@@ -184,6 +184,7 @@ set -g @plugin '2kabhishek/tmux2k'
 set -g @tmux2k-theme 'duo'
 set -g @tmux2k-duo-bg '#292d3e'         # Palenight dark background
 set -g @tmux2k-duo-fg '#82aaff'         # Palenight blue for highlights
+set -g @tmux2k-text '#bfc7d5'           # Light text for better visibility
 set -g @tmux2k-icons-only false
 set -g @tmux2k-military-time true
 set -g @tmux2k-show-powerline true
@@ -191,6 +192,14 @@ set -g @tmux2k-refresh-rate 5
 set -g @tmux2k-left-plugins "git cpu ram"
 set -g @tmux2k-right-plugins "battery network time"
 set -g @tmux2k-show-left-icon session
+
+# Plugin-specific colors for better visibility
+set -g @tmux2k-git-colors "blue white"
+set -g @tmux2k-cpu-colors "green black"
+set -g @tmux2k-ram-colors "purple black"
+set -g @tmux2k-battery-colors "yellow black"
+set -g @tmux2k-network-colors "orange black"
+set -g @tmux2k-time-colors "blue white"
 
 # Explicitly disable pane border status
 set -g pane-border-status off
