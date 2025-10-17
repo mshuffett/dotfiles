@@ -60,8 +60,12 @@ bind -r J resize-pane -D 5
 bind -r K resize-pane -U 5
 bind -r L resize-pane -R 5
 
-# Interactive join-pane (pull pane from another session/window)
-bind M choose-tree -s "join-pane -h -s '%%'"
+# Interactive join-pane (pull pane from another session/window) - uses tmux-fzf with preview
+bind M run-shell -b "~/.tmux/plugins/tmux-fzf/scripts/pane.sh join"
+
+# Replace default session/window pickers with tmux-fzf versions (with preview)
+bind s run-shell -b "~/.tmux/plugins/tmux-fzf/scripts/session.sh switch"
+bind w run-shell -b "~/.tmux/plugins/tmux-fzf/scripts/window.sh switch"
 
 
 # turn on 256 color support in tmux
@@ -77,7 +81,7 @@ set -g status-right-length 100
 set -g status-left "#{?client_prefix,#[fg=colour204]● ,#[fg=colour60]○ }#[fg=colour114,bold]#S #[fg=colour60,nobold]│ #(~/.dotfiles/tmux/scripts/tmux-sessions.sh)"
 
 # Right: Zoom indicator + hints + system stats + window/pane info + time
-set -g status-right "#{?window_zoomed_flag,#[fg=colour204]🔍 ZOOM ,}#[fg=colour60]C-h/j/k/l • C-a //q/f • C-a M/s/w/? #[fg=colour141]│ #[fg=colour114]#{cpu_percentage} #{ram_percentage} #{battery_icon}#{battery_percentage} │ #{session_windows}w #{window_panes}p │ %d %b %R"
+set -g status-right "#{?window_zoomed_flag,#[fg=colour204]🔍 ZOOM ,}#[fg=colour60]C-h/j/k/l • C-a //q/f/s/w • C-a Space/M/C-f/? #[fg=colour141]│ #[fg=colour114]💻 #{cpu_percentage} 🧠 #{ram_percentage} #{battery_icon}#{battery_percentage} │ #{session_windows}w #{window_panes}p │ %d %b %R"
 
 set -g status-justify centre
 set -g status-interval 5  # Update every 5 seconds to show session changes
@@ -198,8 +202,11 @@ set -g @resurrect-strategy-nvim 'session'     # Restore nvim sessions
 set -g @continuum-restore 'on'                # Auto-restore on tmux start
 set -g @continuum-save-interval '15'          # Auto-save every 15 minutes
 
-# tmux-fzf settings
-set -g @tmux-fzf-launch-key 'C-f'             # Ctrl+a Ctrl+f to launch
+# tmux-fzf settings (for individual pickers like M)
+# Disable the default tmux-fzf launch key (we'll override it)
+set-environment -g TMUX_FZF_LAUNCH_KEY ''
+set-environment -g TMUX_FZF_OPTIONS "-p -w 80% -h 80% -m"
+set-environment -g TMUX_FZF_PANE_FORMAT "[#{window_name}] #{pane_current_command}  #{pane_width}x#{pane_height}"
 
 # tmux-fingers settings
 set -g @fingers-key 'f'                        # Ctrl+a f to activate hints
@@ -207,6 +214,10 @@ set -g @fingers-compact-hints 0                # Full hints, not compact
 set -g @fingers-hint-format "#[fg=yellow,bold]%s"  # Yellow hints
 
 run '~/.tmux/plugins/tpm/tpm'
+
+# Override tmux-fzf's default C-f binding with our unified fuzzy finder
+# Must come AFTER tpm loads to override the plugin's binding
+bind-key C-f display-popup -E -w 80% -h 80% "~/.dotfiles/tmux/scripts/fuzzy-everything.sh"
 
 setw -g aggressive-resize on
 

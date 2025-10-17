@@ -9,11 +9,12 @@
 ║  tl          List all sessions              │  Ctrl+a p      Previous window           │  A              Append to buffer (accumulate)               ║
 ║  tk <name>   Kill session                   │  Ctrl+a 0-9    Jump to window number     │  Ctrl+a p       Paste from buffer                           ║
 ║  Ctrl+a d    Detach from session            │  Ctrl+a C-l    Next window (repeat)      │  Ctrl+a = or b  Choose buffer (interactive)                 ║
-║  Ctrl+a s    Native tmux session menu       │  Ctrl+a BSpace Previous window           │  Ctrl+a B       Save buffer to file                         ║
+║  Ctrl+a s    Fuzzy session finder (preview)  │  Ctrl+a w      Fuzzy window finder        │  Ctrl+a B       Save buffer to file                         ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
 ║ SESSION PERSISTENCE (auto-saves every 15min)                │ Ctrl+a Ctrl+s   Manual save  │ Ctrl+a Ctrl+r   Manual restore                              ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
-║ QUICK ACTIONS                               │ Ctrl+a f       Hint mode (copy paths)   │ Ctrl+a Ctrl+f   Fuzzy find (sessions/windows/panes)        ║
+║ QUICK ACTIONS                               │ Ctrl+a f       Hint mode (copy paths)   │ Ctrl+a Ctrl+f   Unified fuzzy search (everything)          ║
+║                                             │ TAB/Shift-TAB  Multi-select in finders  │                 Search sessions/windows/panes in one list  ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
 ║ TMUX PANES (Prefix = Ctrl+a)                │ PANE RESIZING                            │ NVCHAD (Leader = Space)                                     ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
@@ -21,9 +22,9 @@
 ║  Ctrl+a -    Horizontal split               │  Ctrl+a J      Resize down               │  Space ff       Find files (Telescope)                      ║
 ║  Ctrl+h/j/k/l Navigate panes (no prefix!)   │  Ctrl+a K      Resize up                 │  Space fw       Find word/grep in files                     ║
 ║  Ctrl+a h/j/k/l Navigate panes (w/ prefix)  │  Ctrl+a L      Resize right              │  Space th       Change theme (56 themes!)                   ║
-║  Ctrl+a M    Pull pane from another session │  Ctrl+a q      Show pane numbers        │  Ctrl+n         Toggle file tree (nvim-tree)                ║
+║  Ctrl+a M    Pull pane (fuzzy w/ preview)  │  Ctrl+a q      Show pane numbers        │  Ctrl+n         Toggle file tree (nvim-tree)                ║
 ║  Ctrl+a z    Zoom/unzoom pane (fullscreen)  │  Opt+1-9       Jump to pane 1-9         │  Ctrl+h/j/k/l   Navigate splits (seamless with tmux!)      ║
-║  Ctrl+a ;    Toggle last pane              │  Ctrl+a E      Cycle layouts            │  Opt+h/l        Previous/next window (no prefix!)           ║
+║  Ctrl+a ;    Toggle last pane              │  Ctrl+a Space  Cycle layouts            │  Opt+h/l        Previous/next window (no prefix!)           ║
 ║  Ctrl+a x    Kill current pane              │  Ctrl+a Alt+5  Equalize (tiled)         │  :vsplit        Vertical split in nvim                      ║
 ║  Ctrl+a r    Reload tmux config             │  Ctrl+a Alt+1  Even horizontal           │  :split         Horizontal split in nvim                    ║
 ║  Ctrl+a /    Show this cheatsheet           │  Ctrl+a Alt+2  Even vertical             │  Space x        Close buffer                                ║
@@ -39,7 +40,8 @@
 ║  • Zoom pane for focus: Ctrl+a z (perfect for full-screen coding, then unzoom to see other panes)                                                     ║
 ║  • Statusline indicators: ● = prefix active, ○ = prefix inactive, 🔍 ZOOM = pane is zoomed                                                            ║
 ║  • Quick copy: Ctrl+a f shows hints on paths/URLs - type letters to copy instantly                                                                    ║
-║  • Fuzzy search: Ctrl+a Ctrl+f to search sessions/windows/panes/commands                                                                              ║
+║  • Unified search: Ctrl+a Ctrl+f searches ALL sessions/windows/panes in one list. Type [SESSION]/[WINDOW]/[PANE] to filter by type                 ║
+║  • Direct finders: Ctrl+a s (sessions), Ctrl+a w (windows), Ctrl+a M (join pane) - jump straight to that category                                 ║
 ║  • In copy mode: select file path or URL, press 'o' to open, or 'Ctrl-o' to open in $EDITOR                                                          ║
 ║  • Use 'q' or any key to close this cheatsheet, or navigate with less commands (↓/↑, j/k, PgDn/PgUp, /, n)                                           ║
 ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
