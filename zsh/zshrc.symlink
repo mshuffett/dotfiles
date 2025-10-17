@@ -377,3 +377,16 @@ source /Users/michael/.config/broot/launcher/bash/br
 
 # Alias to get a shell without tmux auto-starting
 alias notmux='exec env CURSOR_TRACE_ID=bypass zsh'
+
+# Chafa with automatic tmux passthrough detection
+if command -v chafa >/dev/null 2>&1; then
+  chafa() {
+    if [[ -n "$TMUX" ]]; then
+      # Inside tmux: use kitty format with tmux passthrough
+      command chafa --format=kitty --passthrough=tmux "$@"
+    else
+      # Outside tmux: use default (kitty format for Ghostty)
+      command chafa --format=kitty "$@"
+    fi
+  }
+fi
