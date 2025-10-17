@@ -189,17 +189,27 @@ set -g @tmux2k-icons-only false
 set -g @tmux2k-military-time true
 set -g @tmux2k-show-powerline true
 set -g @tmux2k-refresh-rate 5
-set -g @tmux2k-left-plugins "git cpu ram"
+set -g @tmux2k-left-plugins "session git cpu ram"
 set -g @tmux2k-right-plugins "battery network time"
 set -g @tmux2k-show-left-icon session
 
-# Plugin-specific colors for better visibility
-set -g @tmux2k-git-colors "blue black"
-set -g @tmux2k-cpu-colors "green black"
-set -g @tmux2k-ram-colors "purple black"
-set -g @tmux2k-battery-colors "yellow black"
-set -g @tmux2k-network-colors "orange black"
-set -g @tmux2k-time-colors "blue black"
+# Customize base colors to match Palenight
+set -g @tmux2k-blue '#82aaff'           # Palenight blue
+set -g @tmux2k-purple '#c792ea'         # Palenight purple
+set -g @tmux2k-green '#c3e88d'          # Palenight green
+set -g @tmux2k-yellow '#ffcb6b'         # Palenight yellow
+set -g @tmux2k-red '#ff5370'            # Palenight red
+set -g @tmux2k-orange '#f78c6c'         # Palenight orange
+set -g @tmux2k-black '#292d3e'          # Palenight dark bg
+
+# Plugin-specific colors using Palenight palette
+set -g @tmux2k-session-colors "#82aaff #292d3e"
+set -g @tmux2k-git-colors "#c792ea #292d3e"
+set -g @tmux2k-cpu-colors "#c3e88d #292d3e"
+set -g @tmux2k-ram-colors "#82aaff #292d3e"
+set -g @tmux2k-battery-colors "#ffcb6b #292d3e"
+set -g @tmux2k-network-colors "#f78c6c #292d3e"
+set -g @tmux2k-time-colors "#82aaff #292d3e"
 
 # Explicitly disable pane border status
 set -g pane-border-status off
