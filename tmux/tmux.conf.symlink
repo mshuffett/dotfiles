@@ -74,6 +74,8 @@ set -g default-terminal "xterm-256color"
 set -ga terminal-overrides ",xterm-256color:Tc"
 # Ghostty-specific terminal overrides for image display and extended capabilities
 set -ga terminal-overrides ",xterm-ghostty:Tc:RGB"
+# Allow passthrough for Kitty graphics protocol (required for image display in Ghostty)
+set -g allow-passthrough on
 
 # configure contents of status bar
 # Keep left and right equal length for proper centering
