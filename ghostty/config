@@ -105,3 +105,6 @@ keybind = cmd+shift+p=toggle_command_palette
 
 # Shift+Enter sends newline (for Claude Code)
 keybind = shift+enter=text:\x1b\r
+
+# NOTE: Can't set per-window env vars in Ghostty keybinds
+# To get a shell without tmux, type in any window: NO_TMUX=1 zsh

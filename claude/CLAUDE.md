@@ -7,16 +7,28 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
-## Git Worktrees
+## 🛑 Pre-Flight Checks - MANDATORY BEFORE ACTION
 
-**CRITICAL: ALWAYS use `/worktrees` command when creating or working with worktrees.**
+**STOP AND INVOKE THESE COMMANDS BEFORE PROCEEDING:**
 
-The `/worktrees` command documents the standard pattern:
-- Uses `.worktrees/` subdirectory (NOT sibling directories like `../project-name-worktree`)
-- Ensures consistent workflow across all projects
-- Provides complete setup and cleanup instructions
+### Git Worktrees
+**🛑 BEFORE running ANY `git worktree` command → INVOKE `/worktrees` FIRST**
 
-**Before creating any worktree, invoke `/worktrees` to review the correct pattern.**
+Even if you think you know the workflow, **DO NOT proceed from memory**.
+
+**Why this is critical:**
+- .env files MUST be copied (NOT in git) - forgetting breaks everything
+- Main repository must NOT be modified
+- Dependencies need installation
+- Missing ANY step causes failures
+
+**The `/worktrees` command provides the complete checklist:**
+- Copying .env files
+- Proper directory structure
+- Dependency installation
+- Cleanup procedures
+
+**DO NOT create worktrees without invoking `/worktrees` first. No exceptions.**
 
 ## Git Stash Safety Protocol
 

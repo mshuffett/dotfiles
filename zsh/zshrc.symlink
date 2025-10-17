@@ -15,16 +15,11 @@ zstyle ':z4h:' auto-update-days '28'
 # Keyboard type: 'mac' or 'pc'.
 zstyle ':z4h:bindkey' keyboard  'mac'
 
-# Start tmux if not already in tmux.
-# Only start tmux if not already in tmux and not in cursor
-# For Ghostty: Quick Terminal gets its own tmux session
+# Start tmux if not already in tmux and not in cursor
 if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
-  # Quick Terminal (typically smaller than 30 lines) gets "quick" session
-  if [[ "$TERM_PROGRAM" == "ghostty" && $(tput lines) -lt 30 ]]; then
-    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t quick
-  else
-    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t z4h
-  fi
+  # Use single session name "main" for all Ghostty windows
+  # (No reliable way to detect quick terminal vs regular window)
+  zstyle ':z4h:' start-tmux command tmux -u new -A -D -t main
 else
   zstyle ':z4h:' start-tmux       no
 fi
@@ -379,3 +374,6 @@ fi
 export CLAUDE_CODE_OAUTH_TOKEN="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"
 
 source /Users/michael/.config/broot/launcher/bash/br
+
+# Alias to get a shell without tmux auto-starting
+alias notmux='exec env CURSOR_TRACE_ID=bypass zsh'
