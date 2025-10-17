@@ -369,12 +369,14 @@ export CLAUDE_CODE_OAUTH_TOKEN="sk-ant-oat01-sp8E-6kukulTW2IY8BsbTHoybq-vVrMpn5v
 
 # Auto-start tmux manually (without exec, so shell stays alive on detach)
 # Only start tmux if not already in tmux and not in cursor
-if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" && -o interactive && -t 0 ]]; then
-  # Quick Terminal (typically smaller than 30 lines) gets "quick" session
-  if [[ "$TERM_PROGRAM" == "ghostty" && $(tput lines) -lt 30 ]]; then
-    tmux -u new -A -t quick 2>&1
-  else
-    tmux -u new -A -t z4h 2>&1
+if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
+  # Ensure we have a proper TTY before starting tmux
+  if [[ -t 0 && -t 1 && -t 2 ]]; then
+    # Quick Terminal (typically smaller than 30 lines) gets "quick" session
+    if [[ "$TERM_PROGRAM" == "ghostty" && $(tput lines 2>/dev/null || echo 50) -lt 30 ]]; then
+      exec tmux -u new -A -t quick
+    else
+      exec tmux -u new -A -t z4h
+    fi
   fi
-  # When you detach, execution continues here and shell stays alive
 fi
