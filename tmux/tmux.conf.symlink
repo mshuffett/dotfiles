@@ -84,7 +84,7 @@ set -g status-left "#{?client_prefix,#[fg=colour204]● ,#[fg=colour60]○ }#[fg
 # Right: System stats + time
 set -g status-right "#[fg=colour114]💻 #{cpu_percentage} 🧠 #{ram_percentage} #{battery_icon}#{battery_percentage} #[fg=colour141]│ #[fg=colour114]%d %b %R"
 
-set -g status-justify centre
+set -g status-justify absolute-centre
 set -g window-status-separator ""
 set -g status-interval 5  # Update every 5 seconds to show session changes
 setw -g monitor-activity on
