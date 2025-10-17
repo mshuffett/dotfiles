@@ -72,6 +72,8 @@ bind w display-popup -E -w 80% -h 80% "tmux choose-tree -Zw"
 set -g default-terminal "xterm-256color"
 # True color support for Ghostty and modern terminals
 set -ga terminal-overrides ",xterm-256color:Tc"
+# Ghostty-specific terminal overrides for image display and extended capabilities
+set -ga terminal-overrides ",xterm-ghostty:Tc:RGB"
 
 # configure contents of status bar
 # Keep left and right equal length for proper centering
