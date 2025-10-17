@@ -74,8 +74,8 @@ set -g default-terminal "xterm-256color"
 set -ga terminal-overrides ",xterm-256color:Tc"
 
 # configure contents of status bar
-set -g status-left-length 50
-set -g status-right-length 50
+set -g status-left-length 60
+set -g status-right-length 80
 
 # Left: Prefix indicator + current session + all available sessions
 set -g status-left "#{?client_prefix,#[fg=colour204]● ,#[fg=colour60]○ }#[fg=colour114,bold]#S #[fg=colour60,nobold]│ #(~/.dotfiles/tmux/scripts/tmux-sessions.sh)"
