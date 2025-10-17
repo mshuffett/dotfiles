@@ -194,12 +194,12 @@ set -g @tmux2k-right-plugins "battery network time"
 set -g @tmux2k-show-left-icon session
 
 # Plugin-specific colors for better visibility
-set -g @tmux2k-git-colors "blue white"
+set -g @tmux2k-git-colors "blue black"
 set -g @tmux2k-cpu-colors "green black"
 set -g @tmux2k-ram-colors "purple black"
 set -g @tmux2k-battery-colors "yellow black"
 set -g @tmux2k-network-colors "orange black"
-set -g @tmux2k-time-colors "blue white"
+set -g @tmux2k-time-colors "blue black"
 
 # Explicitly disable pane border status
 set -g pane-border-status off
