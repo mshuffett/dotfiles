@@ -77,20 +77,11 @@ set -ga terminal-overrides ",xterm-ghostty:Tc:RGB"
 # Allow passthrough for Kitty graphics protocol (required for image display in Ghostty)
 set -g allow-passthrough on
 
-# configure contents of status bar
-# Keep left and right equal length for proper centering
+# configure contents of status bar (managed by Catppuccin plugin)
 set -g status-left-length 300
 set -g status-right-length 300
-
-# Left: Prefix indicator + current session + all available sessions
-set -g status-left "#[fg=#292d3e,bg=#82aaff,bold] #{?client_prefix,⚡,❖} #[fg=#82aaff,bg=#434758] #[fg=#bfc7d5,bg=#434758] #S #[fg=#434758,bg=#292d3e] #[fg=#697098] #(~/.dotfiles/tmux/scripts/tmux-sessions.sh)"
-
-# Right: Zoom indicator + hints + system stats + time
-set -g status-right "#{?window_zoomed_flag,#[fg=#ff5370]🔍 ,}#[fg=#697098]C-a //q/f/s/w • C-a Space/M/C-f/? #[fg=#434758,bg=#292d3e] #[fg=#c3e88d,bg=#434758] 💻 #{cpu_percentage} #[fg=#82aaff] 🧠 #{ram_percentage} #[fg=#ffcb6b]#{battery_icon} #{battery_percentage} #[fg=#82aaff,bg=#434758] #[fg=#292d3e,bg=#82aaff,bold] %d %b %R "
-
 set -g status-justify absolute-centre
-set -g window-status-separator ""
-set -g status-interval 5  # Update every 5 seconds to show session changes
+set -g status-interval 5  # Update every 5 seconds
 setw -g monitor-activity on
 set -g visual-activity on
 
@@ -186,15 +177,27 @@ set -g @plugin 'tmux-plugins/tmux-open'        # Open files/URLs from tmux
 set -g @plugin 'tmux-plugins/tmux-cpu'         # CPU/RAM percentage
 set -g @plugin 'tmux-plugins/tmux-battery'     # Battery status
 
-# Palenight theme colors
-set -g status-style "bg=#292d3e,fg=#bfc7d5"
-set -g pane-border-style "fg=#434758"                    # Dimmer gray for inactive
-set -g pane-active-border-style "fg=#82aaff,bg=default" # Bright blue for active (same as status bar)
-set -g message-style "bg=#292d3e,fg=#c3e88d"
+# Theme plugin - Catppuccin
+set -g @plugin 'catppuccin/tmux'
+set -g @catppuccin_flavor 'mocha' # Dark theme (closest to Palenight)
 
-# Window status styling with powerline separators
-set -g window-status-format "#[fg=#697098,bg=#292d3e] #I:#W#{?window_flags,#{window_flags}, } "
-set -g window-status-current-format "#[fg=#292d3e,bg=#82aaff] #[fg=#292d3e,bg=#82aaff,bold]#I:#W#{?window_flags,#{window_flags}, } #[fg=#82aaff,bg=#292d3e]"
+# Catppuccin configuration
+set -g @catppuccin_window_left_separator ""
+set -g @catppuccin_window_right_separator " "
+set -g @catppuccin_window_middle_separator " █"
+set -g @catppuccin_window_number_position "right"
+set -g @catppuccin_window_default_fill "number"
+set -g @catppuccin_window_default_text "#W"
+set -g @catppuccin_window_current_fill "number"
+set -g @catppuccin_window_current_text "#W"
+set -g @catppuccin_status_modules_right "directory cpu battery date_time"
+set -g @catppuccin_status_modules_left "session"
+set -g @catppuccin_status_left_separator  " "
+set -g @catppuccin_status_right_separator ""
+set -g @catppuccin_status_fill "icon"
+set -g @catppuccin_status_connect_separator "no"
+set -g @catppuccin_directory_text "#{pane_current_path}"
+set -g @catppuccin_date_time_text "%d %b %R"
 
 # Explicitly disable pane border status
 set -g pane-border-status off
