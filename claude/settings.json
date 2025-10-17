@@ -1,4 +1,7 @@
 {
+  "enabledMcpjsonServers": [
+    "tavus"
+  ],
   "hooks": {
     "UserPromptSubmit": [
       {
