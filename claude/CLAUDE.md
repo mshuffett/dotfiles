@@ -7,6 +7,30 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
+## Third-Party Library Documentation
+
+**CRITICAL: Always use Context7 for third-party library documentation instead of relying on memory.**
+
+**When working with any third-party library:**
+1. **Use Context7 first** - Search for the library using the `resolve-library-id` and `get-library-docs` MCP tools
+2. **Never rely on memory** - API signatures, patterns, and best practices change frequently
+3. **Get current docs** - Context7 provides up-to-date documentation, examples, and code snippets
+4. **This applies to ALL libraries** - React, Next.js, AI SDK, database libraries, UI frameworks, etc.
+
+**Why this matters:**
+- Libraries update frequently with breaking changes
+- Your training data may be outdated
+- Context7 provides accurate, current documentation
+- Reduces bugs from using deprecated or incorrect APIs
+
+**Example workflow:**
+```
+User: "Add authentication with Supabase"
+1. resolve-library-id("supabase")
+2. get-library-docs(context7CompatibleLibraryID="/supabase/supabase", topic="authentication")
+3. Implement using the current documentation
+```
+
 ## 🛑 Pre-Flight Checks - MANDATORY BEFORE ACTION
 
 **STOP AND INVOKE THESE COMMANDS BEFORE PROCEEDING:**
