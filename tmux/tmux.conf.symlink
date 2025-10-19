@@ -232,5 +232,10 @@ run '~/.tmux/plugins/tpm/tpm'
 # Must come AFTER tpm loads to override the plugin's binding
 bind-key C-f display-popup -E -w 80% -h 80% "~/.dotfiles/tmux/scripts/fuzzy-everything.sh"
 
+# Unbind default find-window from 'f' to allow tmux-fingers to use it
+unbind f
+# Explicitly bind 'f' to tmux-fingers (plugin should handle this but we ensure it)
+# tmux-fingers activates with the configured @fingers-key
+
 setw -g aggressive-resize on
 
