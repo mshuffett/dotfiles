@@ -13,7 +13,9 @@
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
 ║ SESSION PERSISTENCE (auto-saves every 15min)                │ Ctrl+a Ctrl+s   Manual save  │ Ctrl+a Ctrl+r   Manual restore                              ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
-║ QUICK ACTIONS                               │ Ctrl+a f       Hint mode (copy paths)   │ Ctrl+a Ctrl+f   Unified fuzzy search (everything)          ║
+║ QUICK ACTIONS (PLUGINS)                     │ Ctrl+a f       tmux-fingers: Hint mode  │ Ctrl+a o        tmux-open: Open selection w/ default app   ║
+║                                             │ Ctrl+a o       Open highlighted text    │ Ctrl+a Ctrl-o   tmux-open: Open selection w/ $EDITOR       ║
+║                                             │ Ctrl+a Shift-s Search highlighted text  │ Ctrl+a Ctrl+f   Unified fuzzy search (everything)          ║
 ║                                             │ TAB/Shift-TAB  Multi-select in finders  │                 Search sessions/windows/panes in one list  ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
 ║ TMUX PANES (Prefix = Ctrl+a)                │ PANE RESIZING                            │ NVCHAD (Leader = Space)                                     ║
@@ -39,9 +41,9 @@
 ║  • Quick window switching: Opt+h/l for previous/next window without prefix (faster than Ctrl+a n/p)                                                   ║
 ║  • Zoom pane for focus: Ctrl+a z (perfect for full-screen coding, then unzoom to see other panes)                                                     ║
 ║  • Statusline indicators: ● = prefix active, ○ = prefix inactive, 🔍 ZOOM = pane is zoomed                                                            ║
-║  • Quick copy: Ctrl+a f shows hints on paths/URLs - type letters to copy instantly                                                                    ║
+║  • tmux-fingers quick copy: Ctrl+a f shows hints on all paths/URLs/text - type hint letters to copy instantly                                         ║
+║  • tmux-open from selection: highlight text, then Ctrl+a o (open) or Ctrl+a Ctrl-o (edit) or Ctrl+a Shift-s (search)                                ║
 ║  • Unified search: Ctrl+a Ctrl+f searches ALL sessions/windows/panes in one list. Type [SESSION]/[WINDOW]/[PANE] to filter by type                 ║
 ║  • Direct finders: Ctrl+a s (sessions), Ctrl+a w (windows), Ctrl+a M (join pane) - jump straight to that category                                 ║
-║  • In copy mode: select file path or URL, press 'o' to open, or 'Ctrl-o' to open in $EDITOR                                                          ║
 ║  • Use 'q' or any key to close this cheatsheet, or navigate with less commands (↓/↑, j/k, PgDn/PgUp, /, n)                                           ║
 ╚═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
