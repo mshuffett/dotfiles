@@ -191,6 +191,9 @@ z4h bindkey z4h-cd-forward Shift+Right  # cd into the next directory
 z4h bindkey z4h-cd-up      Shift+Up     # cd into the parent directory
 z4h bindkey z4h-cd-down    Shift+Down   # cd into a child directory
 
+# Alt+K deletes to end of line (Ctrl+K is used by tmux for pane navigation)
+bindkey '^[k' kill-line
+
 # Autoload functions.
 autoload -Uz zmv
 
