@@ -221,67 +221,6 @@ done
 
 This loads all available slash command descriptions so you know what specialized tools are available.
 
-## Issue Tracking with Beads
-
-**When working on projects that use beads for issue tracking:**
-
-Projects may use **beads** (`bd`) for dependency-aware issue tracking. Issues are stored in `.beads/` directory.
-
-### Database Location
-- **SQLite DB**: `.beads/[project-name].db` (gitignored - local cache)
-- **JSONL source**: `.beads/issues.jsonl` (committed to git - source of truth)
-- Auto-syncs: Exports to JSONL after changes, imports after git pull
-
-### Common Commands
-
-```bash
-# View all issues
-bd list
-
-# Show issues ready to work on (no blockers)
-bd ready
-
-# View issue details
-bd show [project-prefix]-1
-
-# Create new issue
-bd create "Issue title" -t bug -p 1 -d "Description"
-# Types: bug, feature, task, epic, chore
-# Priority: 0-4 (0=highest)
-
-# Update issue status
-bd update [project-prefix]-1 --status in_progress
-bd update [project-prefix]-1 --status closed
-
-# Close issue with reason
-bd close [project-prefix]-1 --reason "Fixed in commit abc123"
-
-# Add notes
-bd update [project-prefix]-1 --notes "Additional context"
-
-# Manage dependencies
-bd dep add [project-prefix]-2 [project-prefix]-1  # [project-prefix]-1 blocks [project-prefix]-2
-bd dep tree [project-prefix]-1                    # View dependency tree
-```
-
-### Workflow Integration
-
-When working on tasks:
-1. **Check ready work**: `bd ready` - shows unblocked issues
-2. **Update status**: Mark issue as `in_progress` when starting
-3. **Track in TodoWrite**: Use TodoWrite tool for in-session task tracking
-4. **Close when done**: Use `bd close` with reason describing completion
-
-### Issue Naming
-- Each project has a prefix (e.g., `davinci-chat-`, `monorepo-`)
-- Example: `davinci-chat-1`, `davinci-chat-2`, etc.
-
-### Important Notes
-- **Do NOT use MCP tools** - Use `bd` CLI directly via Bash (MCP server has multi-project routing issues)
-- Changes auto-export to JSONL after 5s
-- JSONL file should be committed to git for team sync
-- Check project's CLAUDE.md for project-specific prefix and workflow details
-
 ## Raw Ideas Quick Capture
 
 **When user shares a raw idea** (casual phrasing like "I have a new idea...", "what if we...", "here's something I'm thinking about..."):
