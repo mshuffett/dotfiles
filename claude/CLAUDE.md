@@ -7,6 +7,25 @@ When using the Anthropic API use the model claude-opus-4-1-20250805 for difficul
 
 Use pnpm instead of npm.
 
+## Environment Variables and Secrets
+
+**Global secrets (used across all projects):**
+- Store in `~/.env.zsh`
+- This file is sourced automatically by `.zshrc` on shell startup
+- Use for API keys, tokens, and credentials needed system-wide
+
+**Project-specific secrets:**
+- Store in `.env.local` in the project root
+- Add `.env.local` to `.gitignore` to prevent accidental commits
+- Use `direnv` (already enabled in `.zshrc`) to auto-load when entering project directory
+- Create `.env.example` to document required variables without exposing values
+
+**Example `.env.local`:**
+```bash
+DATABASE_URL=postgresql://localhost:5432/mydb
+API_KEY=your_secret_key_here
+```
+
 ## Third-Party Library Documentation
 
 **CRITICAL: Always use Context7 for third-party library documentation instead of relying on memory.**
