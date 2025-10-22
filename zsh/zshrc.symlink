@@ -323,12 +323,7 @@ export PATH="/Users/michael/.codeium/windsurf/bin:$PATH"
 # bun completions
 [ -s "/Users/michael/.bun/_bun" ] && source "/Users/michael/.bun/_bun"
 
-export TODOIST_API_TOKEN="743e38d195f7457d6a6b67fd0e4ad821a305122e"
-export SMITHERY_API_KEY="dca5d7d1-57bf-41b4-8329-340fdf22a158"
 eval "$(zoxide init zsh)"
-
-export PUSHOVER_TOKEN="au69uu9rkb38bj32o2imjzcdofe921"
-export PUSHOVER_USER_KEY="uji7rih97iczo5fvfzsfhvrnzwb55i"
 export TZ="America/Los_Angeles"
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/michael/.lmstudio/bin"
@@ -374,8 +369,6 @@ else
     export GIT_PAGER="less -FRX"
   fi
 fi
-export CLAUDE_CODE_OAUTH_TOKEN="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"
-
 source /Users/michael/.config/broot/launcher/bash/br
 
 # Alias to get a shell without tmux auto-starting

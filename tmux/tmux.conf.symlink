@@ -221,6 +221,10 @@ set-environment -g TMUX_FZF_LAUNCH_KEY ''
 set-environment -g TMUX_FZF_OPTIONS "-p -w 80% -h 80% -m"
 set-environment -g TMUX_FZF_PANE_FORMAT "[#{window_name}] #{pane_current_command}  #{pane_width}x#{pane_height}"
 
+# IMPORTANT: Free the default tmux 'f' (find-window) BEFORE plugins load,
+# so tmux-fingers can claim it as @fingers-key without being unbound later.
+unbind f
+
 # tmux-fingers settings
 set -g @fingers-key 'f'                        # Ctrl+a f to activate hints
 set -g @fingers-compact-hints 0                # Full hints, not compact
@@ -232,10 +236,4 @@ run '~/.tmux/plugins/tpm/tpm'
 # Must come AFTER tpm loads to override the plugin's binding
 bind-key C-f display-popup -E -w 80% -h 80% "~/.dotfiles/tmux/scripts/fuzzy-everything.sh"
 
-# Unbind default find-window from 'f' to allow tmux-fingers to use it
-unbind f
-# Explicitly bind 'f' to tmux-fingers (plugin should handle this but we ensure it)
-# tmux-fingers activates with the configured @fingers-key
-
 setw -g aggressive-resize on
-

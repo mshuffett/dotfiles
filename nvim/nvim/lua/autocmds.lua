@@ -19,16 +19,6 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "<leader>zM", "zM", { buffer = bufnr, desc = "Markdown: close all folds" })
     vim.keymap.set("n", "<leader>zR", "zR", { buffer = bufnr, desc = "Markdown: open all folds" })
 
-    -- Auto-open outline sidebar for markdown files
-    vim.defer_fn(function()
-      -- Only open outline if buffer is still valid and loaded
-      if vim.api.nvim_buf_is_valid(bufnr) and vim.api.nvim_buf_is_loaded(bufnr) then
-        -- Also check if it's a real file (not a special buffer)
-        local bufname = vim.api.nvim_buf_get_name(bufnr)
-        if bufname ~= "" and not bufname:match("^%w+://") then
-          vim.cmd("Outline")
-        end
-      end
-    end, 150)  -- Small delay to ensure file is loaded
+    -- Removed auto-open of outline sidebar for markdown at user's request (2025-10-19)
   end,
 })

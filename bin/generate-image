@@ -128,7 +128,7 @@ elif [ "$PROVIDER" = "gemini" ]; then
     fi
     # Set default model for Gemini if not specified
     if [ -z "$MODEL" ]; then
-        MODEL="gemini-2.5-flash-image-preview"
+        MODEL="gemini-2.5-flash-image"
     fi
 fi
 

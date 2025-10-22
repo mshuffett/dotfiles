@@ -31,6 +31,7 @@ return {
           "html",
           "cssls",
           "jsonls",
+          "marksman", -- Markdown LSP
         },
         automatic_installation = true,
         handlers = {
