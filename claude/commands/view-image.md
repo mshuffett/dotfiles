@@ -12,31 +12,35 @@ description: View images in the terminal using chafa. ALWAYS open images in a se
 
 ## Standard Image Viewing Protocol
 
-**CRITICAL: Do ALL steps in a SINGLE command - user may switch panes between commands!**
+**CRITICAL: User may switch panes between commands! Always capture $TMUX_PANE first and use -t to target splits.**
 
 ```bash
-# All in one command to prevent pane switching issues
-tmux split-window -h \; send-keys "chafa /path/to/image.png" Enter
+# Step 1: Capture current pane RIGHT NOW before user can switch
+ORIGINAL_PANE=$TMUX_PANE
 
-# Or if you need the pane ID for later:
-tmux split-window -h \; run-shell 'tmux send-keys -t "$(tmux list-panes -F "#{pane_id}" | tail -n 1)" "chafa /path/to/image.png" Enter'
+# Step 2: Split from the ORIGINAL_PANE explicitly (user might have switched already)
+tmux split-window -h -t "$ORIGINAL_PANE"
+
+# Step 3: Get the newly created pane ID immediately
+NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
+
+# Step 4: Send command to the new pane
+tmux send-keys -t "$NEW_PANE" "chafa /path/to/image.png" Enter
 ```
 
-**If you MUST split across multiple commands:**
+**All in one command (safest - no chance for pane switching):**
 ```bash
-# Step 1: Split - do this IMMEDIATELY before next step
-tmux split-window -h
-
-# Step 2: Get pane ID and send command IMMEDIATELY (don't let user switch panes)
-# Use a single compound command:
-NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1) && tmux send-keys -t "$NEW_PANE" "chafa /path/to/image.png" Enter
+ORIGINAL_PANE=$TMUX_PANE && tmux split-window -h -t "$ORIGINAL_PANE" && NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1) && tmux send-keys -t "$NEW_PANE" "chafa /path/to/image.png" Enter
 ```
 
 ## Alternative: Vertical Split
 
 ```bash
-# Split vertically (new pane below)
-tmux split-window -v
+# Capture current pane first
+ORIGINAL_PANE=$TMUX_PANE
+
+# Split vertically from the original pane
+tmux split-window -v -t "$ORIGINAL_PANE"
 
 # Get new pane ID and view image
 NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
@@ -47,7 +51,8 @@ tmux send-keys -t "$NEW_PANE" "chafa /path/to/image.png" Enter
 
 ```bash
 # View multiple images in the same pane (one after another)
-tmux split-window -h
+ORIGINAL_PANE=$TMUX_PANE
+tmux split-window -h -t "$ORIGINAL_PANE"
 NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
 tmux send-keys -t "$NEW_PANE" "chafa image1.png && read && chafa image2.png" Enter
 ```
@@ -73,7 +78,8 @@ chafa --symbols block image.png
 generate-image "prompt" --output my-image.png
 
 # 2. Immediately view in new pane
-tmux split-window -h
+ORIGINAL_PANE=$TMUX_PANE
+tmux split-window -h -t "$ORIGINAL_PANE"
 NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
 tmux send-keys -t "$NEW_PANE" "chafa my-image.png" Enter
 

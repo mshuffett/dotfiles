@@ -32,18 +32,24 @@ echo "Current pane is: $TMUX_PANE"
 
 ## Splitting Panes
 
-```bash
-# Split horizontally (new pane on right)
-tmux split-window -h
+**CRITICAL: Always capture $TMUX_PANE first and use -t to specify which pane to split from!**
 
-# Split vertically (new pane below)
-tmux split-window -v
+```bash
+# Capture current pane first (user may switch panes between commands)
+ORIGINAL_PANE=$TMUX_PANE
+
+# Split horizontally (new pane on right) from the original pane
+tmux split-window -h -t "$ORIGINAL_PANE"
+
+# Split vertically (new pane below) from the original pane
+tmux split-window -v -t "$ORIGINAL_PANE"
 
 # Split with specific command
-tmux split-window -h "htop"
+tmux split-window -h -t "$ORIGINAL_PANE" "htop"
 
 # Split and get the new pane ID
-tmux split-window -h
+ORIGINAL_PANE=$TMUX_PANE
+tmux split-window -h -t "$ORIGINAL_PANE"
 NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
 ```
 
@@ -156,7 +162,8 @@ tmux kill-pane -a
 
 ```bash
 # Split and run command
-tmux split-window -h
+ORIGINAL_PANE=$TMUX_PANE
+tmux split-window -h -t "$ORIGINAL_PANE"
 NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
 tmux send-keys -t "$NEW_PANE" "htop" Enter
 ```
@@ -165,7 +172,8 @@ tmux send-keys -t "$NEW_PANE" "htop" Enter
 
 ```bash
 # Split and view file
-tmux split-window -v
+ORIGINAL_PANE=$TMUX_PANE
+tmux split-window -v -t "$ORIGINAL_PANE"
 NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
 tmux send-keys -t "$NEW_PANE" "cat file.txt" Enter
 ```
@@ -175,7 +183,7 @@ tmux send-keys -t "$NEW_PANE" "cat file.txt" Enter
 ```bash
 # Split, run process, return focus to original
 ORIGINAL_PANE=$TMUX_PANE
-tmux split-window -h
+tmux split-window -h -t "$ORIGINAL_PANE"
 NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
 tmux send-keys -t "$NEW_PANE" "npm run dev" Enter
 tmux select-pane -t "$ORIGINAL_PANE"
@@ -185,7 +193,8 @@ tmux select-pane -t "$ORIGINAL_PANE"
 
 ```bash
 # Split, view, user can close when done
-tmux split-window -h
+ORIGINAL_PANE=$TMUX_PANE
+tmux split-window -h -t "$ORIGINAL_PANE"
 NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
 tmux send-keys -t "$NEW_PANE" "git log --oneline" Enter
 echo "Close the pane with: Ctrl+b x"
@@ -240,14 +249,16 @@ See `/view-image` command
 
 ### With logs (monitoring)
 ```bash
-tmux split-window -v
+ORIGINAL_PANE=$TMUX_PANE
+tmux split-window -v -t "$ORIGINAL_PANE"
 NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
 tmux send-keys -t "$NEW_PANE" "tail -f /var/log/system.log" Enter
 ```
 
 ### With build processes
 ```bash
-tmux split-window -h
+ORIGINAL_PANE=$TMUX_PANE
+tmux split-window -h -t "$ORIGINAL_PANE"
 NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
 tmux send-keys -t "$NEW_PANE" "pnpm run build --watch" Enter
 ```
