@@ -187,6 +187,111 @@ hume-tts "Welcome to our podcast" -d "professional news anchor" -o intro.mp3
 hume-tts "Thanks for listening!" -d "warm and enthusiastic" -o outro.mp3
 ```
 
+## Controlling Emotion and Expression
+
+Both services offer advanced emotional control, but through different mechanisms.
+
+### Hume: Acting Instructions (via `--description`)
+
+Hume's `--description` parameter provides natural language control over:
+- **Emotional tone**: happy, sad, excited, nervous, melancholic, frustrated
+- **Delivery style**: whispering, shouting, rushed, measured pace
+- **Context**: speaking to a crowd, intimate conversation, pedagogical
+
+**Best Practices:**
+- Keep instructions concise (≤100 characters)
+- Use specific emotions instead of broad terms
+  - ✅ "melancholic, hesitant"
+  - ❌ "sad"
+- Combine emotion with delivery style
+  - ✅ "excited but whispering"
+  - ✅ "calm, pedagogical"
+  - ✅ "frightened, rushed"
+
+**Examples:**
+```bash
+# Emotional variations
+hume-tts "I can't believe this happened" -d "shocked, dismayed" -o shocked.mp3
+hume-tts "I can't believe this happened" -d "excited, delighted" -o excited.mp3
+
+# Delivery style control
+hume-tts "Listen carefully to this" -d "whispering, secretive" -o whisper.mp3
+hume-tts "Listen carefully to this" -d "shouting, urgent" -o shout.mp3
+
+# Combined emotional context
+hume-tts "Let us begin by taking a deep breath in" -d "calm, pedagogical" --speed 0.65 -o meditation.mp3
+```
+
+### Inworld: Audio Markups (Text Inline)
+
+Inworld uses inline audio markups in your text for emotion and expression control.
+
+**NOTE:** Current CLI script doesn't support audio markups yet. Text must include markups directly.
+
+**Emotion Markups:**
+- `[happy]` - Happy emotion
+- `[sad]` - Sad emotion
+- `[angry]` - Angry emotion
+- `[excited]` - Excited emotion
+
+**Delivery Style:**
+- `[whispering]` - Whispered speech
+- `[shouting]` - Loud speech
+
+**Non-verbal Vocalizations:**
+- `[laughing]` - Laughter
+- `[sigh]` - Sighing sound
+- `[cough]` - Coughing sound
+- `[clear_throat]` - Throat clearing
+- `[yawn]` - Yawning sound
+
+**Text Emphasis:**
+- Use asterisks: `*really*` for emphasis
+
+**Examples:**
+```bash
+# Emotion control
+inworld-tts "[happy] I can't believe this is happening!" -o happy.mp3
+inworld-tts "[angry] I can't believe you did that." -o angry.mp3
+
+# Mixed emotions
+inworld-tts "[angry] I can't believe you didn't save the last bite of cake for me. [laughing] Got you! I was just kidding." -o prank.mp3
+
+# Non-verbal vocalizations
+inworld-tts "[clear_throat] Did you hear what I said? [sigh] You never listen to me!" -o frustrated.mp3
+
+# Emphasis
+inworld-tts "I *really* need you to understand this." -o emphasis.mp3
+```
+
+### Comparison: Hume vs Inworld Emotion Control
+
+**Hume (Acting Instructions):**
+- ✅ Natural language descriptions
+- ✅ Holistic understanding of context
+- ✅ Affects entire utterance
+- ✅ Easier to use (no markup syntax)
+- ❌ Less granular control within sentences
+
+**Inworld (Audio Markups):**
+- ✅ Precise control at word/phrase level
+- ✅ Mix multiple emotions in one utterance
+- ✅ Non-verbal vocalizations
+- ✅ Fine-grained emphasis markers
+- ❌ Requires markup syntax in text
+
+### Additional Prosody Parameters
+
+**Hume:**
+- `--speed <0.5-2.0>` - Speaking rate (non-linear scale)
+- `--description` - Emotional/delivery instructions
+- Trailing silence (API parameter, not in CLI yet)
+
+**Inworld (API only, not in CLI):**
+- Temperature (0.6-1.0) - Controls randomness/expressiveness
+- Pitch adjustment - Negative for deeper, positive for higher
+- Talking speed - 0.5 (half speed) to 1.5 (1.5x faster)
+
 ## Environment
 
 Environment variables are set in `~/.env.zsh`:
