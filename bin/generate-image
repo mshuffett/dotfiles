@@ -26,28 +26,33 @@ AI Image Generator
 Usage: generate-image "prompt" [options]
 
 Options:
-    -p, --provider PROVIDER  Provider to use: openai or gemini (default: gemini)
+    -p, --provider PROVIDER  Provider to use: openai, gemini, or imagen (default: gemini)
     -s, --size SIZE         Image size (default: 1024x1024)
                            Options: 1024x1024, 1024x1536, 1536x1024
     -o, --output FILE       Output filename (default: generated-image-TIMESTAMP.png)
     -u, --url-only         Only output the URL, don't download the image (OpenAI only)
     -m, --model MODEL      Model to use (default: dall-e-3 for OpenAI,
-                           gemini-2.5-flash-image-preview for Gemini)
+                           gemini-2.5-flash-image for Gemini,
+                           imagen-4.0-generate-001 for Imagen)
+                           Imagen models: imagen-4.0-generate-001 (default),
+                           imagen-4.0-ultra-generate-001 (highest quality),
+                           imagen-4.0-fast-generate-001 (faster)
     -h, --help             Show this help message
 
 Examples:
     generate-image "A sunset over mountains"
     generate-image "A red sports car" --provider openai
     generate-image "Abstract art" --output artwork.png
-    generate-image "A cityscape" --provider openai --size 1024x1536
+    generate-image "A cityscape" --provider imagen
     generate-image "A cute robot"
 
 Environment:
-    GEMINI_API_KEY must be set for Gemini provider (default)
+    GEMINI_API_KEY must be set for Gemini and Imagen providers (default)
     OPENAI_API_KEY must be set for OpenAI provider
 
 Providers:
     gemini - Google's Gemini 2.5 Flash Image (default)
+    imagen - Google's Imagen 4.0
     openai - OpenAI's DALL-E 3
 
 EOF
@@ -104,8 +109,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate provider
-if [[ ! "$PROVIDER" =~ ^(openai|gemini)$ ]]; then
-    echo -e "${RED}Error: Invalid provider. Must be 'openai' or 'gemini'${NC}"
+if [[ ! "$PROVIDER" =~ ^(openai|gemini|imagen)$ ]]; then
+    echo -e "${RED}Error: Invalid provider. Must be 'openai', 'gemini', or 'imagen'${NC}"
     exit 1
 fi
 
@@ -129,6 +134,20 @@ elif [ "$PROVIDER" = "gemini" ]; then
     # Set default model for Gemini if not specified
     if [ -z "$MODEL" ]; then
         MODEL="gemini-2.5-flash-image"
+    fi
+elif [ "$PROVIDER" = "imagen" ]; then
+    if [ -z "$GEMINI_API_KEY" ]; then
+        echo -e "${RED}Error: GEMINI_API_KEY environment variable is not set for Imagen${NC}"
+        echo "Please set it with: export GEMINI_API_KEY='your-key-here'"
+        exit 1
+    fi
+    # Set default model for Imagen if not specified
+    if [ -z "$MODEL" ]; then
+        MODEL="imagen-4.0-generate-001"
+    fi
+    # Validate Imagen model
+    if [[ ! "$MODEL" =~ ^imagen-4\.0-(generate|ultra-generate|fast-generate)-001$ ]]; then
+        echo -e "${YELLOW}Warning: Non-standard Imagen model specified: $MODEL${NC}"
     fi
 fi
 
@@ -181,6 +200,29 @@ EOF
     HTTP_CODE=$(curl -s -w "%{http_code}" -o "$RESPONSE_FILE" \
       --max-time 60 \
       -X POST "https://generativelanguage.googleapis.com/v1beta/models/$MODEL:generateContent" \
+      -H "Content-Type: application/json" \
+      -H "x-goog-api-key: $GEMINI_API_KEY" \
+      -d @"$REQUEST_FILE")
+
+    rm -f "$REQUEST_FILE"
+elif [ "$PROVIDER" = "imagen" ]; then
+    # Create temporary JSON file for Imagen request
+    REQUEST_FILE=$(mktemp)
+    cat > "$REQUEST_FILE" << EOF
+{
+  "instances": [{
+    "prompt": "$PROMPT"
+  }],
+  "parameters": {
+    "sampleCount": 1
+  }
+}
+EOF
+
+    # Imagen API request (via Gemini API)
+    HTTP_CODE=$(curl -s -w "%{http_code}" -o "$RESPONSE_FILE" \
+      --max-time 60 \
+      -X POST "https://generativelanguage.googleapis.com/v1beta/models/$MODEL:predict" \
       -H "Content-Type: application/json" \
       -H "x-goog-api-key: $GEMINI_API_KEY" \
       -d @"$REQUEST_FILE")
@@ -285,6 +327,40 @@ except (KeyError, IndexError) as e:
         echo -e "${GREEN}✅ Image saved as: $OUTPUT${NC}"
     else
         echo -e "${RED}Error: Failed to extract image from Gemini response${NC}"
+        exit 1
+    fi
+elif [ "$PROVIDER" = "imagen" ]; then
+    # Imagen response handling
+    if [ "$URL_ONLY" = true ]; then
+        echo -e "${YELLOW}Note: Imagen returns base64 data, not URLs${NC}"
+    fi
+
+    # Extract and save base64 image from Imagen response
+    python3 -c "
+import json
+import base64
+import sys
+
+try:
+    with open('$RESPONSE_FILE', 'r') as f:
+        response = json.load(f)
+
+    # Imagen returns image in predictions[0].bytesBase64Encoded
+    base64_image = response['predictions'][0]['bytesBase64Encoded']
+    image_data = base64.b64decode(base64_image)
+
+    with open('$OUTPUT', 'wb') as img_file:
+        img_file.write(image_data)
+except (KeyError, IndexError) as e:
+    print(f'Error extracting image from Imagen response: {e}', file=sys.stderr)
+    with open('$RESPONSE_FILE', 'r') as f:
+        print(f.read(), file=sys.stderr)
+    sys.exit(1)
+"
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✅ Image saved as: $OUTPUT${NC}"
+    else
+        echo -e "${RED}Error: Failed to extract image from Imagen response${NC}"
         exit 1
     fi
 fi
