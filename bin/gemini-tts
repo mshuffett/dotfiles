@@ -1,0 +1,255 @@
+#!/usr/bin/env python3
+
+"""
+Gemini TTS CLI
+
+Usage:
+  gemini-tts "Your text here"
+  gemini-tts "Your text here" --voice Zephyr --output custom.wav
+  gemini-tts "Speaker 1: Hello! Speaker 2: Hi there!" --multi-speaker --output podcast.wav
+
+Options:
+  --voice, -v          Voice name (default: Zephyr)
+  --voice2             Second voice for multi-speaker (default: Puck)
+  --multi-speaker      Enable multi-speaker mode (text must include speaker labels)
+  --output, -o         Output filename (default: output.wav)
+  --model, -m          Model: flash, pro, or native-audio (default: flash)
+  --help, -h           Show this help message
+
+Available voices (30 total):
+  Zephyr (Bright), Sulafat (Warm), Charon (Engaging), Kore (Soothing)
+  Aoede (Groundbreaking), Puck (Expressive), Fenrir (Clear), Oberon (Deep)
+  Enceladus (Breathy), Algieba (Smooth), Achird (Friendly)
+  ... and 19 more
+"""
+
+import argparse
+import mimetypes
+import os
+import struct
+import sys
+
+try:
+    from google import genai
+    from google.genai import types
+except ImportError:
+    print("Error: google-genai package not installed", file=sys.stderr)
+    print("Install with: pip install google-genai", file=sys.stderr)
+    sys.exit(1)
+
+
+def convert_to_wav(audio_data: bytes, mime_type: str) -> bytes:
+    """Generates a WAV file header for the given audio data and parameters."""
+    parameters = parse_audio_mime_type(mime_type)
+    bits_per_sample = parameters["bits_per_sample"]
+    sample_rate = parameters["rate"]
+    num_channels = 1
+    data_size = len(audio_data)
+    bytes_per_sample = bits_per_sample // 8
+    block_align = num_channels * bytes_per_sample
+    byte_rate = sample_rate * block_align
+    chunk_size = 36 + data_size
+
+    header = struct.pack(
+        "<4sI4s4sIHHIIHH4sI",
+        b"RIFF",
+        chunk_size,
+        b"WAVE",
+        b"fmt ",
+        16,
+        1,
+        num_channels,
+        sample_rate,
+        byte_rate,
+        block_align,
+        bits_per_sample,
+        b"data",
+        data_size
+    )
+    return header + audio_data
+
+
+def parse_audio_mime_type(mime_type: str) -> dict:
+    """Parses bits per sample and rate from an audio MIME type string."""
+    bits_per_sample = 16
+    rate = 24000
+
+    parts = mime_type.split(";")
+    for param in parts:
+        param = param.strip()
+        if param.lower().startswith("rate="):
+            try:
+                rate_str = param.split("=", 1)[1]
+                rate = int(rate_str)
+            except (ValueError, IndexError):
+                pass
+        elif param.startswith("audio/L"):
+            try:
+                bits_per_sample = int(param.split("L", 1)[1])
+            except (ValueError, IndexError):
+                pass
+
+    return {"bits_per_sample": bits_per_sample, "rate": rate}
+
+
+def generate_single_speaker(client, model, text, voice, output):
+    """Generate single-speaker audio."""
+    print(f'Generating speech with voice "{voice}"...')
+
+    contents = [
+        types.Content(
+            role="user",
+            parts=[types.Part.from_text(text=text)],
+        ),
+    ]
+
+    config = types.GenerateContentConfig(
+        temperature=1,
+        response_modalities=["audio"],
+        speech_config=types.SpeechConfig(
+            voice_config=types.VoiceConfig(
+                prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                    voice_name=voice
+                )
+            )
+        ),
+    )
+
+    audio_chunks = []
+    for chunk in client.models.generate_content_stream(
+        model=model,
+        contents=contents,
+        config=config,
+    ):
+        if (chunk.candidates and
+            chunk.candidates[0].content and
+            chunk.candidates[0].content.parts):
+
+            part = chunk.candidates[0].content.parts[0]
+            if part.inline_data and part.inline_data.data:
+                audio_chunks.append(part.inline_data.data)
+                mime_type = part.inline_data.mime_type
+
+    if not audio_chunks:
+        print("Error: No audio generated", file=sys.stderr)
+        sys.exit(1)
+
+    # Combine chunks and convert to WAV
+    audio_data = b''.join(audio_chunks)
+    wav_data = convert_to_wav(audio_data, mime_type)
+
+    with open(output, 'wb') as f:
+        f.write(wav_data)
+
+    print(f'✓ Audio saved to {output}')
+    print(f'  Text: "{text}"')
+    print(f'  Voice: {voice}')
+
+
+def generate_multi_speaker(client, model, text, voice1, voice2, output):
+    """Generate multi-speaker audio."""
+    print('Generating multi-speaker audio...')
+
+    contents = [
+        types.Content(
+            role="user",
+            parts=[types.Part.from_text(text=text)],
+        ),
+    ]
+
+    config = types.GenerateContentConfig(
+        temperature=1,
+        response_modalities=["audio"],
+        speech_config=types.SpeechConfig(
+            multi_speaker_voice_config=types.MultiSpeakerVoiceConfig(
+                speaker_voice_configs=[
+                    types.SpeakerVoiceConfig(
+                        speaker="Speaker 1",
+                        voice_config=types.VoiceConfig(
+                            prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                                voice_name=voice1
+                            )
+                        ),
+                    ),
+                    types.SpeakerVoiceConfig(
+                        speaker="Speaker 2",
+                        voice_config=types.VoiceConfig(
+                            prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                                voice_name=voice2
+                            )
+                        ),
+                    ),
+                ]
+            ),
+        ),
+    )
+
+    audio_chunks = []
+    for chunk in client.models.generate_content_stream(
+        model=model,
+        contents=contents,
+        config=config,
+    ):
+        if (chunk.candidates and
+            chunk.candidates[0].content and
+            chunk.candidates[0].content.parts):
+
+            part = chunk.candidates[0].content.parts[0]
+            if part.inline_data and part.inline_data.data:
+                audio_chunks.append(part.inline_data.data)
+                mime_type = part.inline_data.mime_type
+
+    if not audio_chunks:
+        print("Error: No audio generated", file=sys.stderr)
+        sys.exit(1)
+
+    # Combine chunks and convert to WAV
+    audio_data = b''.join(audio_chunks)
+    wav_data = convert_to_wav(audio_data, mime_type)
+
+    with open(output, 'wb') as f:
+        f.write(wav_data)
+
+    print(f'✓ Audio saved to {output}')
+    print(f'  Text: "{text[:100]}..."')
+    print(f'  Voice 1: {voice1}')
+    print(f'  Voice 2: {voice2}')
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Gemini TTS CLI')
+    parser.add_argument('text', nargs='+', help='Text to convert to speech')
+    parser.add_argument('-v', '--voice', default='Zephyr', help='Voice name (default: Zephyr)')
+    parser.add_argument('--voice2', default='Puck', help='Second voice for multi-speaker (default: Puck)')
+    parser.add_argument('--multi-speaker', action='store_true', help='Enable multi-speaker mode')
+    parser.add_argument('-o', '--output', default='output.wav', help='Output filename (default: output.wav)')
+    parser.add_argument('-m', '--model', default='flash', choices=['flash', 'pro', 'native-audio'], help='Model: flash, pro, or native-audio (default: flash)')
+
+    args = parser.parse_args()
+    text = ' '.join(args.text)
+
+    # Check for API key
+    api_key = os.environ.get('GEMINI_API_KEY')
+    if not api_key:
+        print('Error: GEMINI_API_KEY environment variable not set', file=sys.stderr)
+        print('Add it to your ~/.env.zsh file', file=sys.stderr)
+        sys.exit(1)
+
+    # Initialize client
+    client = genai.Client(api_key=api_key)
+
+    # Select model
+    if args.model == 'native-audio':
+        model = "gemini-2.5-flash-native-audio-preview-09-2025"
+    else:
+        model = f"gemini-2.5-{args.model}-preview-tts"
+
+    # Generate audio
+    if args.multi_speaker:
+        generate_multi_speaker(client, model, text, args.voice, args.voice2, args.output)
+    else:
+        generate_single_speaker(client, model, text, args.voice, args.output)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,10 +1,10 @@
 ---
-description: Text-to-speech generation using Inworld TTS (#1 on TTS Arena) and Hume Octave (#2 on TTS Arena). Provides high-quality voice synthesis with 20+ voices, dynamic voice generation, and multiple quality models. Use when user asks to generate speech, create audio from text, or work with TTS/voice generation. Includes command reference for both services, voice options, and workflow examples.
+description: Text-to-speech generation using Inworld TTS (#1 on TTS Arena), Hume Octave (#2 on TTS Arena), and Google Gemini 2.5. Provides high-quality voice synthesis with 30+ voices, dynamic voice generation, multiple quality models, and native multi-speaker podcast generation. Use when user asks to generate speech, create audio from text, work with TTS/voice generation, or create podcast-style conversations. Includes command reference for all services, voice options, and workflow examples.
 ---
 
 # Text-to-Speech (TTS) Command
 
-Generate high-quality speech audio using two top-ranked TTS services.
+Generate high-quality speech audio using three top-tier TTS services.
 
 ## Available Services
 
@@ -20,6 +20,13 @@ Generate high-quality speech audio using two top-ranked TTS services.
 - Built-in emotional intelligence
 - Voice Library with 100+ pre-crafted voices (requires UUID)
 - Command: `hume-tts`
+
+### Google Gemini 2.5 TTS (Latest)
+- **Native multi-speaker podcast generation** (unique feature!)
+- 30 pre-defined voices with distinct characteristics
+- Single-speaker and 2-speaker modes
+- Automatic script generation for conversations
+- Command: `gemini-tts`
 
 ## Quick Start
 
@@ -51,6 +58,21 @@ hume-tts "Hello world" --voice "uuid-from-voice-library"
 
 # Instant mode for faster processing
 hume-tts "Hello world" --instant
+```
+
+### Gemini TTS
+```bash
+# Basic usage (uses Zephyr voice by default, outputs WAV)
+gemini-tts "Your text here"
+
+# Custom voice
+gemini-tts "Hello world" --voice Sulafat
+
+# Multi-speaker with explicit dialogue (text must include speaker labels)
+gemini-tts "Speaker 1: Hello! Speaker 2: Hi there!" --multi-speaker
+
+# Custom output file and model
+gemini-tts "Hello world" --output greeting.wav --model pro
 ```
 
 ## Command Reference
@@ -104,6 +126,41 @@ hume-tts <text> [options]
 **Dynamic Voice Generation (Recommended):**
 If no `--voice` is specified, Hume generates a unique voice based on the text's emotional and semantic content. Use `--description` to guide the voice style (e.g., "warm and friendly", "professional and clear", "energetic and upbeat").
 
+### Gemini TTS
+
+**Syntax:**
+```bash
+gemini-tts <text> [options]
+```
+
+**Options:**
+- `--voice, -v <name>` - Voice name (default: Zephyr)
+- `--voice2 <name>` - Second voice for multi-speaker (default: Puck)
+- `--multi-speaker` - Enable 2-person mode (text must include "Speaker 1:" and "Speaker 2:" labels)
+- `--output, -o <file>` - Output filename (default: output.wav)
+- `--model, -m <type>` - Model: flash, pro, or native-audio (default: flash)
+- `--help, -h` - Show help message
+
+**Models:**
+- `flash` - gemini-2.5-flash-preview-tts (faster, default)
+- `pro` - gemini-2.5-pro-preview-tts (higher quality)
+- `native-audio` - gemini-2.5-flash-native-audio-preview-09-2025 (specialized native audio model)
+
+**Multi-Speaker Mode:**
+When `--multi-speaker` is enabled:
+- Your text must include "Speaker 1:" and "Speaker 2:" labels for each line of dialogue
+- Speaker 1 uses the voice specified by `--voice` (default: Zephyr)
+- Speaker 2 uses the voice specified by `--voice2` (default: Puck)
+- Output is a WAV file with distinct voices for each speaker
+
+**Available Voices (30 total):**
+- Zephyr (Bright), Sulafat (Warm), Charon (Engaging), Kore (Soothing)
+- Aoede (Groundbreaking), Puck (Expressive), Fenrir (Clear), Oberon (Deep)
+- Enceladus (Breathy), Algieba (Smooth), Achird (Friendly)
+- ... and 19 more voices with distinct characteristics
+
+**Note:** Outputs WAV format (not MP3). Requires `google-genai` Python package (`pip install google-genai`).
+
 ## Available Voices
 
 ### Female Voices
@@ -139,6 +196,7 @@ If no `--voice` is specified, Hume generates a unique voice based on the text's 
 ```bash
 inworld-tts "Your text here" && open output.mp3
 hume-tts "Your text here" && open output.mp3
+gemini-tts "Your text here" && open output.mp3
 ```
 
 ### Batch Generation
@@ -178,6 +236,19 @@ done
 TEXT="The quick brown fox jumps over the lazy dog"
 inworld-tts "$TEXT" -o inworld-comparison.mp3
 hume-tts "$TEXT" -o hume-comparison.mp3
+gemini-tts "$TEXT" -o gemini-comparison.mp3
+```
+
+### Multi-Speaker Podcast Generation
+```bash
+# Gemini's native multi-speaker mode (requires speaker labels)
+gemini-tts "Speaker 1: Welcome to our show about AI in healthcare! Speaker 2: Thanks for having me! Speaker 1: Let's discuss how AI is transforming diagnosis. Speaker 2: It's fascinating - AI can now detect patterns humans miss." --multi-speaker -o podcast.wav
+
+# Hume with explicit dialogue (single voice with acting)
+hume-tts "Speaker1: Welcome to our show!
+Speaker2: Thanks for having me!
+Speaker1: Today we're discussing AI in healthcare.
+Speaker2: It's fascinating how AI is transforming diagnosis..." -d "conversational, engaging" -o hume-podcast.mp3
 ```
 
 ### Dynamic Voice with Description
@@ -303,11 +374,17 @@ Environment variables are set in `~/.env.zsh`:
 - `HUME_API_KEY` - Hume API key
 - `HUME_SECRET_KEY` - Hume secret key (optional)
 
+**Gemini:**
+- `GEMINI_API_KEY` - Google Gemini API key
+
 ## Script Locations
 
-Both scripts are located in `~/.dotfiles/bin/` and version controlled:
-- `~/.dotfiles/bin/inworld-tts`
-- `~/.dotfiles/bin/hume-tts`
+All scripts are located in `~/.dotfiles/bin/` and version controlled:
+- `~/.dotfiles/bin/inworld-tts` (Node.js)
+- `~/.dotfiles/bin/hume-tts` (Node.js)
+- `~/.dotfiles/bin/gemini-tts` (Python 3)
+
+**Note:** Gemini TTS script requires the `google-genai` Python package. Install with: `pip install google-genai`
 
 ## TTS Arena Rankings (Reference)
 
@@ -329,10 +406,12 @@ Top open-source:
 ### Choosing a Service
 - **Inworld**: Best for consistent voices, faster generation, specific voice requirements
 - **Hume**: Best for dynamic/unique voices, emotional intelligence, voice style descriptions
+- **Gemini**: Best for multi-speaker podcast generation, natural conversations, automatic script creation
 
 ### Voice Selection
 - **Inworld**: Test a few pre-defined voices to find what works best
 - **Hume**: Use voice descriptions for natural variation, or built-in voices for consistency
+- **Gemini**: 30 distinct voices with clear characteristics (Bright, Warm, Engaging, etc.)
 
 ### Model/Quality
 - Use `inworld-tts-1` for speed, `inworld-tts-max` for highest quality
@@ -354,14 +433,26 @@ Top open-source:
 
 **Script not found**
 - Verify `~/.dotfiles/bin` is in your PATH (check ~/.zshrc line 158)
-- Run `chmod +x ~/.dotfiles/bin/inworld-tts ~/.dotfiles/bin/hume-tts`
+- Run `chmod +x ~/.dotfiles/bin/inworld-tts ~/.dotfiles/bin/hume-tts ~/.dotfiles/bin/gemini-tts`
+- For gemini-tts: Ensure Python 3 is installed and in PATH
 
 **API errors**
 - **Inworld**: Check your API key at https://studio.inworld.ai
 - **Hume**: Check your API key at https://platform.hume.ai
+- **Gemini**: Check your API key at https://aistudio.google.com/apikey
 - Verify you have API credits remaining
 
 **Hume: No audio generated**
 - Check the response error message for details
 - Ensure utterances array is properly formatted
 - Try using `--instant` flag for faster processing
+
+**Gemini: Multi-speaker not working**
+- Ensure you're using the `--multi-speaker` flag
+- Text must include "Speaker 1:" and "Speaker 2:" labels for dialogue
+- Check that GEMINI_API_KEY is set in ~/.env.zsh
+
+**Gemini: google-genai package not found**
+- Install the Python package: `pip install google-genai`
+- Or use pip3: `pip3 install google-genai`
+- Verify installation: `python3 -c "from google import genai"`
