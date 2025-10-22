@@ -96,17 +96,29 @@ Available sounds (all `.aiff` format):
 - Slide-EncoreInfinitum.caf
 - Welcome-EncoreInfinitum.caf ⭐ (Michael likes but too long for notifications)
 
+## Custom Sounds (Third-Party)
+
+**Location:** `~/.dotfiles/sounds/`
+
+- **elevenlabs-notification-7.mp3** ⭐⭐⭐ - CURRENT FAVORITE for Stop hook
+  - Source: ElevenLabs (https://elevenlabs.io/sound-effects/notification/)
+  - High-quality AI-generated notification sound
+  - Clean, professional, pleasant tone
+
 ## Michael's Favorites
+
+**From Custom Sounds:**
+- **elevenlabs-notification-7.mp3** ⭐⭐⭐ - Current top choice (used for Stop hook)
 
 **From Classic macOS:**
 - Glass.aiff - Gentle, subtle
 - Blow.aiff - Unique wind sound
 
 **From EncoreInfinitum (newest iOS sounds):**
-- **Rebound** ⭐⭐ - Top choice, has nice echo quality (currently used for Stop hook)
-- Portal - Great sound
-- Rattle - Nice percussive
-- Welcome - Beautiful but too long for quick notifications
+- Portal ⭐ - Great sound (used for Notification hook)
+- Rattle ⭐ - Nice percussive
+- Welcome ⭐ - Beautiful but too long for notifications (used for SessionStart hook)
+- Rebound - Has nice echo quality (previously used for Stop hook)
 
 **Notable mention:**
 - Tri-Tone (Classic iOS) - The famous iOS notification sound
@@ -136,7 +148,7 @@ afplay "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resou
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Rebound-EncoreInfinitum.caf"
+            "command": "afplay ~/.dotfiles/sounds/elevenlabs-notification-7.mp3"
           }
         ]
       }

@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Rebound-EncoreInfinitum.caf"
+            "command": "afplay ~/.dotfiles/sounds/elevenlabs-notification-7.mp3"
           }
         ]
       }
