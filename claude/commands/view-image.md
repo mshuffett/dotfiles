@@ -12,18 +12,24 @@ description: View images in the terminal using chafa. ALWAYS open images in a se
 
 ## Standard Image Viewing Protocol
 
+**CRITICAL: Do ALL steps in a SINGLE command - user may switch panes between commands!**
+
 ```bash
-# Step 1: Split a new pane (horizontal split - new pane on right)
+# All in one command to prevent pane switching issues
+tmux split-window -h \; send-keys "chafa /path/to/image.png" Enter
+
+# Or if you need the pane ID for later:
+tmux split-window -h \; run-shell 'tmux send-keys -t "$(tmux list-panes -F "#{pane_id}" | tail -n 1)" "chafa /path/to/image.png" Enter'
+```
+
+**If you MUST split across multiple commands:**
+```bash
+# Step 1: Split - do this IMMEDIATELY before next step
 tmux split-window -h
 
-# Step 2: Get the ID of the newly created pane
-NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)
-
-# Step 3: Send chafa command to the new pane
-tmux send-keys -t "$NEW_PANE" "chafa /path/to/image.png" Enter
-
-# Optional: Return focus to original pane
-tmux select-pane -t "$TMUX_PANE"
+# Step 2: Get pane ID and send command IMMEDIATELY (don't let user switch panes)
+# Use a single compound command:
+NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1) && tmux send-keys -t "$NEW_PANE" "chafa /path/to/image.png" Enter
 ```
 
 ## Alternative: Vertical Split
