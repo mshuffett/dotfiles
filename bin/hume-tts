@@ -1,0 +1,179 @@
+#!/usr/bin/env node
+
+/**
+ * Hume TTS CLI
+ *
+ * Usage:
+ *   hume-tts "Your text here"
+ *   hume-tts "Your text here" --description "warm and friendly voice"
+ *   hume-tts "Your text here" --voice ITO --output custom.mp3
+ *
+ * Options:
+ *   --voice, -v          Voice ID (default: dynamic generation)
+ *   --description, -d    Voice style description (e.g., "warm and friendly")
+ *   --speed, -s          Playback speed multiplier (default: 1.0)
+ *   --output, -o         Output filename (default: output.mp3)
+ *   --format, -f         Audio format: mp3, wav, pcm (default: mp3)
+ *   --instant            Use instant mode for faster processing
+ *   --help, -h           Show this help message
+ *
+ * Voice Library:
+ *   Use UUIDs from Hume's Voice Library or your saved voices
+ *   List voices: https://api.hume.ai/v0/tts/voices?provider=HUME_AI
+ */
+
+import fs from 'fs';
+import { parseArgs } from 'util';
+
+// Parse command line arguments
+const { values, positionals } = parseArgs({
+  args: process.argv.slice(2),
+  options: {
+    voice: { type: 'string', short: 'v' },
+    description: { type: 'string', short: 'd' },
+    speed: { type: 'string', short: 's', default: '1.0' },
+    output: { type: 'string', short: 'o', default: 'output.mp3' },
+    format: { type: 'string', short: 'f', default: 'mp3' },
+    instant: { type: 'boolean', default: false },
+    help: { type: 'boolean', short: 'h', default: false },
+  },
+  allowPositionals: true,
+});
+
+// Show help
+if (values.help) {
+  console.log(`
+Hume TTS CLI (Octave - Ranked #2 on TTS Arena)
+
+Usage:
+  hume-tts "Your text here"
+  hume-tts "Your text here" --description "warm and friendly voice"
+  hume-tts "Your text here" --voice ITO --output custom.mp3
+
+Options:
+  --voice, -v          Voice ID (default: dynamic generation)
+  --description, -d    Voice style description (e.g., "warm and friendly")
+  --speed, -s          Playback speed multiplier (default: 1.0)
+  --output, -o         Output filename (default: output.mp3)
+  --format, -f         Audio format: mp3, wav, pcm (default: mp3)
+  --instant            Use instant mode for faster processing
+  --help, -h           Show this help message
+
+Voice Library:
+  Use voice UUIDs from Hume's Voice Library or your saved voices
+  List available voices: https://api.hume.ai/v0/tts/voices?provider=HUME_AI
+
+Dynamic Voice Generation (Recommended):
+  If no --voice is specified, Hume will generate a unique voice based on:
+  - The text content (emotional and semantic understanding)
+  - Optional --description parameter for style guidance
+
+Environment variables:
+  HUME_API_KEY        Your Hume API key
+  HUME_SECRET_KEY     Your Hume secret key (optional)
+`);
+  process.exit(0);
+}
+
+// Get text from positional arguments
+const text = positionals.join(' ');
+
+if (!text) {
+  console.error('Error: No text provided');
+  console.error('Usage: hume-tts "Your text here"');
+  process.exit(1);
+}
+
+// Check for API key
+if (!process.env.HUME_API_KEY) {
+  console.error('Error: HUME_API_KEY environment variable not set');
+  console.error('Add it to your ~/.env.zsh file');
+  process.exit(1);
+}
+
+// Build utterance object
+const utterance = {
+  text: text,
+  speed: parseFloat(values.speed),
+};
+
+// Add voice or description if provided
+if (values.voice) {
+  utterance.voice = {
+    id: values.voice,
+    provider: "HUME_AI"
+  };
+}
+if (values.description) {
+  utterance.description = values.description;
+}
+
+// Make API request
+const url = 'https://api.hume.ai/v0/tts';
+
+// Octave v2 requires a voice, v1 supports dynamic generation
+const version = values.voice ? "2" : "1";
+
+const requestBody = {
+  utterances: [utterance],
+  format: {
+    type: values.format
+  },
+  version: version,
+};
+
+if (values.instant) {
+  requestBody.instant_mode = true;
+}
+
+const options = {
+  method: 'POST',
+  headers: {
+    'X-Hume-Api-Key': process.env.HUME_API_KEY,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(requestBody)
+};
+
+const voiceDesc = values.voice
+  ? `voice "${values.voice}"`
+  : values.description
+    ? `dynamic voice (${values.description})`
+    : 'dynamic voice';
+
+console.log(`Generating speech with ${voiceDesc}...`);
+
+try {
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+  }
+
+  const result = await response.json();
+
+  // Extract audio from first generation
+  if (!result.generations || result.generations.length === 0) {
+    throw new Error('No audio generated in response');
+  }
+
+  const generation = result.generations[0];
+  const audioContent = generation.audio;
+
+  // Save audio to file
+  const audioBuffer = Buffer.from(audioContent, 'base64');
+  fs.writeFileSync(values.output, audioBuffer);
+
+  console.log(`✓ Audio saved to ${values.output}`);
+  console.log(`  Text: "${text}"`);
+  console.log(`  Voice: ${values.voice || 'dynamic'}`);
+  if (values.description) {
+    console.log(`  Description: ${values.description}`);
+  }
+  console.log(`  Duration: ${generation.duration.toFixed(2)}s`);
+  console.log(`  Generation ID: ${generation.id}`);
+} catch (error) {
+  console.error('Error generating speech:', error.message);
+  process.exit(1);
+}
