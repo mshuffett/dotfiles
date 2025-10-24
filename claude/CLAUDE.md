@@ -359,6 +359,10 @@ Slash commands in `~/.claude/commands/` provide on-demand loading of specialized
   - **Trigger**: User explicitly asks for tmux context pane, persistent context display, or alignment tracking
   - **Includes**: Window/pane detection, unique ID generation, glow+entr setup, context file template, update protocols, troubleshooting
 
+- **`/sphere`** - Sphere mobile app - Local streaming AI chat application using Vercel AI Gateway with Claude Opus. React Native (0.79.5) + Expo (53.0.22) + React 19. Multi-provider AI support (Claude, Gemini, OpenAI), server-side streaming via SSE, NativeWind/Tailwind styling, Zustand state management, Supabase backend. Use this command when user asks about "the mobile app", "sphere", or mobile development work.
+  - **Trigger**: User asks about "the mobile app", "sphere", React Native development, mobile AI chat app, Expo development, "How do I start the mobile app?", "Is the mobile app running?", "View on my phone"
+  - **Includes**: Starting server (including nohup for persistence), resource usage monitoring, network URLs, phone viewing instructions, environment variables, project structure, development workflow, quick reference commands
+
 ### Creating New Commands
 
 1. Create `~/.claude/commands/[name].md`:
