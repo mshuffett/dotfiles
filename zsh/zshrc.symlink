@@ -347,6 +347,8 @@ if command -v fnm >/dev/null 2>&1; then
   eval "$(fnm env --use-on-cd --shell zsh)"
   # Ensure old NVM bins don't shadow fnm-managed Node
   path=(${path:#$HOME/.nvm/versions/*/bin})
+  # Re-prioritize Bun bin after fnm prepends its path
+  path=($HOME/.bun/bin ${path:#$HOME/.bun/bin})
 fi
 
 # >>> codex-cli defaults (added by assistant) >>>
