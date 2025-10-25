@@ -133,9 +133,10 @@ export HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
 # Homebrew settings
 export HOMEBREW_NO_AUTO_UPDATE="1"
 
-# Path configuration 
+# Path configuration
 typeset -U path # force path array to have unique values
 path=(
+  $HOME/.bun/bin
   /opt/homebrew/bin
   $HOME/.serverless/bin
   /Users/michael/miniconda3/bin
@@ -313,9 +314,8 @@ source ~/.dotfiles/zsh/aliases.zsh
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-12.0.1.jdk/Contents/Home
 export PATH=$JAVA_HOME/bin:$PATH
 
-# add to ~/.zshrc
+# Bun installation directory (path added in path array above)
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Added by Windsurf
 export PATH="/Users/michael/.codeium/windsurf/bin:$PATH"
