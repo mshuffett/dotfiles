@@ -122,8 +122,8 @@ After updating learnings:
 Preserve important learnings - be concise but don't lose critical improvements." \
             > /tmp/session-learnings-$SESSION_ID.log 2>&1
 
-        # Play subtle completion sound (use Glass for regular sessions - more subtle)
-        afplay /System/Library/Sounds/Glass.aiff
+        # Play subtle completion sound
+        afplay "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Portal-EncoreInfinitum.caf"
     ) &
 
     echo "Regular session - analyzing for learnings in background (PID: $!)"
