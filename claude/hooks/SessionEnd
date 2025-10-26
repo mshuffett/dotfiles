@@ -69,7 +69,7 @@ Only edit the MEMORY BANK section. Preserve all other content in coach.md."
             > /tmp/coach-memory-update-$SESSION_ID.log 2>&1
 
         # Play subtle completion sound
-        afplay "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Portal-EncoreInfinitum.caf"
+        afplay "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Droplet-EncoreInfinitum.caf"
     ) &
 
     echo "Coach session detected - triggering memory update in background (PID: $!)"
@@ -125,7 +125,7 @@ Preserve important learnings - be concise but don't lose critical improvements."
             > /tmp/session-learnings-$SESSION_ID.log 2>&1
 
         # Play subtle completion sound
-        afplay "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Portal-EncoreInfinitum.caf"
+        afplay "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Droplet-EncoreInfinitum.caf"
     ) &
 
     echo "Regular session - analyzing for learnings in background (PID: $!)"
