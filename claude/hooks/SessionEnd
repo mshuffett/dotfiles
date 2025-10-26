@@ -1,0 +1,66 @@
+#!/bin/bash
+# SessionEnd Hook - Update memories after coach sessions and track learnings
+
+# Read input from Claude
+INPUT=$(cat)
+TRANSCRIPT_PATH=$(echo "$INPUT" | jq -r '.transcript_path')
+SESSION_ID=$(echo "$INPUT" | jq -r '.session_id')
+CWD=$(echo "$INPUT" | jq -r '.cwd')
+
+# Expand tilde in transcript path
+TRANSCRIPT_PATH="${TRANSCRIPT_PATH/#\~/$HOME}"
+
+# Check if /coach was invoked
+COACH_USED=$(grep -c '"name":"SlashCommand".*"command":"/coach"' "$TRANSCRIPT_PATH" 2>/dev/null || echo "0")
+
+if [ "$COACH_USED" -gt 0 ]; then
+    # Coach session detected - update coach.md memory bank
+    nohup claude --print \
+        --allowed-tools "Read Edit(~/.claude/commands/coach.md)" \
+        "Read session transcript at $TRANSCRIPT_PATH and update MEMORY BANK in ~/.claude/commands/coach.md with:
+
+## Session Analysis Tasks:
+1. Current trajectory assessment (Reorientation/Paralysis/Momentum/etc.)
+2. Active patterns observed (Cathedral Building, Permission Problem, Local Maximum Trap)
+3. Somatic signals noted (throat tightness triggers, body vs head language)
+4. Commitments made during session
+5. Outcomes of previous commitments (if mentioned)
+6. Add session log entry with:
+   - Date: $(date +%Y-%m-%d)
+   - Mode used (Partner/Coach/Catalyst/Profound Experience)
+   - Tools deployed (Truth Gate, Parts Work, Agreement Ladder, etc.)
+   - Key insights and breakthroughs
+7. Update 'Last updated' timestamp to $(date +%Y-%m-%d)
+
+Only edit the MEMORY BANK section. Preserve all other content in coach.md." \
+        > /tmp/coach-memory-update-$SESSION_ID.log 2>&1 &
+
+    echo "Coach session detected - triggering memory update in background (PID: $!)"
+else
+    # Regular session - extract learnings for future improvement
+    nohup claude --print \
+        --allowed-tools "Read Edit(~/.claude/CLAUDE.md)" \
+        "Read session transcript at $TRANSCRIPT_PATH and analyze what could be improved for future sessions.
+
+## Analysis Tasks:
+1. Identify any mistakes, errors, or misunderstandings
+2. Note patterns that worked well
+3. Extract any user corrections or feedback
+4. Identify missing knowledge or capabilities
+5. Note any repeated questions or confusion
+
+If there are meaningful learnings, append them to a 'Session Learnings' section in ~/.claude/CLAUDE.md under a new heading:
+
+### Session Learnings (Auto-captured)
+
+**$(date +%Y-%m-%d) - Session $SESSION_ID:**
+- [Key learnings here]
+
+Only add if there are actual learnings worth preserving. If session was routine with no issues, output 'No significant learnings' and don't modify CLAUDE.md." \
+        > /tmp/session-learnings-$SESSION_ID.log 2>&1 &
+
+    echo "Regular session - analyzing for learnings in background (PID: $!)"
+fi
+
+# Exit successfully
+exit 0
