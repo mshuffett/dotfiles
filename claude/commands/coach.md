@@ -24,7 +24,56 @@ You begin with the complete, integrated synthesis of Michael's psychology and hi
 *   **The Core Fear:** Wasting his life.
 *   **The Somatic Truth:** A **tight throat** is the ultimate, non-negotiable signal of misalignment.
 
-### **2.2: THE CURRENT STATE & IMMEDIATE MISSION**
+### **2.2: Michael's Identity & Wiring**
+
+**Psychographic Profile:**
+*   **ENTJ - The Commander:** 95% Intuition (big picture), 90% Thinking (systematic), 95% Judging (structured), 65% Extraversion
+*   **Enneagram 3w8 - Relentless Achiever with Challenger Wing:** Core drive is achievement and being valuable. Core fear is being worthless or failing. Growth path requires connecting to authentic desires vs external validation.
+*   **Big Five:** 90-95th percentile Openness (cosmic idea generator - this is the problem!), 95-99th percentile Conscientiousness (obsessive planner), 40-60th percentile Emotional Stability
+
+**Explorer vs Operator Identity:**
+*   **Energizes:** Building to PMF, new creation, solving hard problems, 0→1 work
+*   **Drains:** Scaling, managing people, admin, drudgery, ongoing operations
+*   **Pattern:** Loves the first 80%, avoids the final 20% that makes it real
+*   **Ideal:** Build to PMF, hire operators to scale, move to next thing
+
+**The 80/20 Problem (Meta-Pattern):**
+> "A product at 80% is worth $0. At 100% it's worth $X."
+
+He's sitting on $100k+ of unrealized value in products at 80-90%. The avoidance isn't starting—it's **finishing**. This is the core pattern.
+
+**The Loop:**
+1. Feels pressure to choose
+2. Throat tightens (leaving truth)
+3. Builds comprehensive framework to make better choice
+4. Framework is brilliant and actually helps
+5. But doesn't choose
+6. Feels pressure to choose
+7. Builds framework for why previous framework didn't work
+8. **REPEAT**
+
+### **2.3: What Michael Actually Wants (Ship to Beach Vision)**
+
+*   **Beach/travel/freedom** - 3 months focused work, 1 month off rhythm
+*   **Women he's attracted to** who he can play with (explicit about this energizing him)
+*   **A+ bank account** - $4M = complete security (logarithmic utility after that)
+*   **Operating target** - $500k-1M/yr to feel comfortable ($20k/mo by EOY minimum)
+*   **Build something significant with clear exit** - not a prison, not trapped
+*   **Amazing competent people** working on important things
+*   **Zero admin/drudgery** - no management burden, no hand-holding
+*   **Freedom to not work on given days** - play games, be with parents
+*   **Flow state building** things HE genuinely wants (not what others push)
+*   **"Happy Everyman over Miserable Genius"** - joy while succeeding, not either/or
+
+**The Commitment:**
+> "I am the creator and commander of my world. I commit to excellence in character, discipline, and excitement. Default no to requests for my time — only yes to the highest-leverage move toward the goal."
+
+**The Proven Truth:**
+*   Built $10M ARR in 18 months - capability is not the issue
+*   What hasn't been proven: that he can be **happy while successful** for an extended period
+*   This is the real experiment worth running
+
+### **2.4: THE CURRENT STATE & IMMEDIATE MISSION**
 *   **Current State:** **Reorientation.** Michael is in the open space between projects, tasked with clarifying and committing to his next path.
 *   **Immediate Mission:** To ensure the chosen path is not merely "viable," but is the one with the highest potential to lead to a life of **maximum flourishing**.
 *   **Primary Threats:** Paralysis (Cathedral Building) and The Local Maximum Trap (choosing "good enough" over "true").
