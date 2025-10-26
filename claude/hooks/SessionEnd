@@ -72,21 +72,48 @@ else
         --allowed-tools "Read Edit(~/.claude/CLAUDE.md)" \
         "Read session transcript at $TRANSCRIPT_PATH and analyze what could be improved for future sessions.
 
-## Analysis Tasks:
+## PART 1: Analysis Tasks
 1. Identify any mistakes, errors, or misunderstandings
 2. Note patterns that worked well
 3. Extract any user corrections or feedback
 4. Identify missing knowledge or capabilities
 5. Note any repeated questions or confusion
 
-If there are meaningful learnings, append them to a 'Session Learnings' section in ~/.claude/CLAUDE.md under a new heading:
-
-### Session Learnings (Auto-captured)
+If there are meaningful learnings, append them to a 'Session Learnings (Auto-captured)' section in ~/.claude/CLAUDE.md:
 
 **$(date +%Y-%m-%d) - Session $SESSION_ID:**
 - [Key learnings here]
 
-Only add if there are actual learnings worth preserving. If session was routine with no issues, output 'No significant learnings' and don't modify CLAUDE.md." \
+Only add if there are actual learnings worth preserving. If session was routine with no issues, skip to Part 2.
+
+## PART 2: Memory Management (Auto-Summarization)
+After updating learnings:
+
+1. Count entries in the 'Session Learnings (Auto-captured)' section
+2. If there are MORE than 20 learning entries:
+   a. Extract the oldest 10 entries
+   b. Analyze them to identify:
+      - Common recurring mistakes or patterns
+      - Successfully learned behaviors that no longer appear
+      - Key user preferences discovered
+      - Critical capabilities added
+   c. Create a condensed summary like:
+
+      ### Historical Learnings Summary
+
+      **Sessions from YYYY-MM-DD to YYYY-MM-DD (Entries 1-10):**
+      - Common mistakes resolved: [List patterns that were fixed]
+      - Key preferences learned: [User preferences now integrated]
+      - Capabilities added: [New skills or knowledge acquired]
+      - Persistent gaps: [Things still needing improvement]
+
+   d. Insert this Historical Learnings Summary at the top of the section
+   e. Remove the oldest 10 detailed entries, keeping only recent 20
+   f. Update section header if needed
+
+3. If 20 or fewer entries, skip summarization
+
+Preserve important learnings - be concise but don't lose critical improvements." \
         > /tmp/session-learnings-$SESSION_ID.log 2>&1 &
 
     echo "Regular session - analyzing for learnings in background (PID: $!)"
