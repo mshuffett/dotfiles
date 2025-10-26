@@ -18,9 +18,7 @@ COACH_USED=$(echo "$COACH_USED" | tr -d '\n' | head -c 10)
 if [ "$COACH_USED" -gt 0 ]; then
     # Coach session detected - update coach.md memory bank
     (
-        claude --print \
-            --allowed-tools "Read Edit(~/.claude/commands/coach.md)" \
-            "Read session transcript at $TRANSCRIPT_PATH and update MEMORY BANK in ~/.claude/commands/coach.md with:
+        PROMPT="Read session transcript at $TRANSCRIPT_PATH and update MEMORY BANK in ~/.claude/commands/coach.md with:
 
 ## PART 1: Session Analysis Tasks
 1. Current trajectory assessment (Reorientation/Paralysis/Momentum/etc.)
@@ -65,7 +63,9 @@ After updating the session:
 3. If 15 or fewer sessions, skip summarization
 
 Preserve essential insights - be concise but don't lose critical long-term patterns.
-Only edit the MEMORY BANK section. Preserve all other content in coach.md." \
+Only edit the MEMORY BANK section. Preserve all other content in coach.md."
+
+        echo "$PROMPT" | claude --print --allowed-tools "Read Edit(~/.claude/commands/coach.md)" \
             > /tmp/coach-memory-update-$SESSION_ID.log 2>&1
 
         # Play subtle completion sound
@@ -76,9 +76,7 @@ Only edit the MEMORY BANK section. Preserve all other content in coach.md." \
 else
     # Regular session - extract learnings for future improvement
     (
-        claude --print \
-            --allowed-tools "Read Edit(~/.claude/CLAUDE.md)" \
-            "Read session transcript at $TRANSCRIPT_PATH and analyze what could be improved for future sessions.
+        PROMPT="Read session transcript at $TRANSCRIPT_PATH and analyze what could be improved for future sessions.
 
 ## PART 1: Analysis Tasks
 1. Identify any mistakes, errors, or misunderstandings
@@ -121,7 +119,9 @@ After updating learnings:
 
 3. If 20 or fewer entries, skip summarization
 
-Preserve important learnings - be concise but don't lose critical improvements." \
+Preserve important learnings - be concise but don't lose critical improvements."
+
+        echo "$PROMPT" | claude --print --allowed-tools "Read Edit(~/.claude/CLAUDE.md)" \
             > /tmp/session-learnings-$SESSION_ID.log 2>&1
 
         # Play subtle completion sound
