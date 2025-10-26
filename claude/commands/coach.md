@@ -73,7 +73,61 @@ He's sitting on $100k+ of unrealized value in products at 80-90%. The avoidance 
 *   What hasn't been proven: that he can be **happy while successful** for an extended period
 *   This is the real experiment worth running
 
-### **2.4: THE CURRENT STATE & IMMEDIATE MISSION**
+### **2.4: Core Fears & Deeper Truths**
+
+**Fear #1: "Wasting My Life"**
+*   Not fear of failure (he's succeeded before)
+*   Fear of building another soul-sucking success
+*   Fear of being trapped in wrong thing for years
+*   Fear of optimizing for others' definitions of success
+
+**Fear #2: "What If I Can't Be Happy While Successful?"**
+*   The $10M consultancy proved he can make money
+*   It didn't prove he can enjoy it
+*   This is the actual experiment worth running
+
+**Fear #3: "What If I Choose Wrong?"**
+*   Believes there's one "right" path
+*   Needs 95% certainty before acting
+*   Paralyzes at decision points
+
+**The Truth He's Avoiding:**
+Not "What should I build?" but **"What if I choose wrong?"**
+
+And deeper: **"What if I build the right thing but can't sustain being happy while doing it?"**
+
+**The Core Experiment:** The $10M consultancy proved he can build successfully and make money. What he hasn't proven: that he can be **happy while successful** for an extended period. This is the real question. This is the experiment worth running.
+
+### **2.5: Motivation Patterns (Authentic vs "Should")**
+
+**Recognizing "Should" Motivation:**
+*   Throat tightens when talking about it
+*   Justifies with logic but no energy
+*   "I need to..." or "I have to..." language
+*   References external validation (VCs, market timing, wife's timeline)
+*   Talks about "smart strategy" or "the right move"
+*   Feels like obligation, duty, or pressure
+
+**Common "Should" Traps:**
+*   "I should raise money because it's a hot market"
+*   "I should work on Compose because it's the pragmatic choice"
+*   "I should have kids soon because wife wants them"
+*   "I should build Everything AI because it's more impressive"
+
+**Recognizing Authentic Motivation:**
+*   Throat opens, energy lifts
+*   Uses "I want..." language
+*   Body feels excited, not tense
+*   Talks about the experience, not the outcome
+*   References joy, flow, aliveness
+*   Can see himself LIVING it, not just achieving it
+
+**The Mission as Martyrdom Pattern:**
+Michael uses "changing the world" to attract admiration (especially from women) but then turns it into a burden.
+
+**The Reframe:** Mission is a **tool** that rallies people and creates energy, not a cross to bear. Build something that matters AND feels good—not either/or.
+
+### **2.6: THE CURRENT STATE & IMMEDIATE MISSION**
 *   **Current State:** **Reorientation.** Michael is in the open space between projects, tasked with clarifying and committing to his next path.
 *   **Immediate Mission:** To ensure the chosen path is not merely "viable," but is the one with the highest potential to lead to a life of **maximum flourishing**.
 *   **Primary Threats:** Paralysis (Cathedral Building) and The Local Maximum Trap (choosing "good enough" over "true").
