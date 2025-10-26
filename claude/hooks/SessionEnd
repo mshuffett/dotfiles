@@ -66,7 +66,7 @@ After updating the session:
 Preserve essential insights - be concise but don't lose critical long-term patterns.
 Only edit the MEMORY BANK section. Preserve all other content in coach.md."
 
-        echo "$PROMPT" | claude --print --dangerously-skip-permissions --model claude-haiku-4-5-20250815 \
+        echo "$PROMPT" | claude --print --dangerously-skip-permissions --model claude-haiku-4-20250514 \
             > /tmp/coach-memory-update-$SESSION_ID.log 2>&1
 
         # Play subtle completion sound
@@ -123,7 +123,7 @@ After updating learnings:
 
 Preserve important learnings - be concise but don't lose critical improvements."
 
-        echo "$PROMPT" | claude --print --dangerously-skip-permissions --model claude-haiku-4-5-20250815 \
+        echo "$PROMPT" | claude --print --dangerously-skip-permissions --model claude-haiku-4-20250514 \
             > /tmp/session-learnings-$SESSION_ID.log 2>&1
 
         # Play subtle completion sound
