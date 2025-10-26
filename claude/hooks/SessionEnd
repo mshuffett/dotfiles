@@ -15,9 +15,10 @@ COACH_USED=$(grep -c '"name":"SlashCommand".*"command":"/coach"' "$TRANSCRIPT_PA
 
 if [ "$COACH_USED" -gt 0 ]; then
     # Coach session detected - update coach.md memory bank
-    nohup claude --print \
-        --allowed-tools "Read Edit(~/.claude/commands/coach.md)" \
-        "Read session transcript at $TRANSCRIPT_PATH and update MEMORY BANK in ~/.claude/commands/coach.md with:
+    (
+        claude --print \
+            --allowed-tools "Read Edit(~/.claude/commands/coach.md)" \
+            "Read session transcript at $TRANSCRIPT_PATH and update MEMORY BANK in ~/.claude/commands/coach.md with:
 
 ## PART 1: Session Analysis Tasks
 1. Current trajectory assessment (Reorientation/Paralysis/Momentum/etc.)
@@ -63,14 +64,19 @@ After updating the session:
 
 Preserve essential insights - be concise but don't lose critical long-term patterns.
 Only edit the MEMORY BANK section. Preserve all other content in coach.md." \
-        > /tmp/coach-memory-update-$SESSION_ID.log 2>&1 &
+            > /tmp/coach-memory-update-$SESSION_ID.log 2>&1
+
+        # Play subtle completion sound
+        afplay "/System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Portal-EncoreInfinitum.caf"
+    ) &
 
     echo "Coach session detected - triggering memory update in background (PID: $!)"
 else
     # Regular session - extract learnings for future improvement
-    nohup claude --print \
-        --allowed-tools "Read Edit(~/.claude/CLAUDE.md)" \
-        "Read session transcript at $TRANSCRIPT_PATH and analyze what could be improved for future sessions.
+    (
+        claude --print \
+            --allowed-tools "Read Edit(~/.claude/CLAUDE.md)" \
+            "Read session transcript at $TRANSCRIPT_PATH and analyze what could be improved for future sessions.
 
 ## PART 1: Analysis Tasks
 1. Identify any mistakes, errors, or misunderstandings
@@ -114,7 +120,11 @@ After updating learnings:
 3. If 20 or fewer entries, skip summarization
 
 Preserve important learnings - be concise but don't lose critical improvements." \
-        > /tmp/session-learnings-$SESSION_ID.log 2>&1 &
+            > /tmp/session-learnings-$SESSION_ID.log 2>&1
+
+        # Play subtle completion sound (use Glass for regular sessions - more subtle)
+        afplay /System/Library/Sounds/Glass.aiff
+    ) &
 
     echo "Regular session - analyzing for learnings in background (PID: $!)"
 fi
