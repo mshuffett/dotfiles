@@ -18,6 +18,7 @@ COACH_USED=$(echo "$COACH_USED" | head -1)
 if [ "$COACH_USED" -gt 0 ]; then
     # Coach session detected - update coach.md memory bank
     (
+        cd "$HOME" || exit 1
         PROMPT="Read session transcript at $TRANSCRIPT_PATH and update MEMORY BANK in ~/.claude/commands/coach.md with:
 
 ## PART 1: Session Analysis Tasks
@@ -76,6 +77,7 @@ Only edit the MEMORY BANK section. Preserve all other content in coach.md."
 else
     # Regular session - extract learnings for future improvement
     (
+        cd "$HOME" || exit 1
         PROMPT="Read session transcript at $TRANSCRIPT_PATH and analyze what could be improved for future sessions.
 
 ## PART 1: Analysis Tasks
