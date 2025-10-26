@@ -19,7 +19,7 @@ if [ "$COACH_USED" -gt 0 ]; then
         --allowed-tools "Read Edit(~/.claude/commands/coach.md)" \
         "Read session transcript at $TRANSCRIPT_PATH and update MEMORY BANK in ~/.claude/commands/coach.md with:
 
-## Session Analysis Tasks:
+## PART 1: Session Analysis Tasks
 1. Current trajectory assessment (Reorientation/Paralysis/Momentum/etc.)
 2. Active patterns observed (Cathedral Building, Permission Problem, Local Maximum Trap)
 3. Somatic signals noted (throat tightness triggers, body vs head language)
@@ -32,6 +32,36 @@ if [ "$COACH_USED" -gt 0 ]; then
    - Key insights and breakthroughs
 7. Update 'Last updated' timestamp to $(date +%Y-%m-%d)
 
+## PART 2: Memory Management (Auto-Summarization)
+After updating the session:
+
+1. Count session entries in the Session Log section
+2. If there are MORE than 15 session entries:
+   a. Extract the oldest 5-10 sessions (keep the most recent 10 detailed)
+   b. Analyze them to identify:
+      - Recurring patterns across those sessions
+      - Major trajectory shifts
+      - Key commitments and their outcomes
+      - Persistent themes or struggles
+      - Notable breakthroughs
+   c. Create a condensed Historical Summary entry like:
+
+      ### Historical Summary
+
+      **Sessions 001-010 (YYYY-MM-DD to YYYY-MM-DD):**
+      - Overall Trajectory: [Summary of trajectory evolution over this period]
+      - Key Patterns Observed: [Cathedral Building frequency, Permission Problem manifestations, etc.]
+      - Major Commitments: [List significant commitments and whether completed]
+      - Breakthrough Moments: [Any significant insights or shifts]
+      - Mode Distribution: Partner: X, Coach: Y, Catalyst: Z
+
+   d. Insert this Historical Summary section between Pattern Evolution and Session Log
+   e. Remove the detailed entries for the oldest sessions, keeping only recent 10
+   f. Update Session Log header to reflect new range (e.g., 'Session Log (Last 10 Sessions)')
+
+3. If 15 or fewer sessions, skip summarization
+
+Preserve essential insights - be concise but don't lose critical long-term patterns.
 Only edit the MEMORY BANK section. Preserve all other content in coach.md." \
         > /tmp/coach-memory-update-$SESSION_ID.log 2>&1 &
 
