@@ -9,6 +9,43 @@ set -e
 
 DOTFILES_DIR="$HOME/.dotfiles"
 
+# Parse command line arguments
+AUTO_YES=false
+INSTALL_ALL=false
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --yes|-y)
+      AUTO_YES=true
+      shift
+      ;;
+    --all|-a)
+      INSTALL_ALL=true
+      shift
+      ;;
+    --help|-h)
+      echo "Bootstrap Setup Script"
+      echo ""
+      echo "Usage: $0 [OPTIONS]"
+      echo ""
+      echo "Options:"
+      echo "  --yes, -y    Answer yes to all prompts (non-interactive)"
+      echo "  --all, -a    Install all package categories"
+      echo "  --help, -h   Show this help message"
+      echo ""
+      echo "Examples:"
+      echo "  $0              # Interactive mode"
+      echo "  $0 --all --yes  # Install everything without prompts"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Use --help for usage information"
+      exit 1
+      ;;
+  esac
+done
+
 # Handle Ctrl+C gracefully
 trap 'echo ""; log_warning "Bootstrap cancelled by user"; exit 130' INT TERM
 
@@ -22,6 +59,17 @@ NC='\033[0m' # No Color
 # ============================================================================
 # Utility Functions
 # ============================================================================
+
+# Helper for confirmations that respects --yes flag
+ask_confirm() {
+  local prompt=$1
+  if [[ "$AUTO_YES" == "true" ]]; then
+    echo "✓ $prompt (auto-yes)"
+    return 0
+  else
+    gum confirm "$prompt"
+  fi
+}
 
 log_info() {
   if command -v gum &> /dev/null; then
@@ -560,13 +608,18 @@ main() {
   fi
 
   # Confirm before proceeding
-  echo ""
-  gum style --foreground 212 "Ready to configure your setup?"
-  ready=$(gum choose "Yes, let's go!" "No, cancel")
+  if [[ "$AUTO_YES" == "false" ]]; then
+    echo ""
+    gum style --foreground 212 "Ready to configure your setup?"
+    ready=$(gum choose "Yes, let's go!" "No, cancel")
 
-  if [[ "$ready" == "No, cancel" ]]; then
-    log_info "Bootstrap cancelled"
-    exit 0
+    if [[ "$ready" == "No, cancel" ]]; then
+      log_info "Bootstrap cancelled"
+      exit 0
+    fi
+  else
+    echo ""
+    log_info "Running in auto-yes mode"
   fi
 
   echo ""
@@ -605,8 +658,7 @@ main() {
 
   # Symlinks
   local create_symlinks_choice
-  choice=$(gum choose "Yes" "No" --header "Create dotfile symlinks (.zshrc, .tmux.conf, .gitconfig, etc.)?")
-  if [[ "$choice" == "Yes" ]]; then
+  if ask_confirm "Create dotfile symlinks (.zshrc, .tmux.conf, .gitconfig, etc.)?"; then
     create_symlinks_choice="true"
   else
     create_symlinks_choice="false"
@@ -615,7 +667,11 @@ main() {
 
   # Package categories
   local package_categories
-  if gum confirm "Install Homebrew packages?"; then
+  if [[ "$INSTALL_ALL" == "true" ]]; then
+    # Auto-select all categories
+    package_categories=$'🟢 Essential (26 packages)\n🟡 Development (4 packages)\n🟠 Utilities (8 packages)\n🔵 Optional (6 packages)'
+    log_info "Auto-selecting all package categories"
+  elif ask_confirm "Install Homebrew packages?"; then
     gum style \
       --foreground 246 \
       "Select which package categories to install:" \
@@ -653,7 +709,7 @@ main() {
   if command -v node &> /dev/null; then
     gum style --foreground 246 "Node.js already installed: $(node --version)"
   elif echo "$package_categories" | grep -q "Development"; then
-    if gum confirm "Install Node.js LTS via fnm?"; then
+    if ask_confirm "Install Node.js LTS via fnm?"; then
       install_node="true"
     fi
   fi
@@ -664,7 +720,7 @@ main() {
   if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
     # Only offer tmux plugins if Essential category is selected (which includes tmux)
     if echo "$package_categories" | grep -q "Essential"; then
-      if gum confirm "Install tmux plugins? (Installs TPM + all plugins automatically)"; then
+      if ask_confirm "Install tmux plugins? (Installs TPM + all plugins automatically)"; then
         install_tpm="true"
       fi
     fi
@@ -692,7 +748,7 @@ main() {
 
   echo ""
 
-  if ! gum confirm "Execute this plan?"; then
+  if ! ask_confirm "Execute this plan?"; then
     log_info "Bootstrap cancelled"
     exit 0
   fi
