@@ -682,6 +682,7 @@ main() {
   setup_tmux_plugins "$install_tpm"
 
   # Final summary
+  echo ""
   gum style \
     --border double \
     --padding "1 2" \
@@ -690,12 +691,14 @@ main() {
     "✓ Bootstrap Complete!" \
     "" \
     "Next steps:" \
-    "1. Restart your shell (or run: exec zsh)" \
-    "2. Open tmux and press Ctrl+a I to install plugins" \
-    "3. Launch neovim to install plugins" \
-    "4. Review ~/.dotfiles/README.md for more info"
+    "1. Restart your shell: exec zsh" \
+    "2. Tmux plugins are ready!" \
+    "3. Launch neovim to install NvChad plugins" \
+    "" \
+    "Your fresh Mac is ready! 🎉"
 
-  log_info "Your fresh Mac is ready! 🎉"
+  echo ""
+  log_info "Done! Enjoy your new setup."
 }
 
 main "$@"
