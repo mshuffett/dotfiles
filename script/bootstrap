@@ -440,11 +440,21 @@ install_packages() {
   fi
 
   # Install packages
-  gum spin --spinner dot --title "Installing packages..." -- \
-    brew bundle install --file="$temp_brewfile"
+  echo ""
+  gum style --foreground 212 "Installing packages..."
 
-  rm "$temp_brewfile"
-  log_info "Packages installed"
+  if brew bundle install --file="$temp_brewfile" 2>&1 | tee /tmp/brew-install.log; then
+    rm "$temp_brewfile"
+    log_info "Packages installed successfully"
+  else
+    log_error "Package installation failed!"
+    echo ""
+    echo "Error output:"
+    tail -20 /tmp/brew-install.log
+    echo ""
+    log_error "Installation stopped. Please fix the errors above and re-run bootstrap."
+    exit 1
+  fi
 }
 
 # ============================================================================
@@ -459,10 +469,15 @@ setup_node() {
       if command -v node &> /dev/null; then
         log_info "Node.js already installed: $(node --version)"
       else
-        gum spin --spinner dot --title "Installing Node.js LTS..." -- \
-          fnm install --lts
-        fnm default lts-latest
-        log_info "Node.js LTS installed and set as default"
+        echo ""
+        gum style --foreground 212 "Installing Node.js LTS..."
+
+        if fnm install --lts && fnm default lts-latest; then
+          log_info "Node.js LTS installed and set as default"
+        else
+          log_error "Node.js installation failed"
+          exit 1
+        fi
       fi
     else
       log_warning "fnm not installed, skipping Node.js setup"
@@ -475,9 +490,15 @@ setup_tmux_plugins() {
 
   if [[ "$install_tpm" == "true" ]]; then
     if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
-      gum spin --spinner dot --title "Installing TPM and plugins..." -- \
-        bash -c "git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm && ~/.tmux/plugins/tpm/bin/install_plugins"
-      log_info "TPM and plugins installed!"
+      echo ""
+      gum style --foreground 212 "Installing TPM and plugins..."
+
+      if git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm && ~/.tmux/plugins/tpm/bin/install_plugins; then
+        log_info "TPM and plugins installed!"
+      else
+        log_error "TPM installation failed"
+        exit 1
+      fi
     else
       log_info "TPM already installed"
     fi
