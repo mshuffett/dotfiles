@@ -407,6 +407,24 @@ create_symlinks() {
     ln -s "$src" "$dst"
     log_info "Linked $(basename "$dst")"
   done
+
+  # Special handling for nvim config (doesn't follow .symlink naming)
+  if [[ -d "$DOTFILES_DIR/nvim/nvim" ]]; then
+    mkdir -p "$HOME/.config"
+
+    # Backup existing nvim config if it exists and isn't a symlink
+    if [[ -d "$HOME/.config/nvim" ]] && [[ ! -L "$HOME/.config/nvim" ]]; then
+      local backup_dir="$HOME/.dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
+      mkdir -p "$backup_dir"
+      mv "$HOME/.config/nvim" "$backup_dir/nvim"
+      log_info "Backed up existing nvim config to $backup_dir"
+    elif [[ -L "$HOME/.config/nvim" ]]; then
+      rm "$HOME/.config/nvim"
+    fi
+
+    ln -s "$DOTFILES_DIR/nvim/nvim" "$HOME/.config/nvim"
+    log_info "Linked nvim config"
+  fi
 }
 
 # ============================================================================
