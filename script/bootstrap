@@ -9,6 +9,9 @@ set -e
 
 DOTFILES_DIR="$HOME/.dotfiles"
 
+# Handle Ctrl+C gracefully
+trap 'echo ""; log_warning "Bootstrap cancelled by user"; exit 130' INT TERM
+
 # Colors for fallback (if gum isn't installed yet)
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -346,16 +349,67 @@ create_symlinks() {
 install_packages() {
   gum style --foreground 212 "Package Installation"
 
+  # Show what's in each category
+  gum style \
+    --foreground 246 \
+    "Select which package categories to install:" \
+    "" \
+    "🟢 Essential (26 packages):" \
+    "   git, gh, lazygit, tmux, fzf, neovim, bat, eza, fd," \
+    "   ripgrep, zoxide, gum, glow, 1password-cli, gnupg..." \
+    "" \
+    "🟡 Development (4 packages):" \
+    "   fnm (Node version manager), git-delta, flyctl, supabase" \
+    "" \
+    "🟠 Utilities (8 packages):" \
+    "   gnu-sed, grep, moreutils, broot, chafa, duti, rclone" \
+    "" \
+    "🔵 Optional (6 packages):" \
+    "   Nerd Fonts (FiraCode, JetBrains Mono, Hack, etc.)"
+
+  echo ""
+
   # Ask which categories to install
   local categories
   categories=$(gum choose --no-limit \
-    "Essential (git, shell, terminal, modern CLI tools)" \
-    "Development (fnm, cloud tools)" \
-    "Utilities (text processing, file navigation)" \
-    "Optional (Nerd Fonts)")
+    "🟢 Essential (26 packages)" \
+    "🟡 Development (4 packages)" \
+    "🟠 Utilities (8 packages)" \
+    "🔵 Optional (6 packages)")
 
   if [[ -z "$categories" ]]; then
     log_warning "No packages selected, skipping installation"
+    return
+  fi
+
+  # Show what will be installed
+  local total_count=0
+  echo ""
+  gum style --foreground 214 "Will install:"
+
+  if echo "$categories" | grep -q "Essential"; then
+    echo "  🟢 Essential (26 packages)"
+    ((total_count+=26))
+  fi
+  if echo "$categories" | grep -q "Development"; then
+    echo "  🟡 Development (4 packages)"
+    ((total_count+=4))
+  fi
+  if echo "$categories" | grep -q "Utilities"; then
+    echo "  🟠 Utilities (8 packages)"
+    ((total_count+=8))
+  fi
+  if echo "$categories" | grep -q "Optional"; then
+    echo "  🔵 Optional (6 packages)"
+    ((total_count+=6))
+  fi
+
+  echo ""
+  gum style --foreground 212 "Total: $total_count packages"
+  echo ""
+
+  if ! gum confirm "Proceed with installation?"; then
+    log_warning "Package installation cancelled"
     return
   fi
 
@@ -398,33 +452,34 @@ install_packages() {
 # ============================================================================
 
 setup_node() {
-  if command -v fnm &> /dev/null; then
-    if gum confirm "Install Node.js LTS via fnm?"; then
-      gum spin --spinner dot --title "Installing Node.js LTS..." -- \
-        fnm install --lts
-      fnm default lts-latest
-      log_info "Node.js LTS installed and set as default"
+  local install_node=$1
+
+  if [[ "$install_node" == "true" ]]; then
+    if command -v fnm &> /dev/null; then
+      if command -v node &> /dev/null; then
+        log_info "Node.js already installed: $(node --version)"
+      else
+        gum spin --spinner dot --title "Installing Node.js LTS..." -- \
+          fnm install --lts
+        fnm default lts-latest
+        log_info "Node.js LTS installed and set as default"
+      fi
+    else
+      log_warning "fnm not installed, skipping Node.js setup"
     fi
   fi
 }
 
 setup_tmux_plugins() {
-  if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
-    if gum confirm "Install Tmux Plugin Manager (TPM)?"; then
-      gum spin --spinner dot --title "Installing TPM..." -- \
-        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-      log_info "TPM installed. Press prefix + I in tmux to install plugins"
-    fi
-  else
-    log_info "TPM already installed"
-  fi
-}
+  local install_tpm=$1
 
-setup_neovim() {
-  if command -v nvim &> /dev/null; then
-    if gum confirm "Install Neovim plugins on first launch?"; then
-      log_info "Neovim plugins will be installed on first launch"
-      # NvChad auto-installs plugins on first launch
+  if [[ "$install_tpm" == "true" ]]; then
+    if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+      gum spin --spinner dot --title "Installing TPM and plugins..." -- \
+        bash -c "git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm && ~/.tmux/plugins/tpm/bin/install_plugins"
+      log_info "TPM and plugins installed!"
+    else
+      log_info "TPM already installed"
     fi
   fi
 }
@@ -443,45 +498,188 @@ main() {
   install_gum
 
   # Confirm before proceeding
-  if ! gum confirm "Ready to bootstrap your Mac?"; then
+  if ! gum confirm "Ready to configure your setup?"; then
     log_info "Bootstrap cancelled"
     exit 0
   fi
 
+  echo ""
+  gum style --foreground 212 --bold "📋 Configuration"
+  echo ""
+
+  # ============================================================================
+  # COLLECT ALL CHOICES UPFRONT
+  # ============================================================================
+
   # Git configuration
+  local git_name git_email existing_name existing_email
   if [[ ! -f "$DOTFILES_DIR/git/gitconfig.symlink" ]]; then
-    setup_git_config
-  else
-    log_info "Git already configured"
+    gum style --foreground 246 "Git Configuration"
+    existing_name=$(git config --global user.name 2>/dev/null || echo "")
+    existing_email=$(git config --global user.email 2>/dev/null || echo "")
+
+    if [[ -n "$existing_name" ]]; then
+      git_name=$(gum input --placeholder "$existing_name" --prompt "Name: " --value "$existing_name")
+    else
+      git_name=$(gum input --placeholder "Your full name" --prompt "Name: ")
+    fi
+
+    if [[ -n "$existing_email" ]]; then
+      git_email=$(gum input --placeholder "$existing_email" --prompt "Email: " --value "$existing_email")
+    else
+      git_email=$(gum input --placeholder "your.email@example.com" --prompt "Email: ")
+    fi
+
+    if [[ -z "$git_name" ]] || [[ -z "$git_email" ]]; then
+      log_error "Git name and email are required"
+      exit 1
+    fi
+    echo ""
   fi
 
-  # Backup and symlink
-  if gum confirm "Create symlinks for dotfiles?"; then
-    gum style \
-      --foreground 214 \
-      --border normal \
-      --padding "0 1" \
-      "Backup Strategy:" \
-      "• Existing configs will be copied to ~/.dotfiles_backup_TIMESTAMP" \
-      "• Your original files are NEVER deleted" \
-      "• If a .backup file exists, we'll create .backup.1, .backup.2, etc." \
-      "• Completely safe and non-destructive"
+  # Symlinks
+  local create_symlinks_choice
+  if gum confirm "Create dotfile symlinks (.zshrc, .tmux.conf, .gitconfig, etc.)?"; then
+    create_symlinks_choice="true"
+  else
+    create_symlinks_choice="false"
+  fi
+  echo ""
 
+  # Package categories
+  local package_categories
+  if gum confirm "Install Homebrew packages?"; then
+    gum style \
+      --foreground 246 \
+      "Select which package categories to install:" \
+      "" \
+      "🟢 Essential (26 packages):" \
+      "   git, gh, lazygit, tmux, fzf, neovim, bat, eza, fd," \
+      "   ripgrep, zoxide, gum, glow, 1password-cli, gnupg..." \
+      "" \
+      "🟡 Development (4 packages):" \
+      "   fnm (Node version manager), git-delta, flyctl, supabase" \
+      "" \
+      "🟠 Utilities (8 packages):" \
+      "   gnu-sed, grep, moreutils, broot, chafa, duti, rclone" \
+      "" \
+      "🔵 Optional (6 packages):" \
+      "   Nerd Fonts (FiraCode, JetBrains Mono, Hack, etc.)"
+
+    echo ""
+
+    package_categories=$(gum choose --no-limit \
+      "🟢 Essential (26 packages)" \
+      "🟡 Development (4 packages)" \
+      "🟠 Utilities (8 packages)" \
+      "🔵 Optional (6 packages)")
+  fi
+  echo ""
+
+  # Node.js setup
+  local install_node="false"
+  if command -v node &> /dev/null; then
+    gum style --foreground 246 "Node.js already installed: $(node --version)"
+  elif echo "$package_categories" | grep -q "Development"; then
+    if gum confirm "Install Node.js LTS via fnm?"; then
+      install_node="true"
+    fi
+  fi
+  echo ""
+
+  # TMux plugins
+  local install_tpm="false"
+  if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+    if gum confirm "Install tmux plugins? (Installs TPM + all plugins automatically)"; then
+      install_tpm="true"
+    fi
+  else
+    gum style --foreground 246 "TPM already installed"
+  fi
+  echo ""
+
+  # ============================================================================
+  # SHOW COMPLETE PLAN
+  # ============================================================================
+
+  gum style \
+    --border double \
+    --padding "1 2" \
+    --margin "1" \
+    --border-foreground 212 \
+    "📋 Installation Plan" \
+    "" \
+    "$(if [[ -n "$git_name" ]]; then echo "✓ Configure git: $git_name <$git_email>"; fi)" \
+    "$(if [[ "$create_symlinks_choice" == "true" ]]; then echo "✓ Create dotfile symlinks (with safe backups)"; fi)" \
+    "$(if [[ -n "$package_categories" ]]; then echo "✓ Install $(echo "$package_categories" | wc -l | tr -d ' ') package categories"; fi)" \
+    "$(if [[ "$install_node" == "true" ]]; then echo "✓ Install Node.js LTS via fnm"; fi)" \
+    "$(if [[ "$install_tpm" == "true" ]]; then echo "✓ Install tmux plugins (TPM + all plugins)"; fi)"
+
+  echo ""
+
+  if ! gum confirm "Execute this plan?"; then
+    log_info "Bootstrap cancelled"
+    exit 0
+  fi
+
+  # ============================================================================
+  # EXECUTE EVERYTHING
+  # ============================================================================
+
+  echo ""
+  gum style --foreground 212 --bold "🚀 Executing..."
+  echo ""
+
+  # Git configuration
+  if [[ -n "$git_name" ]]; then
+    if [[ -f "$DOTFILES_DIR/git/gitconfig.symlink.example" ]]; then
+      cp "$DOTFILES_DIR/git/gitconfig.symlink.example" "$DOTFILES_DIR/git/gitconfig.symlink"
+      sed -i '' "s/AUTHORNAME/$git_name/g" "$DOTFILES_DIR/git/gitconfig.symlink"
+      sed -i '' "s/AUTHOREMAIL/$git_email/g" "$DOTFILES_DIR/git/gitconfig.symlink"
+      sed -i '' "s/GIT_CREDENTIAL_HELPER/osxkeychain/g" "$DOTFILES_DIR/git/gitconfig.symlink"
+      log_info "Git configured for $git_name <$git_email>"
+    fi
+  fi
+
+  # Symlinks
+  if [[ "$create_symlinks_choice" == "true" ]]; then
     backup_existing_configs
     create_symlinks
   fi
 
-  # Install packages
-  if gum confirm "Install packages via Homebrew?"; then
-    install_packages
+  # Packages
+  if [[ -n "$package_categories" ]]; then
+    # Build temp brewfile
+    local temp_brewfile="/tmp/Brewfile.bootstrap"
+    echo "# Temporary Brewfile for bootstrap" > "$temp_brewfile"
+    echo "" >> "$temp_brewfile"
+
+    grep "^tap " "$DOTFILES_DIR/Brewfile" >> "$temp_brewfile"
+    echo "" >> "$temp_brewfile"
+
+    if echo "$package_categories" | grep -q "Essential"; then
+      sed -n '/^# 🟢 ESSENTIAL/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+    fi
+    if echo "$package_categories" | grep -q "Development"; then
+      sed -n '/^# 🟡 DEVELOPMENT/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+    fi
+    if echo "$package_categories" | grep -q "Utilities"; then
+      sed -n '/^# 🟠 UTILITIES/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+    fi
+    if echo "$package_categories" | grep -q "Optional"; then
+      sed -n '/^# 🔵 OPTIONAL/,/^$/p' "$DOTFILES_DIR/Brewfile" >> "$temp_brewfile"
+    fi
+
+    gum spin --spinner dot --title "Installing packages..." -- \
+      brew bundle install --file="$temp_brewfile"
+
+    rm "$temp_brewfile"
+    log_info "Packages installed"
   fi
 
   # Additional setup
-  gum style --foreground 212 "Additional Setup"
-
-  setup_node
-  setup_tmux_plugins
-  setup_neovim
+  setup_node "$install_node"
+  setup_tmux_plugins "$install_tpm"
 
   # Final summary
   gum style \
