@@ -519,6 +519,9 @@ install_packages() {
   echo ""
   gum style --foreground 212 "Installing packages..."
 
+  # Enable parallel downloads and builds for faster installation
+  export HOMEBREW_MAKE_JOBS=4
+
   if brew bundle install --file="$temp_brewfile" 2>&1 | tee /tmp/brew-install.log; then
     rm "$temp_brewfile"
     log_info "Packages installed successfully"
@@ -810,6 +813,9 @@ main() {
     echo ""
     gum style --foreground 212 "Installing packages..."
     echo ""
+
+    # Enable parallel downloads and builds for faster installation
+    export HOMEBREW_MAKE_JOBS=4
 
     if brew bundle install --file="$temp_brewfile" 2>&1 | tee /tmp/brew-install.log; then
       rm "$temp_brewfile"
