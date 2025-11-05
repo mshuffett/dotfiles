@@ -45,21 +45,61 @@ log_warning() {
 }
 
 show_header() {
+  clear
   if command -v gum &> /dev/null; then
     gum style \
       --border double \
       --padding "1 2" \
       --margin "1" \
       --border-foreground 212 \
-      "🚀 Fresh Mac Bootstrap Wizard" \
+      "╔═══════════════════════════════════════════╗" \
+      "║  ░█▀▄░█▀█░▀█▀░█▀▀░▀█▀░█░░░█▀▀░█▀▀       ║" \
+      "║  ░█░█░█░█░░█░░█▀▀░░█░░█░░░█▀▀░▀▀█       ║" \
+      "║  ░▀▀░░▀▀▀░░▀░░▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀       ║" \
+      "╚═══════════════════════════════════════════╝"
+
+    echo ""
+    gum style --foreground 212 --bold "Fresh Mac Bootstrap Wizard"
+    echo ""
+
+    gum style \
+      --foreground 246 \
+      "This interactive wizard will help you set up your Mac with:" \
       "" \
-      "Let's set up your new machine!"
+      "  🔧  Git configuration (name, email)" \
+      "  🔗  Dotfile symlinks (zsh, tmux, git, etc.)" \
+      "  📦  Homebrew packages (44 curated tools)" \
+      "  ⚙️   Optional setup (Node.js, tmux plugins, Neovim)" \
+      "" \
+      "All steps are:" \
+      "  ✓ Safe (non-destructive backups)" \
+      "  ✓ Interactive (you choose what to install)" \
+      "  ✓ Idempotent (safe to run multiple times)"
+
+    echo ""
   else
-    echo ""
-    echo "======================================"
-    echo "🚀 Fresh Mac Bootstrap Wizard"
-    echo "======================================"
-    echo ""
+    cat << "EOF"
+
+╔═══════════════════════════════════════════╗
+║  ░█▀▄░█▀█░▀█▀░█▀▀░▀█▀░█░░░█▀▀░█▀▀       ║
+║  ░█░█░█░█░░█░░█▀▀░░█░░█░░░█▀▀░▀▀█       ║
+║  ░▀▀░░▀▀▀░░▀░░▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀       ║
+╚═══════════════════════════════════════════╝
+
+Fresh Mac Bootstrap Wizard
+
+This interactive wizard will help you set up your Mac with:
+  🔧  Git configuration (name, email)
+  🔗  Dotfile symlinks (zsh, tmux, git, etc.)
+  📦  Homebrew packages (44 curated tools)
+  ⚙️   Optional setup (Node.js, tmux plugins, Neovim)
+
+All steps are:
+  ✓ Safe (non-destructive backups)
+  ✓ Interactive (you choose what to install)
+  ✓ Idempotent (safe to run multiple times)
+
+EOF
   fi
 }
 
