@@ -518,8 +518,32 @@ main() {
   install_homebrew
   install_gum
 
+  # Check if we have an interactive terminal
+  if [ ! -t 0 ]; then
+    log_error "This script requires an interactive terminal"
+    echo ""
+    echo "Please run it directly from your terminal:"
+    echo "  ~/.dotfiles/script/bootstrap"
+    echo ""
+    echo "Don't pipe it or run through other commands"
+    exit 1
+  fi
+
   # Confirm before proceeding
-  if ! gum confirm "Ready to configure your setup?"; then
+  if ! gum confirm "Ready to configure your setup?" 2>/tmp/gum-error.log; then
+    if grep -q "could not open.*TTY" /tmp/gum-error.log 2>/dev/null; then
+      log_error "Cannot open interactive terminal"
+      echo ""
+      echo "This might be because:"
+      echo "  - You're running through a pipe or redirect"
+      echo "  - Your terminal session isn't properly initialized"
+      echo "  - You're in tmux/screen without proper TTY setup"
+      echo ""
+      echo "Try:"
+      echo "  1. Open a fresh terminal window"
+      echo "  2. Run: ~/.dotfiles/script/bootstrap"
+      exit 1
+    fi
     log_info "Bootstrap cancelled"
     exit 0
   fi
