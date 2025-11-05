@@ -123,7 +123,11 @@ export PNPM_HOME="/Users/michael/Library/pnpm"
 export DENO_INSTALL="/Users/michael/.deno"
 export GOPATH=$HOME/go
 export SPARK_HOME='/Users/michael/pixiedust/bin/spark/spark-2.4.3-bin-hadoop2.7'
-export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+
+# Java - only set if available (avoids errors during shell startup)
+if /usr/libexec/java_home -v 1.8 &>/dev/null; then
+  export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+fi
 
 # Hadoop configuration
 export HADOOP_VERSION=2.7.3
@@ -311,12 +315,6 @@ if [ -f '/Users/michael/google-cloud-sdk/completion.zsh.inc' ]; then
 fi
 
 source ~/.dotfiles/zsh/aliases.zsh
-
-# Java - only set if installed
-if [ -d "/Library/Java/JavaVirtualMachines/jdk-12.0.1.jdk/Contents/Home" ]; then
-  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-12.0.1.jdk/Contents/Home
-  export PATH=$JAVA_HOME/bin:$PATH
-fi
 
 # Bun installation directory (path added in path array above)
 export BUN_INSTALL="$HOME/.bun"
