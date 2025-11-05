@@ -425,6 +425,25 @@ create_symlinks() {
     ln -s "$DOTFILES_DIR/nvim/nvim" "$HOME/.config/nvim"
     log_info "Linked nvim config"
   fi
+
+  # Special handling for Ghostty config (macOS Application Support location)
+  if [[ -f "$DOTFILES_DIR/ghostty/config" ]]; then
+    local ghostty_config_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
+    mkdir -p "$ghostty_config_dir"
+
+    # Backup existing Ghostty config if it exists and isn't a symlink
+    if [[ -f "$ghostty_config_dir/config" ]] && [[ ! -L "$ghostty_config_dir/config" ]]; then
+      local backup_dir="$HOME/.dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
+      mkdir -p "$backup_dir"
+      cp "$ghostty_config_dir/config" "$backup_dir/ghostty-config"
+      log_info "Backed up existing Ghostty config to $backup_dir"
+    elif [[ -L "$ghostty_config_dir/config" ]]; then
+      rm "$ghostty_config_dir/config"
+    fi
+
+    ln -s "$DOTFILES_DIR/ghostty/config" "$ghostty_config_dir/config"
+    log_info "Linked Ghostty config"
+  fi
 }
 
 # ============================================================================
