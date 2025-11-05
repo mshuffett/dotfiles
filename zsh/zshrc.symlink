@@ -330,6 +330,9 @@ export PATH="/Users/michael/.codeium/windsurf/bin:$PATH"
 # bun completions
 [ -s "/Users/michael/.bun/_bun" ] && source "/Users/michael/.bun/_bun"
 
+# Rust (cargo) environment
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+
 eval "$(zoxide init zsh)"
 export TZ="America/Los_Angeles"
 # Added by LM Studio CLI (lms)
