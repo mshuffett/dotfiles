@@ -385,26 +385,34 @@ install_packages() {
   # Show what will be installed
   local total_count=0
   echo ""
-  gum style --foreground 214 "Will install:"
+  gum style --foreground 214 --bold "📦 Packages to Install"
+  echo ""
 
   if echo "$categories" | grep -q "Essential"; then
-    echo "  🟢 Essential (26 packages)"
+    gum style --foreground 212 "🟢 Essential:"
+    sed -n '/^# 🟢 ESSENTIAL/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep '^brew "' | sed 's/brew "//;s/".*//;s/^/  • /'
+    echo ""
     ((total_count+=26))
   fi
   if echo "$categories" | grep -q "Development"; then
-    echo "  🟡 Development (4 packages)"
+    gum style --foreground 214 "🟡 Development:"
+    sed -n '/^# 🟡 DEVELOPMENT/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep '^brew "' | sed 's/brew "//;s/".*//;s/^/  • /'
+    echo ""
     ((total_count+=4))
   fi
   if echo "$categories" | grep -q "Utilities"; then
-    echo "  🟠 Utilities (8 packages)"
+    gum style --foreground 208 "🟠 Utilities:"
+    sed -n '/^# 🟠 UTILITIES/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep '^brew "' | sed 's/brew "//;s/".*//;s/^/  • /'
+    echo ""
     ((total_count+=8))
   fi
   if echo "$categories" | grep -q "Optional"; then
-    echo "  🔵 Optional (6 packages)"
+    gum style --foreground 33 "🔵 Optional (Nerd Fonts):"
+    sed -n '/^# 🔵 OPTIONAL/,/^$/p' "$DOTFILES_DIR/Brewfile" | grep '^cask "' | sed 's/cask "//;s/".*//;s/^/  • /'
+    echo ""
     ((total_count+=6))
   fi
 
-  echo ""
   gum style --foreground 212 "Total: $total_count packages"
   echo ""
 
@@ -715,11 +723,23 @@ main() {
       sed -n '/^# 🔵 OPTIONAL/,/^$/p' "$DOTFILES_DIR/Brewfile" >> "$temp_brewfile"
     fi
 
-    gum spin --spinner dot --title "Installing packages..." -- \
-      brew bundle install --file="$temp_brewfile"
+    echo ""
+    gum style --foreground 212 "Installing packages..."
+    echo ""
 
-    rm "$temp_brewfile"
-    log_info "Packages installed"
+    if brew bundle install --file="$temp_brewfile" 2>&1 | tee /tmp/brew-install.log; then
+      rm "$temp_brewfile"
+      echo ""
+      log_info "✓ All packages installed successfully"
+    else
+      log_error "Package installation failed!"
+      echo ""
+      echo "Error output:"
+      tail -20 /tmp/brew-install.log
+      echo ""
+      log_error "Installation stopped. Please fix the errors above and re-run bootstrap."
+      exit 1
+    fi
   fi
 
   # Additional setup
@@ -728,6 +748,7 @@ main() {
 
   # Final summary
   echo ""
+  echo ""
   gum style \
     --border double \
     --padding "1 2" \
@@ -735,15 +756,23 @@ main() {
     --border-foreground 212 \
     "✓ Bootstrap Complete!" \
     "" \
+    "What was installed:" \
+    "$([ -n "$git_name" ] && echo "  ✓ Git configured for $git_name" || echo "")" \
+    "$([ "$create_symlinks_choice" == "true" ] && echo "  ✓ Dotfiles symlinked" || echo "")" \
+    "$([ -n "$package_categories" ] && echo "  ✓ $(echo "$package_categories" | wc -w | tr -d ' ') package groups" || echo "")" \
+    "$([ "$install_node" == "true" ] && echo "  ✓ Node.js $(command -v node &>/dev/null && node --version || echo "ready")" || echo "")" \
+    "$([ "$install_tpm" == "true" ] && echo "  ✓ Tmux plugins installed" || echo "")" \
+    "" \
     "Next steps:" \
     "1. Restart your shell: exec zsh" \
-    "2. Tmux plugins are ready!" \
-    "3. Launch neovim to install NvChad plugins" \
+    "2. Launch neovim to install NvChad plugins" \
     "" \
     "Your fresh Mac is ready! 🎉"
 
   echo ""
-  log_info "Done! Enjoy your new setup."
+  echo ""
+  gum style --foreground 212 --bold "✨ Done! Enjoy your new setup. ✨"
+  echo ""
 }
 
 main "$@"
