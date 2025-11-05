@@ -1,213 +1,154 @@
-# Dotfiles Scripts Explained
+# Installation Scripts
 
-There are multiple installation scripts in this repository. Here's when to use each one:
+Two simple scripts for setting up your Mac with these dotfiles.
 
-## 🎯 Recommended: Bootstrap Wizard (NEW)
+## 📜 `script/bootstrap`
 
-**File:** `script/bootstrap_wizard`
-
-**When to use:**
-- ✅ Fresh Mac setup
-- ✅ Interactive installation with choices
-- ✅ You want a pleasant UI
-- ✅ You want safe backups and clear explanations
-
-**What it does:**
-1. Checks prerequisites (macOS, Xcode CLT)
-2. Installs Homebrew and gum automatically
-3. Prompts for git configuration
-4. Shows backup strategy before creating symlinks
-5. Lets you choose which package categories to install
-6. Optionally sets up Node.js, tmux plugins, Neovim
-7. Beautiful progress indicators and summaries
-
-**Run it:**
-```bash
-~/.dotfiles/script/bootstrap_wizard
-```
-
-**Or one-line install from scratch:**
-```bash
-curl -fsSL https://raw.githubusercontent.com/mshuffett/dotfiles/fresh-mac-magic/script/install_and_run_wizard | bash
-```
-
----
-
-## 📜 Classic: Bootstrap Script (OLD)
-
-**File:** `script/bootstrap`
+**The interactive setup wizard.**
 
 **When to use:**
-- ✅ Non-interactive/automated setups
-- ✅ You prefer the original workflow
-- ✅ Scripting/CI environments
+- Setting up a fresh Mac (if dotfiles already cloned)
+- Reconfiguring an existing setup
+- Want a guided, interactive experience
 
 **What it does:**
-1. Prompts for git name/email
-2. Creates symlinks with interactive backup choices per file
-3. Runs `bin/dot` to install all dependencies
-4. Runs all topic `install.sh` scripts
+1. Self-bootstraps (installs Homebrew and gum if needed)
+2. Checks prerequisites (macOS, Xcode CLT)
+3. Prompts for git configuration (name, email)
+4. Shows backup strategy and creates safe backups
+5. Creates symlinks for all `.symlink` files
+6. Lets you choose which package categories to install:
+   - 🟢 Essential (git, shell, terminal, CLI tools)
+   - 🟡 Development (fnm, cloud tools)
+   - 🟠 Utilities (text processing, navigation)
+   - 🔵 Optional (Nerd Fonts)
+7. Optionally sets up Node.js, tmux plugins, Neovim
+8. Beautiful UI with progress indicators
 
 **Run it:**
 ```bash
 ~/.dotfiles/script/bootstrap
 ```
 
-**Differences from wizard:**
-- No pretty UI (uses basic terminal colors)
-- Asks about each file individually (skip/overwrite/backup)
-- Installs ALL packages from Brewfile (no selection)
-- Uses `.backup` suffix instead of timestamped directory
+**Features:**
+- ✨ Beautiful interactive UI using gum
+- 🔒 Safe, timestamped backups (~/.dotfiles_backup_TIMESTAMP)
+- ♻️ Idempotent (safe to run multiple times)
+- 🎯 Choose exactly what you want to install
+- 🚀 Self-bootstrapping (installs own dependencies)
 
 ---
 
-## 📦 Install Script
+## 🚀 `script/install_from_scratch`
 
-**File:** `script/install`
-
-**When to use:**
-- ✅ Just want to install packages
-- ✅ Already have symlinks set up
-- ✅ Updating dependencies
-
-**What it does:**
-1. Runs `brew bundle` (installs everything from Brewfile)
-2. Runs all topic-specific `install.sh` scripts
-
-**Run it:**
-```bash
-~/.dotfiles/script/install
-```
-
----
-
-## 🔄 Update Script (dot)
-
-**File:** `bin/dot`
+**One-line installer for brand new Mac.**
 
 **When to use:**
-- ✅ Regular maintenance/updates
-- ✅ Pull latest changes and update packages
-
-**What it does:**
-1. Updates Homebrew
-2. Runs `brew update`
-3. Runs `script/install`
-
-**Run it:**
-```bash
-dot
-```
-
-Or directly:
-```bash
-~/.dotfiles/bin/dot
-```
-
----
-
-## One-Line Installer
-
-**File:** `script/install_and_run_wizard`
-
-**When to use:**
-- ✅ Brand new Mac, nothing installed
-- ✅ Want to run everything from one command
+- Brand new Mac with nothing installed
+- Want one command to do everything
+- Starting completely from scratch
 
 **What it does:**
 1. Checks for macOS
 2. Installs Xcode Command Line Tools (if needed)
-3. Installs Homebrew (if needed)
+3. Installs Homebrew (if needed, with Apple Silicon support)
 4. Clones dotfiles repo to `~/.dotfiles`
 5. Checks out `fresh-mac-magic` branch
-6. Runs the bootstrap wizard
+6. Runs `script/bootstrap` (the interactive wizard)
 
 **Run it:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mshuffett/dotfiles/fresh-mac-magic/script/install_and_run_wizard | bash
+curl -fsSL https://raw.githubusercontent.com/mshuffett/dotfiles/fresh-mac-magic/script/install_from_scratch | bash
 ```
+
+**Use cases:**
+- New Mac unboxing
+- Clean macOS reinstall
+- Setting up a work laptop
 
 ---
 
-## Comparison Table
+## Comparison
 
-| Feature | Bootstrap Wizard | Classic Bootstrap | Install | Dot |
-|---------|-----------------|-------------------|---------|-----|
-| Interactive UI | ✅ Gum | Basic prompts | ❌ | ❌ |
-| Self-bootstrapping | ✅ | ❌ | ❌ | ❌ |
-| Git config | ✅ | ✅ | ❌ | ❌ |
-| Symlinks | ✅ | ✅ | ❌ | ❌ |
-| Package selection | ✅ | ❌ (all) | ❌ (all) | ❌ (all) |
-| Backup strategy | Timestamped dir | .backup suffix | N/A | N/A |
-| Safe for multiple runs | ✅ | ⚠️ | ✅ | ✅ |
-| Recommended for | Fresh Mac | CI/scripts | Updates | Maintenance |
-
----
-
-## Backup Strategies Compared
-
-### Bootstrap Wizard
-- Creates `~/.dotfiles_backup_YYYYMMDD_HHMMSS/`
-- All existing configs copied to this directory
-- Never overwrites existing backups
-- Easy to find and restore all files at once
-
-**Example:**
-```
-~/.dotfiles_backup_20250104_143022/
-├── zshrc
-├── tmux.conf
-├── vimrc
-└── gitconfig
-```
-
-### Classic Bootstrap
-- Prompts for each file: skip, overwrite, or backup
-- Creates `.backup` suffix: `~/.zshrc.backup`
-- If `.backup` exists, prompts again
-- More granular control, but more interactive
-
-**Example:**
-```
-~/.zshrc.backup
-~/.tmux.conf.backup
-~/.vimrc.backup
-```
+| Feature | `bootstrap` | `install_from_scratch` |
+|---------|-------------|----------------------|
+| **Use case** | Setup wizard | One-line fresh install |
+| **Prerequisite** | Dotfiles cloned | Nothing (bare Mac) |
+| **Interactive** | ✅ Yes | ✅ Yes (launches bootstrap) |
+| **Safe backups** | ✅ Timestamped | ✅ Timestamped |
+| **Choose packages** | ✅ Yes | ✅ Yes (via bootstrap) |
+| **Clones repo** | ❌ No | ✅ Yes |
+| **Run it from** | Local | GitHub (curl) |
 
 ---
 
-## Which Should You Use?
+## How .symlink Files Work
 
-**For a fresh Mac:**
-→ Use **Bootstrap Wizard** (`script/bootstrap_wizard`)
+Both scripts create symlinks for all `*.symlink` files:
 
-**For automation/scripting:**
-→ Use **Classic Bootstrap** (`script/bootstrap`)
+```
+zsh/zshrc.symlink → ~/.zshrc
+tmux/tmux.conf.symlink → ~/.tmux.conf
+git/gitconfig.symlink → ~/.gitconfig
+vim/vimrc.symlink → ~/.vimrc
+```
 
-**To just update packages:**
-→ Use **Install** (`script/install`)
-
-**For regular maintenance:**
-→ Use **Dot** (`bin/dot`)
-
-**Starting from absolute zero:**
-→ Use **One-Line Installer** (curl command above)
+Before creating symlinks:
+1. Existing files are backed up to `~/.dotfiles_backup_YYYYMMDD_HHMMSS/`
+2. Never overwrites existing backups (creates .backup.1, .backup.2, etc. if needed)
+3. Completely non-destructive
 
 ---
 
-## Topic-Specific Install Scripts
+## Package Management
 
-Many topics have their own `install.sh` scripts that run automatically:
+Packages are defined in `Brewfile` with categories:
 
-- `homebrew/install.sh` - Installs Homebrew
+### 🟢 Essential (26 packages)
+Git, shell tools, terminal, modern CLI replacements, Neovim, essential utilities
+
+### 🟡 Development (4 packages)
+Node.js version manager (fnm), cloud deployment tools, git-delta
+
+### 🟠 Utilities (8 packages)
+Text processing (gnu-sed, grep, moreutils), file navigation (broot, chafa)
+
+### 🔵 Optional (6 packages)
+Nerd Fonts for terminal icons
+
+The wizard lets you choose which categories to install.
+
+---
+
+## VSCode Extensions
+
+VSCode extensions are managed separately in `vscode/`:
+
+```bash
+# Install all extensions
+cat ~/.dotfiles/vscode/extensions.txt | xargs -L 1 code --install-extension
+
+# Update extension list
+code --list-extensions > ~/.dotfiles/vscode/extensions.txt
+```
+
+See `vscode/README.md` for details.
+
+---
+
+## Topic-Specific Setup
+
+The only topic install script that remains is:
 - `tmux/install.sh` - Installs TPM (Tmux Plugin Manager)
-- `vim/install.sh` - Installs vim plugins
-- `fonts/install.sh` - Installs fonts
-- And more...
 
-These are called by:
-- `script/bootstrap` (classic)
-- `script/install`
-- `bin/dot`
+The bootstrap wizard handles this optionally with a prompt.
 
-The **Bootstrap Wizard** handles these manually with prompts, giving you more control.
+---
+
+## Summary
+
+**Fresh Mac:** Use `install_from_scratch` (one curl command)
+
+**Existing setup:** Use `bootstrap` (local script)
+
+Both are safe, interactive, and guide you through the setup process.

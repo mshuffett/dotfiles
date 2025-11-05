@@ -6,34 +6,34 @@ Personal dotfiles for macOS, originally forked from [holman's dotfiles](https://
 
 **Note:** This repository should be kept private as it contains sensitive configuration and paths.
 
-## 🚀 Quick Install (Recommended)
+## 🚀 Quick Install
 
-**Interactive wizard with beautiful UI and safe backups:**
+### Fresh Mac (Nothing Installed)
+
+One command installs everything:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/mshuffett/dotfiles/fresh-mac-magic/script/install_and_run_wizard | bash
+curl -fsSL https://raw.githubusercontent.com/mshuffett/dotfiles/fresh-mac-magic/script/install_from_scratch | bash
 ```
 
-This will:
-- ✅ Install Xcode Command Line Tools (if needed)
-- ✅ Install Homebrew (if needed)
-- ✅ Clone this repository to `~/.dotfiles`
-- ✅ Launch the interactive bootstrap wizard
+This clones the repo and launches the interactive setup wizard.
 
-See [Bootstrap Wizard README](script/BOOTSTRAP_README.md) for full details.
+### Dotfiles Already Cloned
 
-## 📖 Installation Options
+Run the interactive setup wizard:
 
-Different scripts for different needs:
+```sh
+~/.dotfiles/script/bootstrap
+```
 
-| Method | When to Use | Command |
-|--------|-------------|---------|
-| **Bootstrap Wizard** ✨ | Fresh Mac, interactive setup | `~/.dotfiles/script/bootstrap_wizard` |
-| Classic Bootstrap | Non-interactive/automated | `~/.dotfiles/script/bootstrap` |
-| Install Packages | Just update packages | `~/.dotfiles/script/install` |
-| Update/Maintenance | Regular updates | `dot` |
+**What the wizard does:**
+- ✨ Beautiful interactive UI with gum
+- 🔧 Configure git (name, email)
+- 🔗 Create symlinks (with safe backups)
+- 📦 Choose which packages to install
+- ⚙️ Optional setup (Node.js, tmux plugins, Neovim)
 
-See [Scripts Explained](script/SCRIPTS_EXPLAINED.md) for detailed comparison.
+See [Bootstrap README](script/BOOTSTRAP_README.md) for full details.
 
 ## Secrets Management
 

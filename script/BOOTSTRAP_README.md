@@ -1,19 +1,19 @@
-# Bootstrap Wizard
+# Bootstrap Setup
 
-Interactive setup script for configuring a new Mac with these dotfiles.
+Interactive setup wizard for configuring a new Mac with these dotfiles.
 
 ## Quick Start
 
-### One-Line Install (Fresh Mac)
+### Fresh Mac (One-Line Install)
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/mshuffett/dotfiles/fresh-mac-magic/script/install_and_run_wizard)"
+curl -fsSL https://raw.githubusercontent.com/mshuffett/dotfiles/fresh-mac-magic/script/install_from_scratch | bash
 ```
 
-### If You Already Have Dotfiles Cloned
+### Dotfiles Already Cloned
 
 ```bash
-~/.dotfiles/script/bootstrap_wizard
+~/.dotfiles/script/bootstrap
 ```
 
 ## What It Does
