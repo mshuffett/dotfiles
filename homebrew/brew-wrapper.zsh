@@ -14,6 +14,8 @@ brew() {
           # Wait up to 30 seconds for lock, then dump current state
           flock -w 30 200 || exit 0
           command brew bundle dump --force --describe --file=~/.dotfiles/Brewfile 2>/dev/null
+          # Remove VSCode extensions from Brewfile (managed separately)
+          sed -i '' '/^vscode /d' ~/.dotfiles/Brewfile
         ) 200>"$lockfile"
       ) &
     fi

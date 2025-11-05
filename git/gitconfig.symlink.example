@@ -23,6 +23,7 @@
 [core]
         excludesfile = ~/.gitignore
         editor = vim
+        pager = delta
 [apply]
         whitespace = nowarn
 [mergetool]
@@ -39,3 +40,14 @@
         default = current
 [rebase]
         autosquash = true
+[interactive]
+        diffFilter = delta --color-only
+[delta]
+        navigate = true           # use n and N to move between diff sections
+        side-by-side = true       # show diffs side by side
+        line-numbers = true       # show line numbers
+        syntax-theme = Dracula    # color theme (alternatives: GitHub, Monokai Extended, OneHalfDark)
+[merge]
+        conflictstyle = diff3     # show common ancestor in conflicts
+[diff]
+        colorMoved = default      # highlight moved lines differently
