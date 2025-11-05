@@ -1,16 +1,39 @@
 ## mshuffett does dotfiles
 
-These are my personal dotfiles, originally forked from [holman's dotfiles](https://github.com/holman/dotfiles) with major modifications. I am using oh-my-zsh and antigen as part of these dotfiles.
+Personal dotfiles for macOS, originally forked from [holman's dotfiles](https://github.com/holman/dotfiles) with major modifications.
+
+**Stack:** [zsh for humans](https://github.com/romkatv/zsh4humans), tmux, Neovim (NvChad), Ghostty terminal, modern CLI tools (bat, eza, fd, ripgrep, fzf)
 
 **Note:** This repository should be kept private as it contains sensitive configuration and paths.
 
-## install
+## 🚀 Quick Install (Recommended)
 
-Run this:
+**Interactive wizard with beautiful UI and safe backups:**
 
 ```sh
-curl -sL https://github.com/mshuffett/dotfiles/raw/master/script/install_from_scratch | bash
+curl -fsSL https://raw.githubusercontent.com/mshuffett/dotfiles/fresh-mac-magic/script/install_and_run_wizard | bash
 ```
+
+This will:
+- ✅ Install Xcode Command Line Tools (if needed)
+- ✅ Install Homebrew (if needed)
+- ✅ Clone this repository to `~/.dotfiles`
+- ✅ Launch the interactive bootstrap wizard
+
+See [Bootstrap Wizard README](script/BOOTSTRAP_README.md) for full details.
+
+## 📖 Installation Options
+
+Different scripts for different needs:
+
+| Method | When to Use | Command |
+|--------|-------------|---------|
+| **Bootstrap Wizard** ✨ | Fresh Mac, interactive setup | `~/.dotfiles/script/bootstrap_wizard` |
+| Classic Bootstrap | Non-interactive/automated | `~/.dotfiles/script/bootstrap` |
+| Install Packages | Just update packages | `~/.dotfiles/script/install` |
+| Update/Maintenance | Regular updates | `dot` |
+
+See [Scripts Explained](script/SCRIPTS_EXPLAINED.md) for detailed comparison.
 
 ## Secrets Management
 
@@ -43,9 +66,45 @@ Store your secrets in 1Password with these paths:
 - `op://Private/Anthropic/api_key`
 - `op://Private/Mapbox/access_token`
 
+## 📦 What's Included
+
+**43 carefully curated packages** (reduced from 250+ bloated auto-generated list):
+
+### 🟢 Essential (25 packages)
+- **Version Control:** git, gh, git-lfs, lazygit, tig, git-delta
+- **Shell & Terminal:** tmux, fzf, direnv, zoxide
+- **Modern CLI:** bat, eza, fd, ripgrep, gum, glow
+- **Editors:** neovim
+- **Utilities:** entr, watch, wget
+- **Security:** gnupg, 1password-cli
+
+### 🟡 Development (3 packages)
+- fnm (Node.js version manager)
+- flyctl, supabase (deployment tools)
+
+### 🟠 Utilities (8 packages)
+- gnu-sed, grep, moreutils (text processing)
+- broot, chafa (file navigation)
+- duti, rclone (system tools)
+
+### 🔵 Optional (6 packages)
+- Nerd Fonts for terminal icons
+
+**VSCode extensions** are managed separately in [`vscode/extensions.txt`](vscode/README.md)
+
+## 🛠️ Configuration Highlights
+
+- **Shell:** [zsh for humans](https://github.com/romkatv/zsh4humans) (z4h) with Oh My Zsh integration
+- **Prompt:** Powerlevel10k
+- **Terminal:** Ghostty with Palenight theme
+- **Multiplexer:** tmux with TPM, vim navigation, tmux2k theme
+- **Editor:** Neovim with NvChad
+- **Git:** Delta for beautiful diffs, comprehensive aliases
+- **Claude Code:** Custom commands and hooks in `claude/`
+
 ## for me
 
-Feel free to fork these dotfiles, but I am primarily focusing on them for personal use for the time being, so YMMV.
+Feel free to fork these dotfiles, but I am primarily focusing on them for personal use, so YMMV.
 
 ## topical
 

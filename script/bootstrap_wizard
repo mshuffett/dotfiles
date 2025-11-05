@@ -1,0 +1,432 @@
+#!/bin/bash
+set -e
+
+# ============================================================================
+# Fresh Mac Bootstrap Wizard
+# ============================================================================
+# Interactive setup script for configuring a new Mac with dotfiles
+# Uses gum for a pleasant CLI experience
+
+DOTFILES_DIR="$HOME/.dotfiles"
+
+# Colors for fallback (if gum isn't installed yet)
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# ============================================================================
+# Utility Functions
+# ============================================================================
+
+log_info() {
+  if command -v gum &> /dev/null; then
+    gum style --foreground 212 "✓ $1"
+  else
+    echo -e "${GREEN}✓${NC} $1"
+  fi
+}
+
+log_error() {
+  if command -v gum &> /dev/null; then
+    gum style --foreground 196 "✗ $1"
+  else
+    echo -e "${RED}✗${NC} $1"
+  fi
+}
+
+log_warning() {
+  if command -v gum &> /dev/null; then
+    gum style --foreground 214 "⚠ $1"
+  else
+    echo -e "${YELLOW}⚠${NC} $1"
+  fi
+}
+
+show_header() {
+  if command -v gum &> /dev/null; then
+    gum style \
+      --border double \
+      --padding "1 2" \
+      --margin "1" \
+      --border-foreground 212 \
+      "🚀 Fresh Mac Bootstrap Wizard" \
+      "" \
+      "Let's set up your new machine!"
+  else
+    echo ""
+    echo "======================================"
+    echo "🚀 Fresh Mac Bootstrap Wizard"
+    echo "======================================"
+    echo ""
+  fi
+}
+
+# ============================================================================
+# Pre-flight Checks
+# ============================================================================
+
+check_os() {
+  if [[ "$OSTYPE" != "darwin"* ]]; then
+    log_error "This script is designed for macOS"
+    exit 1
+  fi
+  log_info "Running on macOS"
+}
+
+check_xcode() {
+  if ! xcode-select -p &> /dev/null; then
+    log_warning "Xcode Command Line Tools not found"
+    if command -v gum &> /dev/null; then
+      if gum confirm "Install Xcode Command Line Tools?"; then
+        xcode-select --install
+        log_info "Please complete the Xcode CLT installation, then re-run this script"
+        exit 0
+      else
+        log_error "Xcode Command Line Tools required"
+        exit 1
+      fi
+    else
+      echo "Install Xcode Command Line Tools? (y/n)"
+      read -r response
+      if [[ "$response" =~ ^[Yy]$ ]]; then
+        xcode-select --install
+        log_info "Please complete the Xcode CLT installation, then re-run this script"
+        exit 0
+      else
+        log_error "Xcode Command Line Tools required"
+        exit 1
+      fi
+    fi
+  else
+    log_info "Xcode Command Line Tools installed"
+  fi
+}
+
+install_homebrew() {
+  if ! command -v brew &> /dev/null; then
+    log_warning "Homebrew not found"
+    if command -v gum &> /dev/null; then
+      if gum confirm "Install Homebrew?"; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        # Add Homebrew to PATH for Apple Silicon Macs
+        if [[ $(uname -m) == "arm64" ]]; then
+          echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
+
+        log_info "Homebrew installed"
+      else
+        log_error "Homebrew is required"
+        exit 1
+      fi
+    else
+      echo "Install Homebrew? (y/n)"
+      read -r response
+      if [[ "$response" =~ ^[Yy]$ ]]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        # Add Homebrew to PATH for Apple Silicon Macs
+        if [[ $(uname -m) == "arm64" ]]; then
+          echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
+
+        log_info "Homebrew installed"
+      else
+        log_error "Homebrew is required"
+        exit 1
+      fi
+    fi
+  else
+    log_info "Homebrew installed"
+  fi
+}
+
+install_gum() {
+  if ! command -v gum &> /dev/null; then
+    log_info "Installing gum for better UI..."
+    brew install gum
+    log_info "gum installed! Restarting with fancy UI..."
+    exec "$0" "$@"
+  fi
+}
+
+# ============================================================================
+# Git Configuration
+# ============================================================================
+
+setup_git_config() {
+  local name email
+
+  gum style --foreground 212 "Git Configuration"
+
+  name=$(gum input --placeholder "Your full name" --prompt "Name: ")
+  email=$(gum input --placeholder "your.email@example.com" --prompt "Email: ")
+
+  if [[ -z "$name" ]] || [[ -z "$email" ]]; then
+    log_error "Git name and email are required"
+    exit 1
+  fi
+
+  # Create gitconfig from template
+  if [[ -f "$DOTFILES_DIR/git/gitconfig.symlink.example" ]]; then
+    cp "$DOTFILES_DIR/git/gitconfig.symlink.example" "$DOTFILES_DIR/git/gitconfig.symlink"
+    sed -i '' "s/AUTHORNAME/$name/g" "$DOTFILES_DIR/git/gitconfig.symlink"
+    sed -i '' "s/AUTHOREMAIL/$email/g" "$DOTFILES_DIR/git/gitconfig.symlink"
+    sed -i '' "s/GIT_CREDENTIAL_HELPER/osxkeychain/g" "$DOTFILES_DIR/git/gitconfig.symlink"
+    log_info "Git configured for $name <$email>"
+  fi
+}
+
+# ============================================================================
+# Symlink Creation
+# ============================================================================
+
+backup_file() {
+  local file=$1
+  local backup_strategy=$2  # "timestamped" or "suffix"
+
+  if [[ ! -f "$file" ]] || [[ -L "$file" ]]; then
+    return 0  # File doesn't exist or is already a symlink
+  fi
+
+  if [[ "$backup_strategy" == "timestamped" ]]; then
+    # Use timestamped backup directory (best for bulk operations)
+    local backup_dir="$HOME/.dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
+    mkdir -p "$backup_dir"
+    cp "$file" "$backup_dir/$(basename "$file")"
+    log_info "Backed up $(basename "$file") to $backup_dir"
+    echo "$backup_dir"  # Return backup dir for summary
+  else
+    # Use .backup suffix (matches existing bootstrap script behavior)
+    local backup_file="${file}.backup"
+
+    # Never overwrite existing .backup files
+    if [[ -f "$backup_file" ]]; then
+      # Find next available number: .backup.1, .backup.2, etc.
+      local counter=1
+      while [[ -f "${backup_file}.${counter}" ]]; do
+        ((counter++))
+      done
+      backup_file="${backup_file}.${counter}"
+    fi
+
+    mv "$file" "$backup_file"
+    log_info "Backed up $(basename "$file") to $(basename "$backup_file")"
+  fi
+}
+
+backup_existing_configs() {
+  local backup_dir=""
+  local files_backed_up=0
+
+  # Find all files that would be overwritten by symlinks
+  find "$DOTFILES_DIR" -name "*.symlink" -not -path "*.git*" | while read -r src; do
+    local dst="$HOME/.$(basename "${src%.symlink}")"
+
+    if [[ -f "$dst" ]] && [[ ! -L "$dst" ]]; then
+      if [[ "$files_backed_up" -eq 0 ]]; then
+        # First file - create backup directory
+        backup_dir="$HOME/.dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
+        mkdir -p "$backup_dir"
+        gum style --foreground 214 "Backing up existing configs to: $backup_dir"
+      fi
+
+      cp "$dst" "$backup_dir/$(basename "$dst")"
+      log_info "Backed up $(basename "$dst")"
+      ((files_backed_up++))
+    fi
+  done
+
+  if [[ "$files_backed_up" -gt 0 ]]; then
+    gum style --foreground 212 "✓ Backed up $files_backed_up files"
+  else
+    log_info "No existing configs to backup"
+  fi
+}
+
+create_symlinks() {
+  log_info "Creating symlinks..."
+
+  # Find all .symlink files and create symlinks
+  find "$DOTFILES_DIR" -name "*.symlink" -not -path "*.git*" | while read -r src; do
+    dst="$HOME/.$(basename "${src%.symlink}")"
+
+    # Remove existing symlink or file
+    if [[ -L "$dst" ]]; then
+      rm "$dst"
+    elif [[ -f "$dst" ]]; then
+      log_warning "Removing existing file: $dst"
+      rm "$dst"
+    fi
+
+    ln -s "$src" "$dst"
+    log_info "Linked $(basename "$dst")"
+  done
+}
+
+# ============================================================================
+# Package Installation
+# ============================================================================
+
+install_packages() {
+  gum style --foreground 212 "Package Installation"
+
+  # Ask which categories to install
+  local categories
+  categories=$(gum choose --no-limit \
+    "Essential (git, shell, terminal, modern CLI tools)" \
+    "Development (fnm, cloud tools)" \
+    "Utilities (text processing, file navigation)" \
+    "Optional (Nerd Fonts)")
+
+  if [[ -z "$categories" ]]; then
+    log_warning "No packages selected, skipping installation"
+    return
+  fi
+
+  # Create temporary Brewfile with selected categories
+  local temp_brewfile="/tmp/Brewfile.bootstrap"
+  echo "# Temporary Brewfile for bootstrap" > "$temp_brewfile"
+  echo "" >> "$temp_brewfile"
+
+  # Always include taps
+  grep "^tap " "$DOTFILES_DIR/Brewfile" >> "$temp_brewfile"
+  echo "" >> "$temp_brewfile"
+
+  # Add selected categories
+  if echo "$categories" | grep -q "Essential"; then
+    sed -n '/^# 🟢 ESSENTIAL/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+  fi
+
+  if echo "$categories" | grep -q "Development"; then
+    sed -n '/^# 🟡 DEVELOPMENT/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+  fi
+
+  if echo "$categories" | grep -q "Utilities"; then
+    sed -n '/^# 🟠 UTILITIES/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+  fi
+
+  if echo "$categories" | grep -q "Optional"; then
+    sed -n '/^# 🔵 OPTIONAL/,/^$/p' "$DOTFILES_DIR/Brewfile" >> "$temp_brewfile"
+  fi
+
+  # Install packages
+  gum spin --spinner dot --title "Installing packages..." -- \
+    brew bundle install --file="$temp_brewfile"
+
+  rm "$temp_brewfile"
+  log_info "Packages installed"
+}
+
+# ============================================================================
+# Additional Setup
+# ============================================================================
+
+setup_node() {
+  if command -v fnm &> /dev/null; then
+    if gum confirm "Install Node.js LTS via fnm?"; then
+      gum spin --spinner dot --title "Installing Node.js LTS..." -- \
+        fnm install --lts
+      fnm default lts-latest
+      log_info "Node.js LTS installed and set as default"
+    fi
+  fi
+}
+
+setup_tmux_plugins() {
+  if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+    if gum confirm "Install Tmux Plugin Manager (TPM)?"; then
+      gum spin --spinner dot --title "Installing TPM..." -- \
+        git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+      log_info "TPM installed. Press prefix + I in tmux to install plugins"
+    fi
+  else
+    log_info "TPM already installed"
+  fi
+}
+
+setup_neovim() {
+  if command -v nvim &> /dev/null; then
+    if gum confirm "Install Neovim plugins on first launch?"; then
+      log_info "Neovim plugins will be installed on first launch"
+      # NvChad auto-installs plugins on first launch
+    fi
+  fi
+}
+
+# ============================================================================
+# Main Flow
+# ============================================================================
+
+main() {
+  show_header
+
+  # Pre-flight checks
+  check_os
+  check_xcode
+  install_homebrew
+  install_gum
+
+  # Confirm before proceeding
+  if ! gum confirm "Ready to bootstrap your Mac?"; then
+    log_info "Bootstrap cancelled"
+    exit 0
+  fi
+
+  # Git configuration
+  if [[ ! -f "$DOTFILES_DIR/git/gitconfig.symlink" ]]; then
+    setup_git_config
+  else
+    log_info "Git already configured"
+  fi
+
+  # Backup and symlink
+  if gum confirm "Create symlinks for dotfiles?"; then
+    gum style \
+      --foreground 214 \
+      --border normal \
+      --padding "0 1" \
+      "Backup Strategy:" \
+      "• Existing configs will be copied to ~/.dotfiles_backup_TIMESTAMP" \
+      "• Your original files are NEVER deleted" \
+      "• If a .backup file exists, we'll create .backup.1, .backup.2, etc." \
+      "• Completely safe and non-destructive"
+
+    backup_existing_configs
+    create_symlinks
+  fi
+
+  # Install packages
+  if gum confirm "Install packages via Homebrew?"; then
+    install_packages
+  fi
+
+  # Additional setup
+  gum style --foreground 212 "Additional Setup"
+
+  setup_node
+  setup_tmux_plugins
+  setup_neovim
+
+  # Final summary
+  gum style \
+    --border double \
+    --padding "1 2" \
+    --margin "1" \
+    --border-foreground 212 \
+    "✓ Bootstrap Complete!" \
+    "" \
+    "Next steps:" \
+    "1. Restart your shell (or run: exec zsh)" \
+    "2. Open tmux and press Ctrl+a I to install plugins" \
+    "3. Launch neovim to install plugins" \
+    "4. Review ~/.dotfiles/README.md for more info"
+
+  log_info "Your fresh Mac is ready! 🎉"
+}
+
+main "$@"

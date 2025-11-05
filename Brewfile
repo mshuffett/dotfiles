@@ -37,6 +37,7 @@ brew "neovim"               # Modern, extensible vim-based editor
 brew "entr"                 # Run commands when files change
 brew "watch"                # Execute a program periodically, showing output fullscreen
 brew "wget"                 # Internet file retriever
+brew "gum"                  # Tool for glamorous shell scripts (used by bootstrap wizard)
 
 # Markdown & Documentation
 brew "glow"                 # Render markdown on the CLI
