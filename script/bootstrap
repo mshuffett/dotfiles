@@ -122,7 +122,8 @@ check_xcode() {
   if ! xcode-select -p &> /dev/null; then
     log_warning "Xcode Command Line Tools not found"
     if command -v gum &> /dev/null; then
-      if gum confirm "Install Xcode Command Line Tools?"; then
+      choice=$(gum choose "Yes" "No" --header "Install Xcode Command Line Tools?")
+      if [[ "$choice" == "Yes" ]]; then
         xcode-select --install
         log_info "Please complete the Xcode CLT installation, then re-run this script"
         exit 0
@@ -151,7 +152,8 @@ install_homebrew() {
   if ! command -v brew &> /dev/null; then
     log_warning "Homebrew not found"
     if command -v gum &> /dev/null; then
-      if gum confirm "Install Homebrew?"; then
+      choice=$(gum choose "Yes" "No" --header "Install Homebrew?")
+      if [[ "$choice" == "Yes" ]]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
         # Add Homebrew to PATH for Apple Silicon Macs
@@ -433,7 +435,8 @@ install_packages() {
   gum style --foreground 212 "Total: $total_count packages"
   echo ""
 
-  if ! gum confirm "Proceed with installation?"; then
+  choice=$(gum choose "Yes, install" "No, skip" --header "Proceed with installation?")
+  if [[ "$choice" == "No, skip" ]]; then
     log_warning "Package installation cancelled"
     return
   fi
@@ -557,20 +560,11 @@ main() {
   fi
 
   # Confirm before proceeding
-  if ! gum confirm "Ready to configure your setup?" 2>/tmp/gum-error.log; then
-    if grep -q "could not open.*TTY" /tmp/gum-error.log 2>/dev/null; then
-      log_error "Cannot open interactive terminal"
-      echo ""
-      echo "This might be because:"
-      echo "  - You're running through a pipe or redirect"
-      echo "  - Your terminal session isn't properly initialized"
-      echo "  - You're in tmux/screen without proper TTY setup"
-      echo ""
-      echo "Try:"
-      echo "  1. Open a fresh terminal window"
-      echo "  2. Run: ~/.dotfiles/script/bootstrap"
-      exit 1
-    fi
+  echo ""
+  gum style --foreground 212 "Ready to configure your setup?"
+  ready=$(gum choose "Yes, let's go!" "No, cancel")
+
+  if [[ "$ready" == "No, cancel" ]]; then
     log_info "Bootstrap cancelled"
     exit 0
   fi
@@ -611,7 +605,8 @@ main() {
 
   # Symlinks
   local create_symlinks_choice
-  if gum confirm "Create dotfile symlinks (.zshrc, .tmux.conf, .gitconfig, etc.)?"; then
+  choice=$(gum choose "Yes" "No" --header "Create dotfile symlinks (.zshrc, .tmux.conf, .gitconfig, etc.)?")
+  if [[ "$choice" == "Yes" ]]; then
     create_symlinks_choice="true"
   else
     create_symlinks_choice="false"
@@ -645,6 +640,11 @@ main() {
       "🟡 Development (4 packages)" \
       "🟠 Utilities (8 packages)" \
       "🔵 Optional (6 packages)")
+
+    # Check if user actually selected anything
+    if [[ -z "$package_categories" ]]; then
+      log_warning "No package categories selected"
+    fi
   fi
   echo ""
 
@@ -659,11 +659,14 @@ main() {
   fi
   echo ""
 
-  # TMux plugins
+  # TMux plugins (only if tmux will be installed)
   local install_tpm="false"
   if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
-    if gum confirm "Install tmux plugins? (Installs TPM + all plugins automatically)"; then
-      install_tpm="true"
+    # Only offer tmux plugins if Essential category is selected (which includes tmux)
+    if echo "$package_categories" | grep -q "Essential"; then
+      if gum confirm "Install tmux plugins? (Installs TPM + all plugins automatically)"; then
+        install_tpm="true"
+      fi
     fi
   else
     gum style --foreground 246 "TPM already installed"
@@ -721,6 +724,11 @@ main() {
 
   # Packages
   if [[ -n "$package_categories" ]]; then
+    echo ""
+    gum style --foreground 212 "📦 Installing selected packages..."
+    echo "Categories: $package_categories" # Debug output
+    echo ""
+
     # Build temp brewfile
     local temp_brewfile="/tmp/Brewfile.bootstrap"
     echo "# Temporary Brewfile for bootstrap" > "$temp_brewfile"
@@ -763,7 +771,16 @@ main() {
 
   # Additional setup
   setup_node "$install_node"
-  setup_tmux_plugins "$install_tpm"
+
+  # Only install tmux plugins if tmux is actually installed
+  if [[ "$install_tpm" == "true" ]]; then
+    if ! command -v tmux &> /dev/null; then
+      log_error "Cannot install tmux plugins: tmux is not installed"
+      echo "Please ensure the Essential package category was installed (includes tmux)"
+      exit 1
+    fi
+    setup_tmux_plugins "$install_tpm"
+  fi
 
   # Final summary
   echo ""
