@@ -584,6 +584,44 @@ setup_tmux_plugins() {
   fi
 }
 
+setup_ai_tools() {
+  local install_ai=$1
+
+  if [[ "$install_ai" == "true" ]]; then
+    # Check if npm is available (requires Node.js)
+    if ! command -v npm &> /dev/null; then
+      log_warning "npm not available, skipping AI tools setup"
+      log_warning "Install Node.js first, then run: npm install -g @anthropic-ai/claude-code @openai/codex"
+      return
+    fi
+
+    echo ""
+    gum style --foreground 212 "Installing AI Development Tools..."
+
+    # Check if claude-code is already installed
+    if npm list -g @anthropic-ai/claude-code &> /dev/null; then
+      log_info "Claude Code already installed"
+    else
+      if npm install -g @anthropic-ai/claude-code; then
+        log_info "Claude Code installed"
+      else
+        log_error "Claude Code installation failed"
+      fi
+    fi
+
+    # Check if codex is already installed
+    if npm list -g @openai/codex &> /dev/null; then
+      log_info "Codex already installed"
+    else
+      if npm install -g @openai/codex; then
+        log_info "Codex installed"
+      else
+        log_error "Codex installation failed"
+      fi
+    fi
+  fi
+}
+
 # ============================================================================
 # Main Flow
 # ============================================================================
@@ -733,6 +771,15 @@ main() {
   fi
   echo ""
 
+  # AI Tools setup (Claude Code, Codex)
+  local install_ai="false"
+  if echo "$package_categories" | grep -q "Development"; then
+    if ask_confirm "Install AI Development Tools? (Claude Code, Codex via npm)"; then
+      install_ai="true"
+    fi
+  fi
+  echo ""
+
   # ============================================================================
   # SHOW COMPLETE PLAN
   # ============================================================================
@@ -748,7 +795,8 @@ main() {
     "$(if [[ "$create_symlinks_choice" == "true" ]]; then echo "✓ Create dotfile symlinks (with safe backups)"; fi)" \
     "$(if [[ -n "$package_categories" ]]; then echo "✓ Install $(echo "$package_categories" | wc -l | tr -d ' ') package categories"; fi)" \
     "$(if [[ "$install_node" == "true" ]]; then echo "✓ Install Node.js LTS via fnm"; fi)" \
-    "$(if [[ "$install_tpm" == "true" ]]; then echo "✓ Install tmux plugins (TPM + all plugins)"; fi)"
+    "$(if [[ "$install_tpm" == "true" ]]; then echo "✓ Install tmux plugins (TPM + all plugins)"; fi)" \
+    "$(if [[ "$install_ai" == "true" ]]; then echo "✓ Install AI Development Tools (Claude Code, Codex)"; fi)"
 
   echo ""
 
@@ -834,6 +882,7 @@ main() {
 
   # Additional setup
   setup_node "$install_node"
+  setup_ai_tools "$install_ai"
 
   # Only install tmux plugins if tmux is actually installed
   if [[ "$install_tpm" == "true" ]]; then
