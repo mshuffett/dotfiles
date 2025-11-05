@@ -1,5 +1,0 @@
---sort-files
---color
---ignore-dir=.idea/
---smart-case
---type-set=sql:ext:sql,ctl,hql

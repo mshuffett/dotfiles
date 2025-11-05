@@ -234,29 +234,46 @@ backup_file() {
 }
 
 backup_existing_configs() {
-  local backup_dir=""
-  local files_backed_up=0
+  # First, check what files would be backed up
+  local files_to_backup=()
 
-  # Find all files that would be overwritten by symlinks
-  find "$DOTFILES_DIR" -name "*.symlink" -not -path "*.git*" | while read -r src; do
+  while IFS= read -r src; do
     local dst="$HOME/.$(basename "${src%.symlink}")"
-
     if [[ -f "$dst" ]] && [[ ! -L "$dst" ]]; then
-      if [[ "$files_backed_up" -eq 0 ]]; then
-        # First file - create backup directory
-        backup_dir="$HOME/.dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
-        mkdir -p "$backup_dir"
-        gum style --foreground 214 "Backing up existing configs to: $backup_dir"
-      fi
-
-      cp "$dst" "$backup_dir/$(basename "$dst")"
-      log_info "Backed up $(basename "$dst")"
-      ((files_backed_up++))
+      files_to_backup+=("$(basename "$dst")")
     fi
-  done
+  done < <(find "$DOTFILES_DIR" -name "*.symlink" -not -path "*.git*")
 
-  if [[ "$files_backed_up" -gt 0 ]]; then
-    gum style --foreground 212 "✓ Backed up $files_backed_up files"
+  # If there are files to backup, show what will happen
+  if [[ ${#files_to_backup[@]} -gt 0 ]]; then
+    local backup_dir="$HOME/.dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
+
+    gum style \
+      --foreground 214 \
+      --border normal \
+      --padding "1 2" \
+      --margin "1" \
+      "📦 Backup Plan" \
+      "" \
+      "The following files will be backed up to:" \
+      "$backup_dir" \
+      "" \
+      "Files to backup:" \
+      "$(printf '  • %s\n' "${files_to_backup[@]}")" \
+      "" \
+      "Your original files are SAFE - just copied to backup location."
+
+    echo ""
+
+    # Now actually backup
+    mkdir -p "$backup_dir"
+
+    for file in "${files_to_backup[@]}"; do
+      cp "$HOME/$file" "$backup_dir/$file"
+      log_info "Backed up $file → $backup_dir/"
+    done
+
+    gum style --foreground 212 "✓ Backed up ${#files_to_backup[@]} files"
   else
     log_info "No existing configs to backup"
   fi
@@ -269,11 +286,11 @@ create_symlinks() {
   find "$DOTFILES_DIR" -name "*.symlink" -not -path "*.git*" | while read -r src; do
     dst="$HOME/.$(basename "${src%.symlink}")"
 
-    # Remove existing symlink or file
+    # Remove existing symlink or file (already backed up)
     if [[ -L "$dst" ]]; then
       rm "$dst"
     elif [[ -f "$dst" ]]; then
-      log_warning "Removing existing file: $dst"
+      # File was already backed up in backup_existing_configs()
       rm "$dst"
     fi
 
