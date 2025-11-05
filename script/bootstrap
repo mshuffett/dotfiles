@@ -457,19 +457,19 @@ install_packages() {
 
   if echo "$categories" | grep -q "Essential"; then
     gum style --foreground 212 "🟢 Essential:"
-    sed -n '/^# 🟢 ESSENTIAL/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep '^brew "' | sed 's/brew "//;s/".*//;s/^/  • /'
+    sed -n '/^# 🟢 ESSENTIAL/,/^# ====/p' "$DOTFILES_DIR/Brewfile" | grep '^brew "' | sed 's/brew "//;s/".*//;s/^/  • /'
     echo ""
     ((total_count+=26))
   fi
   if echo "$categories" | grep -q "Development"; then
     gum style --foreground 214 "🟡 Development:"
-    sed -n '/^# 🟡 DEVELOPMENT/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep '^brew "' | sed 's/brew "//;s/".*//;s/^/  • /'
+    sed -n '/^# 🟡 DEVELOPMENT/,/^# ====/p' "$DOTFILES_DIR/Brewfile" | grep '^brew "' | sed 's/brew "//;s/".*//;s/^/  • /'
     echo ""
     ((total_count+=4))
   fi
   if echo "$categories" | grep -q "Utilities"; then
     gum style --foreground 208 "🟠 Utilities:"
-    sed -n '/^# 🟠 UTILITIES/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep '^brew "' | sed 's/brew "//;s/".*//;s/^/  • /'
+    sed -n '/^# 🟠 UTILITIES/,/^# ====/p' "$DOTFILES_DIR/Brewfile" | grep '^brew "' | sed 's/brew "//;s/".*//;s/^/  • /'
     echo ""
     ((total_count+=8))
   fi
@@ -500,15 +500,15 @@ install_packages() {
 
   # Add selected categories
   if echo "$categories" | grep -q "Essential"; then
-    sed -n '/^# 🟢 ESSENTIAL/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+    sed -n '/^# 🟢 ESSENTIAL/,/^# ====/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
   fi
 
   if echo "$categories" | grep -q "Development"; then
-    sed -n '/^# 🟡 DEVELOPMENT/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+    sed -n '/^# 🟡 DEVELOPMENT/,/^# ====/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
   fi
 
   if echo "$categories" | grep -q "Utilities"; then
-    sed -n '/^# 🟠 UTILITIES/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+    sed -n '/^# 🟠 UTILITIES/,/^# ====/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
   fi
 
   if echo "$categories" | grep -q "Optional"; then
@@ -795,13 +795,13 @@ main() {
     echo "" >> "$temp_brewfile"
 
     if echo "$package_categories" | grep -q "Essential"; then
-      sed -n '/^# 🟢 ESSENTIAL/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+      sed -n '/^# 🟢 ESSENTIAL/,/^# ====/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
     fi
     if echo "$package_categories" | grep -q "Development"; then
-      sed -n '/^# 🟡 DEVELOPMENT/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+      sed -n '/^# 🟡 DEVELOPMENT/,/^# ====/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
     fi
     if echo "$package_categories" | grep -q "Utilities"; then
-      sed -n '/^# 🟠 UTILITIES/,/^# =/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
+      sed -n '/^# 🟠 UTILITIES/,/^# ====/p' "$DOTFILES_DIR/Brewfile" | grep -v "^# =" >> "$temp_brewfile"
     fi
     if echo "$package_categories" | grep -q "Optional"; then
       sed -n '/^# 🔵 OPTIONAL/,/^$/p' "$DOTFILES_DIR/Brewfile" >> "$temp_brewfile"
