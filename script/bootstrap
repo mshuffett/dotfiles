@@ -623,6 +623,97 @@ setup_ai_tools() {
 }
 
 # ============================================================================
+# AI Tools Configuration
+# ============================================================================
+
+setup_ai_config() {
+  local configure_ai=$1
+
+  if [[ "$configure_ai" != "true" ]]; then
+    return
+  fi
+
+  echo ""
+  gum style --foreground 212 "Configuring AI Tools (Claude Code & Codex)..."
+  echo ""
+
+  # Backup existing files before symlinking
+  local backup_dir="$HOME/.ai-config-backup-$(date +%Y%m%d_%H%M%S)"
+  local files_backed_up=0
+
+  for item in CLAUDE.md settings.json commands hooks scripts output-styles; do
+    if [[ -e "$HOME/.claude/$item" ]] && [[ ! -L "$HOME/.claude/$item" ]]; then
+      if [[ $files_backed_up -eq 0 ]]; then
+        mkdir -p "$backup_dir/claude"
+        log_info "Backing up existing Claude config to $backup_dir"
+      fi
+      cp -R "$HOME/.claude/$item" "$backup_dir/claude/"
+      files_backed_up=$((files_backed_up + 1))
+    fi
+  done
+
+  # Backup broken codex symlink if it exists
+  if [[ -L "$HOME/.codex/AGENTS.md" ]]; then
+    mkdir -p "$backup_dir/codex"
+    rm "$HOME/.codex/AGENTS.md"
+    log_info "Removed broken codex AGENTS.md symlink"
+  fi
+
+  # Create ~/.claude symlinks
+  log_info "Creating Claude Code symlinks..."
+
+  for item in CLAUDE.md settings.json commands hooks scripts output-styles; do
+    local src="$DOTFILES_DIR/claude/$item"
+    local dst="$HOME/.claude/$item"
+
+    # Remove existing file/symlink
+    if [[ -e "$dst" ]] || [[ -L "$dst" ]]; then
+      rm -rf "$dst"
+    fi
+
+    # Create symlink
+    if [[ -e "$src" ]]; then
+      ln -s "$src" "$dst"
+      log_info "Linked ~/.claude/$(basename "$dst")"
+    fi
+  done
+
+  # Create ~/.codex symlinks
+  log_info "Creating Codex symlinks..."
+
+  # Fix AGENTS.md symlink
+  ln -s "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.codex/AGENTS.md"
+  log_info "Linked ~/.codex/AGENTS.md"
+
+  # Create prompts directory and symlink all commands
+  mkdir -p "$HOME/.codex/prompts"
+
+  for cmd in "$DOTFILES_DIR/claude/commands"/*.md; do
+    local cmd_name=$(basename "$cmd")
+    local dst="$HOME/.codex/prompts/$cmd_name"
+
+    # Remove existing symlink if it exists
+    if [[ -L "$dst" ]]; then
+      rm "$dst"
+    fi
+
+    # Create symlink
+    ln -s "$cmd" "$dst"
+  done
+
+  log_info "Linked $(find "$DOTFILES_DIR/claude/commands" -name "*.md" | wc -l | tr -d ' ') commands to ~/.codex/prompts"
+
+  echo ""
+  gum style --foreground 212 "✓ AI tools configured!"
+  echo ""
+  log_info "All Claude commands, hooks, and scripts are now version-controlled"
+  log_info "Codex has access to all commands as prompts"
+  if [[ $files_backed_up -gt 0 ]]; then
+    log_info "Backup of original files: $backup_dir"
+  fi
+}
+
+# ============================================================================
 # Main Flow
 # ============================================================================
 
@@ -780,6 +871,15 @@ main() {
   fi
   echo ""
 
+  # AI Tools configuration
+  local configure_ai="false"
+  if [[ "$install_ai" == "true" ]] || command -v claude &> /dev/null || command -v codex &> /dev/null; then
+    if ask_confirm "Configure AI tools? (Symlink commands, hooks, CLAUDE.md from dotfiles)"; then
+      configure_ai="true"
+    fi
+  fi
+  echo ""
+
   # ============================================================================
   # SHOW COMPLETE PLAN
   # ============================================================================
@@ -796,7 +896,8 @@ main() {
     "$(if [[ -n "$package_categories" ]]; then echo "✓ Install $(echo "$package_categories" | wc -l | tr -d ' ') package categories"; fi)" \
     "$(if [[ "$install_node" == "true" ]]; then echo "✓ Install Node.js LTS via fnm"; fi)" \
     "$(if [[ "$install_tpm" == "true" ]]; then echo "✓ Install tmux plugins (TPM + all plugins)"; fi)" \
-    "$(if [[ "$install_ai" == "true" ]]; then echo "✓ Install AI Development Tools (Claude Code, Codex)"; fi)"
+    "$(if [[ "$install_ai" == "true" ]]; then echo "✓ Install AI Development Tools (Claude Code, Codex)"; fi)" \
+    "$(if [[ "$configure_ai" == "true" ]]; then echo "✓ Configure AI tools (commands, hooks, CLAUDE.md)"; fi)"
 
   echo ""
 
@@ -883,6 +984,7 @@ main() {
   # Additional setup
   setup_node "$install_node"
   setup_ai_tools "$install_ai"
+  setup_ai_config "$configure_ai"
 
   # Only install tmux plugins if tmux is actually installed
   if [[ "$install_tpm" == "true" ]]; then
