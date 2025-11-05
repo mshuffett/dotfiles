@@ -596,14 +596,15 @@ main() {
 
   echo "" # Add spacing for readability
 
-  # Check if we have an interactive terminal
-  if [ ! -t 0 ]; then
+  # Check if we have an interactive terminal (skip if --yes is set)
+  if [[ "$AUTO_YES" == "false" ]] && [ ! -t 0 ]; then
     log_error "This script requires an interactive terminal"
     echo ""
     echo "Please run it directly from your terminal:"
     echo "  ~/.dotfiles/script/bootstrap"
     echo ""
-    echo "Don't pipe it or run through other commands"
+    echo "Or use --yes for non-interactive mode:"
+    echo "  ~/.dotfiles/script/bootstrap --yes --all"
     exit 1
   fi
 
