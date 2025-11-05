@@ -2,8 +2,6 @@
 # TAPS (Third-party repositories)
 # ============================================================================
 
-tap "homebrew/bundle"
-tap "homebrew/command-not-found"
 tap "jesseduffield/lazygit"
 tap "supabase/tap"
 
