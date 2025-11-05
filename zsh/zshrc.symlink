@@ -311,8 +311,12 @@ if [ -f '/Users/michael/google-cloud-sdk/completion.zsh.inc' ]; then
 fi
 
 source ~/.dotfiles/zsh/aliases.zsh
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-12.0.1.jdk/Contents/Home
-export PATH=$JAVA_HOME/bin:$PATH
+
+# Java - only set if installed
+if [ -d "/Library/Java/JavaVirtualMachines/jdk-12.0.1.jdk/Contents/Home" ]; then
+  export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-12.0.1.jdk/Contents/Home
+  export PATH=$JAVA_HOME/bin:$PATH
+fi
 
 # Bun installation directory (path added in path array above)
 export BUN_INSTALL="$HOME/.bun"
@@ -374,7 +378,9 @@ else
     export GIT_PAGER="less -FRX"
   fi
 fi
-source /Users/michael/.config/broot/launcher/bash/br
+
+# Broot launcher - only source if installed
+[ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
 
 # Alias to get a shell without tmux auto-starting
 alias notmux='exec env CURSOR_TRACE_ID=bypass zsh'
