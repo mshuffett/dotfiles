@@ -159,12 +159,26 @@ install_gum() {
 # ============================================================================
 
 setup_git_config() {
-  local name email
+  local name email existing_name existing_email
 
   gum style --foreground 212 "Git Configuration"
 
-  name=$(gum input --placeholder "Your full name" --prompt "Name: ")
-  email=$(gum input --placeholder "your.email@example.com" --prompt "Email: ")
+  # Get existing git config values if they exist
+  existing_name=$(git config --global user.name 2>/dev/null || echo "")
+  existing_email=$(git config --global user.email 2>/dev/null || echo "")
+
+  # Use existing values as placeholders, or defaults if not set
+  if [[ -n "$existing_name" ]]; then
+    name=$(gum input --placeholder "$existing_name" --prompt "Name: " --value "$existing_name")
+  else
+    name=$(gum input --placeholder "Your full name" --prompt "Name: ")
+  fi
+
+  if [[ -n "$existing_email" ]]; then
+    email=$(gum input --placeholder "$existing_email" --prompt "Email: " --value "$existing_email")
+  else
+    email=$(gum input --placeholder "your.email@example.com" --prompt "Email: ")
+  fi
 
   if [[ -z "$name" ]] || [[ -z "$email" ]]; then
     log_error "Git name and email are required"
