@@ -191,9 +191,26 @@ install_homebrew() {
 install_gum() {
   if ! command -v gum &> /dev/null; then
     log_info "Installing gum for better UI..."
-    brew install gum
-    log_info "gum installed! Restarting with fancy UI..."
-    exec "$0" "$@"
+    if brew install gum; then
+      # Reload shell environment to pick up new binary
+      if [[ $(uname -m) == "arm64" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      fi
+
+      # Verify gum is now available
+      if command -v gum &> /dev/null; then
+        log_info "gum installed successfully"
+      else
+        log_error "gum installation completed but command not found"
+        echo "Please run the script again: ~/.dotfiles/script/bootstrap"
+        exit 1
+      fi
+    else
+      log_error "Failed to install gum"
+      exit 1
+    fi
+  else
+    log_info "gum already installed"
   fi
 }
 
@@ -525,6 +542,8 @@ main() {
   check_xcode
   install_homebrew
   install_gum
+
+  echo "" # Add spacing for readability
 
   # Check if we have an interactive terminal
   if [ ! -t 0 ]; then
