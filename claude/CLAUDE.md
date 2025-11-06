@@ -11,36 +11,36 @@ My name is Michael
 - For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
 
-**Commands as Prompts and Checklists**
+**Procedure Files in ~/.claude/commands/**
 
-Commands in `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) are NOT just documentation - they are prompts, checklists, and procedures that you MUST load and follow.
+The directory `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) contains procedure files with checklists and step-by-step instructions that you MUST read and follow.
 
-**CRITICAL: Read Command Files When Topics Apply**
+**CRITICAL: Read Procedure Files When Topics Apply**
 
-Before working on ANY task, check if it matches these topics. If it does, use SlashCommand tool to read that file FIRST:
+Before working on ANY task, check if it matches these topics. If it does, read that file FIRST:
 
-- **Working with worktrees** → Read `/worktrees` any time you are working with git worktrees (creating, managing, or discussing worktrees)
-- **API endpoints or authentication** → Read `/api-patterns` when working on API routes, authentication, or request validation
-- **Writing tests** → Read `/testing-patterns` when writing tests or debugging test failures
-- **Firebase Authentication** → Read `/firebase-auth-patterns` when implementing Firebase Authentication in API routes or client code
-- **UI animations** → Read `/framer-motion-patterns` when implementing UI animations and transitions
-- **Reviewing mistakes** → Read `/mistakes` before implementing to avoid known issues
-- **Analyzing failures** → Read `/mistake-analysis` when analyzing failures or tracking mistake patterns
-- **User preferences** → Read `/user-preferences` for context-specific user preferences and workflow details
+- **Working with worktrees** → Read `~/.claude/commands/worktrees.md` any time you are working with git worktrees (creating, managing, or discussing worktrees)
+- **API endpoints or authentication** → Read `~/.claude/commands/api-patterns.md` when working on API routes, authentication, or request validation
+- **Writing tests** → Read `~/.claude/commands/testing-patterns.md` when writing tests or debugging test failures
+- **Firebase Authentication** → Read `~/.claude/commands/firebase-auth-patterns.md` when implementing Firebase Authentication in API routes or client code
+- **UI animations** → Read `~/.claude/commands/framer-motion-patterns.md` when implementing UI animations and transitions
+- **Reviewing mistakes** → Read `~/.claude/commands/mistakes.md` before implementing to avoid known issues
+- **Analyzing failures** → Read `~/.claude/commands/mistake-analysis.md` when analyzing failures or tracking mistake patterns
+- **User preferences** → Read `~/.claude/commands/user-preferences.md` for context-specific user preferences and workflow details
 
 **How this works**:
 1. User request arrives
 2. You identify which topic(s) it matches from the list above
-3. Use SlashCommand tool to invoke that command FIRST (e.g., `SlashCommand: /worktrees`)
-4. The command loads its procedures and checklists into your context
-5. Follow the command's guidance
+3. Read that procedure file FIRST using the Read tool
+4. Load the procedures and checklists into your context
+5. Follow the file's guidance
 6. Then respond to the user
 
 **Example**:
 - User: "I need to create a worktree for a new feature"
 - You see: "worktree" → matches "Working with worktrees"
-- You: Use SlashCommand tool to invoke `/worktrees`
-- You: Load and follow the pre-flight checklist from that command
+- You: Read `~/.claude/commands/worktrees.md` using the Read tool
+- You: Load and follow the pre-flight checklist from that file
 - You: Execute the worktree creation correctly with all steps
 
 **Editing Policy (this file)**
