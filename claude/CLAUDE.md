@@ -17,16 +17,46 @@ The directory `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) co
 
 **CRITICAL: Read Procedure Files When Topics Apply**
 
-Before working on ANY task, check if it matches these topics. If it does, read that file FIRST:
+Before working on ANY task, check if it matches these topics. If it does, read that file FIRST using the Read tool:
 
-- **Working with worktrees** → Read `~/.claude/commands/worktrees.md` any time you are working with git worktrees (creating, managing, or discussing worktrees)
+**Development & Git Workflows:**
+- **Working with worktrees** → Read `~/.claude/commands/worktrees.md` when creating, managing, or discussing git worktrees
+- **Creating pull requests** → Read `~/.claude/commands/pr.md` when asked to create a PR or prepare code for review
+- **Managing git stashes** → Read `~/.claude/commands/git-safety.md` before stashing changes
+- **Managing configs** → Read `~/.claude/commands/configs.md` when discovering stray configuration files
+
+**Code Patterns & Best Practices:**
 - **API endpoints or authentication** → Read `~/.claude/commands/api-patterns.md` when working on API routes, authentication, or request validation
 - **Writing tests** → Read `~/.claude/commands/testing-patterns.md` when writing tests or debugging test failures
 - **Firebase Authentication** → Read `~/.claude/commands/firebase-auth-patterns.md` when implementing Firebase Authentication in API routes or client code
 - **UI animations** → Read `~/.claude/commands/framer-motion-patterns.md` when implementing UI animations and transitions
-- **Reviewing mistakes** → Read `~/.claude/commands/mistakes.md` before implementing to avoid known issues
+
+**Tools & Infrastructure:**
+- **Managing ports/processes** → Read `~/.claude/commands/ports.md` before killing processes on ports
+- **Working with tmux** → Read `~/.claude/commands/tmux.md` when managing tmux panes, windows, or sessions
+- **Deploying applications** → Read `~/.claude/commands/deploy.md` when deploying to production or development environments
+- **Managing environment variables** → Read `~/.claude/commands/env.md` when adding or updating secrets and environment variables
+- **Viewing images** → Read `~/.claude/commands/view-image.md` when asked to view or display images in terminal
+
+**Learning & Improvement:**
+- **Reviewing common mistakes** → Read `~/.claude/commands/mistakes.md` before implementing to avoid known issues
 - **Analyzing failures** → Read `~/.claude/commands/mistake-analysis.md` when analyzing failures or tracking mistake patterns
+- **Documenting learnings** → Read `~/.claude/commands/session-learnings.md` when summarizing session insights
+- **Memory placement decisions** → Read `~/.claude/commands/memory-guide.md` when deciding where information belongs
+
+**User Context:**
 - **User preferences** → Read `~/.claude/commands/user-preferences.md` for context-specific user preferences and workflow details
+- **Linear workflow** → Read `~/.claude/commands/linear.md` when creating or managing Linear issues
+- **Documentation guidelines** → Read `~/.claude/commands/docs.md` when adding or updating documentation
+- **Note management** → Read `~/.claude/commands/notes.md` when capturing or organizing notes
+
+**Advanced Features:**
+- **Prompt engineering** → Read `~/.claude/commands/prompt-improve.md` when improving prompts or commands
+- **Prompt alignment** → Read `~/.claude/commands/prompt-alignment.md` when aligning prompts with examples
+- **Text-to-speech** → Read `~/.claude/commands/tts.md` when generating speech or audio from text
+- **Image generation** → Read `~/.claude/commands/images.md` when generating images
+- **Notifications** → Read `~/.claude/commands/notifications.md` when sending completion notifications
+- **Computer use** → Read `~/.claude/commands/computer-use.md` only when explicitly asked to use the computer use agent
 
 **How this works**:
 1. User request arrives
