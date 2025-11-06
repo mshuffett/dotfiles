@@ -10,7 +10,13 @@ description: Always read this whenever working with git worktrees
 - When asked to isolate work from the main repository
 
 ## Acceptance Checks
-- [ ] Guide consulted (this file)
+
+**FIRST STEP - Log that you read this file:**
+```bash
+echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) - worktrees.md consulted" >> /tmp/claude-procedure-log.txt
+```
+
+- [ ] Logged consultation to /tmp/claude-procedure-log.txt
 - [ ] `.env` files copied to the worktree if needed
 - [ ] Dependencies installed inside the worktree
 - [ ] No git operations performed in the main repo (only inside worktree)
