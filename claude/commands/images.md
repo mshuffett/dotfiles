@@ -6,6 +6,14 @@ description: Generate images with Gemini or OpenAI; includes commands, provider 
 
 Use the `generate-image` command to create images with Google Gemini or OpenAI:
 
+## When to Use (Triggers)
+- You are asked to generate images or visual assets
+
+## Acceptance Checks
+- [ ] Provider chosen (Gemini/OpenAI) based on need
+- [ ] Required API key is present in env
+- [ ] Size/output options selected appropriately
+
 Commands:
 - `generate-image "prompt"` — generates a 1024x1024 image with Gemini (default)
 - `generate-image "prompt" --provider openai` — generates image with OpenAI DALL‑E 3
@@ -23,4 +31,3 @@ Environment variables:
 - `GEMINI_API_KEY` — required for Gemini provider
 
 The command is available at `~/bin/generate-image` (symlinked from `~/.dotfiles/bin/generate-image`).
-

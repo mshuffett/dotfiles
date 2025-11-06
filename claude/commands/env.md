@@ -21,3 +21,10 @@ DATABASE_URL=postgresql://localhost:5432/mydb
 API_KEY=your_secret_key_here
 ```
 
+## When to Use (Triggers)
+- Adding or updating secrets or environment variables
+
+## Acceptance Checks
+- [ ] Secrets stored in `~/.env.zsh` (global) or `.env.local` (project)
+- [ ] `.env.example` updated with variable names (no values)
+- [ ] `direnv` loads when entering the project directory

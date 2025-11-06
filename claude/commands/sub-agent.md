@@ -16,3 +16,9 @@ done
 
 This loads all available command descriptions so you know what specialized tools are available.
 
+## When to Use (Triggers)
+- A sub‑agent session starts and needs to know which commands are available
+
+## Acceptance Checks
+- [ ] Command list generated
+- [ ] Relevant commands loaded as needed

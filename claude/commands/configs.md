@@ -25,3 +25,10 @@ Existing managed configs:
 - `~/.claude/scripts/` → `~/.dotfiles/claude/scripts/`
 - `~/bin/` scripts → `~/.dotfiles/bin/`
 
+## When to Use (Triggers)
+- You encounter a stray config file that should be tracked
+
+## Acceptance Checks
+- [ ] File moved into `~/.dotfiles/<app>/`
+- [ ] Symlink created back to original path
+- [ ] Change committed in dotfiles repo

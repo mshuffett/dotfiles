@@ -6,6 +6,17 @@ description: Root-cause test debugging workflow; apply when tests fail. Includes
 
 CRITICAL: When tests fail, INVESTIGATE the root cause — don't just report the failure.
 
+## When to Use (Triggers)
+- Any test fails locally or in CI
+- Flaky behavior is observed during test runs
+
+## Acceptance Checks
+- [ ] Guide consulted (this file)
+- [ ] Failure analyzed (what/where/why)
+- [ ] Minimal reproduction attempted
+- [ ] Root cause fixed
+- [ ] Simplest test passes; full suite passes (or documented)
+
 ## Universal Debugging Approach
 1. Identify WHAT failed — Read the error carefully
    - Which assertion failed?
@@ -34,4 +45,3 @@ After fixing ANY test failure:
 - Document project‑specific patterns in the project’s CLAUDE.md or docs.
 - Update the root memory only if the pattern is universal.
 - Commit learnings immediately.
-

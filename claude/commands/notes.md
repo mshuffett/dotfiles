@@ -20,3 +20,10 @@ Working with notes:
 - New notes default to `+Inbox/` unless a specific location is requested
 - The notes folder has its own comprehensive CLAUDE.md with detailed processing rules
 
+## When to Use (Triggers)
+- Capturing new ideas, project notes, or references
+
+## Acceptance Checks
+- [ ] Note placed in correct PARA location (default +Inbox)
+- [ ] Linked from relevant parent or index when applicable
+- [ ] Followed local notes CLAUDE.md rules

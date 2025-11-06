@@ -11,6 +11,14 @@ When working with any third‑party library:
 2. Fetch docs — Use `get-library-docs` with the exact ID and optional topic.
 3. Implement using the current documentation and examples.
 
+## When to Use (Triggers)
+- You need to use or answer questions about a third‑party library
+
+## Acceptance Checks
+- [ ] `resolve-library-id` run for the library name
+- [ ] `get-library-docs` fetched for the exact ID (optionally with topic)
+- [ ] Implementation/answer aligned to current docs
+
 Why this matters:
 - Libraries update frequently with breaking changes.
 - Training data may be outdated.
@@ -24,4 +32,3 @@ User: "Add authentication with Supabase"
 2. get-library-docs(context7CompatibleLibraryID="/supabase/supabase", topic="authentication")
 3. Implement using the current documentation
 ```
-

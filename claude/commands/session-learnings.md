@@ -15,3 +15,9 @@ Usage:
 - Cross‑link notable entries to relevant guides (e.g., worktrees, ports, PRs) and update those guides as needed.
 - Use the mistakes log for automated promotion/demotion decisions; keep the session‑learnings file readable for humans.
 
+## When to Use (Triggers)
+- End of a significant session or after notable learning
+
+## Acceptance Checks
+- [ ] Summary appended to `~/.claude/logs/session-learnings.md`
+- [ ] Related guide(s) updated if needed

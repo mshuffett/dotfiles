@@ -7,6 +7,17 @@ description: Safe protocol for managing processes on ports; requires explicit pe
 IMPORTANT: Never kill a process running on a port unless you started it yourself or have explicit permission from the user.
 
 Protocol:
+## When to Use (Triggers)
+- A port is busy and you need to free it
+- You suspect a dev server is still running
+
+## Acceptance Checks
+- [ ] Guide consulted (this file)
+- [ ] Process identified with `lsof -i :<PORT>` (PID and command noted)
+- [ ] If you did not start the process, explicit permission obtained from the user
+- [ ] If you started it, safe to terminate confirmed
+
+Protocol:
 1. If you need to stop a process on a port:
    - First check if you started it in this session.
    - If you didn't start it, ask the user for explicit permission before killing it.
@@ -20,4 +31,3 @@ Protocol:
 Examples:
 - Acceptable: You started `pnpm run dev` on port 5173 — you can kill it later without asking.
 - Requires permission: Port 3000 is busy; identify process and ask user before terminating.
-

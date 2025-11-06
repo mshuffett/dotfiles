@@ -16,3 +16,11 @@ Top-level docs are for:
 - Major cross-cutting concerns (TESTING, DESIGN, ARCHITECTURE if truly repo-wide)
 - Everything else → `docs/` or appropriate subdirectory
 
+## When to Use (Triggers)
+- You need to add or update documentation for a feature, workflow, or pattern
+
+## Acceptance Checks
+- [ ] Existing docs reviewed and updated when possible (no duplication)
+- [ ] New content placed under `docs/` (not cluttering root) unless truly repo‑wide
+- [ ] Feature‑specific file naming used (not generic)
+- [ ] Linked from README or parent doc (no orphans)

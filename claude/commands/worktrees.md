@@ -4,6 +4,18 @@ description: CRITICAL - Git worktree workflow for parallel feature development. 
 
 # Git Worktrees - Parallel Feature Development
 
+## When to Use (Triggers)
+- Before creating or modifying any git worktree
+- When working on parallel feature branches
+- When asked to isolate work from the main repository
+
+## Acceptance Checks
+- [ ] Guide consulted (this file)
+- [ ] `.env` files copied to the worktree if needed
+- [ ] Dependencies installed inside the worktree
+- [ ] No git operations performed in the main repo (only inside worktree)
+- [ ] Worktree path uses `.worktrees/` convention
+
 ## What are Git Worktrees?
 
 Git worktrees allow you to have multiple branches checked out simultaneously in different directories. This is essential for:

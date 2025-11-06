@@ -6,6 +6,17 @@ description: Pull request workflow using gh; verifies conflicts and tests locall
 
 When asked to create a pull request, use the `gh` command.
 
+## When to Use (Triggers)
+- You are ready to open a PR for a branch and want it reviewed/merged
+- The branch is up to date locally and tests pass
+
+## Acceptance Checks
+- [ ] Guide consulted (this file)
+- [ ] Latest base merged locally and conflicts resolved
+- [ ] Tests executed and passing
+- [ ] Commit messages clear and relevant
+- [ ] PR title/body prepared (or `--fill` used appropriately)
+
 Commands:
 ```bash
 # Create PR with interactive prompts
@@ -46,4 +57,3 @@ git push
 # Now create PR
 gh pr create --base develop ...
 ```
-

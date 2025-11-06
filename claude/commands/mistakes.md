@@ -25,6 +25,14 @@ Enforcement:
 - Any attempt to execute a procedural task when a known trigger condition applies MUST record which guide was consulted and whether acceptance checks passed.
 - If no guide was consulted, automatically log `guide.not_consulted` with `condition` and stop until consultation occurs.
 
+## When to Use (Triggers)
+- A mistake occurs (missed guide, skipped acceptance check, policy violation)
+- Session start/end review
+
+## Acceptance Checks
+- [ ] Event appended to the correct JSONL log
+- [ ] Promotion/demotion considered based on counts in last 14–30 days
+
 Example mistake IDs:
 - `worktrees.preflight_skipped`
 - `ports.killed_without_permission`
@@ -32,4 +40,3 @@ Example mistake IDs:
 - `pr.conflicts_not_checked`
 - `guide.not_consulted`
 - `guide.acceptance_checks_skipped`
-

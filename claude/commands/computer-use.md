@@ -9,6 +9,14 @@ Only use the computer use agent when explicitly asked. Do not proactively sugges
 Conflict handling:
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
 
+## When to Use (Triggers)
+- The user explicitly asks you to control the computer or to perform an action that requires the agent
+
+## Acceptance Checks
+- [ ] Explicit request confirmed
+- [ ] Any conflicts surfaced and resolved (temporary override or rule update)
+- [ ] Scope and steps confirmed before execution (dry-run or live)
+
 Usage:
 ```bash
 # Dry-run (shows what will happen)
@@ -23,4 +31,3 @@ Example acceptable usage:
 
 Example unacceptable usage:
 - User: "I need to check my memory usage" → Do not run the agent automatically; provide manual steps unless explicitly asked to control the computer.
-
