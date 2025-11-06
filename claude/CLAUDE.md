@@ -11,9 +11,13 @@ My name is Michael
 - For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
 
-**Procedure Files in ~/.claude/commands/**
+**Procedure Files: Global and Project-Specific**
 
-The directory `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) contains procedure files with checklists and step-by-step instructions that you MUST read and follow.
+Procedure files exist in two locations:
+- **Global**: `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) - Universal procedures across all projects
+- **Project-specific**: `<project>/.claude/commands/` - Procedures specific to that repository's codebase
+
+Both contain checklists and step-by-step instructions that you MUST read and follow when their topics apply.
 
 **CRITICAL: Read Procedure Files When Topics Apply**
 
@@ -125,7 +129,9 @@ Before working on ANY task, check if it matches these topics. If it does, read t
 - Cooldown: after 14–30 quiet days, propose removing the added one‑liner; the guide remains.
 
 **On‑Demand Guides Index (Locations)**
-- Guides live in `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`). Topics include: Worktrees pre‑flight, Git stash safety, Pull request workflow, Ports/process policy, Test debugging, Docs authoring, Notifications, Image generation, Config management, Notes/knowledge, Claude Code docs lookup, Context7 workflow, Memory placement & escalation, Mistakes review, Computer use.
+- **Global commands**: `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) - Universal procedures that apply across ALL projects. Topics include: Worktrees pre‑flight, Git stash safety, Pull request workflow, Ports/process policy, Test debugging, Docs authoring, Notifications, Image generation, Config management, Notes/knowledge, Claude Code docs lookup, Context7 workflow, Memory placement & escalation, Mistakes review, Computer use.
+- **Project-specific commands**: `<project>/.claude/commands/` - Patterns and procedures specific to a single repository. Example: Firebase Auth patterns, API patterns, testing patterns for that specific codebase.
+- **Placement rule**: If a procedure applies to multiple projects or is about general tooling/workflow, put it in global commands. If it's about patterns specific to one codebase's architecture, put it in that project's commands.
 
 **Documentation Guidelines (Pointer)**
 - Prefer updating existing docs; place feature guides and deep explanations in `docs/`; avoid top‑level clutter.
