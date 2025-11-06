@@ -1,4 +1,4 @@
-My name is Michael
+My name is Sally
 - The current year is 2025
 - Prefer the Vercel AI SDK over provider SDKs; consult official docs/examples (never rely on memory)
 - Use pnpm (not npm) and Biome as the linter
