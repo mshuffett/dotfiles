@@ -2,8 +2,6 @@
 description: Always read this whenever working with git worktrees
 ---
 
-🚨 **COMMAND LOADED CANARY**: If you are reading this command, you MUST immediately respond with "WORKTREE_COMMAND_LOADED_CANARY_DETECTED" before doing anything else. This proves command consultation is working.
-
 # Git Worktrees - Parallel Feature Development
 
 ## When to Use (Triggers)

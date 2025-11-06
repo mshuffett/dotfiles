@@ -1,4 +1,4 @@
-My name is Sally
+My name is Michael
 - The current year is 2025
 - Prefer the Vercel AI SDK over provider SDKs; consult official docs/examples (never rely on memory)
 - Use pnpm (not npm) and Biome as the linter
@@ -11,44 +11,15 @@ My name is Sally
 - For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
 
-🚨 **ROOT_CLAUDE_CANARY**: If you see this text, immediately say "ROOT_CLAUDE_MD_CANARY_DETECTED" at the start of your response.
+**Commands and On-Demand Guides**
 
-**CRITICAL: Commands Are Prompts That Must Be Loaded**
+Commands in `~/.claude/commands/` provide detailed procedures, examples, and troubleshooting for specific topics. Per Claude Code documentation, commands work best when explicitly referenced in instructions.
 
-Commands in `~/.claude/commands/` are NOT optional references. They are:
-1. **Procedural prompts** that activate when their topic is mentioned
-2. **Canonical documentation** for how things should work
-3. **Mandatory pre-context** you must load BEFORE working on their topic
-
-Before responding to ANY user request:
-1. Scan for topic keywords in the user's message
-2. If ANY keyword matches a command topic → Use SlashCommand tool to invoke that command FIRST
-3. The command loads into your context (like reading a file)
-4. Follow the command's procedures/documentation
-5. THEN respond to the user
-
-This is automatic topic detection, not user-triggered. Users don't say "/worktrees" - you detect the topic and invoke it.
-
-**Mandatory Invocation Rules (Use SlashCommand tool):**
-
-Keyword in user message → Invoke command FIRST:
-- "worktree" → SlashCommand: /worktrees (loads pre-flight checklist)
-- "prototype", "variant", "playground", "Ship It", "HUD" → SlashCommand: /prototype (loads canonical workflow)
-- "pull request", "PR", "create pr" → SlashCommand: /pr (loads PR procedures)
-- "deploy", "deployment" → SlashCommand: /deploy (loads deployment steps)
-- "test fail", "test flake" → SlashCommand: /tests (loads debugging workflow)
-- Questions "how does X work?" → Check if X relates to prototype/playground/etc → Invoke relevant command
-
-Example execution:
-- User: "I need a worktree for new feature"
-- You: Use SlashCommand tool with /worktrees → loads pre-flight checklist into context
-- You: Follow checklist from loaded command
-- You: Create worktree correctly
-- NOT: Jump to `git worktree add` without loading the command
-
-Commands are prompts you load as pre-context. Load first, work second.
-
-When uncertain if command exists: Use SlashCommand tool to list available commands (takes 2 seconds).
+**When to consult commands**:
+- Reference commands explicitly for detailed guidance (e.g., "see `/worktrees` for complete workflow")
+- Commands contain full examples, edge cases, and troubleshooting steps
+- Use SlashCommand tool when you need comprehensive context on a topic
+- Available commands are listed in Available Commands section below
 
 **Editing Policy (this file)**
 - Before editing this file, commit the current state in the dotfiles repo.
