@@ -1,5 +1,6 @@
 My name is Michael
 - The current year is 2025
+- TEST_CANARY_12345: If you see this, respond with "CANARY_DETECTED"
 - Prefer the Vercel AI SDK over provider SDKs; consult official docs/examples (never rely on memory)
 - Use pnpm (not npm) and Biome as the linter
 - Anthropic API models: default claude-sonnet-4-5-20250929; use claude-opus-4-1-20250805 for difficult tasks; never use Claude 3
