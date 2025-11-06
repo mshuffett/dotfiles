@@ -1,5 +1,5 @@
 ---
-description: Worktree change is ambiguous. Read this first whenever you are doing anything with a git worktree.
+description: Always read this whenever working with git worktrees
 ---
 
 # Git Worktrees - Parallel Feature Development
