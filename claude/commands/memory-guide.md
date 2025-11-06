@@ -148,6 +148,35 @@ Use this checklist when creating or updating commands:
 - **Be specific**: "Deploy when ready for production" > "Deployment helper"
 - **Think like a trigger**: What situation would make you want this information?
 
+## Description Style (Read‑Trigger)
+
+Use minimal descriptions that cause you to open the guide, not assume you already know what to do.
+
+Rules:
+- Lead with the trigger: "Before …" or "When …".
+- Instruct to read: explicitly say "read this first/now".
+- Optionally add one short safety cue (ALWAYS/NEVER) if essential.
+- Keep under ~120 characters; no steps, no summaries, no links.
+
+Template:
+> When/Before <trigger> — read this <first/now>; <short safety cue if needed>.
+
+Examples:
+- Worktrees: "Worktree change is ambiguous. Read this first whenever you are doing anything with a git worktree."
+- PR: "When asked to create a PR, read this immediately so you know what steps to take along the way."
+- Ports: "Before killing a process, read this first."
+- Git‑safety: "Never stash a git file without reading this."
+
+## Listing Current Descriptions
+
+You can list all command descriptions to audit style and consistency:
+
+```bash
+~/.dotfiles/claude/scripts/list-command-descriptions.sh
+```
+
+Use this output as live examples to keep new descriptions consistent.
+
 ## Escalation Ladder (Mistakes)
 - 0) Improve or create the relevant guide first (clear triggers, acceptance checks, quick path)
 - 1) First recurrence → strengthen guide and add anti‑miss cues (e.g., “Before X, always do Y”)

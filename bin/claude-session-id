@@ -1,0 +1,37 @@
+#!/bin/bash
+# Find the current Claude Code session ID and file path
+
+# Generate unique marker
+MARKER="claude-session-marker-$(uuidgen)"
+echo "$MARKER" >&2
+
+# Wait for session to flush to disk
+sleep 2
+
+# Search for the marker in all session files
+SESSION_FILE=$(rg -l "$MARKER" ~/.claude/projects/*/*.jsonl 2>/dev/null | head -1)
+
+if [ -z "$SESSION_FILE" ]; then
+    echo "Error: Could not find current session" >&2
+    exit 1
+fi
+
+# Extract session ID from filename
+SESSION_ID=$(basename "$SESSION_FILE" .jsonl)
+
+# Output format based on flag
+case "${1:-}" in
+    --id)
+        echo "$SESSION_ID"
+        ;;
+    --file)
+        echo "$SESSION_FILE"
+        ;;
+    --json)
+        echo "{\"session_id\":\"$SESSION_ID\",\"file\":\"$SESSION_FILE\"}"
+        ;;
+    *)
+        echo "Session ID: $SESSION_ID"
+        echo "File: $SESSION_FILE"
+        ;;
+esac
