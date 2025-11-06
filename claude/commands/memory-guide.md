@@ -150,19 +150,22 @@ Use this checklist when creating or updating commands:
 
 ## Description Style (Read‑Trigger)
 
-Use minimal descriptions that cause you to open the guide, not assume you already know what to do.
+Descriptions should only trigger opening the guide — never summarize steps.
 
 Rules:
-- Lead with the trigger: "Before …" or "When …".
-- Instruct to read: explicitly say "read this first/now".
-- Optionally add one short safety cue (ALWAYS/NEVER) if essential.
-- Keep under ~120 characters; no steps, no summaries, no links.
+- Lead with the trigger: "Before …", "When …", or "Always read this whenever …".
+- Say "read this first/now" or use the minimal imperative (e.g., "Never stash …") that forces opening.
+- No steps, no acceptance checks, no links, no outcomes; keep ≤120 chars.
+- Avoid implying you can proceed without reading. The body holds all details.
 
-Template:
-> When/Before <trigger> — read this <first/now>; <short safety cue if needed>.
+Patterns:
+- Before <action> — read this first.
+- When asked to <task> — read this immediately.
+- Always read this whenever <topic>.
+- Never <risky action> without reading this.
 
-Examples:
-- Worktrees: "Worktree change is ambiguous. Read this first whenever you are doing anything with a git worktree."
+Examples (approved style):
+- Worktrees: "Always read this whenever working with git worktrees"
 - PR: "When asked to create a PR, read this immediately so you know what steps to take along the way."
 - Ports: "Before killing a process, read this first."
 - Git‑safety: "Never stash a git file without reading this."
