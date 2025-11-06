@@ -11,6 +11,10 @@ My name is Michael
 - For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
 
+**Editing Policy (this file)**
+- Before editing this file, commit the current state in the dotfiles repo.
+- After making changes, commit again with a clear message summarizing what changed and why.
+
 **Universal Guardrails**
 - Procedures: ALWAYS consult the correct on‑demand guide when its trigger applies; proceed only after acceptance checks pass.
 - Git worktrees: Before any git worktree operation, complete a pre‑flight checklist; ensure `.env` files are copied and dependencies installed. If unclear, pause and ask.
@@ -73,4 +77,3 @@ My name is Michael
 **Session Learnings**
 - Ongoing history is maintained in a dedicated log file at `~/.claude/logs/session-learnings.md` (human‑readable summaries).
 - The mistakes/event log for escalation lives at `~/.claude/mistakes.jsonl`.
-
