@@ -1018,6 +1018,24 @@ main() {
     fi
   fi
 
+  # Lefthook (git hooks manager) — install and sync hooks for dotfiles repo
+  if command -v brew &> /dev/null; then
+    if ! command -v lefthook &> /dev/null; then
+      log_info "Installing lefthook (git hooks manager)"
+      brew install lefthook || brew upgrade lefthook || true
+      if [[ $(uname -m) == "arm64" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      fi
+    else
+      gum style --foreground 246 "lefthook already installed: $(lefthook version)"
+    fi
+    (
+      cd "$DOTFILES_DIR" && lefthook install && gum style --foreground 212 "lefthook hooks installed for dotfiles"
+    )
+  else
+    log_warning "Homebrew not found; skipping lefthook install (pre-commit hook may be used instead)"
+  fi
+
   # Additional setup
   setup_node "$install_node"
   setup_ai_tools "$install_ai"
