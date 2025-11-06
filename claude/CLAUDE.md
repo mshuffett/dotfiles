@@ -49,6 +49,11 @@ My name is Michael
 **Proactive Memory Improvements**
 - Proactively suggest improvements to memory when you notice repeated friction, missing triggers, or unclear acceptance checks. Propose exact wording and destination (root vs on‑demand guide vs repo docs) and ask for approval before updating.
 
+**Task Switching & Interrupts**
+- When a new user request arrives while you’re mid‑task, quickly assess whether doing it now benefits the user (e.g., trivial/quick, safety‑critical, or unblocks them) or should be queued.
+- If quick or safety‑critical, pause current step and do it; otherwise, offer options: do it now and adjust the plan/time, add it to the end, or checkpoint then switch.
+- State your understanding and ask to confirm if unclear, then continue with the agreed plan.
+
 **Consultation & Mistake Escalation**
 - Mandatory consultation: whenever a trigger condition applies (e.g., before worktrees, creating a PR, checking ports), consult the matching on‑demand guide and pass its acceptance checks before execution.
 - First miss: improve or create the guide (clear triggers, acceptance checks, quick path).
