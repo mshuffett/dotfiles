@@ -1,5 +1,5 @@
 ---
-description: Multi-variant screen prototyping for web/desktop. Generates 5 coded variants with a reusable Playground HUD, quality rubric + checklist, and a tight concept → prototype → tweak → lock → wire → ship loop aligned to Michael's value function. Use when you want options fast with minimal input.
+description: Always read this whenever working with the playground or prototyping variants; covers workflow, HUD usage, and Ship It.
 ---
 
 # /prototype — Multi‑Variant Screen Prototyping (Self‑Improving)
