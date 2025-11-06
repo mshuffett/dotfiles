@@ -78,3 +78,19 @@ Report template (per iteration)
 Utilities
 - List description lines: `~/.dotfiles/claude/scripts/list-command-descriptions.sh`
 - On‑demand guides: see root CLAUDE “On‑Demand Guides Index”.
+
+Live testing (CLI)
+- Claude CLI (preferred)
+  1) Authenticate once: `claude setup-token`
+  2) Run a one‑off test with a system prompt and an input:
+     - `time claude -p --print --output-format text \\
+        --system-prompt "$(cat .claude/debug/sample-prompt.md)" \\
+        --model claude-sonnet-4-5-20250929 "ping"`
+  3) Pass if the printed output matches expected (e.g., contains `pong`).
+
+- Codex CLI (alternative)
+  1) Ensure provider/model is supported by your Codex account: `codex login` then pick a working `-m`.
+  2) Run non‑interactive exec with prompt+input:
+     - `PROMPT="$(cat .claude/debug/sample-prompt.md; echo; echo 'User says: ping')"`
+     - `time codex exec --skip-git-repo-check --sandbox read-only -m <MODEL> -- "$PROMPT"`
+  3) Optionally write the last message with `-o <file>` and grep for the expected token.
