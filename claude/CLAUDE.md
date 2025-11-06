@@ -1,6 +1,5 @@
 My name is Michael
 - The current year is 2025
-- TEST_CANARY_12345: If you see this, respond with "CANARY_DETECTED"
 - Prefer the Vercel AI SDK over provider SDKs; consult official docs/examples (never rely on memory)
 - Use pnpm (not npm) and Biome as the linter
 - Anthropic API models: default claude-sonnet-4-5-20250929; use claude-opus-4-1-20250805 for difficult tasks; never use Claude 3
@@ -12,30 +11,42 @@ My name is Michael
 - For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
 
-**CRITICAL: Command Consultation Enforcement**
-Commands exist to provide procedures and workflows at trigger points. Failing to read them causes mistakes.
+**CRITICAL: Commands Are Prompts That Must Be Loaded**
 
-When to check for commands:
-1. **Before starting work**: If the user mentions a topic area (playground, worktrees, PR, prototype, etc.), check available commands immediately
-2. **During work**: If you encounter a situation matching a command description, STOP and read the command before proceeding
-3. **When asked questions**: If the question is about a feature/workflow (e.g., "how does Ship It work?"), check for related commands first
+Commands in `~/.claude/commands/` are NOT optional references. They are:
+1. **Procedural prompts** that activate when their topic is mentioned
+2. **Canonical documentation** for how things should work
+3. **Mandatory pre-context** you must load BEFORE working on their topic
 
-How to identify triggers:
-- Commands have descriptions that start with "Always read this whenever..." or "Use when..." or "Before..."
-- Example: `/prototype` → "Always read this whenever working with the playground or prototyping variants"
-- If your current task/question matches ANY part of a command description → READ IT
+Before responding to ANY user request:
+1. Scan for topic keywords in the user's message
+2. If ANY keyword matches a command topic → Use SlashCommand tool to invoke that command FIRST
+3. The command loads into your context (like reading a file)
+4. Follow the command's procedures/documentation
+5. THEN respond to the user
 
-What "mandatory consultation" means:
-- Read the full command (not just skim)
-- Apply any checklists or procedures in the command
-- Pass acceptance checks before proceeding
-- If blocked, inform the user rather than guessing
+This is automatic topic detection, not user-triggered. Users don't say "/worktrees" - you detect the topic and invoke it.
 
-Recent pattern to avoid:
-- User asks about playground Ship It functionality
-- You read code and explain localStorage
-- BUT /prototype command has the canonical workflow spec
-- Correct: Read /prototype first, then explain how current implementation differs from spec
+**Mandatory Invocation Rules (Use SlashCommand tool):**
+
+Keyword in user message → Invoke command FIRST:
+- "worktree" → SlashCommand: /worktrees (loads pre-flight checklist)
+- "prototype", "variant", "playground", "Ship It", "HUD" → SlashCommand: /prototype (loads canonical workflow)
+- "pull request", "PR", "create pr" → SlashCommand: /pr (loads PR procedures)
+- "deploy", "deployment" → SlashCommand: /deploy (loads deployment steps)
+- "test fail", "test flake" → SlashCommand: /tests (loads debugging workflow)
+- Questions "how does X work?" → Check if X relates to prototype/playground/etc → Invoke relevant command
+
+Example execution:
+- User: "I need a worktree for new feature"
+- You: Use SlashCommand tool with /worktrees → loads pre-flight checklist into context
+- You: Follow checklist from loaded command
+- You: Create worktree correctly
+- NOT: Jump to `git worktree add` without loading the command
+
+Commands are prompts you load as pre-context. Load first, work second.
+
+When uncertain if command exists: Use SlashCommand tool to list available commands (takes 2 seconds).
 
 **Editing Policy (this file)**
 - Before editing this file, commit the current state in the dotfiles repo.
