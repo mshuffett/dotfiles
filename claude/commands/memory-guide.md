@@ -1,16 +1,16 @@
 ---
-description: Reference when you want to remember something across sessions
+description: Decide where information belongs (root vs guide vs repo docs) and how to escalate repeated mistakes. Includes placement tree, escalation ladder, and command creation guidelines.
 ---
 
-# Memory & Commands System Reference
+# Memory Placement & Commands System
 
 Quick reference for remembering things across Claude Code and Codex sessions.
 
-## Core Decision Workflow
+## Core Decision Workflow (Placement)
 
 ### Where Should This Go?
 
-**Ask yourself**: "Do I need to know this most of the time when assisting, or might I make a mistake without it?"
+**Ask yourself**: "Do I need this most of the time when assisting, or might I make a mistake without it?"
 
 - **YES** → Put it in **CLAUDE.md** (or user-level `~/.claude/CLAUDE.md` if it applies to ALL projects)
 - **NO** → Create a **command/prompt** with a description that triggers checking it
@@ -28,6 +28,9 @@ Quick reference for remembering things across Claude Code and Codex sessions.
 - `"Reference for Linear task management workflows"` ← /linear-workflow
 
 **Test**: Would you naturally think to check this command in that situation? If no, rewrite the description.
+
+### Consultation Rule (Mandatory for procedures)
+- Whenever a trigger condition applies (e.g., pre‑worktree, creating a PR, checking ports), you MUST consult the matching on‑demand guide/command and pass its acceptance checks before proceeding. If a suitable guide exists and is not consulted, log `guide.not_consulted` and stop.
 
 ## Memory Structure
 
@@ -54,7 +57,7 @@ When a command and prompt are identical (like this file), symlink instead of cop
 ln -s ~/.claude/commands/name.md ~/.codex/prompts/name.md
 ```
 
-## Creating Commands/Prompts
+## Creating Commands/Guides
 
 ### Command Format (Claude Code)
 
@@ -114,7 +117,7 @@ No bash execution - just text expansion.
 3. **Write the workflow**: Step-by-step procedures
 4. **Test the description**: Would you think to check this command in that situation?
 
-## Checklist: Before Saving a Command/Prompt
+## Checklist: Before Saving a Command/Guide
 
 Use this checklist when creating or updating commands:
 
@@ -144,6 +147,13 @@ Use this checklist when creating or updating commands:
 - **Descriptions are discovery** - They tell you when to use the command
 - **Be specific**: "Deploy when ready for production" > "Deployment helper"
 - **Think like a trigger**: What situation would make you want this information?
+
+## Escalation Ladder (Mistakes)
+- 0) Improve or create the relevant guide first (clear triggers, acceptance checks, quick path)
+- 1) First recurrence → strengthen guide and add anti‑miss cues (e.g., “Before X, always do Y”)
+- 2) Second recurrence in same repo (≤14 days) → add a one‑line Hot Rule to that repo’s agent file
+- 3) Cross‑repo recurrence (≥2 repos in ≤14 days) → add a one‑line universal guardrail to root CLAUDE
+- 4) Cooldown after 14–30 quiet days → propose removing one‑liners; guide remains canonical
 
 ## Argument Syntax
 
