@@ -79,6 +79,39 @@ Bash commands use `!` prefix:
 !`your-command "$ARGUMENTS"`
 ```
 
+### CRITICAL: Registering Commands
+
+**After creating a new command file, you MUST add it to the appropriate CLAUDE.md file.**
+
+Commands are consulted via the **Read tool + file paths** approach. You must explicitly reference them in CLAUDE.md.
+
+**For global commands** (`~/.claude/commands/*.md`):
+1. Create the command file in `~/.claude/commands/`
+2. Add to `~/.claude/CLAUDE.md` in the "CRITICAL: Read Procedure Files When Topics Apply" section
+3. Use this format:
+   ```markdown
+   - **[Topic]** → Read `~/.claude/commands/filename.md` when [triggering condition]
+   ```
+
+**For project commands** (`.claude/commands/*.md`):
+1. Create the command file in `.claude/commands/`
+2. Add to project `CLAUDE.md` or `AGENTS.md` with explicit Read instructions
+3. Use this format:
+   ```markdown
+   - **[Topic]** → Read `.claude/commands/filename.md` when [triggering condition]
+   ```
+
+**Example registration:**
+```markdown
+**Tools & Infrastructure:**
+- **Managing database migrations** → Read `~/.claude/commands/database-migrations.md` when creating or running database migrations
+```
+
+**Why this is required:**
+- Commands are NOT automatically discovered by their descriptions
+- The CLAUDE.md topic mappings tell you when to Read the command file
+- Without registration, the command file will never be consulted
+
 ### Prompt Format (Codex)
 
 ```yaml
