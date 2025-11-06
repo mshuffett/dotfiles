@@ -316,6 +316,9 @@ fi
 
 source ~/.dotfiles/zsh/aliases.zsh
 
+# Modern CLI tools hints (subtle reminders)
+source ~/.dotfiles/zsh/modern-tools-hints.zsh
+
 # Bun installation directory (path added in path array above)
 export BUN_INSTALL="$HOME/.bun"
 
@@ -329,6 +332,12 @@ export PATH="/Users/michael/.codeium/windsurf/bin:$PATH"
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 
 eval "$(zoxide init zsh)"
+
+# Atuin - magical shell history
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init zsh)"
+fi
+
 export TZ="America/Los_Angeles"
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/michael/.lmstudio/bin"

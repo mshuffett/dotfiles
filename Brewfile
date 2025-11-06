@@ -21,12 +21,14 @@ brew "tmux"                 # Terminal multiplexer
 brew "fzf"                  # Command-line fuzzy finder
 brew "direnv"               # Load/unload environment variables based on $PWD
 brew "zoxide"               # Smarter cd command
+brew "atuin"                # Magical shell history (SQLite-backed, sync, stats)
 
 # Modern CLI Replacements
 brew "bat"                  # Better cat with syntax highlighting
 brew "eza"                  # Modern replacement for ls
 brew "fd"                   # Simple, fast alternative to find
 brew "ripgrep"              # Fast search tool (better grep)
+brew "xh"                   # Fast and friendly HTTP client (better curl)
 
 # Editors
 brew "neovim"               # Modern, extensible vim-based editor
@@ -34,11 +36,16 @@ brew "neovim"               # Modern, extensible vim-based editor
 # Essential Utilities
 brew "entr"                 # Run commands when files change
 brew "watch"                # Execute a program periodically, showing output fullscreen
+brew "watchexec"            # Execute commands when files change (more flexible than entr)
 brew "wget"                 # Internet file retriever
 brew "gum"                  # Tool for glamorous shell scripts (used by bootstrap wizard)
+brew "btop"                 # Modern resource monitor with beautiful graphs
+brew "hyperfine"            # Command-line benchmarking tool
+brew "just"                 # Command runner (like make but simpler)
 
 # Markdown & Documentation
 brew "glow"                 # Render markdown on the CLI
+brew "tldr"                 # Simplified, community-driven man pages
 
 # Security & Secrets
 cask "1password-cli"        # Command-line interface for 1Password
@@ -53,6 +60,7 @@ brew "fnm"                  # Fast Node.js version manager (use this to install 
 # Cloud & Deployment
 brew "flyctl"               # Command-line tools for fly.io services
 brew "supabase"             # Supabase CLI (from supabase/tap)
+brew "lazydocker"           # Terminal UI for Docker commands
 
 # Code Quality
 brew "git-delta"            # Modern diff viewer with syntax highlighting
@@ -65,6 +73,7 @@ brew "git-delta"            # Modern diff viewer with syntax highlighting
 brew "gnu-sed"              # GNU implementation of stream editor (macOS sed is BSD)
 brew "grep"                 # GNU grep, egrep and fgrep
 brew "moreutils"            # Collection of useful Unix tools (sponge, ts, etc.)
+brew "yq"                   # YAML/JSON/XML processor (like jq for YAML)
 
 # File Navigation
 brew "broot"                # New way to see and navigate directory trees

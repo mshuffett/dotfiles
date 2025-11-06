@@ -4,6 +4,22 @@ My name is Michael
 - Use pnpm (not npm) and Biome as the linter
 - Anthropic API models: default claude-sonnet-4-5-20250929; use claude-opus-4-1-20250805 for difficult tasks; never use Claude 3
 
+**Modern CLI Tools**
+Prefer built-in Claude Code tools, but when using shell commands prefer modern alternatives:
+- `rg` over `grep` (ripgrep - faster, respects .gitignore)
+- `fd` over `find` (faster, simpler syntax)
+- `bat` over `cat` (syntax highlighting)
+- `eza` over `ls` (better formatting, git integration)
+- `xh` over `curl` (friendlier HTTP client)
+- `yq` for YAML/JSON processing (like jq for YAML)
+- `btop` for system monitoring (better than top/htop)
+- `lazydocker` for Docker management (TUI)
+- `lazygit` for git operations (TUI)
+- `tldr` over `man` for quick command examples
+- `hyperfine` for benchmarking commands
+- `watchexec` over `watch` for file-watching tasks
+- `atuin` enhances shell history with SQLite-backed search (Ctrl+R)
+
 **Governance Summary**
 - Keep universal rules here; place procedures and specifics in on‑demand guides and repo docs.
 - Hot, frequent repo commands live in that repo's agent file as a small "Hot Commands" list.
