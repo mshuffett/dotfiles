@@ -6,10 +6,35 @@ My name is Michael
 
 **Governance Summary**
 - Keep universal rules here; place procedures and specifics in on‑demand guides and repo docs.
-- Hot, frequent repo commands live in that repo’s agent file as a small “Hot Commands” list.
+- Hot, frequent repo commands live in that repo's agent file as a small "Hot Commands" list.
 - Procedures are condition‑triggered: ALWAYS consult the matching on‑demand guide whenever its trigger applies, and do not proceed until acceptance checks pass; skipping consultation is logged and may be escalated.
 - For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
+
+**CRITICAL: Command Consultation Enforcement**
+Commands exist to provide procedures and workflows at trigger points. Failing to read them causes mistakes.
+
+When to check for commands:
+1. **Before starting work**: If the user mentions a topic area (playground, worktrees, PR, prototype, etc.), check available commands immediately
+2. **During work**: If you encounter a situation matching a command description, STOP and read the command before proceeding
+3. **When asked questions**: If the question is about a feature/workflow (e.g., "how does Ship It work?"), check for related commands first
+
+How to identify triggers:
+- Commands have descriptions that start with "Always read this whenever..." or "Use when..." or "Before..."
+- Example: `/prototype` → "Always read this whenever working with the playground or prototyping variants"
+- If your current task/question matches ANY part of a command description → READ IT
+
+What "mandatory consultation" means:
+- Read the full command (not just skim)
+- Apply any checklists or procedures in the command
+- Pass acceptance checks before proceeding
+- If blocked, inform the user rather than guessing
+
+Recent pattern to avoid:
+- User asks about playground Ship It functionality
+- You read code and explain localStorage
+- BUT /prototype command has the canonical workflow spec
+- Correct: Read /prototype first, then explain how current implementation differs from spec
 
 **Editing Policy (this file)**
 - Before editing this file, commit the current state in the dotfiles repo.
