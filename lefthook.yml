@@ -1,0 +1,16 @@
+pre-commit:
+  parallel: true
+  commands:
+    claude_size_check:
+      runner: bash
+      # Ensure root CLAUDE file is <= 40000 bytes (approx characters)
+      run: |
+        max=40000
+        file="claude/CLAUDE.md"
+        if [ -f "$file" ]; then
+          size=$(wc -c < "$file" | tr -d ' ')
+          if [ "$size" -gt "$max" ]; then
+            echo "ERROR: $file is ${size} bytes; limit is $max. Please slim the file or extract content to guides." 1>&2
+            exit 1
+          fi
+        fi
