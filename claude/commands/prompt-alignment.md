@@ -1,96 +1,80 @@
 ---
-description: Use when aligning ANY prompt to Michael's preferences; includes full prompt rules, a pass/fail rubric, and a fix-first workflow.
+description: When aligning any prompt — read this first; fit examples and generalize efficiently.
 ---
 
-# Prompt Alignment (Any Prompt)
+# Prompt‑Alignment (from scratch)
 
-Purpose
-- Align any prompt to user preferences with an explicit pass/fail rubric and concrete fixes.
-- Living document: improve the rubric as preferences evolve. Meta‑rule: all rules below must have clear pass/fail criteria.
+Two‑sentence definition
+- Prompt‑alignment learns a prompt by fitting example input→output mappings (X→Y) and testing generalization. It iteratively proposes the smallest effective changes to the prompt until model(p, X) matches Y on known cases and holds on unseen X′.
 
-Session Kickoff (Orientation)
-- We are currently working on: <brief list of items in flight>
-- Current step: <which step of the workflow we’re on>
-- My understanding: we’re aligning <prompt name> and/or improving <descriptions> following the rules below
-- After this: <next action in the workflow, e.g., audit → fix → commit → PR review>
+What “alignment” means here
+- Fit: model(p, Xᵢ) ≈ Yᵢ for all known pairs.
+- Generalize: model(p, X′) remains within spec on nearby cases and hard negatives.
+- Conform: p respects Michael’s global rules (safety/policy/constraints/style/interrupts).
 
-Scope
-- Primary: operational prompts (procedures, workflows, tool usage), strategy/plan prompts, and one‑line descriptions.
-- Where applicable, treat “Read‑trigger description rules” as a specialization (see Specializations below).
+Artifacts (always produce)
+- p₀ → p* diff with rationale (which failure each change addresses).
+- Example table: X, expected Y, actual Y′, pass/fail, notes.
+- Guardrails report: checks against global rules + on‑demand guides.
+- Acceptance doc: success criteria, thresholds, and any trade‑offs.
 
-Full Prompt Rules (Global)
+Workflow (single loop; repeat until criteria met)
+1) Orient (Session Kickoff)
+   - We are working on: <items>. Step: <step>. Understanding: <goal>. Next: <action>.
+   - Collect the current prompt p₀, constraints, and a minimal, diverse set of example pairs {(Xᵢ, Yᵢ)}; add 2–3 hard negatives.
+2) Specify acceptance
+   - Define measurable criteria (e.g., 100% pass on known pairs; no guardrail violations; ≤ N edits or ≤ L chars change; latency/cost bounds if applicable).
+3) Baseline
+   - Run model(p₀, Xᵢ) and record failures; note which rule/constraint each failure violates.
+4) Minimal change proposal
+   - Identify the smallest edit expected to fix the widest set of failures (ordering, tighter instruction, explicit constraint, anti‑pattern, example).
+   - Prefer consult‑guides cues over inlining steps; prefer Context7 cues for third‑party APIs.
+5) Micro‑eval
+   - Test model(p₁, Xᵢ); track pass rate, regressions, and guardrail compliance; revert if regressions > improvements.
+6) Generalization probe
+   - Try X′ variants (paraphrases, edge cases, adversarials); ensure no guardrail breaks.
+7) Decide
+   - If acceptance met, freeze p*; else iterate with another minimal change.
+8) Persist
+   - Document the p₀→p* diff, rationale per change, updated examples, and a short “playbook” note; commit.
+
+Full Prompt Rules (global conformance)
 1) Objective & Scope
-   - State the goal and scope explicitly; avoid ambiguous “change”.
-   - Define inputs, assumptions, and boundaries (what’s in/out).
-   - PASS if goal/scope/inputs are present and unambiguous.
-2) Safety & Policy Alignment
-   - If a procedure exists, instruct to consult the on‑demand guide and follow acceptance checks (don’t inline steps).
-   - For third‑party libraries, instruct to fetch current docs via Context7 (never rely on memory).
-   - If a user request conflicts with a rule, surface the conflict and ask: temporary override or rule update.
-   - PASS if these cues are present when applicable and do not contradict root CLAUDE.
+   - Goal and boundaries are explicit; inputs/assumptions clear.
+2) Safety & Policy
+   - Refer to on‑demand guides for procedures (don’t inline); use Context7 for third‑party docs; surface conflicts and ask for override/update.
 3) Execution Constraints
-   - Prefer pnpm over npm; use Biome as linter; prefer Vercel AI SDK (consult docs) where relevant.
-   - Include any tool constraints, environment variables, or approvals that matter.
-   - PASS if required constraints are declared when applicable.
+   - pnpm > npm; Biome for lint; prefer Vercel AI SDK when relevant; include approvals/env as needed.
 4) Output & Acceptance
-   - Specify the expected output shape (bullets/headers/paths) and acceptance checks (how we know it’s done).
-   - Keep prompts testable; acceptance must be verifiable.
-   - PASS if acceptance is concrete and testable.
+   - Expected output shape and acceptance checks are testable.
 5) Task Switching & Interrupts
-   - If interrupts occur, include guidance to reflect/decide/confirm/continue (quick vs queue). 
-   - PASS if present for long‑running prompts.
-6) Tone & Structure (per AGENTS spec)
-   - Concise, direct, friendly; use headers/bullets judiciously; monospace for commands/paths; avoid over‑formatting.
-   - PASS if the structure aids execution and matches house style.
+   - Include reflect/decide/confirm/continue guidance for long or multi‑step prompts.
+6) Style
+   - Concise, direct, friendly; follow AGENTS formatting rules.
 7) Metarule
-   - Every rule above must be checkable with YES/NO; all must PASS.
+   - Each rule has YES/NO checks; all must pass.
 
-Specialization: Read‑Trigger Descriptions
-- One‑liners must cause opening the guide, not summarize steps.
+Specialization: Read‑trigger descriptions (one‑liners)
+- Must cause opening the guide; never summarize steps.
 - Patterns: “Before <action> — read this first.”, “When asked to <task> — read this immediately.”, “Always read this whenever <topic>.”, “Never <risky action> without reading this.”
-- Approved examples:
-  - Worktrees: “Always read this whenever working with git worktrees”
-  - PR: “When asked to create a PR, read this immediately so you know what steps to take along the way.”
-  - Ports: “Before killing a process, read this first.”
-  - Git‑safety: “Never stash a git file without reading this.”
+- Approved examples: Worktrees / PR / Ports / Git‑safety (see memory‑guide for exact lines).
 
-Rubric (Pass/Fail)
-- Objective & scope clear? (YES/NO)
-- Safety & policy cues present (guides/Context7/conflict‑override) when applicable? (YES/NO)
-- Execution constraints declared when applicable? (YES/NO)
-- Output shape + acceptance checks testable? (YES/NO)
-- Interrupt handling for long‑running flows? (YES/NO)
-- Style matches house rules? (YES/NO)
-- For descriptions only: read‑trigger rules satisfied? (YES/NO)
-- PASS = all required items YES; otherwise FAIL with a concrete fix.
+Rubric (apply every loop)
+- Fit: All known (Xᵢ→Yᵢ) pass? (YES/NO)
+- Generalize: Hold on X′ probes? (YES/NO)
+- Conform: All global rules satisfied? (YES/NO)
+- Parsimony: Is this the smallest effective change? (YES/NO)
+- Regressions: No new failures introduced? (YES/NO)
+- PASS = all YES; else record failure and propose the next smallest fix.
 
-Workflow
-1) Collect candidates
-   - For descriptions: `~/.dotfiles/claude/scripts/list-command-descriptions.sh`
-   - For other prompts: gather the full text and any example I/O.
-2) Snapshot preferences
-   - Confirm the “Full Prompt Rules” above and any newly approved examples.
-3) Map intent → description
-   - For descriptions: write a minimal read‑trigger line.
-   - For full prompts: include objective/scope, safety/policy, constraints, output/acceptance, interrupts.
-4) Audit
-   - Apply the rubric to current and proposed versions; record PASS/FAIL and fixes.
-5) Fix or propose
-   - If FAIL, replace with the proposed line that passes.
-6) Persist
-   - Update files; commit with message “docs(commands): normalize descriptions to read‑trigger style”.
-7) Review & iterate
-   - Confirm with user; add newly approved examples to this command.
+Report template (per iteration)
+- Prompt name:
+- p₀ excerpt → p₁ change (diff):
+- Failures addressed:
+- Micro‑eval results: pass/total, regressions, guardrail status
+- Generalization probes: notes
+- Decision: accept/revert/next change
 
-Report Template (per item)
-- Command: `<file>`
-- Current: `"…"`
-- Proposed: `"…"`
-- Checks (descriptions): Trigger(Y/N), Read‑directive(Y/N), No‑steps(Y/N), Length(Y/N), No‑proceed‑implication(Y/N)
-- Checks (full prompts): Objective/Scope(Y/N), Safety/Policy(Y/N), Constraints(Y/N), Output/Acceptance(Y/N), Interrupts(Y/N), Style(Y/N)
-- Result: PASS/FAIL
-- Fix (if FAIL): `"…"`
-
-Notes
-- Use this as the single source of truth for description alignment.
-- When preferences change, update “Full Prompt Rules” and examples, then re‑run the audit.
+Utilities
+- List description lines: `~/.dotfiles/claude/scripts/list-command-descriptions.sh`
+- On‑demand guides: see root CLAUDE “On‑Demand Guides Index”.
