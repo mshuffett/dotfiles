@@ -17,9 +17,10 @@ My name is Michael
 
 **Universal Guardrails**
 - Procedures: ALWAYS consult the correct on‑demand guide when its trigger applies; proceed only after acceptance checks pass.
+- Complex tasks: For multi‑step tasks with 3+ dependent steps, use an internal todo list/checklist to track progress and ensure completion.
 - Git worktrees: Before any git worktree operation, complete a pre‑flight checklist; ensure `.env` files are copied and dependencies installed. If unclear, pause and ask.
 - Stash safety: Never stash unfamiliar changes without asking. First list modified files and confirm.
-- Ports: Do not kill a process on a port you didn’t start. Identify with `lsof -i :<PORT>` and ask before terminating.
+- Ports: Do not kill a process on a port you didn't start. Identify with `lsof -i :<PORT>` and ask before terminating.
 - Pull requests: Merge latest base locally, resolve conflicts, run tests, then create the PR.
 - Third‑party docs: Use Context7 to fetch up‑to‑date API documentation at execution time.
 - Computer use agent: Only use when explicitly asked.
