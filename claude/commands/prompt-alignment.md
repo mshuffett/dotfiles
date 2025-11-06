@@ -1,8 +1,8 @@
 ---
-description: When aligning any prompt — read this first; fit examples and generalize efficiently.
+description: When aligning ANY prompt — read this first; run fit→generalize loop and test with CLIs.
 ---
 
-# Prompt‑Alignment (from scratch)
+# Prompt‑Alignment (Process)
 
 Two‑sentence definition
 - Prompt‑alignment learns a prompt by fitting example input→output mappings (X→Y) and testing generalization. It iteratively proposes the smallest effective changes to the prompt until model(p, X) matches Y on known cases and holds on unseen X′.
@@ -12,31 +12,24 @@ What “alignment” means here
 - Generalize: model(p, X′) remains within spec on nearby cases and hard negatives.
 - Conform: p respects Michael’s global rules (safety/policy/constraints/style/interrupts).
 
-Artifacts (always produce)
-- p₀ → p* diff with rationale (which failure each change addresses).
-- Example table: X, expected Y, actual Y′, pass/fail, notes.
-- Guardrails report: checks against global rules + on‑demand guides.
-- Acceptance doc: success criteria, thresholds, and any trade‑offs.
+Orientation (start every run)
+- We are working on: <items>. Current step: <step>. Understanding: <goal>. Next: <action>.
+- Confirm data you’ll use: current prompt p₀, small diverse example set {(Xᵢ, Yᵢ)} + a few hard negatives; constraints and success criteria.
+- Ask for scope if unclear; do not change files until approved.
 
-Workflow (single loop; repeat until criteria met)
-1) Orient (Session Kickoff)
-   - We are working on: <items>. Step: <step>. Understanding: <goal>. Next: <action>.
-   - Collect the current prompt p₀, constraints, and a minimal, diverse set of example pairs {(Xᵢ, Yᵢ)}; add 2–3 hard negatives.
-2) Specify acceptance
-   - Define measurable criteria (e.g., 100% pass on known pairs; no guardrail violations; ≤ N edits or ≤ L chars change; latency/cost bounds if applicable).
-3) Baseline
-   - Run model(p₀, Xᵢ) and record failures; note which rule/constraint each failure violates.
-4) Minimal change proposal
-   - Identify the smallest edit expected to fix the widest set of failures (ordering, tighter instruction, explicit constraint, anti‑pattern, example).
-   - Prefer consult‑guides cues over inlining steps; prefer Context7 cues for third‑party APIs.
-5) Micro‑eval
-   - Test model(p₁, Xᵢ); track pass rate, regressions, and guardrail compliance; revert if regressions > improvements.
-6) Generalization probe
-   - Try X′ variants (paraphrases, edge cases, adversarials); ensure no guardrail breaks.
-7) Decide
-   - If acceptance met, freeze p*; else iterate with another minimal change.
-8) Persist
-   - Document the p₀→p* diff, rationale per change, updated examples, and a short “playbook” note; commit.
+Artifacts (every iteration)
+- p₀ → p₁ diff with 1–2 sentence rationale (which failures it fixes).
+- Example table: X, expected Y, actual Y′, pass/fail, notes.
+- Guardrails check: which global rules and on‑demand guides were honored.
+- Acceptance: criteria/thresholds and whether they’re met.
+
+Workflow (fit → generalize loop)
+1) Baseline — run model(p₀, Xᵢ); record failures and which rule/constraint each violates.
+2) Minimal change — propose the smallest textual edit likely to fix the widest failures.
+3) Micro‑eval — test model(p₁, Xᵢ); measure pass rate and guardrail compliance; revert if regressions > improvements.
+4) Generalize — probe with X′ (paraphrase, boundary, adversarial); confirm no guardrail breaks.
+5) Decide & Persist — if acceptance is met, freeze p*; else loop. Document diff, rationale, examples, and acceptance result.
+6) Apply (approval gate) — present patch or exact text; do not write files until explicitly approved.
 
 Full Prompt Rules (global conformance)
 1) Objective & Scope
@@ -82,10 +75,10 @@ Utilities
 Live testing (CLI)
 - Claude CLI (preferred)
   1) Authenticate once: `claude setup-token`
-  2) Run a one‑off test with a system prompt and an input:
-     - `time claude -p --print --output-format text \\
-        --system-prompt "$(cat .claude/debug/sample-prompt.md)" \\
-        --model claude-sonnet-4-5-20250929 "ping"`
+   2) Run a one‑off test with a system prompt and an input:
+      - `time claude -p --print --output-format text \\
+         --system-prompt "$(cat .claude/debug/sample-prompt.md)" \\
+         "ping"`
   3) Pass if the printed output matches expected (e.g., contains `pong`).
 
 - Codex CLI (alternative)
