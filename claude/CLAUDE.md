@@ -11,15 +11,29 @@ My name is Michael
 - For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
 
-**Commands and On-Demand Guides**
+**Commands as Prompts and Checklists**
 
-Commands in `~/.claude/commands/` provide detailed procedures, examples, and troubleshooting for specific topics. Per Claude Code documentation, commands work best when explicitly referenced in instructions.
+Commands in `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) are NOT just documentation - they are prompts, checklists, and procedures that you should load and follow.
 
-**When to consult commands**:
-- Reference commands explicitly for detailed guidance (e.g., "see `/worktrees` for complete workflow")
-- Commands contain full examples, edge cases, and troubleshooting steps
-- Use SlashCommand tool when you need comprehensive context on a topic
-- Available commands are listed in Available Commands section below
+**IMPORTANT: Automatic Invocation by Description Match**
+
+Each command has a `description` field in its frontmatter that describes when it applies. Whenever a user request matches a command's description, you MUST:
+
+1. Use the SlashCommand tool to invoke that command FIRST
+2. Load its procedures and checklists into your context
+3. Follow the command's guidance
+4. Then respond to the user
+
+This is NOT about users typing "/command" - it's about YOU recognizing when a command description applies to the current task and proactively loading it.
+
+**Example**:
+- User: "I need to create a worktree for a new feature"
+- You recognize: This matches `/worktrees` description ("Always read this whenever working with git worktrees")
+- You: Use SlashCommand tool to invoke `/worktrees`
+- You: Follow the pre-flight checklist from the loaded command
+- You: Execute the worktree creation correctly
+
+**Where to find commands**: Check available commands in the Available Commands section below. Each has a description telling you when it applies.
 
 **Editing Policy (this file)**
 - Before editing this file, commit the current state in the dotfiles repo.
