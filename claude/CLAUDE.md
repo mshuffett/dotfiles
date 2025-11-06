@@ -13,27 +13,35 @@ My name is Michael
 
 **Commands as Prompts and Checklists**
 
-Commands in `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) are NOT just documentation - they are prompts, checklists, and procedures that you should load and follow.
+Commands in `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) are NOT just documentation - they are prompts, checklists, and procedures that you MUST load and follow.
 
-**IMPORTANT: Automatic Invocation by Description Match**
+**CRITICAL: Read Command Files When Topics Apply**
 
-Each command has a `description` field in its frontmatter that describes when it applies. Whenever a user request matches a command's description, you MUST:
+Before working on ANY task, check if it matches these topics. If it does, use SlashCommand tool to read that file FIRST:
 
-1. Use the SlashCommand tool to invoke that command FIRST
-2. Load its procedures and checklists into your context
-3. Follow the command's guidance
-4. Then respond to the user
+- **Working with worktrees** → Read `/worktrees` any time you are working with git worktrees (creating, managing, or discussing worktrees)
+- **API endpoints or authentication** → Read `/api-patterns` when working on API routes, authentication, or request validation
+- **Writing tests** → Read `/testing-patterns` when writing tests or debugging test failures
+- **Firebase Authentication** → Read `/firebase-auth-patterns` when implementing Firebase Authentication in API routes or client code
+- **UI animations** → Read `/framer-motion-patterns` when implementing UI animations and transitions
+- **Reviewing mistakes** → Read `/mistakes` before implementing to avoid known issues
+- **Analyzing failures** → Read `/mistake-analysis` when analyzing failures or tracking mistake patterns
+- **User preferences** → Read `/user-preferences` for context-specific user preferences and workflow details
 
-This is NOT about users typing "/command" - it's about YOU recognizing when a command description applies to the current task and proactively loading it.
+**How this works**:
+1. User request arrives
+2. You identify which topic(s) it matches from the list above
+3. Use SlashCommand tool to invoke that command FIRST (e.g., `SlashCommand: /worktrees`)
+4. The command loads its procedures and checklists into your context
+5. Follow the command's guidance
+6. Then respond to the user
 
 **Example**:
 - User: "I need to create a worktree for a new feature"
-- You recognize: This matches `/worktrees` description ("Always read this whenever working with git worktrees")
+- You see: "worktree" → matches "Working with worktrees"
 - You: Use SlashCommand tool to invoke `/worktrees`
-- You: Follow the pre-flight checklist from the loaded command
-- You: Execute the worktree creation correctly
-
-**Where to find commands**: Check available commands in the Available Commands section below. Each has a description telling you when it applies.
+- You: Load and follow the pre-flight checklist from that command
+- You: Execute the worktree creation correctly with all steps
 
 **Editing Policy (this file)**
 - Before editing this file, commit the current state in the dotfiles repo.
