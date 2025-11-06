@@ -8,6 +8,12 @@ Purpose
 - Align any prompt to user preferences with an explicit pass/fail rubric and concrete fixes.
 - Living document: improve the rubric as preferences evolve. Meta‑rule: all rules below must have clear pass/fail criteria.
 
+Session Kickoff (Orientation)
+- We are currently working on: <brief list of items in flight>
+- Current step: <which step of the workflow we’re on>
+- My understanding: we’re aligning <prompt name> and/or improving <descriptions> following the rules below
+- After this: <next action in the workflow, e.g., audit → fix → commit → PR review>
+
 Scope
 - Primary: operational prompts (procedures, workflows, tool usage), strategy/plan prompts, and one‑line descriptions.
 - Where applicable, treat “Read‑trigger description rules” as a specialization (see Specializations below).
