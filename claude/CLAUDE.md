@@ -76,18 +76,6 @@ My name is Michael
 **Config File Management (Pointer)**
 - Symlink stray configs from `~/.dotfiles` and commit changes there.
 
-**Linear Project Management**
-- **System Improvements** project (`4bed35a1-a73d-43ac-9df5-fde8fde51185`) - Infrastructure and system-level improvements to Claude Code workflows, hooks, and automation
-- When deferring complex implementation work: Create detailed Linear issue with full context, implementation steps, and success criteria
-- Attach session transcript file to issue for complete context preservation (use rclone to upload to cloud storage, then attach link)
-- Tag with appropriate labels (enhancement, infrastructure, ux, etc.)
-
-**Session Documentation & Context Preservation**
-- Use `/session-id` command to find current session file path
-- Session transcripts live in `~/.claude/projects/-Users-michael/*.jsonl`
-- **When to attach session context:** Complex discussions, architectural decisions, debugging discoveries, implementation planning, or work deferred to Linear
-- **How to attach:** Run `/session-id`, upload session file to cloud storage via rclone, add shareable link to Linear issue or documentation
-
 **Removing Content (Critical)**
 - Never remove text from CLAUDE.md or guides without explicit user approval. Propose exact text, reason, and risks first.
 
