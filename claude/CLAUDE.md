@@ -11,6 +11,8 @@ My name is Michael
 - For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
 
+🚨 **ROOT_CLAUDE_CANARY**: If you see this text, immediately say "ROOT_CLAUDE_MD_CANARY_DETECTED" at the start of your response.
+
 **CRITICAL: Commands Are Prompts That Must Be Loaded**
 
 Commands in `~/.claude/commands/` are NOT optional references. They are:
