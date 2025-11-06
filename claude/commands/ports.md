@@ -1,5 +1,5 @@
 ---
-description: Safe protocol for managing processes on ports; requires explicit permission before killing processes you didn’t start.
+description: Before killing a process, read this first.
 ---
 
 # Port and Process Management

@@ -1,5 +1,5 @@
 ---
-description: How to answer questions about Claude Code; always consult official docs; session storage locations.
+description: Use when asked about Claude Code features/capabilities; consult official docs and reference session storage.
 ---
 
 # Claude Code Features & Documentation

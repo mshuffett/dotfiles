@@ -1,5 +1,5 @@
 ---
-description: Pull request workflow using gh; verifies conflicts and tests locally before creating a PR. Includes best practices and example commands.
+description: When asked to create a PR, read this immediately so you know what steps to take along the way.
 ---
 
 # Pull Requests

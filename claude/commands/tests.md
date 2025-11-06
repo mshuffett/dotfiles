@@ -1,5 +1,5 @@
 ---
-description: Root-cause test debugging workflow; apply when tests fail. Includes universal steps and meta-learning integration.
+description: Use when tests fail or flake; root-cause debugging workflow with universal steps and meta-learning integration.
 ---
 
 # Test Debugging Principle

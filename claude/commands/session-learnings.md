@@ -1,5 +1,5 @@
 ---
-description: Location and usage of session learnings log; how to review and reference alongside mistakes log.
+description: Use when summarizing a session; append a human‑readable entry and reference any updated guides.
 ---
 
 # Session Learnings

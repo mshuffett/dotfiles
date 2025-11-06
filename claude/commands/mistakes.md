@@ -1,5 +1,5 @@
 ---
-description: Log and review recurring mistakes; propose promotions/demotions of guardrails based on frequency.
+description: Use when logging or reviewing mistakes; append JSONL events and promote/demote guardrails based on frequency.
 ---
 
 # Mistakes Log & Review

@@ -1,5 +1,5 @@
 ---
-description: Environment variables & secrets policy; locations, loading, and example .env.local.
+description: Use when adding or updating environment variables/secrets; store in ~/.env.zsh or .env.local and document names in .env.example.
 ---
 
 # Environment Variables and Secrets

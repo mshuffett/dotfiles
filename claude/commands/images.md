@@ -1,5 +1,5 @@
 ---
-description: Generate images with Gemini or OpenAI; includes commands, provider options, and required environment variables.
+description: Use when generating images; choose provider (Gemini/OpenAI), ensure API keys, and select size/output options.
 ---
 
 # Image Generation

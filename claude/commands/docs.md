@@ -1,5 +1,5 @@
 ---
-description: Documentation authoring guidelines; prefer updating existing docs, use docs/ for deep guides, avoid cluttering repo root.
+description: Use when adding or updating docs; prefer updating existing content and put deep guides under docs/.
 ---
 
 # Documentation Guidelines

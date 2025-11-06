@@ -1,5 +1,5 @@
 ---
-description: Manage config files via dotfiles symlinks; includes pattern for new configs and existing managed paths.
+description: Use when you discover a stray config; move into dotfiles, symlink back, and commit.
 ---
 
 # Config File Management

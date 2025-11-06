@@ -1,5 +1,5 @@
 ---
-description: CRITICAL - Git worktree workflow for parallel feature development. ALWAYS invoke this command BEFORE creating or working with worktrees to ensure you follow the correct pattern (uses .worktrees/ subdirectory, NOT sibling directories). Use whenever user asks about worktrees, parallel development, or creating feature branches. Documents the standard pattern used across multiple projects (vibe-coding-platform, waycraft-monorepo, everything-monorepo, container-ux-worktree, claude-chat-app).
+description: Worktree change is ambiguous. Read this first whenever you are doing anything with a git worktree.
 ---
 
 # Git Worktrees - Parallel Feature Development

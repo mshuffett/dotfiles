@@ -1,5 +1,5 @@
 ---
-description: Never stash unfamiliar changes without asking. Lists safe workflow when encountering modified files; explains why stashing blindly is risky.
+description: Never stash a git file without reading this.
 ---
 
 # Git Stash Safety Protocol

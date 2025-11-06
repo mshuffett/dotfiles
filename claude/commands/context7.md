@@ -1,5 +1,5 @@
 ---
-description: Use Context7 MCP tools to fetch up‑to‑date third‑party library docs; never rely on memory. Includes example workflow.
+description: Use when you need third‑party library docs; fetch with Context7 (resolve-library-id → get-library-docs) instead of relying on memory.
 ---
 
 # Context7 Library Documentation Workflow

@@ -1,5 +1,5 @@
 ---
-description: How and when to send notifications using the push command; only on explicit request.
+description: Use when the user explicitly asks for a completion notification; send with the push command.
 ---
 
 # Notifications

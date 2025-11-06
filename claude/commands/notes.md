@@ -1,5 +1,5 @@
 ---
-description: Notes & knowledge management locations and PARA structure; where to put new notes and how to work with them.
+description: Use when capturing or organizing notes; follow PARA structure and local notes CLAUDE.
 ---
 
 # Notes & Knowledge Management
