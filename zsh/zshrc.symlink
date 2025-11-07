@@ -316,9 +316,6 @@ fi
 
 source ~/.dotfiles/zsh/aliases.zsh
 
-# Modern CLI tools hints (subtle reminders)
-source ~/.dotfiles/zsh/modern-tools-hints.zsh
-
 # Bun installation directory (path added in path array above)
 export BUN_INSTALL="$HOME/.bun"
 
