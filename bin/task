@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Personal task management CLI wrapper
+# Finds the Everything AI monorepo and runs the task CLI from there
+
+# Find the monorepo - check worktree first, then main repo
+if [ -f "$HOME/ws/everything-monorepo/.worktrees/chat-interface/apps/web/scripts/task-cli.ts" ]; then
+    WEB_DIR="$HOME/ws/everything-monorepo/.worktrees/chat-interface/apps/web"
+elif [ -f "$HOME/ws/everything-monorepo/apps/web/scripts/task-cli.ts" ]; then
+    WEB_DIR="$HOME/ws/everything-monorepo/apps/web"
+else
+    echo "Error: Could not find task CLI in Everything AI monorepo"
+    echo "Expected location: ~/ws/everything-monorepo/apps/web/scripts/task-cli.ts"
+    exit 1
+fi
+
+cd "$WEB_DIR" && pnpm exec tsx scripts/task-cli.ts "$@"

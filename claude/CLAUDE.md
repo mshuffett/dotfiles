@@ -10,11 +10,11 @@ rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec,
 
 **Personal Task Management**
 - **task** - Your personal task management CLI for managing work/tasks in Firestore
-  - Globally available via `task <command>` (linked from `~/ws/everything-monorepo/apps/web`)
+  - Globally available via `task <command>` from `~/.dotfiles/bin/task`
   - Full CRUD: create, update, get, list, delete, batch, link, unlink, clone, export
   - Interactive mode (when no args) or one-off CLI mode (with flags)
-  - Documentation: Run `task --help` or see `apps/web/scripts/README.md`
-  - Setup requires Firebase service account key at `apps/web/service-account-key.json`
+  - Documentation: Run `task --help` or see `~/ws/everything-monorepo/apps/web/scripts/README.md`
+  - Auto-finds CLI in worktrees or main repo - no manual linking needed
 
 **Governance Summary**
 - Keep universal rules here; place procedures and specifics in on‑demand guides and repo docs.
