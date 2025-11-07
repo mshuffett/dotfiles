@@ -8,8 +8,8 @@ My name is Michael
 Prefer built-in tools when available. Otherwise, use modern alternatives:
 rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec, atuin.
 
-**Project-Specific CLI Tools**
-- **task** - Task management CLI for Everything AI monorepo (Firestore CRUD operations)
+**Personal Task Management**
+- **task** - Your personal task management CLI for managing work/tasks in Firestore
   - Globally available via `task <command>` (linked from `~/ws/everything-monorepo/apps/web`)
   - Full CRUD: create, update, get, list, delete, batch, link, unlink, clone, export
   - Interactive mode (when no args) or one-off CLI mode (with flags)
