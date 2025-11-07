@@ -1,10 +1,12 @@
 alias l=ls
+alias e='$EDITOR'
 alias dirs="dirs -v"
 alias sz="exec zsh"
 alias s="exec zsh"
 alias sa="source ~/.dotfiles/zsh/aliases.zsh"
 alias ez="$EDITOR ~/.zshrc"
 alias ea="$EDITOR ~/.dotfiles/zsh/aliases.zsh"
+alias ec="$EDITOR ~/.dotfiles/claude/CLAUDE.md"
 alias shuffle="perl -MList::Util -e 'print List::Util::shuffle <>'"
 alias reload!='. ~/.zshrc'
 alias lh='ls -a | egrep "^\."' # ls dotfiles only

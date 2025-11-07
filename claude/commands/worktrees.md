@@ -11,13 +11,7 @@ description: Always read this whenever working with git worktrees
 
 ## Acceptance Checks
 
-**FIRST STEP - Log that you read this file:**
-```bash
-echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) - worktrees.md consulted" >> /tmp/claude-procedure-log.txt
-```
-
-- [ ] Logged consultation to /tmp/claude-procedure-log.txt
-- [ ] `.env` files copied to the worktree if needed
+- [ ] All `.env*` files recursively copied to the worktree
 - [ ] Dependencies installed inside the worktree
 - [ ] No git operations performed in the main repo (only inside worktree)
 - [ ] Worktree path uses `.worktrees/` convention
@@ -57,7 +51,12 @@ cd .worktrees/feature-name
 git pull origin develop  # or whatever base branch you need
 
 # Copy environment files if needed (they're not in git)
-cp ../../.env.local .env.local  # Use relative path from worktree
+# Copy all .env files recursively from main repo to worktree
+cp ../../.env .env 2>/dev/null || true
+find ../../apps ../../packages -maxdepth 2 -name ".env.local" -o -name ".env.*.local" 2>/dev/null | while read file; do
+  target="${file#../../}"
+  cp "$file" "$target" 2>/dev/null || true
+done
 
 # Install dependencies
 pnpm install
