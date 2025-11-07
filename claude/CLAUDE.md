@@ -2,23 +2,19 @@ My name is Michael
 - The current year is 2025
 - Prefer the Vercel AI SDK over provider SDKs; consult official docs/examples (never rely on memory)
 - Use pnpm (not npm) and Biome as the linter
-- Anthropic API models: default claude-sonnet-4-5-20250929; use claude-opus-4-1-20250805 for difficult tasks; never use Claude 3
+- Anthropic API: use claude-sonnet-4-5-20250929 (default); claude-opus-4-1-20250805 for challenging tasks; never use Claude 3.
 
-**Modern CLI Tools**
-Prefer built-in Claude Code tools, but when using shell commands prefer modern alternatives:
-- `rg` over `grep` (ripgrep - faster, respects .gitignore)
-- `fd` over `find` (faster, simpler syntax)
-- `bat` over `cat` (syntax highlighting)
-- `eza` over `ls` (better formatting, git integration)
-- `xh` over `curl` (friendlier HTTP client)
-- `yq` for YAML/JSON processing (like jq for YAML)
-- `btop` for system monitoring (better than top/htop)
-- `lazydocker` for Docker management (TUI)
-- `lazygit` for git operations (TUI)
-- `tldr` over `man` for quick command examples
-- `hyperfine` for benchmarking commands
-- `watchexec` over `watch` for file-watching tasks
-- `atuin` enhances shell history with SQLite-backed search (Ctrl+R)
+**CLI Tools**
+Prefer built-in tools when available. Otherwise, use modern alternatives:
+rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec, atuin.
+
+**Project-Specific CLI Tools**
+- **task** - Task management CLI for Everything AI monorepo (Firestore CRUD operations)
+  - Globally available via `task <command>` (linked from `~/ws/everything-monorepo/apps/web`)
+  - Full CRUD: create, update, get, list, delete, batch, link, unlink, clone, export
+  - Interactive mode (when no args) or one-off CLI mode (with flags)
+  - Documentation: Run `task --help` or see `apps/web/scripts/README.md`
+  - Setup requires Firebase service account key at `apps/web/service-account-key.json`
 
 **Governance Summary**
 - Keep universal rules here; place procedures and specifics in on‑demand guides and repo docs.
