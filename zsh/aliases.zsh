@@ -144,3 +144,4 @@ alias ls="${aliases[ls]:-ls} -A"
 alias claude="claude --dangerously-skip-permissions"
 alias c="claude --dangerously-skip-permissions"
 alias lg='lazygit'
+alias j='just'
