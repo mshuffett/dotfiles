@@ -338,6 +338,11 @@ if command -v atuin >/dev/null 2>&1; then
   eval "$(atuin init zsh)"
 fi
 
+# Navi - interactive cheatsheets (Ctrl+G)
+if command -v navi >/dev/null 2>&1; then
+  eval "$(navi widget zsh)"
+fi
+
 export TZ="America/Los_Angeles"
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/michael/.lmstudio/bin"

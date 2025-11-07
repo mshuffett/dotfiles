@@ -42,6 +42,7 @@ brew "gum"                  # Tool for glamorous shell scripts (used by bootstra
 brew "btop"                 # Modern resource monitor with beautiful graphs
 brew "hyperfine"            # Command-line benchmarking tool
 brew "just"                 # Command runner (like make but simpler)
+brew "navi"                 # Interactive cheatsheet tool with variable prompts
 
 # Markdown & Documentation
 brew "glow"                 # Render markdown on the CLI

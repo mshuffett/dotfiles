@@ -13,10 +13,12 @@ _show_startup_hint() {
       "💡 Tip: Try 'btop' for a beautiful system monitor"
       "💡 Tip: 'lazydocker' gives you a TUI for Docker management"
       "💡 Tip: Press Ctrl+R for fuzzy history search with atuin"
+      "💡 Tip: Press Ctrl+G for interactive cheatsheets with navi"
       "💡 Tip: 'gh dash' shows your GitHub PRs and issues"
       "💡 Tip: 'tldr <command>' gives quick examples instead of long man pages"
       "💡 Tip: 'hyperfine <cmd1> <cmd2>' benchmarks command performance"
       "💡 Tip: 'watchexec -e ts,tsx <command>' runs commands when files change"
+      "💡 Tip: Type 'j' to see all your available just commands"
     )
 
     # Pick a random hint
@@ -111,12 +113,15 @@ PRODUCTIVITY:
   tldr <command>            → Quick command examples
   hyperfine <cmd1> <cmd2>   → Benchmark commands
   watchexec -e ts <cmd>     → Run command when files change
+  j or just                 → Command runner menu for your scripts
+  navi                      → Interactive cheatsheets (or Ctrl+G)
 
 EXISTING (already configured):
   z <dir>                   → Jump to directory (zoxide)
   lg                        → Lazygit TUI
 
 Press Ctrl+R for fuzzy history search!
+Press Ctrl+G for interactive cheatsheets!
 
 To disable these hints: Set DISABLE_TOOL_HINTS=1 in your ~/.zshrc
 EOF'
