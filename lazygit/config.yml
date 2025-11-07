@@ -1,0 +1,96 @@
+gui:
+  # Palenight theme colors
+  theme:
+    activeBorderColor:
+      - '#82aaff'  # Blue
+      - bold
+    inactiveBorderColor:
+      - '#676e95'  # Muted purple-gray
+    optionsTextColor:
+      - '#82aaff'  # Blue
+    selectedLineBgColor:
+      - '#444267'  # Slightly lighter than bg
+    selectedRangeBgColor:
+      - '#444267'  # Slightly lighter than bg
+    cherryPickedCommitBgColor:
+      - '#c792ea'  # Purple
+    cherryPickedCommitFgColor:
+      - '#82aaff'  # Blue
+    unstagedChangesColor:
+      - '#f07178'  # Red
+    defaultFgColor:
+      - '#bfc7d5'  # Foreground
+    searchingActiveBorderColor:
+      - '#ffcb6b'  # Yellow
+
+  # Commit graph colors
+  commitLength:
+    show: true
+
+  # Show branch heads
+  showBranchCommitHash: true
+
+  # Diff colors
+  nerdFontsVersion: "3"
+
+# Git colors matching Palenight
+git:
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never --syntax-theme=Dracula
+  commit:
+    signOff: false
+  merging:
+    manualCommit: false
+
+# Keybindings - keep defaults but show for reference
+keybinding:
+  universal:
+    togglePanel: '<tab>'
+    prevItem: '<up>'
+    nextItem: '<down>'
+    prevPage: ','
+    nextPage: '.'
+    gotoTop: '<'
+    gotoBottom: '>'
+    scrollLeft: 'H'
+    scrollRight: 'L'
+    prevBlock: '<left>'
+    nextBlock: '<right>'
+    jumpToBlock: ["1", "2", "3", "4", "5"]
+    nextMatch: 'n'
+    prevMatch: 'N'
+    optionMenu: 'x'
+    optionMenuAlt1: '?'
+    select: '<space>'
+    goInto: '<enter>'
+    confirm: '<enter>'
+    return: '<esc>'
+    quit: 'q'
+    quitWithoutChangingDirectory: 'Q'
+    togglePanel: '<tab>'
+    prevItem-alt: 'k'
+    nextItem-alt: 'j'
+    prevItem: '<up>'
+    nextItem: '<down>'
+    undo: 'z'
+    redo: '<c-z>'
+    filteringMenu: '<c-s>'
+    diffingMenu: 'W'
+    diffingMenu-alt: '<c-e>'
+    copyToClipboard: '<c-o>'
+    submitEditorText: '<enter>'
+    appendNewline: '<a-enter>'
+    extrasMenu: '@'
+    toggleWhitespaceInDiffView: '<c-w>'
+    increaseContextInDiffView: '}'
+    decreaseContextInDiffView: '{'
+
+# Custom commands
+customCommands:
+  - key: 'C'
+    command: 'git cz'
+    description: 'commit with commitizen'
+    context: 'files'
+    loadingText: 'opening commitizen commit tool'
+    subprocess: true
