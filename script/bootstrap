@@ -751,6 +751,98 @@ setup_ai_config() {
 }
 
 # ============================================================================
+# Secrets Management
+# ============================================================================
+
+setup_secrets() {
+  local download_secrets=$1
+
+  if [[ "$download_secrets" != "true" ]]; then
+    return
+  fi
+
+  echo ""
+  gum style --foreground 212 "Downloading secrets from 1Password..."
+  echo ""
+
+  # Check if 1Password CLI is installed
+  if ! command -v op &> /dev/null; then
+    log_error "1Password CLI not found. Install with: brew install 1password-cli"
+    return
+  fi
+
+  # Check if authenticated
+  if ! op account list &> /dev/null; then
+    log_warning "Not authenticated with 1Password. Please sign in:"
+    if ! op signin; then
+      log_error "1Password authentication failed, skipping secrets download"
+      return
+    fi
+  fi
+
+  local op_vault="Private"
+  local op_item="Shell Environment Variables"
+
+  # Check if the item exists
+  if ! op item get "$op_item" --vault "$op_vault" &> /dev/null; then
+    log_warning "No secrets found in 1Password (looking for '$op_item' in '$op_vault' vault)"
+    log_info "You can add secrets later using: add-secret KEY VALUE"
+    return
+  fi
+
+  # Backup existing ~/.env.zsh if it exists and isn't a symlink
+  if [[ -f "$HOME/.env.zsh" ]] && [[ ! -L "$HOME/.env.zsh" ]]; then
+    local backup_file="$HOME/.env.zsh.backup-$(date +%Y%m%d_%H%M%S)"
+    cp "$HOME/.env.zsh" "$backup_file"
+    log_info "Backed up existing ~/.env.zsh to $(basename "$backup_file")"
+  fi
+
+  # Create or append to ~/.env.zsh
+  if [[ ! -f "$HOME/.env.zsh" ]]; then
+    cat > "$HOME/.env.zsh" << 'EOF'
+# ~/.env.zsh - Private environment variables (not in dotfiles repo)
+
+# API Keys
+
+EOF
+  fi
+
+  # Get all password fields from the 1Password item
+  local fields_json
+  fields_json=$(op item get "$op_item" --vault "$op_vault" --format json 2>/dev/null)
+
+  if [[ -z "$fields_json" ]]; then
+    log_warning "Could not retrieve secrets from 1Password"
+    return
+  fi
+
+  # Extract password fields and append to ~/.env.zsh
+  local secrets_added=0
+  while IFS= read -r field; do
+    local key=$(echo "$field" | jq -r '.label')
+    local value=$(echo "$field" | jq -r '.value')
+
+    # Skip if key already exists in file
+    if grep -q "^export $key=" "$HOME/.env.zsh"; then
+      log_warning "Skipping $key (already exists in ~/.env.zsh)"
+      continue
+    fi
+
+    # Add to file
+    echo "export $key=\"$value\"" >> "$HOME/.env.zsh"
+    log_info "Added $key"
+    ((secrets_added++))
+  done < <(echo "$fields_json" | jq -c '.fields[] | select(.type == "CONCEALED")')
+
+  if [[ $secrets_added -gt 0 ]]; then
+    echo ""
+    log_info "✓ Downloaded $secrets_added secrets from 1Password"
+  else
+    log_info "No new secrets to download"
+  fi
+}
+
+# ============================================================================
 # Main Flow
 # ============================================================================
 
@@ -917,6 +1009,15 @@ main() {
   fi
   echo ""
 
+  # Secrets download
+  local download_secrets="false"
+  if command -v op &> /dev/null || echo "$package_categories" | grep -q "Essential"; then
+    if ask_confirm "Download secrets from 1Password to ~/.env.zsh?"; then
+      download_secrets="true"
+    fi
+  fi
+  echo ""
+
   # ============================================================================
   # SHOW COMPLETE PLAN
   # ============================================================================
@@ -934,7 +1035,8 @@ main() {
     "$(if [[ "$install_node" == "true" ]]; then echo "✓ Install Node.js LTS via fnm"; fi)" \
     "$(if [[ "$install_tpm" == "true" ]]; then echo "✓ Install tmux plugins (TPM + all plugins)"; fi)" \
     "$(if [[ "$install_ai" == "true" ]]; then echo "✓ Install AI Development Tools (Claude Code, Codex)"; fi)" \
-    "$(if [[ "$configure_ai" == "true" ]]; then echo "✓ Configure AI tools (commands, hooks, CLAUDE.md)"; fi)"
+    "$(if [[ "$configure_ai" == "true" ]]; then echo "✓ Configure AI tools (commands, hooks, CLAUDE.md)"; fi)" \
+    "$(if [[ "$download_secrets" == "true" ]]; then echo "✓ Download secrets from 1Password"; fi)"
 
   echo ""
 
@@ -1040,6 +1142,7 @@ main() {
   setup_node "$install_node"
   setup_ai_tools "$install_ai"
   setup_ai_config "$configure_ai"
+  setup_secrets "$download_secrets"
 
   # Only install tmux plugins if tmux is actually installed
   if [[ "$install_tpm" == "true" ]]; then
