@@ -75,21 +75,22 @@ Create a new window in the background - doesn't interrupt user's current view.
 
 ```bash
 # Single command approach - window + split + content
-tmux new-window -d -n "window-name" "command-for-left-pane" \
-  && tmux split-window -h -t window-name "command-for-right-pane"
+tmux new-window -d -n "claude-window-name" "command-for-left-pane" \
+  && tmux split-window -h -t claude-window-name "command-for-right-pane"
 ```
 
 **Tips:**
-- Use descriptive window names (e.g., `pm-chat-code`, `api-docs`)
+- Use `claude-` prefix for all windows you create
+- Use descriptive names (e.g., `claude-pm-chat-code`, `claude-api-docs`)
 - Tell user which window number to switch to
 - Good for code that user may want to reference later
 - User can switch with `Ctrl+b` then window number
 
 **Example - Show code with folding:**
 ```bash
-tmux new-window -d -n "code-review" \
+tmux new-window -d -n "claude-code-review" \
   "nvim -c 'set foldmethod=manual' -c '79' -c '1,78fold' file.ts" \
-  && tmux split-window -h -t code-review \
+  && tmux split-window -h -t claude-code-review \
   "nvim -c 'set foldmethod=manual' -c '133' -c '1,132fold' file.ts"
 ```
 
@@ -204,9 +205,32 @@ echo && echo '=== SECTION 2 ===' && sed -n '50,60p' file.ts
 
 ### Naming Windows
 
-Use descriptive names that indicate content:
-- ✅ `api-routes`, `db-schema`, `test-results`
-- ❌ `code`, `stuff`, `temp`
+**Use prefix for easy cleanup:**
+- Prefix all Claude-created windows with `claude-` for easy identification
+- Makes cleanup simple: `tmux kill-window -t claude-*` won't exist, but easy to identify
+- Examples: `claude-code-review`, `claude-api-docs`, `claude-logs`
+
+**Good names:**
+- ✅ `claude-api-routes`, `claude-db-schema`, `claude-test-results`
+- ✅ `claude-pm-chat-code`, `claude-comparison`
+
+**Bad names:**
+- ❌ `code`, `stuff`, `temp` (not descriptive, no prefix)
+- ❌ `api-routes` (descriptive but no prefix for cleanup)
+
+**Cleanup pattern:**
+```bash
+# List all Claude-created windows
+tmux list-windows | grep claude-
+
+# Kill specific Claude window
+tmux kill-window -t claude-code-review
+
+# Or kill multiple at once
+for w in $(tmux list-windows -F "#{window_name}" | grep "^claude-"); do
+  tmux kill-window -t "$w"
+done
+```
 
 ### Choosing Display Method
 
@@ -261,15 +285,15 @@ MY_PANE=$TMUX_PANE
 # Decide based on current state
 if [ "$PANE_COUNT" -gt 1 ]; then
   echo "Window already split - creating background window"
-  tmux new-window -d -n "code-view" \
+  tmux new-window -d -n "claude-code-view" \
     "nvim file.ts" \
-    && tmux split-window -h -t code-view \
+    && tmux split-window -h -t claude-code-view \
     "bat file.ts"
 else
   echo "Single pane window - can split if needed"
   # Check if user explicitly wants immediate view
   # Otherwise still prefer background window for code review
-  tmux new-window -d -n "code-view" "nvim file.ts"
+  tmux new-window -d -n "claude-code-view" "nvim file.ts"
 fi
 ```
 
@@ -286,9 +310,9 @@ fi
 
 Show two versions side-by-side:
 ```bash
-tmux new-window -d -n "comparison" \
+tmux new-window -d -n "claude-comparison" \
   "nvim file-v1.ts" \
-  && tmux split-window -h -t comparison \
+  && tmux split-window -h -t claude-comparison \
   "nvim file-v2.ts"
 ```
 
@@ -296,9 +320,9 @@ tmux new-window -d -n "comparison" \
 
 Watch logs while working:
 ```bash
-tmux new-window -d -n "logs" \
+tmux new-window -d -n "claude-logs" \
   "tail -f app.log" \
-  && tmux split-window -h -t logs \
+  && tmux split-window -h -t claude-logs \
   "tail -f error.log"
 ```
 
@@ -306,9 +330,9 @@ tmux new-window -d -n "logs" \
 
 Show docs with relevant code:
 ```bash
-tmux new-window -d -n "docs" \
+tmux new-window -d -n "claude-docs" \
   "glow README.md" \
-  && tmux split-window -h -t docs \
+  && tmux split-window -h -t claude-docs \
   "nvim src/main.ts"
 ```
 
