@@ -60,6 +60,7 @@ Before working on ANY task, check if it matches these topics. If it does, read t
 - **Analyzing failures** → Read `~/.claude/commands/mistake-analysis.md` when analyzing failures or tracking mistake patterns
 - **Documenting learnings** → Read `~/.claude/commands/session-learnings.md` when summarizing session insights
 - **Memory placement decisions** → Read `~/.claude/commands/memory-guide.md` when deciding where information belongs
+- **Editing CLAUDE.md files** → Read `~/.claude/commands/memory-maintenance.md` BEFORE making ANY edits to CLAUDE.md (includes checklist, requires memory-guide.md, and covers new file vs existing file decisions)
 
 **User Context:**
 - **User preferences** → Read `~/.claude/commands/user-preferences.md` for context-specific user preferences and workflow details
@@ -91,8 +92,10 @@ Before working on ANY task, check if it matches these topics. If it does, read t
 - You: Execute the worktree creation correctly with all steps
 
 **Editing Policy (this file)**
-- Before editing this file, commit the current state in the dotfiles repo.
-- After making changes, commit again with a clear message summarizing what changed and why.
+- **REQUIRED**: Before ANY edits to this file, read `~/.claude/commands/memory-guide.md` to verify placement is correct
+- Before editing this file, commit the current state in the dotfiles repo
+- After making changes, commit again with a clear message summarizing what changed and why
+- Ask yourself: "Do I need this MOST OF THE TIME or might I make a mistake without it?" If NO → create a procedure file instead
 
 **Universal Guardrails**
 - Procedures: ALWAYS consult the correct on‑demand guide when its trigger applies; proceed only after acceptance checks pass.
