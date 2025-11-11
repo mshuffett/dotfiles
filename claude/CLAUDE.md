@@ -50,6 +50,7 @@ Before working on ANY task, check if it matches these topics. If it does, read t
 **Tools & Infrastructure:**
 - **Managing ports/processes** → Read `~/.claude/commands/ports.md` before killing processes on ports
 - **Working with tmux** → Read `~/.claude/commands/tmux.md` when managing tmux panes, windows, or sessions
+- **Displaying content in tmux** → Read `~/.claude/commands/tmux-display.md` when showing code, logs, or other content to the user in tmux
 - **Deploying applications** → Read `~/.claude/commands/deploy.md` when deploying to production or development environments
 - **Managing environment variables** → Read `~/.claude/commands/env.md` when adding or updating secrets and environment variables
 - **Viewing images** → Read `~/.claude/commands/view-image.md` when asked to view or display images in terminal
@@ -115,15 +116,43 @@ Before working on ANY task, check if it matches these topics. If it does, read t
 - Placement decision:
   - Universal, always‑on rules → a short line here (no examples).
   - Procedural/runbook with a clear trigger → an on‑demand guide with purpose, triggers, acceptance checks, and quick‑path examples.
-  - Repo‑specific setup/commands → the repo’s README (quickstart) and docs/ (deep guides, troubleshooting); the repo agent file keeps only Hot Commands and minimal rules.
+  - Repo‑specific setup/commands → the repo's README (quickstart) and docs/ (deep guides, troubleshooting); the repo agent file keeps only Hot Commands and minimal rules.
   - Third‑party libraries → consult current docs via Context7 at execution time (do not embed API signatures here).
   - Historical logs or learnings → a dedicated log doc; link from here.
-- Implementation steps when the user says “remember this” or provides learnings:
+- Implementation steps when the user says "remember this" or provides learnings:
   - Decide destination using the above; create or update the guide or doc immediately.
   - Inform the user where and why it was documented.
   - Commit promptly so future sessions benefit.
 - When in doubt:
   - Ask whether it should apply to every interaction (here) or only when working on a specific topic (on‑demand guide or repo docs).
+
+**Creating New Procedure Files**
+- **CRITICAL**: When creating a new procedure file in `~/.claude/commands/`, you MUST:
+  1. Create the file with clear triggers, guidelines, and examples
+  2. **Immediately add it to the "CRITICAL: Read Procedure Files When Topics Apply" section** above with:
+     - Clear trigger description (when to read it)
+     - File path reference
+     - Appropriate category (Development & Git, Code Patterns, Tools & Infrastructure, etc.)
+  3. Commit both the new file AND the updated CLAUDE.md together
+- **Missing this step is a mistake** - the procedure file exists but won't be consulted because it's not documented as a trigger
+- **Example of complete workflow**:
+  - Create `~/.claude/commands/tmux-display.md`
+  - Add entry: "**Displaying content in tmux** → Read `~/.claude/commands/tmux-display.md` when showing code, logs, or other content to the user in tmux"
+  - Commit both files together
+
+**Keeping Procedure Files Updated**
+- When working with a topic that has a procedure file (e.g., tmux, worktrees, testing), actively watch for:
+  - New insights, gotchas, or better approaches discovered during work
+  - User corrections or clarifications that improve understanding
+  - Edge cases or context-dependent decisions not covered in the guide
+  - More reliable methods than what's currently documented
+- **Action when new information is discovered:**
+  - Update the relevant procedure file immediately while the context is fresh
+  - Add the new information to the appropriate section
+  - Commit the update with a clear message explaining what was learned
+  - Inform the user that the documentation has been improved
+- **Example**: During tmux work, discovering that `$TMUX_PANE` is more reliable than `display-message` → immediately update tmux-display.md to clarify this distinction
+- This keeps procedure files living, accurate, and continuously improving based on real-world usage
 
 **Proactive Memory Improvements**
 - Proactively suggest improvements to memory when you notice repeated friction, missing triggers, or unclear acceptance checks. Propose exact wording and destination (root vs on‑demand guide vs repo docs) and ask for approval before updating.
