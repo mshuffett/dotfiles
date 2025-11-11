@@ -127,6 +127,150 @@ Use $ARGUMENTS or $1, $2 for placeholders.
 No bash execution - just text expansion.
 ```
 
+## CLAUDE.md Editing Workflow
+
+### Before ANY Edit to CLAUDE.md
+
+**CRITICAL**: Follow this checklist every time you edit CLAUDE.md
+
+### Pre-Edit Checklist
+
+**Placement Decision:**
+- [ ] **Read memory-guide.md** - Confirmed this belongs in CLAUDE.md
+- [ ] **Answer: "Do I need this MOST OF THE TIME or might I make a mistake without it?"**
+  - YES → Belongs in CLAUDE.md
+  - NO → Create a procedure file instead
+- [ ] **If it has trigger conditions** → Should probably be a procedure file
+- [ ] **If it's step-by-step workflow** → Definitely should be a procedure file
+
+**Content Quality:**
+- [ ] **Is it specific?** ("Use 2-space indentation" > "Format code properly")
+- [ ] **Is it actionable?** Can you act on this information?
+- [ ] **Is it timeless?** Will this still be true in 6 months?
+- [ ] **Is it concise?** No unnecessary words or examples
+- [ ] **Does it duplicate existing content?** Check before adding
+
+**Organization:**
+- [ ] **Right section?** Placed under appropriate heading
+- [ ] **Follows existing structure?** Matches surrounding format
+- [ ] **Creates clutter?** Would a new heading help organize it?
+- [ ] **Cross-references clear?** Links to procedure files if needed
+
+**Size Check:**
+- [ ] **Current file size acceptable?** (Run `wc -c CLAUDE.md`)
+  - Project CLAUDE.md: ~30-40k chars is reasonable
+  - Global CLAUDE.md: ~15-20k chars is reasonable
+  - If approaching limits, consider extracting to procedure files
+
+### CLAUDE.md Size Targets
+
+**No official limits**, but practical guidelines:
+
+**Project CLAUDE.md** (`<project>/CLAUDE.md`):
+- **Watch at**: 40,000 chars
+- **Refactor at**: 50,000 chars
+
+**Global CLAUDE.md** (`~/.claude/CLAUDE.md`):
+- **Watch at**: 20,000 chars
+- **Refactor at**: 25,000 chars
+
+**Combined Context**: Aim for <15k tokens (<10% of 200k context window)
+
+### Editing Steps
+
+1. **Determine Placement**: Ask "Do I need this most of the time?"
+   - YES → Continue to step 2
+   - NO → Create procedure file instead
+
+2. **Check Current Size**: `wc -c CLAUDE.md ~/.claude/CLAUDE.md`
+   - If approaching watch thresholds, consider refactoring first
+
+3. **Find Right Section**:
+   - Core principles → Top sections
+   - Development rules → Middle sections
+   - Project-specific → Later sections
+   - Future work → Near end
+
+4. **Make the Edit**:
+   - Keep it concise and specific
+   - Use bullet points for lists
+   - Use headings to organize
+   - Add cross-references to procedure files when relevant
+
+5. **Verify Changes**:
+   - Re-read the edited section
+   - Check that it doesn't duplicate existing content
+   - Ensure cross-references work
+   - Run pre-commit checks if applicable
+
+6. **Commit with Context**:
+   ```bash
+   git add CLAUDE.md
+   git commit -m "docs: [type] - brief description"
+   ```
+   Commit types: `add`, `update`, `refactor`, `remove`
+
+### When to Create Procedure File Instead
+
+**Signs this should be a procedure file, not CLAUDE.md:**
+- ✅ Has clear trigger conditions ("when doing X...")
+- ✅ Step-by-step workflow or checklist
+- ✅ Only needed in specific situations
+- ✅ Contains detailed examples or templates
+- ✅ Longer than 10-15 lines
+- ✅ Domain-specific (API patterns, testing, deployment)
+
+### Refactoring CLAUDE.md
+
+When CLAUDE.md hits watch thresholds or feels cluttered:
+
+**Step 1: Identify Candidates for Extraction**
+- Sections with clear trigger conditions
+- Step-by-step procedures
+- Rarely needed in all interactions
+- Could stand alone as procedure files
+
+**Step 2: Create Procedure Files**
+1. Create `.claude/commands/[topic].md`
+2. Include: Purpose, Triggers, Workflow, Checklist, Examples
+3. Follow format from existing procedure files
+
+**Step 3: Update CLAUDE.md**
+- Brief one-line summary
+- Clear trigger condition
+- Reference to procedure file: "Read `.claude/commands/[topic].md` when [trigger]"
+
+**Step 4: Update Trigger List**
+Add to "CRITICAL: Read Procedure Files When Topics Apply" section
+
+**Step 5: Test and Commit**
+- Verify triggers work
+- Check that nothing was lost
+- Commit both CLAUDE.md and new procedure files together
+
+### Periodic Review Schedule
+
+**Monthly** (or after significant changes):
+- Review CLAUDE.md for outdated content
+- Check if any sections should become procedure files
+- Verify cross-references still work
+- Check file size
+
+**Quarterly**:
+- Full audit of CLAUDE.md organization
+- Consider refactoring if approaching size limits
+- Review all procedure files for consistency
+
+### Common Mistakes to Avoid
+
+❌ **Adding step-by-step procedures** → Use procedure files
+❌ **Including examples in CLAUDE.md** → Put in procedure files
+❌ **Duplicating information** → Reference existing content
+❌ **Vague statements** → Be specific and actionable
+❌ **Not checking memory-guide.md** → Always check placement first
+❌ **Adding without reviewing context** → Read surrounding content
+❌ **Forgetting to update trigger lists** → Update when adding procedures
+
 ## Writing Workflow
 
 ### To Remember a Fact or Pattern
@@ -145,10 +289,107 @@ No bash execution - just text expansion.
 
 ### To Create a Procedural Workflow
 
-1. **Write the triggering description**: When would you need this workflow?
-2. **Choose location**: All projects (user-level) or project-specific?
-3. **Write the workflow**: Step-by-step procedures
-4. **Test the description**: Would you think to check this command in that situation?
+**Before creating a NEW procedure file, check if it belongs in an EXISTING one.**
+
+#### Decision Tree
+
+**Question 1**: "Is this about the same topic as an existing procedure file?"
+
+List existing files:
+```bash
+ls -lh ~/.claude/commands/       # Global procedures
+ls -lh .claude/commands/          # Project procedures
+```
+
+Common topics:
+- API patterns, authentication → `api-patterns.md`
+- Testing, test failures → `testing-patterns.md`
+- UI components, animations, themes → `ui-patterns.md`
+- Git worktrees → `worktrees.md`
+- Deployment → `deploy.md`
+
+**If YES** (same topic):
+- **Update the existing file** - Add new section or expand content
+- Keep related knowledge together
+
+**If NO** (different topic):
+- Continue to Question 2
+
+**Question 2**: "Does this apply to ALL projects or just this one?"
+
+**ALL projects** → Create global file at `~/.claude/commands/[topic].md`
+- Examples: Git workflows, deployment patterns, testing strategies
+
+**This project only** → Create project file at `<project>/.claude/commands/[topic].md`
+- Examples: This project's build system, specific API patterns
+
+**Question 3**: "Does this overlap with multiple existing files?"
+
+If uncertain whether to combine or separate:
+- **Ask the user** - Present arguments for each approach
+- Don't assume the separation is obvious
+
+#### When to Update Existing Files
+
+✅ **Update existing file when:**
+- Adding a new pattern to an established category
+- Expanding on existing guidance
+- Fixing outdated information
+- Adding examples to existing procedures
+- Clarifying ambiguous instructions
+
+❌ **Don't create new file when:**
+- Content fits naturally in existing file
+- Topic is already covered (even if not comprehensively)
+- New info is a refinement, not a new domain
+
+#### When to Create New Files
+
+✅ **Create new file when:**
+- Entirely new topic not covered by any existing file
+- Content substantial enough (>50 lines) to stand alone
+- Clear trigger condition distinct from existing files
+- Would make existing file too long (>300 lines)
+- Belongs to different category/domain
+
+#### After Creating/Updating Procedure Files
+
+**CRITICAL**: Always update the trigger list in CLAUDE.md
+
+**For global files** (`~/.claude/commands/`):
+1. Edit `~/.claude/CLAUDE.md`
+2. Add to "CRITICAL: Read Procedure Files When Topics Apply" section
+3. Format: `- **[Topic]** → Read ~/.claude/commands/[file].md when [trigger]`
+
+**For project files** (`<project>/.claude/commands/`):
+1. Edit `<project>/CLAUDE.md`
+2. Add to "CRITICAL: Read Procedure Files When Topics Apply" section
+3. Format: `- **[Topic]** → Read <project>/.claude/commands/[file].md when [trigger]`
+
+#### Memory Decision Report Format
+
+When documenting placement decisions, use this format:
+
+```
+## MEMORY DECISION: [filename]
+
+**Decision Path**
+1. Always-on? [YES/NO] ([reason]) → [result]
+2. Existing file? Checked [filename] ([difference]) → [new/update]
+3. Scope? [ALL/THIS] projects → [path]
+
+**Proposed Trigger**
+"[Topic]" → Read [path] when [condition]"
+
+**Red Team (False Negatives)**
+✓ "[synonym 1]" → [how it's covered]
+✓ "[synonym 2]" → [how it's covered]
+🔴 "[missed case]" → [issue description]
+   Fix: [proposed solution]
+
+**Checklist**
+✅ All items followed: [brief summary]
+```
 
 ## Checklist: Before Saving a Command/Guide
 
@@ -235,6 +476,24 @@ Both systems use identical placeholders:
 
 ### Direct Editing
 - Edit `CLAUDE.md` or `AGENTS.md` (same file via symlink)
+
+## Quick Commands
+
+```bash
+# Check size of CLAUDE.md files
+wc -c CLAUDE.md ~/.claude/CLAUDE.md
+wc -l CLAUDE.md ~/.claude/CLAUDE.md
+
+# View memory guide placement decision
+cat ~/.claude/commands/memory-guide.md | grep -A 20 "Core Decision"
+
+# List all procedure files
+ls -lh .claude/commands/
+ls -lh ~/.claude/commands/
+
+# Search CLAUDE.md for duplicates
+grep -n "keyword" CLAUDE.md
+```
 
 ## Viewing Current Memory Structure
 

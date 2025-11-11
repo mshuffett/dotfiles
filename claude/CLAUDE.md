@@ -59,8 +59,7 @@ Before working on ANY task, check if it matches these topics. If it does, read t
 - **Reviewing common mistakes** → Read `~/.claude/commands/mistakes.md` before implementing to avoid known issues
 - **Analyzing failures** → Read `~/.claude/commands/mistake-analysis.md` when analyzing failures or tracking mistake patterns
 - **Documenting learnings** → Read `~/.claude/commands/session-learnings.md` when summarizing session insights
-- **Memory placement decisions** → Read `~/.claude/commands/memory-guide.md` when deciding where information belongs
-- **Editing CLAUDE.md files** → Read `~/.claude/commands/memory-maintenance.md` BEFORE making ANY edits to CLAUDE.md (includes checklist, requires memory-guide.md, and covers new file vs existing file decisions)
+- **Memory & CLAUDE.md editing** → Read `~/.claude/commands/memory-guide.md` when deciding where information belongs OR before editing CLAUDE.md (includes placement decisions, editing checklist, size guidelines, and new file vs existing file decisions)
 
 **User Context:**
 - **User preferences** → Read `~/.claude/commands/user-preferences.md` for context-specific user preferences and workflow details
