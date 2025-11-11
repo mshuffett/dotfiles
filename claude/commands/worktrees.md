@@ -12,6 +12,7 @@ description: Always read this whenever working with git worktrees
 ## Acceptance Checks
 
 - [ ] All `.env*` files recursively copied to the worktree
+- [ ] `GOOGLE_APPLICATION_CREDENTIALS` env var set in `.env.local` (pointing to `~/.config/firebase/service-account-key.json`)
 - [ ] Dependencies installed inside the worktree
 - [ ] No git operations performed in the main repo (only inside worktree)
 - [ ] Worktree path uses `.worktrees/` convention
@@ -57,6 +58,14 @@ find ../../apps ../../packages -maxdepth 2 -name ".env.local" -o -name ".env.*.l
   target="${file#../../}"
   cp "$file" "$target" 2>/dev/null || true
 done
+
+# Ensure GOOGLE_APPLICATION_CREDENTIALS is set in .env.local (centralized credential)
+# Note: Firebase service account key should be at ~/.config/firebase/service-account-key.json
+if ! grep -q "GOOGLE_APPLICATION_CREDENTIALS" apps/web/.env.local 2>/dev/null; then
+  echo '' >> apps/web/.env.local
+  echo '# Firebase Admin SDK - Service Account' >> apps/web/.env.local
+  echo 'GOOGLE_APPLICATION_CREDENTIALS="'$HOME'/.config/firebase/service-account-key.json"' >> apps/web/.env.local
+fi
 
 # Install dependencies
 pnpm install
