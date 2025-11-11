@@ -33,33 +33,39 @@ fi
 
 ### Use Environment Variables for Current Context
 
-**Why:** Avoid hardcoding pane/window references - user may switch windows between commands.
+**Why:** Avoid hardcoding pane/window references that depend on user's current focus.
 
-**Available tmux environment variables:**
-- `$TMUX_PANE` - Current pane ID (e.g., `%69`)
-- Use `tmux display-message -p` to get other format variables
+**Key Distinction:**
+- `$TMUX_PANE` - **Persistent**: Set when shell starts, doesn't change if user switches focus
+- `tmux display-message -p "#{pane_id}"` - **Focus-dependent**: Returns currently active pane
+
+**When to use each:**
 
 ```bash
-# GOOD - Uses current pane from environment
+# BEST - Use $TMUX_PANE for the pane where your shell is running
+# This stays correct even if user switches to another window/pane
 CURRENT_PANE=$TMUX_PANE
-tmux split-window -t "$CURRENT_PANE" -h "command"
+tmux split-window -t "$TMUX_PANE" -h "command"
 
-# BETTER - Get fresh context each time
-CURRENT_PANE=$(tmux display-message -p "#{pane_id}")
+# ONLY use display-message when you specifically want the user's current focus
+# (rarely needed - usually you want YOUR pane, not where user is looking)
+USER_FOCUSED_PANE=$(tmux display-message -p "#{pane_id}")
 
-# BAD - Hardcoded pane ID that may be stale
+# BAD - Hardcoded pane ID from earlier command
 tmux split-window -t %69 -h "command"
 ```
 
-**When working relative to current window:**
+**Working relative to the Claude Code window:**
 ```bash
-# Get current window info
-CURRENT_WINDOW=$(tmux display-message -p "#{window_id}")
-WINDOW_INDEX=$(tmux display-message -p "#{window_index}")
+# Get info about where Claude Code is running
+MY_PANE=$TMUX_PANE
+PANE_COUNT=$(tmux list-panes | wc -l)  # Counts panes in current window
 
-# Split relative to current pane
+# Split relative to Claude's pane, not user's focus
 tmux split-window -t "$TMUX_PANE" -h "command"
 ```
+
+**Key insight:** `$TMUX_PANE` is more reliable because it refers to the pane where the command is executing, regardless of where the user's focus has moved.
 
 ## Display Methods
 
@@ -248,8 +254,9 @@ Here's how to make context-aware display decisions:
 
 ```bash
 # Get current pane count and context
+# Use $TMUX_PANE - it's persistent and not affected by user's focus
 PANE_COUNT=$(tmux list-panes | wc -l)
-CURRENT_PANE=$(tmux display-message -p "#{pane_id}")
+MY_PANE=$TMUX_PANE
 
 # Decide based on current state
 if [ "$PANE_COUNT" -gt 1 ]; then
@@ -268,7 +275,7 @@ fi
 
 **Quick decision checklist:**
 1. ✅ Check pane count first
-2. ✅ Use `$TMUX_PANE` or fresh `display-message` for current context
+2. ✅ Use `$TMUX_PANE` for reliable pane reference (not display-message)
 3. ✅ Prefer background window when already split
 4. ✅ Use descriptive window names
 5. ✅ Tell user where to find the new window
