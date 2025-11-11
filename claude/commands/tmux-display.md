@@ -10,6 +10,57 @@ When you need to show the user:
 - Side-by-side comparisons
 - Long-running process output
 
+## Context-Aware Display Decisions
+
+Before choosing how to display content, check the current tmux state:
+
+### Check Current Window Split Status
+
+**Why:** If the user's current window is already split, prefer creating a background window instead of adding more splits.
+
+```bash
+# Count panes in current window
+PANE_COUNT=$(tmux list-panes | wc -l)
+
+if [ "$PANE_COUNT" -gt 1 ]; then
+  # Window already split - use background window
+  tmux new-window -d -n "window-name" "command"
+else
+  # Single pane - splitting is fine if needed
+  tmux split-window -h "command"
+fi
+```
+
+### Use Environment Variables for Current Context
+
+**Why:** Avoid hardcoding pane/window references - user may switch windows between commands.
+
+**Available tmux environment variables:**
+- `$TMUX_PANE` - Current pane ID (e.g., `%69`)
+- Use `tmux display-message -p` to get other format variables
+
+```bash
+# GOOD - Uses current pane from environment
+CURRENT_PANE=$TMUX_PANE
+tmux split-window -t "$CURRENT_PANE" -h "command"
+
+# BETTER - Get fresh context each time
+CURRENT_PANE=$(tmux display-message -p "#{pane_id}")
+
+# BAD - Hardcoded pane ID that may be stale
+tmux split-window -t %69 -h "command"
+```
+
+**When working relative to current window:**
+```bash
+# Get current window info
+CURRENT_WINDOW=$(tmux display-message -p "#{window_id}")
+WINDOW_INDEX=$(tmux display-message -p "#{window_index}")
+
+# Split relative to current pane
+tmux split-window -t "$TMUX_PANE" -h "command"
+```
+
 ## Display Methods
 
 ### 1. Background Window (Recommended for Code Review)
@@ -153,12 +204,22 @@ Use descriptive names that indicate content:
 
 ### Choosing Display Method
 
+**Always check first:** Is the current window already split?
+```bash
+PANE_COUNT=$(tmux list-panes | wc -l)
+```
+- If `> 1` panes exist → **Strongly prefer background window**
+- If `= 1` pane → Consider split or background based on needs
+
 **Background window when:**
+- Current window is already split (multiple panes visible)
 - User may want to reference it multiple times
 - Content is for review/reading (not urgent)
 - You're showing code structure or documentation
+- Default choice for most code displays
 
 **Split current window when:**
+- Current window has only one pane (unsplit)
 - User explicitly asked to "show me now"
 - Content needs immediate attention
 - Monitoring an ongoing process
@@ -167,6 +228,7 @@ Use descriptive names that indicate content:
 - Updating already-visible content
 - User has a specific pane open for this purpose
 - Running sequential commands in same context
+- You have a reliable pane reference (use $TMUX_PANE)
 
 ### Informing the User
 
@@ -179,6 +241,37 @@ I've created a background window "api-docs" (window #4) showing:
 
 Switch to it with Ctrl+b then 4
 ```
+
+## Decision Flow Example
+
+Here's how to make context-aware display decisions:
+
+```bash
+# Get current pane count and context
+PANE_COUNT=$(tmux list-panes | wc -l)
+CURRENT_PANE=$(tmux display-message -p "#{pane_id}")
+
+# Decide based on current state
+if [ "$PANE_COUNT" -gt 1 ]; then
+  echo "Window already split - creating background window"
+  tmux new-window -d -n "code-view" \
+    "nvim file.ts" \
+    && tmux split-window -h -t code-view \
+    "bat file.ts"
+else
+  echo "Single pane window - can split if needed"
+  # Check if user explicitly wants immediate view
+  # Otherwise still prefer background window for code review
+  tmux new-window -d -n "code-view" "nvim file.ts"
+fi
+```
+
+**Quick decision checklist:**
+1. ✅ Check pane count first
+2. ✅ Use `$TMUX_PANE` or fresh `display-message` for current context
+3. ✅ Prefer background window when already split
+4. ✅ Use descriptive window names
+5. ✅ Tell user where to find the new window
 
 ## Common Patterns
 
