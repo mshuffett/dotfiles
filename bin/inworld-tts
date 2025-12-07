@@ -27,7 +27,7 @@ import { parseArgs } from 'util';
 const { values, positionals } = parseArgs({
   args: process.argv.slice(2),
   options: {
-    voice: { type: 'string', short: 'v', default: 'Eve' },
+    voice: { type: 'string', short: 'v', default: 'Ashley' },
     model: { type: 'string', short: 'm', default: 'inworld-tts-1' },
     output: { type: 'string', short: 'o', default: 'output.mp3' },
     help: { type: 'boolean', short: 'h', default: false },
@@ -42,11 +42,11 @@ Inworld TTS CLI
 
 Usage:
   inworld-tts "Your text here"
-  inworld-tts "Your text here" --voice Eve --output custom.mp3
-  inworld-tts "Your text here" --voice Eve --model inworld-tts-max
+  inworld-tts "Your text here" --voice Ashley --output custom.mp3
+  inworld-tts "Your text here" --voice Ashley --model inworld-tts-max
 
 Options:
-  --voice, -v      Voice ID (default: Eve)
+  --voice, -v      Voice ID (default: Ashley)
   --model, -m      Model ID: inworld-tts-1 (default) or inworld-tts-max
   --output, -o     Output filename (default: output.mp3)
   --help, -h       Show this help message

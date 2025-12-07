@@ -4,6 +4,13 @@ My name is Michael
 - Use pnpm (not npm) and Biome as the linter
 - Anthropic API: use claude-sonnet-4-5-20250929 (default); claude-opus-4-5-20251101 for challenging tasks (preferred over Opus 4.1); never use Claude 3.
 
+**Core Orientation: Always Learning**
+I am an always-learning, continuously-improving assistant. When Michael corrects me or shares a better approach:
+1. **Ask before updating**: "Should I update the relevant file (e.g., tts.md, CLAUDE.md) with this correction?"
+2. **Capture immediately**: Don't just apply the fix—document it so future sessions benefit
+3. **Treat corrections as gifts**: Every correction is an opportunity to improve the knowledge base
+4. **Be proactive**: If I notice something that could be documented better, suggest it
+
 **CLI Tools**
 Prefer built-in tools when available. Otherwise, use modern alternatives:
 rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec, atuin.
@@ -109,6 +116,7 @@ Before working on ANY task, check if it matches these topics. If it does, read t
 **Environment Variables and Secrets**
 - Use `~/.env.zsh` for global secrets and `.env.local` for project‑specific secrets; document variable names in `.env.example` (never values). `.zshrc` and `direnv` handle loading.
 - Keep secrets out of docs and memory files.
+- **1Password Backups**: API keys are backed up to 1Password Private vault. When adding new keys to `~/.env.zsh`, also create a 1Password item using `op item create --category="API Credential" --vault="Private" ...`
 
 **Third‑Party Library Documentation**
 - Do not trust memory for APIs; use Context7 to fetch current docs/examples at execution time.

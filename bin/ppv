@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+# PPV (Pillars, Pipelines, Vaults) Notion Query Tool
+# Queries Michael's PPV planning system databases
+
+set -euo pipefail
+
+# Load API key
+if [[ -z "${NOTION_API_KEY:-}" ]]; then
+  if [[ -f ~/.env.zsh ]]; then
+    source ~/.env.zsh
+  fi
+fi
+
+if [[ -z "${NOTION_API_KEY:-}" ]]; then
+  echo "Error: NOTION_API_KEY not set. Add it to ~/.env.zsh" >&2
+  exit 1
+fi
+
+# Database IDs
+ACTION_ITEMS_DB="17e577f8-2e28-8181-aa14-e20e6759705a"
+PROJECTS_DB="17e577f8-2e28-81ed-ae33-e18b1dcfeae5"
+OUTCOME_GOALS_DB="17e577f8-2e28-8133-bfee-cdc469747b60"
+NOTES_DB="17e577f8-2e28-817a-8c4c-f04bc5902f9c"
+PEOPLE_DB="17e577f8-2e28-8196-b750-dada632d4853"
+DAILY_TRACKING_DB="17e577f8-2e28-8135-8cb8-d4ad6d41408d"
+
+# API base
+API_BASE="https://api.notion.com/v1"
+
+query_database() {
+  local db_id="$1"
+  local filter="$2"
+  local sorts="${3:-[]}"
+
+  curl -s -X POST "${API_BASE}/databases/${db_id}/query" \
+    -H "Authorization: Bearer ${NOTION_API_KEY}" \
+    -H "Notion-Version: 2022-06-28" \
+    -H "Content-Type: application/json" \
+    -d "{\"filter\":${filter},\"sorts\":${sorts}}"
+}
+
+format_action_items() {
+  jq -r '.results[] |
+    "\(.properties["Priority"].select.name // "No Priority") | \(.properties["Action Item"].title[0].plain_text) | \(.properties["Do Date"].date.start // "No date") | \(.properties["Status"].select.name // "No status")"' |
+    column -t -s '|'
+}
+
+format_projects() {
+  jq -r '.results[] |
+    "\(.properties["Status"].select.name // "No Status") | \(.properties["Name"].title[0].plain_text // "Untitled")"' |
+    column -t -s '|'
+}
+
+cmd_today() {
+  local today=$(date +%Y-%m-%d)
+  # Today view: Do Date <= today AND Done = false AND Parent item empty AND Owner = Michael
+  local filter='{"and":[{"property":"Do Date","date":{"on_or_before":"'"${today}"'"}},{"property":"Done","checkbox":{"equals":false}},{"property":"Parent item","relation":{"is_empty":true}},{"property":"Owner","people":{"contains":"5923a1d0-4c9c-4376-b7d7-3c50704758c1"}}]}'
+  local sorts='[{"property":"Priority","direction":"ascending"},{"property":"Do Date","direction":"ascending"}]'
+
+  echo "=== Today's Action Items (Due <= ${today}) ==="
+  echo ""
+  query_database "$ACTION_ITEMS_DB" "$filter" "$sorts" | format_action_items
+}
+
+cmd_week() {
+  local today=$(date +%Y-%m-%d)
+  local week_end=$(date -v+7d +%Y-%m-%d 2>/dev/null || date -d "+7 days" +%Y-%m-%d)
+  # This Week view: Do Date <= 1 week AND Done = false AND Status = Active AND Parent empty AND Owner = Michael
+  local filter='{"and":[{"property":"Do Date","date":{"on_or_before":"'"${week_end}"'"}},{"property":"Done","checkbox":{"equals":false}},{"property":"Status","select":{"equals":"Active"}},{"property":"Parent item","relation":{"is_empty":true}},{"property":"Owner","people":{"contains":"5923a1d0-4c9c-4376-b7d7-3c50704758c1"}}]}'
+  local sorts='[{"property":"Do Date","direction":"ascending"},{"property":"Priority","direction":"ascending"}]'
+
+  echo "=== This Week's Action Items (Due <= ${week_end}) ==="
+  echo ""
+  query_database "$ACTION_ITEMS_DB" "$filter" "$sorts" | format_action_items
+}
+
+cmd_projects() {
+  local filter='{"property":"Status","select":{"equals":"Active"}}'
+
+  echo "=== Active Projects ==="
+  echo ""
+  query_database "$PROJECTS_DB" "$filter" | format_projects
+}
+
+cmd_all() {
+  # All open items: Done = false AND Parent empty AND Owner = Michael
+  local filter='{"and":[{"property":"Done","checkbox":{"equals":false}},{"property":"Parent item","relation":{"is_empty":true}},{"property":"Owner","people":{"contains":"5923a1d0-4c9c-4376-b7d7-3c50704758c1"}}]}'
+  local sorts='[{"property":"Priority","direction":"ascending"},{"property":"Do Date","direction":"ascending"}]'
+
+  echo "=== All Open Action Items ==="
+  echo ""
+  query_database "$ACTION_ITEMS_DB" "$filter" "$sorts" | format_action_items
+}
+
+cmd_raw() {
+  local db="$1"
+  local filter="${2:-{}}"
+
+  case "$db" in
+    actions|action|items) query_database "$ACTION_ITEMS_DB" "$filter" ;;
+    projects|project) query_database "$PROJECTS_DB" "$filter" ;;
+    goals) query_database "$OUTCOME_GOALS_DB" "$filter" ;;
+    notes) query_database "$NOTES_DB" "$filter" ;;
+    people) query_database "$PEOPLE_DB" "$filter" ;;
+    daily) query_database "$DAILY_TRACKING_DB" "$filter" ;;
+    *) echo "Unknown database: $db" >&2; exit 1 ;;
+  esac
+}
+
+cmd_help() {
+  cat <<EOF
+PPV - Pillars, Pipelines, Vaults Query Tool
+
+Usage: ppv <command> [options]
+
+Commands:
+  today       Show today's active action items (due today or overdue)
+  week        Show this week's active action items
+  projects    Show active projects
+  all         Show all open action items
+  raw <db>    Raw JSON query (db: actions, projects, goals, notes, people, daily)
+  help        Show this help message
+
+Examples:
+  ppv today
+  ppv week
+  ppv projects
+  ppv raw actions '{"property":"Priority","select":{"equals":"Immediate 🔥"}}'
+
+Environment:
+  NOTION_API_KEY  Required. Set in ~/.env.zsh
+EOF
+}
+
+# Main
+case "${1:-help}" in
+  today) cmd_today ;;
+  week) cmd_week ;;
+  projects) cmd_projects ;;
+  all) cmd_all ;;
+  raw) cmd_raw "${2:-actions}" "${3:-{}}" ;;
+  help|--help|-h) cmd_help ;;
+  *) echo "Unknown command: $1" >&2; cmd_help; exit 1 ;;
+esac

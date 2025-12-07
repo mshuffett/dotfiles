@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+# Tana Input API CLI
+# Usage: tana <command> [options]
+#
+# Commands:
+#   add <text>              Add a node to inbox
+#   add -t <tag> <text>     Add a node with supertag
+#   add -f <field> <text>   Add a node with field value
+#   node <json>             Send raw node JSON
+#
+# Environment: TANA_API_TOKEN (required)
+
+set -euo pipefail
+
+API_URL="https://europe-west1-tagr-prod.cloudfunctions.net/addToNodeV2"
+
+if [[ -z "${TANA_API_TOKEN:-}" ]]; then
+  echo "Error: TANA_API_TOKEN not set" >&2
+  echo "Get your token: Tana Settings → API Tokens → Create token" >&2
+  exit 1
+fi
+
+usage() {
+  cat <<EOF
+Tana Input API CLI
+
+Usage: tana <command> [options]
+
+Commands:
+  add <text>                    Add a plain node to inbox
+  add -t <supertag-id> <text>   Add a node with supertag
+  add -p <parent-id> <text>     Add a node under a specific parent
+  node <json>                   Send raw nodes JSON array
+
+Options:
+  -t, --tag <id>      Apply supertag (use node ID from Tana)
+  -p, --parent <id>   Target parent node (default: INBOX)
+  -d, --desc <text>   Add description to node
+  -h, --help          Show this help
+
+Examples:
+  tana add "Quick note to inbox"
+  tana add -t abc123 "New task with supertag"
+  tana add -p def456 -d "Details here" "Node with parent and description"
+  tana node '[{"name": "Custom node", "children": [{"name": "Child"}]}]'
+
+Get supertag/node IDs: In Tana, right-click → Copy link → grab ID after '='
+EOF
+}
+
+send_request() {
+  local payload="$1"
+
+  response=$(curl -s -w "\n%{http_code}" -X POST "$API_URL" \
+    -H "Authorization: Bearer $TANA_API_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "$payload")
+
+  http_code=$(echo "$response" | tail -n1)
+  body=$(echo "$response" | sed '$d')
+
+  if [[ "$http_code" -ge 200 && "$http_code" -lt 300 ]]; then
+    echo "✓ Added to Tana"
+    [[ -n "$body" ]] && echo "$body" | jq -r '.children[]?.nodeId // empty' 2>/dev/null | head -1
+  else
+    echo "✗ Failed (HTTP $http_code)" >&2
+    echo "$body" >&2
+    exit 1
+  fi
+}
+
+cmd_add() {
+  local target="INBOX"
+  local supertag=""
+  local description=""
+  local text=""
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -t|--tag)
+        supertag="$2"
+        shift 2
+        ;;
+      -p|--parent)
+        target="$2"
+        shift 2
+        ;;
+      -d|--desc)
+        description="$2"
+        shift 2
+        ;;
+      -*)
+        echo "Unknown option: $1" >&2
+        exit 1
+        ;;
+      *)
+        text="$1"
+        shift
+        ;;
+    esac
+  done
+
+  if [[ -z "$text" ]]; then
+    echo "Error: No text provided" >&2
+    usage
+    exit 1
+  fi
+
+  # Build node object - strip newlines from name (Tana doesn't allow them)
+  local clean_text=$(echo -n "$text" | tr '\n' ' ')
+  local node=$(jq -n --arg name "$clean_text" '{name: $name}')
+
+  if [[ -n "$description" ]]; then
+    node=$(echo "$node" | jq --arg d "$description" '. + {description: $d}')
+  fi
+
+  if [[ -n "$supertag" ]]; then
+    node=$(echo "$node" | jq --arg t "$supertag" '. + {supertags: [{id: $t}]}')
+  fi
+
+  local payload=$(jq -n --arg target "$target" --argjson node "$node" \
+    '{targetNodeId: $target, nodes: [$node]}')
+
+  send_request "$payload"
+}
+
+cmd_node() {
+  local nodes_json="$1"
+  local target="${2:-INBOX}"
+
+  local payload=$(jq -n --arg target "$target" --argjson nodes "$nodes_json" \
+    '{targetNodeId: $target, nodes: $nodes}')
+
+  send_request "$payload"
+}
+
+# Main
+case "${1:-}" in
+  add)
+    shift
+    cmd_add "$@"
+    ;;
+  node)
+    shift
+    cmd_node "$@"
+    ;;
+  -h|--help|help|"")
+    usage
+    ;;
+  *)
+    echo "Unknown command: $1" >&2
+    usage
+    exit 1
+    ;;
+esac

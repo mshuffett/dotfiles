@@ -8,18 +8,23 @@ Generate high-quality speech audio using three top-tier TTS services.
 
 ## Available Services
 
-### Inworld TTS (#1 on TTS Arena - ELO 1679)
-- 20+ pre-defined voices
-- Two quality models (standard and max)
-- Fast, consistent results
-- Command: `inworld-tts`
-
-### Hume Octave (#2 on TTS Arena - ELO 1669)
+### Hume Octave (#1 on TTS Arena V2 - ELO 1632)
 - **Dynamic voice generation from text** (unique feature!)
 - Optional voice style descriptions
 - Built-in emotional intelligence
 - Voice Library with 100+ pre-crafted voices (requires UUID)
 - Command: `hume-tts`
+
+### Inworld TTS MAX (#2 on TTS Arena V2 - ELO 1629)
+- Highest quality Inworld model
+- 20+ pre-defined voices
+- Best for quality-critical applications
+- Command: `inworld-tts --model inworld-tts-max`
+
+### Inworld TTS (#3 on TTS Arena V2 - ELO 1609)
+- 20+ pre-defined voices
+- Fast, consistent results (default model)
+- Command: `inworld-tts`
 
 ### Google Gemini 2.5 TTS (Latest)
 - **Native multi-speaker podcast generation** (unique feature!)
@@ -51,14 +56,38 @@ inworld-tts "Hello world" --output greeting.mp3
 hume-tts "Your text here"
 
 # With voice style description
-hume-tts "Hello world" --description "warm and friendly"
+hume-tts "Hello world" --description "smooth, captivating, slightly breathy female"
 
 # Use voice from library (requires UUID)
-hume-tts "Hello world" --voice "uuid-from-voice-library"
+hume-tts "Hello world" --voice "f898a92e-685f-43fa-985b-a46920f0650b"
 
 # Instant mode for faster processing
 hume-tts "Hello world" --instant
 ```
+
+**Michael's Preferred Voices** (pick one per session, stay consistent):
+| Voice | ID | Best For |
+|-------|-----|----------|
+| Mysterious Woman | `f898a92e-685f-43fa-985b-a46920f0650b` | Engaging, captivating (favorite) |
+| Inspiring Woman | `b201d214-914c-4d0a-b8e4-54adfc14a0dd` | Motivational, warm |
+| Ava Song | `5bb7de05-c8fe-426a-8fcc-ba4fc4ce9f9c` | Quick, expressive |
+| Demure Conversationalist | `d6fd5cc2-53e6-4e80-ba83-93972682386a` | Soft, thoughtful |
+| Serene Assistant | `71de875d-bc14-4ed5-87da-8584ba4ea247` | Calm, professional |
+| Expressive Girl | `6b530c02-5a80-4e60-bb68-f2c171c5029f` | Animated, lively |
+
+**Preferred style modifiers** (layer on top of voice ID via description):
+`"slight vocal fry, breathy, airy, light feminine resonance, intimate, engaging, emphasis on important words, subtle British pronunciation"`
+
+**Research-backed attractive voice traits** (use in descriptions):
+- **Breathiness** - Most impactful; "monotonically increases attractiveness"
+- **Airy/light feminine resonance** - Wide formant dispersion (spacing between resonant frequencies); sounds more feminine
+- **Slight vocal fry** - Adds intimacy/seduction when subtle
+- **Emphasis on important words** - Dynamic delivery, not monotone
+- **Subtle British pronunciation** - Adds sophistication
+- **Lower pitch** - People naturally lower pitch when being seductive
+- **Smooth delivery** - Low jitter perceived as healthier/more attractive
+
+**Dynamic description fallback**: `"smooth, captivating, slightly breathy female"`
 
 ### Gemini TTS
 ```bash
@@ -194,10 +223,12 @@ When `--multi-speaker` is enabled:
 
 ### Generate and Play Audio
 ```bash
-inworld-tts "Your text here" && open output.mp3
-hume-tts "Your text here" && open output.mp3
-gemini-tts "Your text here" && open output.mp3
+inworld-tts "Your text here" && afplay output.mp3
+hume-tts "Your text here" && afplay output.mp3
+gemini-tts "Your text here" && afplay output.wav
 ```
+
+Note: `afplay` is macOS's built-in CLI audio player. Use `&` to play in background: `afplay output.mp3 &`
 
 ### Batch Generation
 ```bash
@@ -386,20 +417,21 @@ All scripts are located in `~/.dotfiles/bin/` and version controlled:
 
 **Note:** Gemini TTS script requires the `google-genai` Python package. Install with: `pip install google-genai`
 
-## TTS Arena Rankings (Reference)
+## TTS Arena V2 Rankings (December 2025)
 
-Top performing TTS models as of 2025:
-1. **Inworld TTS** - ELO 1679 (60% win rate) ← **You have this**
-2. **Hume Octave** - ELO 1669 (66% win rate) ← **You have this**
-3. **Inworld TTS MAX** - ELO 1668 (65% win rate) ← **You have this**
-4. Eleven Turbo v2.5 - ELO 1647
-5. Papla P1 - ELO 1599
-
-Top open-source:
-- Kokoro v1.0 - ELO 1467 (#13 overall)
-- CosyVoice 2.0 - ELO 1439 (#14 overall)
+Top performing TTS models on [TTS Arena V2](https://tts-agi-tts-arena-v2.hf.space/leaderboard):
+1. **Hume Octave** - ELO 1632 (66% win rate) ← **You have this**
+2. **Inworld TTS MAX** - ELO 1629 (67% win rate) ← **You have this**
+3. **Inworld TTS** - ELO 1609 (61% win rate) ← **You have this**
+4. Papla P1 - ELO 1586 (57% win rate)
+5. CastleFlow v1.0 - ELO 1585 (60% win rate)
+6. Eleven Multilingual v2 - ELO 1561 (59% win rate)
+7. Eleven Flash v2.5 - ELO 1556 (56% win rate)
+8. MiniMax Speech-02-HD - ELO 1553 (58% win rate)
 
 **You have access to the top 3 models on TTS Arena!**
+
+Note: TTS Arena V2 is a fresh leaderboard - votes from V1 don't carry over. ELO scores are lower than V1 because it's a new rating pool.
 
 ## Tips
 
@@ -422,7 +454,8 @@ Top open-source:
 - Consider prefixing with service name for comparisons (e.g., `inworld-intro.mp3`, `hume-intro.mp3`)
 
 ### Playback
-- MP3 files default to VLC on your system
+- Use `afplay` for CLI playback (macOS built-in): `afplay output.mp3`
+- Add `&` to play in background: `afplay output.mp3 &`
 
 ## Troubleshooting
 
