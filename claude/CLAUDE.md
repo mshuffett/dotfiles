@@ -2,7 +2,7 @@ My name is Michael
 - The current year is 2025
 - Prefer the Vercel AI SDK over provider SDKs; consult official docs/examples (never rely on memory)
 - Use pnpm (not npm) and Biome as the linter
-- Anthropic API: use claude-sonnet-4-5-20250929 (default); claude-opus-4-1-20250805 for challenging tasks; never use Claude 3.
+- Anthropic API: use claude-sonnet-4-5-20250929 (default); claude-opus-4-5-20251101 for challenging tasks (preferred over Opus 4.1); never use Claude 3.
 
 **CLI Tools**
 Prefer built-in tools when available. Otherwise, use modern alternatives:
@@ -128,7 +128,8 @@ Before working on ANY task, check if it matches these topics. If it does, read t
 - When in doubt:
   - Ask whether it should apply to every interaction (here) or only when working on a specific topic (on‑demand guide or repo docs).
 
-**Creating New Procedure Files**
+**Creating New Slash Commands & Procedure Files**
+- **Location**: Always create in `~/.claude/commands/` (which symlinks to `~/.dotfiles/claude/commands/`). This ensures commands are version-controlled in dotfiles.
 - **CRITICAL**: When creating a new procedure file in `~/.claude/commands/`, you MUST:
   1. Create the file with clear triggers, guidelines, and examples
   2. **Immediately add it to the "CRITICAL: Read Procedure Files When Topics Apply" section** above with:

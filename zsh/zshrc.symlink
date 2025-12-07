@@ -406,3 +406,6 @@ if command -v chafa >/dev/null 2>&1; then
     fi
   }
 fi
+
+# Added by Antigravity
+export PATH="/Users/michael/.antigravity/antigravity/bin:$PATH"
