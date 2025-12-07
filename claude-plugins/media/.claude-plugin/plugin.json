@@ -1,0 +1,11 @@
+{
+  "name": "media",
+  "version": "1.0.0",
+  "description": "Media generation and alerts: text-to-speech, image generation, and push notifications",
+  "author": {
+    "name": "Michael Shuffett",
+    "email": "michael@compose.ai"
+  },
+  "keywords": ["tts", "speech", "images", "notifications", "media"],
+  "license": "MIT"
+}

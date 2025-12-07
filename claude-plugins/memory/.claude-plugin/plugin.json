@@ -1,0 +1,11 @@
+{
+  "name": "memory",
+  "version": "1.0.0",
+  "description": "Knowledge management: memory placement, documentation, notes, mistakes tracking, session learnings, prompt engineering, and config management",
+  "author": {
+    "name": "Michael Shuffett",
+    "email": "michael@compose.ai"
+  },
+  "keywords": ["memory", "docs", "notes", "mistakes", "prompts", "config", "knowledge"],
+  "license": "MIT"
+}

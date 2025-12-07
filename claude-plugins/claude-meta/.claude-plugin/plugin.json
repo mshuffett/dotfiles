@@ -1,0 +1,11 @@
+{
+  "name": "claude-meta",
+  "version": "1.0.0",
+  "description": "Claude Code meta-utilities: Codex extended reasoning, session management, auto-compact, continuous mode, prototyping, and computer use",
+  "author": {
+    "name": "Michael Shuffett",
+    "email": "michael@compose.ai"
+  },
+  "keywords": ["codex", "session", "compact", "continuous", "prototype", "subagent", "computer-use"],
+  "license": "MIT"
+}

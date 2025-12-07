@@ -1,0 +1,11 @@
+{
+  "name": "productivity",
+  "version": "1.0.0",
+  "description": "Personal effectiveness: day planning, task management, focus, GTD, coaching, and PPV Notion integration",
+  "author": {
+    "name": "Michael Shuffett",
+    "email": "michael@compose.ai"
+  },
+  "keywords": ["productivity", "planning", "tasks", "gtd", "focus", "coaching", "notion", "ppv"],
+  "license": "MIT"
+}

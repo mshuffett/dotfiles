@@ -1,0 +1,11 @@
+{
+  "name": "dev",
+  "version": "1.0.0",
+  "description": "Development workflows: git operations, PR workflow, testing, port management, Linear integration, and Context7 library docs",
+  "author": {
+    "name": "Michael Shuffett",
+    "email": "michael@compose.ai"
+  },
+  "keywords": ["git", "pr", "worktrees", "testing", "ports", "linear", "context7", "development"],
+  "license": "MIT"
+}

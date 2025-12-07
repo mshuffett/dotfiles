@@ -1,0 +1,11 @@
+{
+  "name": "terminal",
+  "version": "1.0.0",
+  "description": "Terminal environment: tmux pane/window management, image viewing, theme switching, and system sounds",
+  "author": {
+    "name": "Michael Shuffett",
+    "email": "michael@compose.ai"
+  },
+  "keywords": ["tmux", "terminal", "images", "themes", "sounds"],
+  "license": "MIT"
+}
