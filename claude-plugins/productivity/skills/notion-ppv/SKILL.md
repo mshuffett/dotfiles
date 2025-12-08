@@ -1,7 +1,7 @@
 ---
 name: Notion PPV Interaction
 description: Use when interacting with Notion PPV system, creating projects, updating goals, doing quarterly reviews, or working with PPV databases. Provides MCP tool patterns and key database IDs.
-version: 0.7.0
+version: 0.8.0
 ---
 
 # Notion PPV Interaction Guide
@@ -269,6 +269,38 @@ Relations require JSON array of page URLs:
 1. **Debrief** - Accomplishments, Disappointments, Am I on track?
 2. **Process & Update** - Review Quarters, Goals, Projects
 3. **Someday/Maybe** - Activate waiting items
+
+## Periodic Review Tracking
+
+**State file**: `~/.claude/productivity.local.md`
+
+At session start, check if any reviews are overdue:
+```yaml
+reviews:
+  annual:
+    last_completed: "2024-12-XX"
+    next_due: "2025-12-31"
+  quarterly:
+    last_completed: "2025-12-08"
+    next_due: "2026-03-31"
+  monthly:
+    last_completed: null
+    next_due: "2025-12-31"
+  weekly:
+    last_completed: null
+    next_due: "2025-12-15"
+```
+
+**Trigger behavior**: If `next_due` is in the past, prompt user: "Your [X] review is due. Would you like to do it now?"
+
+**After completing a review**: Update both `last_completed` and `next_due` in the state file.
+
+| Review | Cadence | Next Due Calculation |
+|--------|---------|---------------------|
+| Annual | Dec/Jan | End of next year |
+| Quarterly | End of quarter | +3 months |
+| Monthly | Last week of month | End of next month |
+| Weekly | Sunday/Monday | +7 days |
 
 ## Best Practices
 
