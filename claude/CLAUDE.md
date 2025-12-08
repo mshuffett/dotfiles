@@ -24,84 +24,66 @@ rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec,
   - Auto-finds CLI in worktrees or main repo - no manual linking needed
 
 **Governance Summary**
-- Keep universal rules here; place procedures and specifics in on‑demand guides and repo docs.
-- Hot, frequent repo commands live in that repo's agent file as a small "Hot Commands" list.
-- Procedures are condition‑triggered: ALWAYS consult the matching on‑demand guide whenever its trigger applies, and do not proceed until acceptance checks pass; skipping consultation is logged and may be escalated.
+- Keep universal rules here; place procedures and specifics in plugins (skills + commands).
+- Skills auto-load when context matches their description; commands require explicit `/command` invocation.
 - For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
 
-**Procedure Files: Global and Project-Specific**
+**Plugin Philosophy**
 
-Procedure files exist in two locations:
-- **Global**: `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) - Universal procedures across all projects
-- **Project-specific**: `<project>/.claude/commands/` - Procedures specific to that repository's codebase
+Plugins are evolving tools and memory—not static, they grow with use:
+- **Skills** = Contextual knowledge (auto-loaded when context matches). Use for: safety protocols, best practices, domain knowledge. Example: git-safety skill auto-loads when about to git stash.
+- **Commands** = Explicit user actions (invoked via `/command`). Use for: workflows, routines, actions. Example: `/morning` starts the day.
+- **`.local.md`** = Per-project state and config (`.claude/plugin-name.local.md`). YAML frontmatter + markdown body for plugin-specific settings.
 
-Both contain checklists and step-by-step instructions that you MUST read and follow when their topics apply.
+**Installed Plugins** (`~/.dotfiles/claude-plugins/`):
+| Plugin | Purpose |
+|--------|---------|
+| `productivity` | PPV Notion, GTD, coaching, task management, day planning |
+| `dev` | Git, PR workflow, testing, ports, Linear, Context7 |
+| `terminal` | Tmux, image viewing, themes, sounds |
+| `media` | TTS, image generation, notifications |
+| `claude-meta` | Codex reasoning, session management, prototyping |
+| `memory` | Docs, notes, mistakes, prompt engineering, configs |
+| `misc` | Hammerspoon, Sphere mobile, specialized tools |
 
-**CRITICAL: Read Procedure Files When Topics Apply**
+**How Plugins Work**
+1. **Skills auto-load**: When context matches a skill description, Claude automatically loads that knowledge
+2. **Commands are invoked**: User types `/plugin:command` or just `/command` if unique
+3. **Both can read `.local.md`**: For per-project configuration
 
-Before working on ANY task, check if it matches these topics. If it does, read that file FIRST using the Read tool:
+**Project-Specific Commands**
+- `<project>/.claude/commands/` - Procedures specific to that repository's codebase (API patterns, testing patterns, etc.)
 
-**Development & Git Workflows:**
-- **Working with worktrees** → Read `~/.claude/commands/worktrees.md` when creating, managing, or discussing git worktrees
-- **Creating pull requests** → Read `~/.claude/commands/pr.md` when asked to create a PR or prepare code for review
-- **Managing git stashes** → Read `~/.claude/commands/git-safety.md` before stashing changes
-- **Managing configs** → Read `~/.claude/commands/configs.md` when discovering stray configuration files
+**Skills Auto-Load, Commands Are Invoked**
 
-**Code Patterns & Best Practices:**
-- **API endpoints or authentication** → Read `~/.claude/commands/api-patterns.md` when working on API routes, authentication, or request validation
-- **Writing tests** → Read `~/.claude/commands/testing-patterns.md` when writing tests or debugging test failures
-- **Firebase Authentication** → Read `~/.claude/commands/firebase-auth-patterns.md` when implementing Firebase Authentication in API routes or client code
-- **UI animations** → Read `~/.claude/commands/framer-motion-patterns.md` when implementing UI animations and transitions
+With plugins, you no longer need to manually read procedure files for most topics. Skills auto-load when their context matches:
 
-**Tools & Infrastructure:**
-- **Managing ports/processes** → Read `~/.claude/commands/ports.md` before killing processes on ports
-- **Working with tmux** → Read `~/.claude/commands/tmux.md` when managing tmux panes, windows, or sessions
-- **Displaying content in tmux** → Read `~/.claude/commands/tmux-display.md` when showing code, logs, or other content to the user in tmux
-- **Deploying applications** → Read `~/.claude/commands/deploy.md` when deploying to production or development environments
-- **Managing environment variables** → Read `~/.claude/commands/env.md` when adding or updating secrets and environment variables
-- **Viewing images** → Read `~/.claude/commands/view-image.md` when asked to view or display images in terminal
+**Auto-loading Skills** (no manual read needed):
+- `git-safety` → Loads when about to git stash
+- `port-safety` → Loads when killing processes on ports
+- `tmux-patterns` → Loads when working with tmux panes
+- `memory-placement` → Loads when deciding where to store information
+- `ppv-query` → Loads when user asks about tasks/projects/PPV
 
-**Learning & Improvement:**
-- **Reviewing common mistakes** → Read `~/.claude/commands/mistakes.md` before implementing to avoid known issues
-- **Analyzing failures** → Read `~/.claude/commands/mistake-analysis.md` when analyzing failures or tracking mistake patterns
-- **Documenting learnings** → Read `~/.claude/commands/session-learnings.md` when summarizing session insights
-- **Memory & CLAUDE.md editing** → Read `~/.claude/commands/memory-guide.md` when deciding where information belongs OR before editing CLAUDE.md (includes placement decisions, editing checklist, size guidelines, and new file vs existing file decisions)
+**Project-Specific Patterns** (read when working in that repo):
+- **API patterns** → Read `<project>/.claude/commands/api-patterns.md` when working on API routes
+- **Testing patterns** → Read `<project>/.claude/commands/testing-patterns.md` when writing tests
+- **Firebase Auth** → Read `<project>/.claude/commands/firebase-auth-patterns.md` for Firebase Auth patterns
 
-**User Context:**
-- **User preferences** → Read `~/.claude/commands/user-preferences.md` for context-specific user preferences and workflow details
-- **Linear workflow** → Read `~/.claude/commands/linear.md` when creating or managing Linear issues
-- **Documentation guidelines** → Read `~/.claude/commands/docs.md` when adding or updating documentation
-- **Note management** → Read `~/.claude/commands/notes.md` when capturing or organizing notes
-
-**Advanced Features:**
-- **Prompt engineering** → Read `~/.claude/commands/prompt-improve.md` when improving prompts or commands
-- **Prompt alignment** → Read `~/.claude/commands/prompt-alignment.md` when aligning prompts with examples
-- **Text-to-speech** → Read `~/.claude/commands/tts.md` when generating speech or audio from text
-- **Image generation** → Read `~/.claude/commands/images.md` when generating images
-- **Notifications** → Read `~/.claude/commands/notifications.md` when sending completion notifications
-- **Computer use** → Read `~/.claude/commands/computer-use.md` only when explicitly asked to use the computer use agent
-
-**How this works**:
-1. User request arrives
-2. You identify which topic(s) it matches from the list above
-3. Read that procedure file FIRST using the Read tool
-4. Load the procedures and checklists into your context
-5. Follow the file's guidance
-6. Then respond to the user
-
-**Example**:
-- User: "I need to create a worktree for a new feature"
-- You see: "worktree" → matches "Working with worktrees"
-- You: Read `~/.claude/commands/worktrees.md` using the Read tool
-- You: Load and follow the pre-flight checklist from that file
-- You: Execute the worktree creation correctly with all steps
+**Invoking Commands** (user types `/command`):
+- `/dev:pr` or `/pr` - Create pull request workflow
+- `/dev:worktrees` - Git worktree management
+- `/dev:tests` - Test debugging workflow
+- `/media:tts` or `/tts` - Text-to-speech generation
+- `/productivity:morning` or `/morning` - Start the day
+- Full list in each plugin's `commands/` directory
 
 **Editing Policy (this file)**
-- **REQUIRED**: Before ANY edits to this file, read `~/.claude/commands/memory-guide.md` to verify placement is correct
+- **REQUIRED**: The `memory-placement` skill auto-loads when editing CLAUDE.md—follow its guidance
 - Before editing this file, commit the current state in the dotfiles repo
 - After making changes, commit again with a clear message summarizing what changed and why
-- Ask yourself: "Do I need this MOST OF THE TIME or might I make a mistake without it?" If NO → create a procedure file instead
+- Ask yourself: "Do I need this MOST OF THE TIME or might I make a mistake without it?" If NO → create a skill or command in a plugin instead
 
 **Universal Guardrails**
 - Procedures: ALWAYS consult the correct on‑demand guide when its trigger applies; proceed only after acceptance checks pass.
@@ -136,34 +118,44 @@ Before working on ANY task, check if it matches these topics. If it does, read t
 - When in doubt:
   - Ask whether it should apply to every interaction (here) or only when working on a specific topic (on‑demand guide or repo docs).
 
-**Creating New Slash Commands & Procedure Files**
-- **Location**: Always create in `~/.claude/commands/` (which symlinks to `~/.dotfiles/claude/commands/`). This ensures commands are version-controlled in dotfiles.
-- **CRITICAL**: When creating a new procedure file in `~/.claude/commands/`, you MUST:
-  1. Create the file with clear triggers, guidelines, and examples
-  2. **Immediately add it to the "CRITICAL: Read Procedure Files When Topics Apply" section** above with:
-     - Clear trigger description (when to read it)
-     - File path reference
-     - Appropriate category (Development & Git, Code Patterns, Tools & Infrastructure, etc.)
-  3. Commit both the new file AND the updated CLAUDE.md together
-- **Missing this step is a mistake** - the procedure file exists but won't be consulted because it's not documented as a trigger
-- **Example of complete workflow**:
-  - Create `~/.claude/commands/tmux-display.md`
-  - Add entry: "**Displaying content in tmux** → Read `~/.claude/commands/tmux-display.md` when showing code, logs, or other content to the user in tmux"
-  - Commit both files together
+**Creating New Plugin Content**
 
-**Keeping Procedure Files Updated**
-- When working with a topic that has a procedure file (e.g., tmux, worktrees, testing), actively watch for:
+When adding new functionality, decide: **Skill** (auto-loads) or **Command** (user-invoked)?
+
+**Creating a Skill** (contextual knowledge that should auto-load):
+1. Choose the appropriate plugin from the table above
+2. Create `~/.dotfiles/claude-plugins/<plugin>/skills/<skill-name>/SKILL.md`
+3. Write a clear `description` in frontmatter that triggers loading
+4. Commit the new skill
+
+**Creating a Command** (explicit user action):
+1. Choose the appropriate plugin
+2. Create `~/.dotfiles/claude-plugins/<plugin>/commands/<command>.md`
+3. Add frontmatter with `description` and optional `allowed-tools`
+4. Commit the new command
+
+**Example - Adding a new skill**:
+```
+~/.dotfiles/claude-plugins/dev/skills/deployment-safety/SKILL.md
+---
+name: Deployment Safety
+description: Use when about to deploy to production, running deploy commands, or discussing deployment strategies.
+---
+# Deployment Safety Protocol
+...
+```
+
+**Keeping Skills & Commands Updated**
+- When working with a topic that has a skill or command, actively watch for:
   - New insights, gotchas, or better approaches discovered during work
   - User corrections or clarifications that improve understanding
-  - Edge cases or context-dependent decisions not covered in the guide
+  - Edge cases or context-dependent decisions not covered
   - More reliable methods than what's currently documented
 - **Action when new information is discovered:**
-  - Update the relevant procedure file immediately while the context is fresh
-  - Add the new information to the appropriate section
+  - Update the relevant skill or command immediately while context is fresh
   - Commit the update with a clear message explaining what was learned
   - Inform the user that the documentation has been improved
-- **Example**: During tmux work, discovering that `$TMUX_PANE` is more reliable than `display-message` → immediately update tmux-display.md to clarify this distinction
-- This keeps procedure files living, accurate, and continuously improving based on real-world usage
+- This keeps plugins living, accurate, and continuously improving based on real-world usage
 
 **Proactive Memory Improvements**
 - Proactively suggest improvements to memory when you notice repeated friction, missing triggers, or unclear acceptance checks. Propose exact wording and destination (root vs on‑demand guide vs repo docs) and ask for approval before updating.
@@ -180,10 +172,11 @@ Before working on ANY task, check if it matches these topics. If it does, read t
 - Cross‑repo repeats (≥2 repos in 14 days): add a one‑line guardrail here.
 - Cooldown: after 14–30 quiet days, propose removing the added one‑liner; the guide remains.
 
-**On‑Demand Guides Index (Locations)**
-- **Global commands**: `~/.claude/commands/` (symlink: `~/.dotfiles/claude/commands/`) - Universal procedures that apply across ALL projects. Topics include: Worktrees pre‑flight, Git stash safety, Pull request workflow, Ports/process policy, Test debugging, Docs authoring, Notifications, Image generation, Config management, Notes/knowledge, Claude Code docs lookup, Context7 workflow, Memory placement & escalation, Mistakes review, Computer use.
-- **Project-specific commands**: `<project>/.claude/commands/` - Patterns and procedures specific to a single repository. Example: Firebase Auth patterns, API patterns, testing patterns for that specific codebase.
-- **Placement rule**: If a procedure applies to multiple projects or is about general tooling/workflow, put it in global commands. If it's about patterns specific to one codebase's architecture, put it in that project's commands.
+**Plugin Locations**
+- **Global plugins**: `~/.dotfiles/claude-plugins/` - Version-controlled plugins with skills and commands
+- **Symlinked to**: `~/.claude/plugins/marketplaces/local-plugins/plugins/`
+- **Project-specific commands**: `<project>/.claude/commands/` - Patterns specific to that repository (API patterns, testing patterns, etc.)
+- **Placement rule**: If functionality applies to multiple projects → global plugin. If it's specific to one codebase → project commands.
 
 **Documentation Guidelines (Pointer)**
 - Prefer updating existing docs; place feature guides and deep explanations in `docs/`; avoid top‑level clutter.
