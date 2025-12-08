@@ -1,7 +1,7 @@
 ---
 name: Notion PPV Interaction
 description: Use when interacting with Notion PPV system, creating projects, updating goals, doing quarterly reviews, or working with PPV databases. Provides MCP tool patterns and key database IDs.
-version: 0.6.1
+version: 0.7.0
 ---
 
 # Notion PPV Interaction Guide
@@ -72,7 +72,7 @@ Pillar Groups: Growth | Business | Home & Social
 | Accomplishments | `17e577f8-2e28-8138-a7c5-000bdd245764` | | - |
 | Disappointments | `17e577f8-2e28-81da-a2ef-000b4a08f006` | | - |
 | Quarters | `17e577f8-2e28-8198-ab3e-000b64c1b87d` | | - |
-| Action Items | `17e577f8-2e28-81cf-9d6b-000bc2cf0d50` | `17e577f8-2e28-8181-aa14-e20e6759705a` | - |
+| Action Items | `17e577f8-2e28-81cf-9d6b-000bc2cf0d50` | `17e577f8-2e28-8181-aa14-e20e6759705a` | `17f577f8-2e28-8063-8b2b-d3a52819591a` |
 
 ## Key Page IDs
 
@@ -170,24 +170,59 @@ mcp__notion__notion-create-pages({
 
 ## Creating Action Items (Tasks)
 
-**Note:** Action Items do NOT have templates (unlike Projects). MCP `create-pages` is the correct approach - pages will be blank, which is expected. Add content via `update-page` if needed.
+Like Projects, Action Items use templates. Use the **direct Notion API** with template_id.
+
+### Correct Pattern: Direct API with template_id
+
+```bash
+xh --ignore-stdin --raw '{
+  "parent": {
+    "type": "database_id",
+    "database_id": "17e577f8-2e28-8181-aa14-e20e6759705a"
+  },
+  "properties": {
+    "Action Item": {
+      "title": [{"text": {"content": "Task description"}}]
+    },
+    "Priority": {
+      "select": {"name": "2nd Priority"}
+    },
+    "Status": {
+      "select": {"name": "Active"}
+    },
+    "Do Date": {
+      "date": {"start": "2025-12-08"}
+    },
+    "Owner": {
+      "people": [{"id": "5923a1d0-4c9c-4376-b7d7-3c50704758c1"}]
+    }
+  },
+  "template": {
+    "type": "template_id",
+    "template_id": "17f577f8-2e28-8063-8b2b-d3a52819591a"
+  }
+}' POST 'https://api.notion.com/v1/pages' \
+  "Authorization: Bearer $NOTION_API_KEY" \
+  'Notion-Version: 2022-06-28'
+```
+
+### After Creation: Set Relations via MCP
 
 ```javascript
-mcp__notion__notion-create-pages({
-  parent: {type: "data_source_id", data_source_id: "17e577f8-2e28-81cf-9d6b-000bc2cf0d50"},
-  pages: [{
-    properties: {
-      "Action Item": "Task description",
-      "Priority": "2nd Priority",  // Options: Immediate 🔥, Quick ⚡, Scheduled 📅, 1st Priority 🚀, 2nd Priority, 3rd Priority, 4th Priority, 5th Priority, Errand 🚘, Remember 💭, ‼️ Repeat
-      "Status": "Active",  // Options: Active, Waiting, Next Up, Paused, Future 1/2/3
-      "date:Do Date:start": "2025-12-08",
-      "date:Do Date:is_datetime": 0,
-      "Projects (DB)": "[\"https://www.notion.so/<project_page_id>\"]",
-      "Owner": "<user_id>"  // Use UUID directly, not URL
-    }
-  }]
+mcp__notion__notion-update-page({
+  page_id: "<new_task_id>",
+  command: "update_properties",
+  properties: {
+    "Projects (DB)": "[\"https://www.notion.so/<project_page_id>\"]"
+  }
 })
 ```
+
+### Priority Options
+`Immediate 🔥`, `Quick ⚡`, `Scheduled 📅`, `1st Priority 🚀`, `2nd Priority`, `3rd Priority`, `4th Priority`, `5th Priority`, `Errand 🚘`, `Remember 💭`, `‼️ Repeat`
+
+### Status Options
+`Active`, `Waiting`, `Next Up`, `Paused`, `Future 1`, `Future 2`, `Future 3`
 
 **Michael's User ID**: `5923a1d0-4c9c-4376-b7d7-3c50704758c1`
 
