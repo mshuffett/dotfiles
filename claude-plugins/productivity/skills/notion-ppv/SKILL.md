@@ -1,7 +1,7 @@
 ---
 name: Notion PPV Interaction
 description: Use when interacting with Notion PPV system, creating projects, updating goals, doing quarterly reviews, or working with PPV databases. Provides MCP tool patterns and key database IDs.
-version: 0.1.0
+version: 0.2.0
 ---
 
 # Notion PPV Interaction Guide
@@ -12,9 +12,9 @@ Patterns for interacting with Michael's PPV (Pillars, Pipelines, Vaults) system 
 
 - `mcp__notion__notion-search` - Search pages/databases
 - `mcp__notion__notion-fetch` - Get page/database content and schema
-- `mcp__notion__notion-create-pages` - Create new pages in databases
+- `mcp__notion__notion-create-pages` - Create new pages in databases (with content!)
 - `mcp__notion__notion-update-page` - Update page properties or content
-- `mcp__notion__notion-duplicate-page` - Duplicate a page (use for templates!)
+- `mcp__notion__notion-duplicate-page` - Duplicate a page (⚠️ see warning below)
 
 ## Key PPV Database IDs
 
@@ -34,48 +34,91 @@ Patterns for interacting with Michael's PPV (Pillars, Pipelines, Vaults) system 
 | Q3 2025 | `2c2577f8-2e28-80a5-b2f9-e9eabfc36dad` | |
 | Q4 2025 | `28d577f8-2e28-80f7-89c9-cf447c8d2a58` | |
 | 2024 Annual Reflection | `16b577f82e28806ea3ccdc2ded3713ee` | 7-step journey |
-| Project Template | `17e577f8-2e28-81ef-ad01-d9e271fd6b68` | Duplicate for new projects |
 
 ## Creating a New Project (IMPORTANT)
 
-**Do NOT use `create-pages` for projects.** The Projects database has a template with complex layout (linked database views for Action Items, Notes, Documents, People, etc.).
+⚠️ **Do NOT use `duplicate-page`** - it preserves template status, creating a new template instead of a regular page.
 
-**Correct Pattern**:
-1. Duplicate the template: `notion-duplicate-page` with `17e577f8-2e28-81ef-ad01-d9e271fd6b68`
-2. Update properties: `notion-update-page` with `command: "update_properties"`
-3. Update content: `notion-update-page` with `command: "replace_content_range"`
+⚠️ **Do NOT use `create-pages` without content** - the API bypasses Notion's default template, creating a blank page.
 
-```
-// Step 1: Duplicate template
-mcp__notion__notion-duplicate-page(page_id: "17e577f8-2e28-81ef-ad01-d9e271fd6b68")
-// Returns new page ID
+**Correct Pattern**: Use `create-pages` WITH the template content structure:
 
-// Step 2: Update properties
-mcp__notion__notion-update-page({
-  page_id: "<new_id>",
-  command: "update_properties",
-  properties: {
-    "Project": "Project Name",
-    "Status": "Active",
-    "Priority": "1st Priority",
-    "Quarter": "[\"https://www.notion.so/<quarter_page_id>\"]"
-  }
+```javascript
+mcp__notion__notion-create-pages({
+  parent: {type: "data_source_id", data_source_id: "17e577f8-2e28-81cb-8e3d-000bc55b9945"},
+  pages: [{
+    properties: {
+      "Project": "Project Name",
+      "Status": "Active",
+      "Priority": "1st Priority",
+      "Quarter": "[\"https://www.notion.so/<quarter_page_id>\"]",
+      "Outcome Goals": "[\"https://www.notion.so/<goal_page_id>\"]"
+    },
+    content: `<columns>
+	<column>
+		### <span color="purple">**Thoughts & Reminders**</span> {color="purple"}
+		- Your project notes here
+		<empty-block/>
+	</column>
+	<column>
+		<callout icon="/icons/push-pin_purple.svg" color="gray_bg">
+			<span color="purple">**OUTCOME GOALS**</span>
+		</callout>
+		<empty-block/>
+	</column>
+</columns>
+> <span color="purple">**ACTION ITEMS**</span>
+	---
+<empty-block/>
+<columns>
+	<column>
+		<callout icon="/icons/compose_purple.svg" color="gray_bg">
+			<span color="purple">**NOTES & MEETINGS**</span>
+		</callout>
+	</column>
+	<column>
+		<callout icon="/icons/attachment_purple.svg" color="gray_bg">
+			<span color="purple">**DOCUMENTS**</span>
+		</callout>
+	</column>
+</columns>
+<empty-block/>
+<columns>
+	<column>
+		<callout icon="/icons/user-circle_purple.svg" color="gray_bg">
+			<span color="purple">**PEOPLE**</span>
+		</callout>
+	</column>
+	<column>
+		<callout icon="/icons/hashtag_purple.svg" color="gray_bg">
+			<span color="purple">**KNOWLEDGE TOPICS**</span>
+		</callout>
+	</column>
+</columns>
+<empty-block/>
+<columns>
+	<column>
+		<callout icon="/icons/shopping-cart_purple.svg" color="gray_bg">
+			<span color="purple">**GOODS & SERVICES**</span>
+		</callout>
+	</column>
+	<column>
+		<callout icon="/icons/download_purple.svg" color="gray_bg">
+			<span color="purple">**MEDIA**</span>
+		</callout>
+	</column>
+</columns>`
+  }]
 })
-
-// Step 3: Update content (Thoughts & Reminders section)
-mcp__notion__notion-update-page({
-  page_id: "<new_id>",
-  command: "replace_content_range",
-  selection_with_ellipsis: "### <span color...Reminders**</span>...<empty-block/>",
-  new_str: "### <span color=\"purple\">**Thoughts & Reminders**</span> {color=\"purple\"}\n\t\t- Your notes here\n\t\t<empty-block/>"
-})
 ```
+
+**Note**: The template includes linked database views that won't be recreated via API. The callout sections provide the visual structure; users can manually add linked views if needed.
 
 ## Creating Accomplishments/Disappointments
 
 Simple `create-pages` works fine - no complex template:
 
-```
+```javascript
 mcp__notion__notion-create-pages({
   parent: {type: "data_source_id", data_source_id: "17e577f8-2e28-8138-a7c5-000bdd245764"},
   pages: [{
@@ -89,7 +132,7 @@ mcp__notion__notion-create-pages({
 
 ## Creating Outcome Goals
 
-```
+```javascript
 mcp__notion__notion-create-pages({
   parent: {type: "data_source_id", data_source_id: "17e577f8-2e28-8149-be9c-000b4fe59e54"},
   pages: [{
@@ -141,7 +184,8 @@ Relations in Notion require JSON array of page URLs:
 ## Best Practices
 
 1. **Always fetch first** - Get the page/database to see current schema and content
-2. **Use duplicate for templates** - Projects, Quarters have complex layouts
-3. **Use create-pages for simple** - Accomplishments, Goals work with direct creation
-4. **Relations are URL arrays** - Format as JSON array of page URLs
-5. **Date fields are expanded** - Use `date:Field Name:start`, `date:Field Name:is_datetime`
+2. **Use create-pages WITH content for projects** - Include the template structure in the content field
+3. **Never use duplicate-page for templates** - Creates a new template, not a regular page
+4. **Use create-pages for simple databases** - Accomplishments, Goals work with just properties
+5. **Relations are URL arrays** - Format as JSON array of page URLs
+6. **Date fields are expanded** - Use `date:Field Name:start`, `date:Field Name:is_datetime`
