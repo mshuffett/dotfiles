@@ -87,6 +87,10 @@ curl -s -X POST "https://api.notion.com/v1/databases/17e577f8-2e28-81ed-ae33-e18
 - [ ] Enter: Effectiveness rating, Gratitude, Improvement Summary
 
 ### II. Pipelines
+- [ ] **Todoist Cleanup** (Michael)
+  - Review and clear Todoist inbox
+  - Move actionable items to PPV Action Items or complete them
+  - Archive or delete stale items
 - [ ] **Email Cleanup** - Inbox organized, starred emails processed
 - [ ] **Calendar Review**
   - Last 2 weeks: anything need follow-up?
@@ -116,7 +120,7 @@ Example for Week entry:
   "page_id": "<week_page_id>",
   "command": "update_properties",
   "properties": {
-    "Effectiveness": "4 ⭐️⭐️⭐️⭐️",
+    "Effectiveness": "4",
     "Gratitude": "Productive sprint week, good progress on demo",
     "Focus/Objective": "Ship demo v1, hiring pipeline",
     "Improvement Summary": "Better time-boxing needed, reduce context switching"

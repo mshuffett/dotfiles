@@ -4,7 +4,7 @@ description: Morning planning routine - start your day with PPV integration
 
 # Morning Routine (PPV-Integrated)
 
-Start the day with clarity by connecting to your PPV system.
+Start Michael's day with clarity by connecting to his PPV system.
 
 ## Steps
 
@@ -12,53 +12,38 @@ Start the day with clarity by connecting to your PPV system.
 
 Check if a daily tracking entry exists for today. If not, create one:
 
-**Database ID**: `17e577f8-2e28-8181-aa14-e20e6759705a` (Action Items DB page, Daily Tracking is a view)
-**Data Source ID**: `1be577f8-2e28-8096-bb0b-000b5a462ab3`
+**Data Source ID**: `17e577f8-2e28-8183-9177-000bbb7d847f`
 
-Search for today's date in Daily Tracking. If not found, create using direct API:
+Search for today's date in Daily Tracking. If not found, create:
 
-```bash
-xh --ignore-stdin --raw '{
-  "parent": {
-    "type": "database_id",
-    "database_id": "1be577f82e2880968b30c5e7b98a1baf"
-  },
-  "properties": {
-    "Date Title": {
-      "title": [{"text": {"content": "YYYY-MM-DD"}}]
-    },
-    "Date": {
-      "date": {"start": "YYYY-MM-DD"}
-    },
-    "Owner": {
-      "people": [{"id": "5923a1d0-4c9c-4376-b7d7-3c50704758c1"}]
+```javascript
+mcp__notion__notion-create-pages({
+  parent: {type: "data_source_id", data_source_id: "17e577f8-2e28-8183-9177-000bbb7d847f"},
+  pages: [{
+    properties: {
+      "Date Title": "Michael @[Month Day, Year]",
+      "date:Date:start": "YYYY-MM-DD",
+      "date:Date:is_datetime": 0,
+      "Owner": "[\"5923a1d0-4c9c-4376-b7d7-3c50704758c1\"]",
+      "Week": "[\"https://www.notion.so/<current_week_id>\"]"
     }
-  }
-}' POST 'https://api.notion.com/v1/pages' \
-  "Authorization: Bearer $NOTION_API_KEY" \
-  'Notion-Version: 2022-06-28'
+  }]
+})
 ```
-
-Link to current week if available.
 
 ### 2. Show Today's Action Items
 
 Query Action Items with Do Date <= today and Status = Active:
 
-```bash
-# Use MCP notion-search with query for today's tasks
-mcp__notion__notion-list-issues or search Action Items
-```
-
 Display tasks grouped by priority:
-- 1st Priority (limit 1)
-- 2nd Priority (limit 1)
-- 3rd Priority (limit 1)
-- Quick/Immediate items
+- **1st Priority** (only 1 allowed)
+- **2nd Priority** (only 1 allowed)
+- **3rd Priority** (only 1 allowed)
+- **Quick/Immediate** items
 
 ### 3. Morning Questions
 
-Ask the user:
+Ask Michael:
 1. How are you feeling this morning? (1-10 energy level)
 2. What's the ONE thing that would make today a success?
 3. Any time-sensitive items or meetings?
@@ -69,28 +54,68 @@ Ask the user:
 Based on responses:
 - Confirm top 3 tasks for the day
 - Identify first task to start with
-- Note any items to reschedule if overloaded
+- Note any items to reschedule if overloaded (>5 tasks = too many)
 
-### 5. Update Daily Tracking (Optional)
+### 5. Update Daily Tracking (Optional Morning Fields)
 
-If user provides morning data, update the daily entry:
-- Energy level
-- Morning intentions/notes
+If Michael provides morning data, update the daily entry:
+
+```javascript
+mcp__notion__notion-update-page({
+  page_id: "<daily_entry_id>",
+  command: "update_properties",
+  properties: {
+    "Bullet Planner": "__YES__"  // If morning planning done
+  }
+})
+```
+
+## Daily Tracking Fields Reference
+
+**Core:**
+- `Date Title` (title) - Format: "Michael @December 8, 2025"
+- `Date` (date)
+- `Owner` (person) - Michael's ID: `5923a1d0-4c9c-4376-b7d7-3c50704758c1`
+- `Week` (relation)
+
+**Habits (checkboxes):**
+| Field | Description |
+|-------|-------------|
+| `Meditate` | Morning meditation done |
+| `Mindset` | Mindset practice done |
+| `Visualization` | Visualization practice done |
+| `Read` | Reading done |
+| `Workout` | Exercise done |
+| `Logged Food` | Food logging done |
+| `Bullet Planner` | Morning planning done |
+| `Schedule Tomorrow` | Evening planning done |
+
+**Sleep:**
+- `Bedtime` (date) - Previous night's bedtime
+- `Wakeup Time` (date) - This morning's wakeup
+
+**Reflection:**
+- `Blue Sky/Twitter Reflection` (text)
+- `Improvements` (text)
+
+**Reviews Done (multi-select):**
+- Options: `Weekly`, `Monthly`, `Quarterly`
 
 ## Key Database IDs
 
 | Database | Data Source ID |
 |----------|----------------|
 | Action Items | `17e577f8-2e28-81cf-9d6b-000bc2cf0d50` |
-| Daily Tracking | `1be577f8-2e28-8096-bb0b-000b5a462ab3` |
+| Daily Tracking | `17e577f8-2e28-8183-9177-000bbb7d847f` |
 | Weeks | `17e577f8-2e28-8186-b8d7-000b3ee8cfa3` |
 
 **Michael's User ID**: `5923a1d0-4c9c-4376-b7d7-3c50704758c1`
 
 ## Quick Flow
 
-1. Find/create daily entry
+1. Find/create daily entry (link to current week)
 2. Show today's tasks (Do Date <= today, Active)
 3. Ask morning questions
 4. Confirm top 3 priorities
-5. Start first task
+5. Mark "Bullet Planner" if planning done
+6. Start first task
