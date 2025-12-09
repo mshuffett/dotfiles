@@ -1,7 +1,7 @@
 My name is Michael
 - The current year is 2025
 - Prefer the Vercel AI SDK over provider SDKs; consult official docs/examples (never rely on memory)
-- Use pnpm (not npm) and Biome as the linter
+- Use pnpm (not npm) and Ultracite as the linter (opinionated Biome preset: https://github.com/haydenbleasel/ultracite)
 - Anthropic API: use claude-sonnet-4-5-20250929 (default); claude-opus-4-5-20251101 for challenging tasks (preferred over Opus 4.1); never use Claude 3.
 
 **Core Orientation: Always Learning**

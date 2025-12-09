@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# cq - Claude Quick: Non-interactive Claude Code with Haiku
+# Usage: cq "your prompt here"
+
+if [ -z "$1" ]; then
+    echo "Usage: cq \"your prompt here\""
+    echo "Runs Claude Code non-interactively with Haiku model"
+    exit 1
+fi
+
+claude --dangerously-skip-permissions --model haiku -p "$*"

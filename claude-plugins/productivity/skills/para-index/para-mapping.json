@@ -1,0 +1,134 @@
+{
+  "obsidian": {
+    "vault": "~/ws/notes",
+    "para_folders": {
+      "inbox": "+Inbox",
+      "gate": "0-Gate",
+      "projects": "1-Projects",
+      "areas": "2-Areas",
+      "resources": "3-Resources",
+      "archives": "4-Archives",
+      "tools": "5-Tools"
+    },
+    "projects": [
+      "🚢🏖️ Ship to Beach",
+      "DaVinci",
+      "💰 Financial Runway Planning",
+      "📊 Compose AI Telemetry",
+      "Claude Continuous Runner",
+      "Todoist Test Dataset",
+      "Gemini Pipecat Hackathon",
+      "🏢 Space at Embarcadero"
+    ],
+    "key_areas": [
+      "Agents",
+      "Foundation",
+      "Everything AI Strategy",
+      "Fundraise",
+      "Coaching",
+      "People",
+      "PRDs",
+      "Ideas",
+      "Vision",
+      "Product",
+      "Hiring"
+    ],
+    "special_files": {
+      "basecamp": "🏕️ Basecamp.md",
+      "north_star": "🎯 North Star.md",
+      "working_note": "📝 Working Note Prime.md"
+    }
+  },
+  "todoist": {
+    "containers": {
+      "projects": "2359994569",
+      "areas": "2359994572",
+      "resources": "2359995015",
+      "inbox": "377445380"
+    },
+    "projects": {
+      "2361483339": "DaVinci",
+      "2361088358": "Space at Embarcadero",
+      "2360467902": "Purchase Computer Equipment",
+      "2360467715": "Manage Personal Financial Runway",
+      "2359995105": "Solidify Sprint / Daily Process",
+      "2360261804": "Ship Waycraft Experiment",
+      "2361226874": "DMA with Waycraft Imagery",
+      "2360468212": "Manage Recent Apple Purchases",
+      "2360261796": "Support Art of San Francisco",
+      "2360265582": "Waycraft Company Formation",
+      "2360261810": "Ship Everything AI Experiment",
+      "2360473311": "Investigate Fyxer Features",
+      "2360468541": "Prep for Founder Satsang AI Talk",
+      "2360467659": "Someday / Later",
+      "2360281206": "Founder Satsang Event",
+      "2360927142": "Ship to Beach Dashboard",
+      "2360927149": "Sprint Execution"
+    },
+    "areas": {
+      "2360468426": "Foundation",
+      "2360467840": "Backlogs",
+      "2360261784": "People",
+      "2356814197": "M&E",
+      "2359995207": "ADHD",
+      "2351862275": "Tickler",
+      "2352874867": "Genova Estate",
+      "2303017956": "Fun List",
+      "2360467982": "Misc",
+      "2360279496": "Daily Briefing",
+      "2361090350": "Review",
+      "2361090351": "Clarifications",
+      "2331010777": "Admin",
+      "2333454773": "Low Energy Kanban",
+      "2335087773": "Bugs"
+    },
+    "resources": {
+      "2216540478": "Wisdom",
+      "2353246721": "Fundraising",
+      "2359176566": "Networking",
+      "2359177322": "Co-Founder Dating",
+      "2359177602": "Accounting",
+      "2359178966": "Events",
+      "2359179348": "Personal Finance",
+      "2362258704": "tools"
+    }
+  },
+  "notion": {
+    "databases": {
+      "projects": {
+        "id": "17e577f8-2e28-81ed-ae33-e18b1dcfeae5",
+        "collection_id": "17e577f8-2e28-81cb-8e3d-000bc55b9945"
+      },
+      "action_items": {
+        "id": "17e577f8-2e28-8181-aa14-e20e6759705a",
+        "collection_id": "17e577f8-2e28-81cf-9d6b-000bc2cf0d50"
+      }
+    },
+    "priority_map": {
+      "urgent": "Immediate 🔥",
+      "quick": "Quick ⚡",
+      "scheduled": "Scheduled 📅",
+      "p1": "1st Priority 🚀",
+      "p2": "2nd Priority",
+      "p3": "3rd Priority",
+      "p4": "4th Priority",
+      "p5": "5th Priority",
+      "errand": "Errand 🚘",
+      "remember": "Remember 💭"
+    },
+    "status_map": {
+      "active": "Active",
+      "waiting": "Waiting",
+      "next": "Next Up",
+      "paused": "Paused",
+      "future1": "Future 1",
+      "future2": "Future 2",
+      "future3": "Future 3"
+    }
+  },
+  "collaborators": {
+    "486423": {"name": "Michael", "email": "mshuffett@gmail.com", "is_current_user": true},
+    "42258732": {"name": "Michelle Soriano", "email": "michelle@compose.ai"},
+    "48532968": {"name": "Evelisa", "email": "evelisa@compose.ai"}
+  }
+}
