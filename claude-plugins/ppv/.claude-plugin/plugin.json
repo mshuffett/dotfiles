@@ -1,0 +1,11 @@
+{
+  "name": "ppv",
+  "version": "1.0.0",
+  "description": "Query and interact with your PPV (Pillars, Pipelines, Vaults) Notion planning system",
+  "author": {
+    "name": "Michael Shuffett",
+    "email": "michael@compose.ai"
+  },
+  "keywords": ["notion", "ppv", "productivity", "planning", "tasks", "action-items"],
+  "license": "MIT"
+}

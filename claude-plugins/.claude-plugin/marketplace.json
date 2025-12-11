@@ -1,0 +1,100 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "local-plugins",
+  "version": "1.0.0",
+  "description": "Michael's local plugins for Claude Code",
+  "owner": {
+    "name": "Michael Shuffett",
+    "email": "michael@compose.ai"
+  },
+  "plugins": [
+    {
+      "name": "ppv",
+      "description": "Query and interact with your PPV (Pillars, Pipelines, Vaults) Notion planning system",
+      "version": "1.0.0",
+      "author": {
+        "name": "Michael Shuffett",
+        "email": "michael@compose.ai"
+      },
+      "source": "./plugins/ppv",
+      "category": "productivity"
+    },
+    {
+      "name": "productivity",
+      "description": "Personal effectiveness: day planning, task management, focus, GTD, coaching, Todoist integration",
+      "version": "1.0.0",
+      "author": {
+        "name": "Michael Shuffett",
+        "email": "michael@compose.ai"
+      },
+      "source": "./plugins/productivity",
+      "category": "productivity"
+    },
+    {
+      "name": "dev",
+      "description": "Git, PR workflow, testing, ports, Linear, Context7 integration",
+      "version": "1.0.0",
+      "author": {
+        "name": "Michael Shuffett",
+        "email": "michael@compose.ai"
+      },
+      "source": "./plugins/dev",
+      "category": "development"
+    },
+    {
+      "name": "media",
+      "description": "TTS, image generation, notifications",
+      "version": "1.0.0",
+      "author": {
+        "name": "Michael Shuffett",
+        "email": "michael@compose.ai"
+      },
+      "source": "./plugins/media",
+      "category": "media"
+    },
+    {
+      "name": "terminal",
+      "description": "Tmux, image viewing, themes, sounds",
+      "version": "1.0.0",
+      "author": {
+        "name": "Michael Shuffett",
+        "email": "michael@compose.ai"
+      },
+      "source": "./plugins/terminal",
+      "category": "terminal"
+    },
+    {
+      "name": "memory",
+      "description": "Docs, notes, mistakes, prompt engineering, configs",
+      "version": "1.0.0",
+      "author": {
+        "name": "Michael Shuffett",
+        "email": "michael@compose.ai"
+      },
+      "source": "./plugins/memory",
+      "category": "productivity"
+    },
+    {
+      "name": "misc",
+      "description": "Hammerspoon, Sphere mobile, specialized tools",
+      "version": "1.0.0",
+      "author": {
+        "name": "Michael Shuffett",
+        "email": "michael@compose.ai"
+      },
+      "source": "./plugins/misc",
+      "category": "tools"
+    },
+    {
+      "name": "claude-meta",
+      "description": "Codex reasoning, session management, prototyping",
+      "version": "1.0.0",
+      "author": {
+        "name": "Michael Shuffett",
+        "email": "michael@compose.ai"
+      },
+      "source": "./plugins/claude-meta",
+      "category": "meta"
+    }
+  ]
+}
