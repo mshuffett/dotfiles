@@ -91,7 +91,7 @@ With plugins, you no longer need to manually read procedure files for most topic
 - Git worktrees: Before any git worktree operation, complete a pre‑flight checklist; ensure `.env` files are copied and dependencies installed. If unclear, pause and ask.
 - Stash safety: Never stash unfamiliar changes without asking. First list modified files and confirm.
 - Ports: Do not kill a process on a port you didn't start. Identify with `lsof -i :<PORT>` and ask before terminating.
-- Pull requests: Merge latest base locally, resolve conflicts, run tests, then create the PR.
+- Pull requests: Merge latest base locally, resolve conflicts, run tests, then create the PR. After creating, watch checks in background (`gh pr checks --watch`) and fix any failures before moving on.
 - Third‑party docs: Use Context7 to fetch up‑to‑date API documentation at execution time.
 - Computer use agent: Only use when explicitly asked.
 
