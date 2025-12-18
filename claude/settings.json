@@ -53,10 +53,17 @@
     "claude-opus-4-5-migration@claude-code-plugins": true,
     "feature-dev@claude-code-plugins": true,
     "frontend-design@claude-code-plugins": true,
-    "hookify@claude-code-plugins": true,
+    "hookify@claude-code-plugins": false,
     "ralph-wiggum@claude-code-plugins": true,
     "plugin-dev@claude-code-plugins": true,
-    "ppv@local-plugins": true
+    "ppv@local-plugins": true,
+    "claude-meta@local-plugins": true,
+    "dev@local-plugins": true,
+    "media@local-plugins": true,
+    "memory@local-plugins": true,
+    "misc@local-plugins": true,
+    "productivity@local-plugins": true,
+    "terminal@local-plugins": true
   },
   "alwaysThinkingEnabled": true
 }

@@ -10,7 +10,8 @@ SIZE="1024x1024"
 OUTPUT=""
 URL_ONLY=false
 MODEL=""
-PROVIDER="gemini"
+PROVIDER="gemini-pro"
+INPUT_IMAGES=()  # Array to hold input image paths
 
 # Colors for output
 RED='\033[0;31m'
@@ -26,17 +27,19 @@ AI Image Generator
 Usage: generate-image "prompt" [options]
 
 Options:
-    -p, --provider PROVIDER  Provider to use: openai, gemini, or imagen (default: gemini)
+    -p, --provider PROVIDER  Provider to use: openai, gemini, gemini-pro, or imagen (default: gemini-pro)
     -s, --size SIZE         Image size (default: 1024x1024)
                            Options: 1024x1024, 1024x1536, 1536x1024
+                           Gemini Pro also supports: 2048x2048, 2048x3072, 3072x2048
     -o, --output FILE       Output filename (default: generated-image-TIMESTAMP.png)
+    -i, --input IMAGE       Input image for editing/style reference (Gemini only, can use multiple)
     -u, --url-only         Only output the URL, don't download the image (OpenAI only)
-    -m, --model MODEL      Model to use (default: dall-e-3 for OpenAI,
-                           gemini-2.5-flash-image for Gemini,
-                           imagen-4.0-generate-001 for Imagen)
-                           Imagen models: imagen-4.0-generate-001 (default),
-                           imagen-4.0-ultra-generate-001 (highest quality),
-                           imagen-4.0-fast-generate-001 (faster)
+    -m, --model MODEL      Model to use (default varies by provider)
+                           Gemini: gemini-2.5-flash-image (Nano Banana)
+                           Gemini Pro: gemini-3-pro-image-preview (Nano Banana Pro)
+                           OpenAI: dall-e-3
+                           Imagen: imagen-4.0-generate-001, imagen-4.0-ultra-generate-001,
+                                   imagen-4.0-fast-generate-001
     -h, --help             Show this help message
 
 Examples:
@@ -45,15 +48,19 @@ Examples:
     generate-image "Abstract art" --output artwork.png
     generate-image "A cityscape" --provider imagen
     generate-image "A cute robot"
+    generate-image "Detailed infographic" --provider gemini-pro --size 2048x2048
+    generate-image "Make this more vibrant" -i input.png --output edited.png
+    generate-image "Combine these in style of first" -i style.png -i content.png
 
 Environment:
-    GEMINI_API_KEY must be set for Gemini and Imagen providers (default)
+    GEMINI_API_KEY must be set for Gemini, Gemini Pro, and Imagen providers (default)
     OPENAI_API_KEY must be set for OpenAI provider
 
 Providers:
-    gemini - Google's Gemini 2.5 Flash Image (default)
-    imagen - Google's Imagen 4.0
-    openai - OpenAI's DALL-E 3
+    gemini     - Google's Gemini 2.5 Flash Image / Nano Banana (default, fast)
+    gemini-pro - Google's Gemini 3 Pro Image / Nano Banana Pro (advanced, better text)
+    imagen     - Google's Imagen 4.0
+    openai     - OpenAI's DALL-E 3
 
 EOF
 }
@@ -96,6 +103,10 @@ while [[ $# -gt 0 ]]; do
             URL_ONLY=true
             shift
             ;;
+        -i|--input)
+            INPUT_IMAGES+=("$2")
+            shift 2
+            ;;
         -m|--model)
             MODEL="$2"
             shift 2
@@ -109,8 +120,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Validate provider
-if [[ ! "$PROVIDER" =~ ^(openai|gemini|imagen)$ ]]; then
-    echo -e "${RED}Error: Invalid provider. Must be 'openai', 'gemini', or 'imagen'${NC}"
+if [[ ! "$PROVIDER" =~ ^(openai|gemini|gemini-pro|imagen)$ ]]; then
+    echo -e "${RED}Error: Invalid provider. Must be 'openai', 'gemini', 'gemini-pro', or 'imagen'${NC}"
     exit 1
 fi
 
@@ -135,6 +146,16 @@ elif [ "$PROVIDER" = "gemini" ]; then
     if [ -z "$MODEL" ]; then
         MODEL="gemini-2.5-flash-image"
     fi
+elif [ "$PROVIDER" = "gemini-pro" ]; then
+    if [ -z "$GEMINI_API_KEY" ]; then
+        echo -e "${RED}Error: GEMINI_API_KEY environment variable is not set${NC}"
+        echo "Please set it with: export GEMINI_API_KEY='your-key-here'"
+        exit 1
+    fi
+    # Set default model for Gemini Pro (Nano Banana Pro) if not specified
+    if [ -z "$MODEL" ]; then
+        MODEL="gemini-3-pro-image-preview"
+    fi
 elif [ "$PROVIDER" = "imagen" ]; then
     if [ -z "$GEMINI_API_KEY" ]; then
         echo -e "${RED}Error: GEMINI_API_KEY environment variable is not set for Imagen${NC}"
@@ -152,9 +173,16 @@ elif [ "$PROVIDER" = "imagen" ]; then
 fi
 
 # Validate size
-if [[ ! "$SIZE" =~ ^(1024x1024|1024x1536|1536x1024)$ ]]; then
-    echo -e "${RED}Error: Invalid size. Must be 1024x1024, 1024x1536, or 1536x1024${NC}"
-    exit 1
+if [ "$PROVIDER" = "gemini-pro" ]; then
+    if [[ ! "$SIZE" =~ ^(1024x1024|1024x1536|1536x1024|2048x2048|2048x3072|3072x2048)$ ]]; then
+        echo -e "${RED}Error: Invalid size for Gemini Pro. Must be 1024x1024, 1024x1536, 1536x1024, 2048x2048, 2048x3072, or 3072x2048${NC}"
+        exit 1
+    fi
+else
+    if [[ ! "$SIZE" =~ ^(1024x1024|1024x1536|1536x1024)$ ]]; then
+        echo -e "${RED}Error: Invalid size. Must be 1024x1024, 1024x1536, or 1536x1024${NC}"
+        exit 1
+    fi
 fi
 
 # Set output filename if not specified
@@ -183,10 +211,14 @@ if [ "$PROVIDER" = "openai" ]; then
         \"n\": 1,
         \"size\": \"$SIZE\"
       }")
-elif [ "$PROVIDER" = "gemini" ]; then
+elif [ "$PROVIDER" = "gemini" ] || [ "$PROVIDER" = "gemini-pro" ]; then
     # Create temporary JSON file for Gemini request
     REQUEST_FILE=$(mktemp)
-    cat > "$REQUEST_FILE" << EOF
+
+    # Build the parts array with text prompt and optional input images
+    if [ ${#INPUT_IMAGES[@]} -eq 0 ]; then
+        # No input images - simple text-only request
+        cat > "$REQUEST_FILE" << EOF
 {
   "contents": [{
     "parts": [
@@ -195,10 +227,56 @@ elif [ "$PROVIDER" = "gemini" ]; then
   }]
 }
 EOF
+    else
+        # Has input images - build request with images using Python
+        echo -e "${YELLOW}Including ${#INPUT_IMAGES[@]} input image(s)...${NC}"
+        python3 << PYEOF
+import json
+import base64
+import sys
 
-    # Gemini API request
+parts = [{"text": "$PROMPT"}]
+
+input_images = """${INPUT_IMAGES[*]}""".split()
+for img_path in input_images:
+    try:
+        with open(img_path, 'rb') as f:
+            img_data = base64.b64encode(f.read()).decode('utf-8')
+        # Detect mime type
+        if img_path.lower().endswith('.png'):
+            mime = 'image/png'
+        elif img_path.lower().endswith(('.jpg', '.jpeg')):
+            mime = 'image/jpeg'
+        elif img_path.lower().endswith('.webp'):
+            mime = 'image/webp'
+        elif img_path.lower().endswith('.gif'):
+            mime = 'image/gif'
+        else:
+            mime = 'image/png'  # default
+        parts.append({
+            "inline_data": {
+                "mime_type": mime,
+                "data": img_data
+            }
+        })
+        print(f"Added image: {img_path}", file=sys.stderr)
+    except Exception as e:
+        print(f"Error loading {img_path}: {e}", file=sys.stderr)
+        sys.exit(1)
+
+request = {"contents": [{"parts": parts}]}
+with open("$REQUEST_FILE", 'w') as f:
+    json.dump(request, f)
+PYEOF
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}Error: Failed to process input images${NC}"
+            exit 1
+        fi
+    fi
+
+    # Gemini API request (works for both gemini and gemini-pro)
     HTTP_CODE=$(curl -s -w "%{http_code}" -o "$RESPONSE_FILE" \
-      --max-time 60 \
+      --max-time 120 \
       -X POST "https://generativelanguage.googleapis.com/v1beta/models/$MODEL:generateContent" \
       -H "Content-Type: application/json" \
       -H "x-goog-api-key: $GEMINI_API_KEY" \
@@ -286,8 +364,8 @@ with open('$OUTPUT', 'wb') as img_file:
         cat "$RESPONSE_FILE"
         exit 1
     fi
-elif [ "$PROVIDER" = "gemini" ]; then
-    # Gemini response handling
+elif [ "$PROVIDER" = "gemini" ] || [ "$PROVIDER" = "gemini-pro" ]; then
+    # Gemini response handling (same for both gemini and gemini-pro)
     if [ "$URL_ONLY" = true ]; then
         echo -e "${YELLOW}Note: Gemini returns base64 data, not URLs${NC}"
     fi

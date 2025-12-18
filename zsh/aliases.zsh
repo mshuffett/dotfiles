@@ -147,3 +147,6 @@ alias claude="claude --dangerously-skip-permissions"
 alias c="claude --dangerously-skip-permissions"
 alias lg='lazygit'
 alias j='just'
+
+# Claude Code worktree launcher
+alias cw='claude-worktree'

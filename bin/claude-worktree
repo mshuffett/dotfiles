@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# claude-worktree: Create a git worktree and start Claude Code in it
+# Usage: claude-worktree [claude args...]
+
+# Get the repo root
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || {
+    echo "Error: Not in a git repository"
+    exit 1
+}
+
+# Generate a random worktree name
+WORKTREE_NAME="session-$(date +%m%d)-$(openssl rand -hex 3)"
+
+WORKTREE_DIR="$REPO_ROOT/.worktrees/$WORKTREE_NAME"
+BRANCH_NAME="feature/$WORKTREE_NAME"
+
+echo "Creating worktree '$WORKTREE_NAME'..."
+
+# Ensure .worktrees directory exists
+mkdir -p "$REPO_ROOT/.worktrees"
+
+# Create the worktree with new branch
+git worktree add -b "$BRANCH_NAME" "$WORKTREE_DIR"
+
+# Copy .env files if they exist
+for env_file in .env .env.local .env.development.local; do
+    if [[ -f "$REPO_ROOT/$env_file" ]]; then
+        cp "$REPO_ROOT/$env_file" "$WORKTREE_DIR/$env_file"
+        echo "Copied $env_file"
+    fi
+done
+
+echo ""
+echo "Starting Claude Code in $WORKTREE_DIR..."
+echo ""
+
+cd "$WORKTREE_DIR"
+exec claude --dangerously-skip-permissions "$@"
