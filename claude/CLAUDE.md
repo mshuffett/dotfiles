@@ -85,6 +85,10 @@ With plugins, you no longer need to manually read procedure files for most topic
 - After making changes, commit again with a clear message summarizing what changed and why
 - Ask yourself: "Do I need this MOST OF THE TIME or might I make a mistake without it?" If NO → create a skill or command in a plugin instead
 
+**MCP Servers (Context Management)**
+- Heavy MCP servers (Notion, Linear, Playwright) are disabled by default to save context (~30k+ tokens).
+- When a task needs one of these, prompt Michael to re-enable it via `/mcp`.
+
 **Universal Guardrails**
 - Subagents: Default to `run_in_background: true` for Task tool calls to avoid blocking. Use `TaskOutput` to retrieve results when needed. Only use blocking execution when results are immediately required for the next step.
 - Procedures: ALWAYS consult the correct on‑demand guide when its trigger applies; proceed only after acceptance checks pass.
