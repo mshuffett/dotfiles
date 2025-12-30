@@ -129,7 +129,7 @@ def classify_email(client, email, preferences, corrections):
         for c in corrections[-10:]:  # Last 10 corrections
             corrections_text += f"- {c.get('email', '')}: Got {c.get('got', '')}, should be {c.get('should_be', '')}\n"
 
-    prompt = f"""Classify this email and suggest actions.
+    prompt = f"""Classify this email and draft a response if needed.
 
 Email:
 - From: {email.get('from', '')}
@@ -138,19 +138,33 @@ Email:
 - Body: {email.get('body', '')[:2000]}
 
 Categories:
-- urgent: Needs response today, time-sensitive. Push notification + draft response.
-- action: Needs response, not urgent. Draft response + label.
-- fyi: Informational, worth reading. Label only.
+- urgent: Needs response today, time-sensitive (deadlines, important contacts). Draft response.
+- action: Needs ANY response, even a short acknowledgment. Draft response.
+- fyi: Purely informational, no response needed (CC'd, status updates, confirmations with no follow-up).
 - noise: Newsletters, notifications, marketing. Auto-archive.
-- calendar: Meeting invites/updates. Label only.
+- calendar: Automated calendar invites/updates from calendar systems only (not humans discussing events).
+
+CLASSIFICATION RULES:
+- If someone confirms attendance or says "I'll be there" → action (acknowledge with RSVP link if relevant)
+- If someone asks a question → action (answer or ask clarifying question)
+- If someone offers help or introduces someone → action (thank them, provide next steps)
+- Short acknowledgments like "Sounds great!" or "See you there!" are valid responses
+- Only use "calendar" for automated calendar-notification@google.com type emails, NOT human messages about events
+- If subject contains "demo day" or "YC" and someone expresses interest → use RSVP link, not calendar link
 
 User preferences (ALWAYS use these for drafts):
-- User's name: Michael (ALWAYS sign off as Michael, never use names from the email thread)
-- Calendar link: {preferences.get('calendar_link', 'not set')}
+- User's name: Michael (ALWAYS sign as Michael, never names from the email thread)
+- Demo day RSVP link: https://luma.com/7wf4iwk5 (use this for demo day confirmations, NOT calendar link)
+- Calendar link: {preferences.get('calendar_link', 'not set')} (use for scheduling calls, NOT for RSVP)
 - Signature style: {preferences.get('signature', 'not set')}
-- Tone: {preferences.get('tone', 'professional but warm')}
+- Tone: {preferences.get('tone', 'professional but warm')} - Be enthusiastic! Use "awesome", "crushing it", "glad you can make it"
 
-IMPORTANT: When drafting responses, sign as "Michael" not any other name from the email context.
+DRAFT STYLE:
+- Be warm and enthusiastic, not formal
+- For investor intros: proactively mention sponsor opportunities if they're from a fund
+- When unclear what someone wants, ask a clarifying question + offer a call
+- Short responses are fine for simple confirmations
+- Address the person directly (not the introducer)
 {corrections_text}
 
 Respond with JSON only:
