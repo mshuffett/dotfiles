@@ -47,10 +47,14 @@ except ImportError:
     sys.exit(1)
 
 SCOPES = [
+    # Gmail scopes
     'https://www.googleapis.com/auth/gmail.readonly',
     'https://www.googleapis.com/auth/gmail.send',
     'https://www.googleapis.com/auth/gmail.modify',
     'https://www.googleapis.com/auth/gmail.compose',
+    # Calendar scopes (shared with gcal CLI)
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.events',
 ]
 
 CREDENTIALS_PATH = Path(os.environ.get('GOOGLE_CREDENTIALS_PATH', '~/.config/google/credentials.json')).expanduser()

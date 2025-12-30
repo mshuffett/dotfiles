@@ -28,7 +28,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 try:
@@ -45,6 +45,12 @@ except ImportError:
     sys.exit(1)
 
 SCOPES = [
+    # Gmail scopes (shared with gmail CLI)
+    'https://www.googleapis.com/auth/gmail.readonly',
+    'https://www.googleapis.com/auth/gmail.send',
+    'https://www.googleapis.com/auth/gmail.modify',
+    'https://www.googleapis.com/auth/gmail.compose',
+    # Calendar scopes
     'https://www.googleapis.com/auth/calendar',
     'https://www.googleapis.com/auth/calendar.events',
 ]
@@ -153,7 +159,7 @@ def cmd_auth(args):
 def cmd_today(args):
     """Show today's events."""
     service = get_service()
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat() + 'Z'
     end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=0).isoformat() + 'Z'
 
@@ -190,7 +196,7 @@ def cmd_today(args):
 def cmd_week(args):
     """Show this week's events."""
     service = get_service()
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
     start_of_week = (now - timedelta(days=now.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
     end_of_week = start_of_week + timedelta(days=7)
 
