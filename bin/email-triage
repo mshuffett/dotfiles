@@ -1,0 +1,538 @@
+#!/usr/bin/env python3
+"""
+Email Triage CLI - Automated email classification and response drafting
+
+Usage:
+  email-triage                      # Dry-run: show proposed actions, create drafts
+  email-triage --apply              # Actually execute label/archive actions
+  email-triage --backtest 50        # Classify last N emails (no actions)
+  email-triage --learn-style        # Learn preferences from sent emails
+  email-triage --correct <id>       # Mark email as misclassified
+  email-triage --show-corrections   # Show all corrections
+
+Options:
+  --dry-run         Show what would happen, create drafts (default)
+  --apply           Actually execute label/archive actions
+  --backtest N      Test classification on last N emails
+  --learn-style     Analyze sent emails to learn your style
+  --since DURATION  Process emails from last duration (e.g., 1h, 2d)
+  --verbose, -v     Detailed output
+  --json            Output as JSON
+"""
+
+import argparse
+import json
+import os
+import re
+import subprocess
+import sys
+from datetime import datetime, timedelta
+from pathlib import Path
+
+try:
+    import anthropic
+except ImportError:
+    print("Error: anthropic package not installed", file=sys.stderr)
+    print("Install with: pip install anthropic", file=sys.stderr)
+    sys.exit(1)
+
+# Paths
+SKILL_DIR = Path("~/.dotfiles/claude-plugins/communication/skills/email-triage").expanduser()
+PREFERENCES_PATH = SKILL_DIR / "preferences.md"
+CORRECTIONS_PATH = SKILL_DIR / "corrections.md"
+CACHE_DIR = Path("~/.cache/email-triage").expanduser()
+LAST_RUN_PATH = CACHE_DIR / "last-run"
+
+# Gmail CLI path
+GMAIL_CLI = Path("~/.dotfiles/bin/gmail").expanduser()
+PUSH_CLI = Path("~/.dotfiles/bin/push").expanduser()
+
+
+def run_gmail(args, json_output=True):
+    """Run gmail CLI and return output."""
+    cmd = [str(GMAIL_CLI)]
+    if json_output:
+        cmd.append("--json")
+    cmd.extend(args)
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"Gmail CLI error: {result.stderr}", file=sys.stderr)
+        return None
+
+    if json_output and result.stdout.strip():
+        try:
+            return json.loads(result.stdout)
+        except json.JSONDecodeError:
+            return result.stdout
+    return result.stdout
+
+
+def load_preferences():
+    """Load preferences from markdown file."""
+    if not PREFERENCES_PATH.exists():
+        return {}
+
+    content = PREFERENCES_PATH.read_text()
+    prefs = {
+        "calendar_link": "",
+        "signature": "",
+        "tone": "professional but warm",
+        "noise_domains": [],
+        "urgent_contacts": [],
+        "templates": {}
+    }
+
+    # Extract calendar link
+    if match := re.search(r'\*\*Calendar link\*\*:\s*(.+)', content):
+        prefs["calendar_link"] = match.group(1).strip()
+
+    # Extract signature
+    if match := re.search(r'\*\*Signature\*\*:\s*(.+)', content):
+        prefs["signature"] = match.group(1).strip()
+
+    return prefs
+
+
+def load_corrections():
+    """Load corrections from markdown file."""
+    if not CORRECTIONS_PATH.exists():
+        return []
+
+    content = CORRECTIONS_PATH.read_text()
+    corrections = []
+
+    # Parse corrections (## Correction: sections)
+    sections = re.split(r'## Correction:', content)
+    for section in sections[1:]:  # Skip header
+        lines = section.strip().split('\n')
+        correction = {}
+        for line in lines:
+            if line.startswith('- **Email**:'):
+                correction['email'] = line.replace('- **Email**:', '').strip()
+            elif line.startswith('- **Got**:'):
+                correction['got'] = line.replace('- **Got**:', '').strip()
+            elif line.startswith('- **Should be**:'):
+                correction['should_be'] = line.replace('- **Should be**:', '').strip()
+        if correction:
+            corrections.append(correction)
+
+    return corrections
+
+
+def classify_email(client, email, preferences, corrections):
+    """Classify a single email using Claude API."""
+
+    corrections_text = ""
+    if corrections:
+        corrections_text = "\n\nPrevious corrections (learn from these):\n"
+        for c in corrections[-10:]:  # Last 10 corrections
+            corrections_text += f"- {c.get('email', '')}: Got {c.get('got', '')}, should be {c.get('should_be', '')}\n"
+
+    prompt = f"""Classify this email and suggest actions.
+
+Email:
+- From: {email.get('from', '')}
+- Subject: {email.get('subject', '')}
+- Preview: {email.get('snippet', '')}
+- Body: {email.get('body', '')[:2000]}
+
+Categories:
+- urgent: Needs response today, time-sensitive. Push notification + draft response.
+- action: Needs response, not urgent. Draft response + label.
+- fyi: Informational, worth reading. Label only.
+- noise: Newsletters, notifications, marketing. Auto-archive.
+- calendar: Meeting invites/updates. Label only.
+
+User preferences (ALWAYS use these for drafts):
+- User's name: Michael (ALWAYS sign off as Michael, never use names from the email thread)
+- Calendar link: {preferences.get('calendar_link', 'not set')}
+- Signature style: {preferences.get('signature', 'not set')}
+- Tone: {preferences.get('tone', 'professional but warm')}
+
+IMPORTANT: When drafting responses, sign as "Michael" not any other name from the email context.
+{corrections_text}
+
+Respond with JSON only:
+{{
+  "category": "urgent|action|fyi|noise|calendar",
+  "confidence": 0.0-1.0,
+  "reason": "brief explanation",
+  "draft_response": "draft reply text if category is urgent or action, null otherwise"
+}}"""
+
+    try:
+        response = client.messages.create(
+            model="claude-3-5-haiku-20241022",
+            max_tokens=1024,
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        # Extract JSON from response
+        text = response.content[0].text
+        # Find JSON in response
+        json_match = re.search(r'\{[^{}]*\}', text, re.DOTALL)
+        if json_match:
+            return json.loads(json_match.group())
+        return None
+    except Exception as e:
+        print(f"Classification error: {e}", file=sys.stderr)
+        return None
+
+
+def learn_style(client, args):
+    """Analyze sent emails to learn user's style."""
+    print("Learning your email style from sent messages...")
+
+    # Fetch sent emails
+    sent = run_gmail(["search", "in:sent", "--limit", "50"])
+    if not sent:
+        print("No sent emails found.")
+        return
+
+    print(f"Analyzing {len(sent)} sent emails...")
+
+    # Collect email bodies
+    samples = []
+    for email in sent[:20]:  # Analyze first 20
+        full_email = run_gmail(["read", email['id']])
+        if full_email:
+            samples.append({
+                "to": full_email.get('to', ''),
+                "subject": full_email.get('subject', ''),
+                "body": full_email.get('body', '')[:1000]
+            })
+
+    if not samples:
+        print("Could not read sent emails.")
+        return
+
+    # Analyze with Claude
+    prompt = f"""Analyze these sent emails to extract the user's communication style.
+
+Sent emails:
+{json.dumps(samples, indent=2)}
+
+Extract and respond with JSON:
+{{
+  "signature": "how they typically sign off",
+  "tone": "description of their tone (formal, casual, professional but warm, etc.)",
+  "calendar_link": "any scheduling link found (cal.com, calendly, etc.) or null",
+  "common_phrases": ["phrases they use often"],
+  "response_length": "short (1-2 sentences) | medium (2-4 sentences) | long (4+ sentences)"
+}}"""
+
+    try:
+        response = client.messages.create(
+            model="claude-sonnet-4-5-20250929",
+            max_tokens=1024,
+            messages=[{"role": "user", "content": prompt}]
+        )
+
+        text = response.content[0].text
+        json_match = re.search(r'\{[^{}]*\}', text, re.DOTALL)
+        if json_match:
+            style = json.loads(json_match.group())
+
+            print("\nLearned style:")
+            print(f"  Signature: {style.get('signature', 'not found')}")
+            print(f"  Tone: {style.get('tone', 'not found')}")
+            print(f"  Calendar link: {style.get('calendar_link', 'not found')}")
+            print(f"  Response length: {style.get('response_length', 'not found')}")
+
+            # Update preferences file
+            if PREFERENCES_PATH.exists():
+                content = PREFERENCES_PATH.read_text()
+
+                if style.get('calendar_link'):
+                    content = re.sub(
+                        r'\*\*Calendar link\*\*:.*',
+                        f"**Calendar link**: {style['calendar_link']}",
+                        content
+                    )
+
+                if style.get('signature'):
+                    content = re.sub(
+                        r'\*\*Signature\*\*:.*',
+                        f"**Signature**: {style['signature']}",
+                        content
+                    )
+
+                if style.get('tone'):
+                    content = re.sub(
+                        r'\*\*Tone\*\*:.*',
+                        f"**Tone**: {style['tone']}",
+                        content
+                    )
+
+                # Update timestamp
+                content = re.sub(
+                    r'\*Last updated by --learn-style:.*\*',
+                    f"*Last updated by --learn-style: {datetime.now().strftime('%Y-%m-%d %H:%M')}*",
+                    content
+                )
+
+                PREFERENCES_PATH.write_text(content)
+                print(f"\nUpdated {PREFERENCES_PATH}")
+
+    except Exception as e:
+        print(f"Error analyzing style: {e}", file=sys.stderr)
+
+
+def backtest(client, args):
+    """Test classification on historical emails."""
+    limit = args.backtest
+    print(f"Backtesting on last {limit} emails...")
+
+    # Fetch recent emails (not just inbox - include all recent)
+    emails = run_gmail(["search", "newer_than:30d -in:sent -in:drafts", "--limit", str(limit)])
+    if not emails:
+        print("No emails found.")
+        return
+
+    preferences = load_preferences()
+    corrections = load_corrections()
+
+    results = {"urgent": 0, "action": 0, "fyi": 0, "noise": 0, "calendar": 0}
+
+    for i, email in enumerate(emails):
+        # Get full email
+        full_email = run_gmail(["read", email['id']])
+        if not full_email:
+            continue
+
+        # Classify
+        classification = classify_email(client, full_email, preferences, corrections)
+        if not classification:
+            continue
+
+        category = classification.get('category', 'unknown')
+        confidence = classification.get('confidence', 0)
+        reason = classification.get('reason', '')
+
+        results[category] = results.get(category, 0) + 1
+
+        # Print result
+        print(f"\n[{i+1}/{len(emails)}] {email.get('subject', 'No subject')[:50]}")
+        print(f"  From: {email.get('from', '')[:40]}")
+        print(f"  Category: {category} ({confidence:.0%})")
+        print(f"  Reason: {reason}")
+
+        # Always show draft response for review in backtest
+        if classification.get('draft_response'):
+            draft = classification['draft_response']
+            print(f"  📝 Draft Response:")
+            # Show full draft, indented
+            for line in draft.split('\n'):
+                print(f"     {line}")
+
+    # Summary
+    print("\n" + "="*50)
+    print("Classification Summary:")
+    for cat, count in sorted(results.items(), key=lambda x: -x[1]):
+        if count > 0:
+            print(f"  {cat}: {count}")
+
+
+def triage(client, args):
+    """Main triage function - process new emails."""
+    dry_run = not args.apply
+
+    print(f"{'[DRY-RUN] ' if dry_run else ''}Triaging emails...")
+
+    # Determine time range
+    if args.since:
+        # Parse duration like "1h", "2d"
+        match = re.match(r'(\d+)([hd])', args.since)
+        if match:
+            num, unit = int(match.group(1)), match.group(2)
+            if unit == 'h':
+                since = datetime.now() - timedelta(hours=num)
+            else:
+                since = datetime.now() - timedelta(days=num)
+            query = f"in:inbox after:{since.strftime('%Y/%m/%d')}"
+        else:
+            query = "in:inbox is:unread"
+    else:
+        query = "in:inbox is:unread"
+
+    # Fetch emails
+    emails = run_gmail(["search", query, "--limit", "20"])
+    if not emails:
+        print("No new emails to triage.")
+        return
+
+    print(f"Found {len(emails)} emails to process.")
+
+    preferences = load_preferences()
+    corrections = load_corrections()
+
+    urgent_emails = []
+    actions_taken = []
+
+    for email in emails:
+        # Get full email
+        full_email = run_gmail(["read", email['id']])
+        if not full_email:
+            continue
+
+        # Classify
+        classification = classify_email(client, full_email, preferences, corrections)
+        if not classification:
+            continue
+
+        category = classification.get('category', 'unknown')
+        confidence = classification.get('confidence', 0)
+        draft = classification.get('draft_response')
+
+        print(f"\n{email.get('subject', 'No subject')[:50]}")
+        print(f"  From: {email.get('from', '')[:40]}")
+        print(f"  -> {category} ({confidence:.0%})")
+
+        # Track urgent emails for notification
+        if category == 'urgent':
+            urgent_emails.append(email)
+
+        # Take actions based on category
+        if category == 'noise' and confidence >= 0.8:
+            if dry_run:
+                print(f"  [DRY-RUN] Would archive")
+            else:
+                run_gmail(["archive", email['id']], json_output=False)
+                print(f"  Archived")
+            actions_taken.append(f"Archived: {email.get('subject', '')[:30]}")
+
+        elif category in ['urgent', 'action'] and draft:
+            # Create draft response
+            to_addr = full_email.get('from', '').split('<')[-1].rstrip('>')
+            subject = full_email.get('subject', '')
+            if not subject.startswith('Re:'):
+                subject = f"Re: {subject}"
+
+            # Always create drafts (safe)
+            run_gmail(["drafts", "create", to_addr, subject, draft], json_output=False)
+            print(f"  Draft created")
+            actions_taken.append(f"Draft: {subject[:30]}")
+
+        # Label based on category (only if applying)
+        if not dry_run and category in ['urgent', 'action', 'fyi', 'calendar']:
+            run_gmail(["label", email['id'], f"triage/{category}"], json_output=False)
+
+    # Send push notification for urgent emails
+    if urgent_emails:
+        summary = f"{len(urgent_emails)} urgent email(s):\n"
+        for e in urgent_emails[:3]:
+            summary += f"- {e.get('from', '')[:20]}: {e.get('subject', '')[:30]}\n"
+
+        if dry_run:
+            print(f"\n[DRY-RUN] Would send push notification:\n{summary}")
+        else:
+            subprocess.run([str(PUSH_CLI), summary, "1"], capture_output=True)
+            print(f"\nPush notification sent for {len(urgent_emails)} urgent email(s)")
+
+    # Summary
+    print("\n" + "="*50)
+    print(f"Actions: {len(actions_taken)}")
+    for action in actions_taken[:5]:
+        print(f"  - {action}")
+
+
+def correct_email(args):
+    """Mark an email as misclassified and record correction."""
+    message_id = args.correct
+
+    # Get email details
+    email = run_gmail(["read", message_id])
+    if not email:
+        print(f"Email not found: {message_id}")
+        return
+
+    print(f"Email: {email.get('from', '')} - {email.get('subject', '')}")
+    print("\nWhat should the correct category be?")
+    print("  1. urgent")
+    print("  2. action")
+    print("  3. fyi")
+    print("  4. noise")
+    print("  5. calendar")
+
+    choice = input("\nEnter number (1-5): ").strip()
+    categories = {"1": "urgent", "2": "action", "3": "fyi", "4": "noise", "5": "calendar"}
+    correct_category = categories.get(choice)
+
+    if not correct_category:
+        print("Invalid choice.")
+        return
+
+    reason = input("Why? (brief explanation): ").strip()
+
+    # Append to corrections file
+    correction = f"""
+## Correction: {datetime.now().strftime('%Y-%m-%d %H:%M')}
+- **Email**: From {email.get('from', '')} re: {email.get('subject', '')}
+- **Got**: (unknown - was misclassified)
+- **Should be**: {correct_category} because {reason}
+"""
+
+    with open(CORRECTIONS_PATH, 'a') as f:
+        f.write(correction)
+
+    print(f"\nCorrection recorded in {CORRECTIONS_PATH}")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Email Triage CLI',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__
+    )
+
+    parser.add_argument('--apply', action='store_true',
+                        help='Actually execute actions (default is dry-run)')
+    parser.add_argument('--dry-run', action='store_true',
+                        help='Show what would happen without executing (default)')
+    parser.add_argument('--backtest', type=int, metavar='N',
+                        help='Test classification on last N emails')
+    parser.add_argument('--learn-style', action='store_true',
+                        help='Analyze sent emails to learn your style')
+    parser.add_argument('--since', metavar='DURATION',
+                        help='Process emails from last duration (e.g., 1h, 2d)')
+    parser.add_argument('--correct', metavar='ID',
+                        help='Mark email as misclassified')
+    parser.add_argument('--show-corrections', action='store_true',
+                        help='Show all corrections')
+    parser.add_argument('--verbose', '-v', action='store_true',
+                        help='Detailed output')
+    parser.add_argument('--json', action='store_true',
+                        help='Output as JSON')
+
+    args = parser.parse_args()
+
+    # Ensure cache directory exists
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Initialize Anthropic client
+    api_key = os.environ.get('ANTHROPIC_API_KEY')
+    if not api_key:
+        print("Error: ANTHROPIC_API_KEY not set", file=sys.stderr)
+        sys.exit(1)
+
+    client = anthropic.Anthropic(api_key=api_key)
+
+    # Handle commands
+    if args.learn_style:
+        learn_style(client, args)
+    elif args.backtest:
+        backtest(client, args)
+    elif args.correct:
+        correct_email(args)
+    elif args.show_corrections:
+        if CORRECTIONS_PATH.exists():
+            print(CORRECTIONS_PATH.read_text())
+        else:
+            print("No corrections yet.")
+    else:
+        triage(client, args)
+
+
+if __name__ == '__main__':
+    main()
