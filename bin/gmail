@@ -1,0 +1,511 @@
+#!/usr/bin/env python3
+"""
+Gmail CLI - Command-line interface for Gmail operations
+
+Usage:
+  gmail auth                              # Authenticate with Google
+  gmail search "query"                    # Search emails
+  gmail read <message_id>                 # Read email by ID
+  gmail send "to" "subject" "body"        # Send email
+  gmail reply <message_id> "body"         # Reply to email
+  gmail archive <message_id>              # Archive email (remove from inbox)
+  gmail label <message_id> <label>        # Add label to email
+  gmail trash <message_id>                # Move to trash
+  gmail drafts list                       # List drafts
+  gmail drafts create "to" "subject" "body"  # Create draft
+  gmail drafts send <draft_id>            # Send draft
+  gmail labels                            # List all labels
+
+Search query examples:
+  "from:boss@company.com"
+  "is:unread"
+  "subject:meeting after:2025/01/01"
+  "has:attachment"
+
+Environment:
+  GOOGLE_CREDENTIALS_PATH  Path to OAuth credentials JSON (default: ~/.config/google/credentials.json)
+  GOOGLE_TOKEN_PATH        Path to token storage (default: ~/.config/google/token.json)
+"""
+
+import argparse
+import base64
+import json
+import os
+import sys
+from email.mime.text import MIMEText
+from pathlib import Path
+
+try:
+    from google.auth.transport.requests import Request
+    from google.oauth2.credentials import Credentials
+    from google_auth_oauthlib.flow import InstalledAppFlow
+    from googleapiclient.discovery import build
+    from googleapiclient.errors import HttpError
+except ImportError:
+    print("Error: Required packages not installed", file=sys.stderr)
+    print("Install with: pip install google-auth google-auth-oauthlib google-api-python-client", file=sys.stderr)
+    sys.exit(1)
+
+SCOPES = [
+    'https://www.googleapis.com/auth/gmail.readonly',
+    'https://www.googleapis.com/auth/gmail.send',
+    'https://www.googleapis.com/auth/gmail.modify',
+    'https://www.googleapis.com/auth/gmail.compose',
+]
+
+CREDENTIALS_PATH = Path(os.environ.get('GOOGLE_CREDENTIALS_PATH', '~/.config/google/credentials.json')).expanduser()
+TOKEN_PATH = Path(os.environ.get('GOOGLE_TOKEN_PATH', '~/.config/google/token.json')).expanduser()
+
+
+def get_credentials():
+    """Get valid credentials, prompting for auth if needed."""
+    creds = None
+
+    if TOKEN_PATH.exists():
+        creds = Credentials.from_authorized_user_file(str(TOKEN_PATH), SCOPES)
+
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            if not CREDENTIALS_PATH.exists():
+                print(f"Error: Credentials file not found at {CREDENTIALS_PATH}", file=sys.stderr)
+                print("Download OAuth credentials from Google Cloud Console", file=sys.stderr)
+                sys.exit(1)
+
+            flow = InstalledAppFlow.from_client_secrets_file(str(CREDENTIALS_PATH), SCOPES)
+            creds = flow.run_local_server(port=0)
+
+        TOKEN_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with open(TOKEN_PATH, 'w') as token:
+            token.write(creds.to_json())
+
+    return creds
+
+
+def get_service():
+    """Build Gmail API service."""
+    creds = get_credentials()
+    return build('gmail', 'v1', credentials=creds)
+
+
+def cmd_auth(args):
+    """Authenticate with Google."""
+    print("Authenticating with Google...")
+    get_credentials()
+    print("Authentication successful! Token saved to:", TOKEN_PATH)
+
+
+def cmd_search(args):
+    """Search emails."""
+    service = get_service()
+    try:
+        results = service.users().messages().list(
+            userId='me',
+            q=args.query,
+            maxResults=args.limit
+        ).execute()
+
+        messages = results.get('messages', [])
+        if not messages:
+            print("No messages found.")
+            return
+
+        output = []
+        for msg in messages:
+            msg_data = service.users().messages().get(
+                userId='me',
+                id=msg['id'],
+                format='metadata',
+                metadataHeaders=['From', 'Subject', 'Date']
+            ).execute()
+
+            headers = {h['name']: h['value'] for h in msg_data['payload'].get('headers', [])}
+            output.append({
+                'id': msg['id'],
+                'from': headers.get('From', ''),
+                'subject': headers.get('Subject', ''),
+                'date': headers.get('Date', ''),
+                'snippet': msg_data.get('snippet', '')[:100]
+            })
+
+        if args.json:
+            print(json.dumps(output, indent=2))
+        else:
+            for item in output:
+                print(f"\n{item['id']}")
+                print(f"  From: {item['from']}")
+                print(f"  Subject: {item['subject']}")
+                print(f"  Date: {item['date']}")
+                print(f"  Preview: {item['snippet']}...")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_read(args):
+    """Read a specific email."""
+    service = get_service()
+    try:
+        msg = service.users().messages().get(
+            userId='me',
+            id=args.message_id,
+            format='full'
+        ).execute()
+
+        headers = {h['name']: h['value'] for h in msg['payload'].get('headers', [])}
+
+        # Get body
+        body = ""
+        if 'parts' in msg['payload']:
+            for part in msg['payload']['parts']:
+                if part['mimeType'] == 'text/plain':
+                    body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
+                    break
+        elif 'body' in msg['payload'] and 'data' in msg['payload']['body']:
+            body = base64.urlsafe_b64decode(msg['payload']['body']['data']).decode('utf-8')
+
+        output = {
+            'id': msg['id'],
+            'threadId': msg['threadId'],
+            'from': headers.get('From', ''),
+            'to': headers.get('To', ''),
+            'subject': headers.get('Subject', ''),
+            'date': headers.get('Date', ''),
+            'labels': msg.get('labelIds', []),
+            'body': body
+        }
+
+        if args.json:
+            print(json.dumps(output, indent=2))
+        else:
+            print(f"From: {output['from']}")
+            print(f"To: {output['to']}")
+            print(f"Subject: {output['subject']}")
+            print(f"Date: {output['date']}")
+            print(f"Labels: {', '.join(output['labels'])}")
+            print(f"\n{output['body']}")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_send(args):
+    """Send an email."""
+    service = get_service()
+    try:
+        message = MIMEText(args.body)
+        message['to'] = args.to
+        message['subject'] = args.subject
+
+        raw = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
+
+        result = service.users().messages().send(
+            userId='me',
+            body={'raw': raw}
+        ).execute()
+
+        print(f"Email sent! Message ID: {result['id']}")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_reply(args):
+    """Reply to an email."""
+    service = get_service()
+    try:
+        # Get original message for headers
+        original = service.users().messages().get(
+            userId='me',
+            id=args.message_id,
+            format='metadata',
+            metadataHeaders=['From', 'Subject', 'Message-ID']
+        ).execute()
+
+        headers = {h['name']: h['value'] for h in original['payload'].get('headers', [])}
+
+        message = MIMEText(args.body)
+        message['to'] = headers.get('From', '')
+        subject = headers.get('Subject', '')
+        message['subject'] = f"Re: {subject}" if not subject.startswith('Re:') else subject
+        message['In-Reply-To'] = headers.get('Message-ID', '')
+        message['References'] = headers.get('Message-ID', '')
+
+        raw = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
+
+        result = service.users().messages().send(
+            userId='me',
+            body={'raw': raw, 'threadId': original['threadId']}
+        ).execute()
+
+        print(f"Reply sent! Message ID: {result['id']}")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_archive(args):
+    """Archive an email (remove INBOX label)."""
+    service = get_service()
+    try:
+        service.users().messages().modify(
+            userId='me',
+            id=args.message_id,
+            body={'removeLabelIds': ['INBOX']}
+        ).execute()
+
+        print(f"Email archived: {args.message_id}")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_label(args):
+    """Add a label to an email."""
+    service = get_service()
+    try:
+        # Get or create label
+        labels = service.users().labels().list(userId='me').execute()
+        label_id = None
+        for label in labels.get('labels', []):
+            if label['name'].lower() == args.label.lower():
+                label_id = label['id']
+                break
+
+        if not label_id:
+            # Create label
+            new_label = service.users().labels().create(
+                userId='me',
+                body={'name': args.label, 'labelListVisibility': 'labelShow', 'messageListVisibility': 'show'}
+            ).execute()
+            label_id = new_label['id']
+            print(f"Created new label: {args.label}")
+
+        service.users().messages().modify(
+            userId='me',
+            id=args.message_id,
+            body={'addLabelIds': [label_id]}
+        ).execute()
+
+        print(f"Label '{args.label}' added to: {args.message_id}")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_trash(args):
+    """Move email to trash."""
+    service = get_service()
+    try:
+        service.users().messages().trash(
+            userId='me',
+            id=args.message_id
+        ).execute()
+
+        print(f"Email moved to trash: {args.message_id}")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_labels(args):
+    """List all labels."""
+    service = get_service()
+    try:
+        results = service.users().labels().list(userId='me').execute()
+        labels = results.get('labels', [])
+
+        if args.json:
+            print(json.dumps(labels, indent=2))
+        else:
+            print("Labels:")
+            for label in sorted(labels, key=lambda x: x['name']):
+                print(f"  {label['name']} ({label['id']})")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_drafts_list(args):
+    """List drafts."""
+    service = get_service()
+    try:
+        results = service.users().drafts().list(userId='me', maxResults=args.limit).execute()
+        drafts = results.get('drafts', [])
+
+        if not drafts:
+            print("No drafts found.")
+            return
+
+        output = []
+        for draft in drafts:
+            draft_data = service.users().drafts().get(userId='me', id=draft['id']).execute()
+            msg = draft_data['message']
+            headers = {h['name']: h['value'] for h in msg['payload'].get('headers', [])}
+            output.append({
+                'id': draft['id'],
+                'to': headers.get('To', ''),
+                'subject': headers.get('Subject', ''),
+                'snippet': msg.get('snippet', '')[:100]
+            })
+
+        if args.json:
+            print(json.dumps(output, indent=2))
+        else:
+            for item in output:
+                print(f"\n{item['id']}")
+                print(f"  To: {item['to']}")
+                print(f"  Subject: {item['subject']}")
+                print(f"  Preview: {item['snippet']}...")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_drafts_create(args):
+    """Create a draft."""
+    service = get_service()
+    try:
+        message = MIMEText(args.body)
+        message['to'] = args.to
+        message['subject'] = args.subject
+
+        raw = base64.urlsafe_b64encode(message.as_bytes()).decode('utf-8')
+
+        result = service.users().drafts().create(
+            userId='me',
+            body={'message': {'raw': raw}}
+        ).execute()
+
+        print(f"Draft created! Draft ID: {result['id']}")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_drafts_send(args):
+    """Send a draft."""
+    service = get_service()
+    try:
+        result = service.users().drafts().send(
+            userId='me',
+            body={'id': args.draft_id}
+        ).execute()
+
+        print(f"Draft sent! Message ID: {result['id']}")
+
+    except HttpError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Gmail CLI - Command-line interface for Gmail',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__
+    )
+    parser.add_argument('--json', action='store_true', help='Output as JSON')
+
+    subparsers = parser.add_subparsers(dest='command', help='Commands')
+
+    # auth
+    subparsers.add_parser('auth', help='Authenticate with Google')
+
+    # search
+    search_parser = subparsers.add_parser('search', help='Search emails')
+    search_parser.add_argument('query', help='Search query')
+    search_parser.add_argument('--limit', '-n', type=int, default=10, help='Max results (default: 10)')
+
+    # read
+    read_parser = subparsers.add_parser('read', help='Read email by ID')
+    read_parser.add_argument('message_id', help='Message ID')
+
+    # send
+    send_parser = subparsers.add_parser('send', help='Send email')
+    send_parser.add_argument('to', help='Recipient email')
+    send_parser.add_argument('subject', help='Email subject')
+    send_parser.add_argument('body', help='Email body')
+
+    # reply
+    reply_parser = subparsers.add_parser('reply', help='Reply to email')
+    reply_parser.add_argument('message_id', help='Message ID to reply to')
+    reply_parser.add_argument('body', help='Reply body')
+
+    # archive
+    archive_parser = subparsers.add_parser('archive', help='Archive email')
+    archive_parser.add_argument('message_id', help='Message ID')
+
+    # label
+    label_parser = subparsers.add_parser('label', help='Add label to email')
+    label_parser.add_argument('message_id', help='Message ID')
+    label_parser.add_argument('label', help='Label name')
+
+    # trash
+    trash_parser = subparsers.add_parser('trash', help='Move email to trash')
+    trash_parser.add_argument('message_id', help='Message ID')
+
+    # labels
+    subparsers.add_parser('labels', help='List all labels')
+
+    # drafts
+    drafts_parser = subparsers.add_parser('drafts', help='Draft operations')
+    drafts_subparsers = drafts_parser.add_subparsers(dest='drafts_command')
+
+    drafts_list = drafts_subparsers.add_parser('list', help='List drafts')
+    drafts_list.add_argument('--limit', '-n', type=int, default=10, help='Max results')
+
+    drafts_create = drafts_subparsers.add_parser('create', help='Create draft')
+    drafts_create.add_argument('to', help='Recipient email')
+    drafts_create.add_argument('subject', help='Email subject')
+    drafts_create.add_argument('body', help='Email body')
+
+    drafts_send = drafts_subparsers.add_parser('send', help='Send draft')
+    drafts_send.add_argument('draft_id', help='Draft ID')
+
+    args = parser.parse_args()
+
+    if not args.command:
+        parser.print_help()
+        sys.exit(0)
+
+    commands = {
+        'auth': cmd_auth,
+        'search': cmd_search,
+        'read': cmd_read,
+        'send': cmd_send,
+        'reply': cmd_reply,
+        'archive': cmd_archive,
+        'label': cmd_label,
+        'trash': cmd_trash,
+        'labels': cmd_labels,
+    }
+
+    if args.command == 'drafts':
+        if args.drafts_command == 'list':
+            cmd_drafts_list(args)
+        elif args.drafts_command == 'create':
+            cmd_drafts_create(args)
+        elif args.drafts_command == 'send':
+            cmd_drafts_send(args)
+        else:
+            drafts_parser.print_help()
+    elif args.command in commands:
+        commands[args.command](args)
+    else:
+        parser.print_help()
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,10 @@
+{
+  "name": "communication",
+  "version": "1.0.0",
+  "description": "Email and calendar integration via CLI tools",
+  "author": {
+    "name": "Michael Shuffett"
+  },
+  "keywords": ["email", "gmail", "calendar", "gcal", "google"],
+  "license": "MIT"
+}
