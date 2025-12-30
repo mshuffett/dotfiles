@@ -2,6 +2,11 @@
   "enabledMcpjsonServers": [
     "tavus"
   ],
+  "disabledMcpServers": [
+    "notion",
+    "linear-server",
+    "plugin:Notion:notion"
+  ],
   "hooks": {
     "UserPromptSubmit": [
       {
@@ -21,6 +26,14 @@
             "command": "afplay ~/.dotfiles/sounds/elevenlabs-notification-7.mp3"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/claude/scripts/test-stop-hook-input.sh"
+          }
+        ]
       }
     ],
     "Notification": [
@@ -34,6 +47,14 @@
       }
     ],
     "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/claude/scripts/capture-session-id.sh"
+          }
+        ]
+      },
       {
         "hooks": [
           {
@@ -63,7 +84,8 @@
     "memory@local-plugins": true,
     "misc@local-plugins": true,
     "productivity@local-plugins": true,
-    "terminal@local-plugins": true
+    "terminal@local-plugins": true,
+    "Notion@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true
 }
