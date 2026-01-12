@@ -4,11 +4,27 @@ description: Morning planning routine - start your day with PPV integration
 
 # Morning Routine (PPV-Integrated)
 
-Start Michael's day with clarity by connecting to his PPV system.
+Start Michael's day with clarity by connecting to his PPV system, calendar, and Todoist.
 
 ## Steps
 
-### 1. Create or Find Today's Daily Tracking Entry
+### 1. Check Today's Calendar
+
+**First, show what's scheduled:**
+- Use `icalBuddy -f eventsToday` or calendar MCP to show today's meetings
+- Highlight any conflicts or back-to-back meetings
+- Note prep needed for important meetings
+
+Display format:
+```
+📅 TODAY'S CALENDAR
+─────────────────────
+9:00 AM - Team standup (30 min)
+11:00 AM - Investor call - Foundation Capital (1 hr) ⚠️ PREP NEEDED
+2:00 PM - Focus block (2 hr)
+```
+
+### 2. Create or Find Today's Daily Tracking Entry
 
 Check if a daily tracking entry exists for today. If not, create one:
 
@@ -31,7 +47,21 @@ mcp__notion__notion-create-pages({
 })
 ```
 
-### 2. Show Today's Action Items
+### 3. Show Today's Todoist Tasks
+
+Fetch Todoist tasks for today using filter `today|overdue`:
+- Show tasks from the weekly priority project first
+- Then show other today tasks
+- Flag any overdue items that need attention
+
+```bash
+# Quick Todoist check
+source ~/.env.zsh && curl -s "https://api.todoist.com/rest/v2/tasks" \
+  -H "Authorization: Bearer $TODOIST_API_TOKEN" | \
+  python3 -c "import json,sys; tasks=json.load(sys.stdin); today=[t for t in tasks if t.get('due') and 'today' in str(t.get('due',{})).lower()]; print(f'📋 {len(today)} tasks for today')"
+```
+
+### 4. Show PPV Action Items
 
 Query Action Items with Do Date <= today and Status = Active:
 
@@ -41,22 +71,23 @@ Display tasks grouped by priority:
 - **3rd Priority** (only 1 allowed)
 - **Quick/Immediate** items
 
-### 3. Morning Questions
+### 5. Morning Questions
 
 Ask Michael:
 1. How are you feeling this morning? (1-10 energy level)
-2. What's the ONE thing that would make today a success?
-3. Any time-sensitive items or meetings?
+2. Any meetings needing prep?
+3. What's the ONE thing that would make today a success?
 4. Any blockers to address first?
 
-### 4. Set Intentions
+### 6. Set Today's Focus
 
-Based on responses:
+Based on calendar + tasks + energy:
 - Confirm top 3 tasks for the day
 - Identify first task to start with
 - Note any items to reschedule if overloaded (>5 tasks = too many)
+- Block focus time on calendar if needed
 
-### 5. Update Daily Tracking (Optional Morning Fields)
+### 7. Update Daily Tracking (Optional Morning Fields)
 
 If Michael provides morning data, update the daily entry:
 
@@ -113,9 +144,10 @@ mcp__notion__notion-update-page({
 
 ## Quick Flow
 
-1. Find/create daily entry (link to current week)
-2. Show today's tasks (Do Date <= today, Active)
-3. Ask morning questions
-4. Confirm top 3 priorities
-5. Mark "Bullet Planner" if planning done
-6. Start first task
+1. **Calendar first** - Show today's schedule
+2. **Todoist** - Show today's tasks
+3. **PPV** - Find/create daily entry, show action items
+4. Ask morning questions
+5. Confirm top 3 priorities aligned with calendar
+6. Mark "Bullet Planner" if planning done
+7. Start first task
