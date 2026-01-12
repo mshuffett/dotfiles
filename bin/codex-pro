@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+export CODEX_HOME="$HOME/.codex-pro"
+exec codex "$@"

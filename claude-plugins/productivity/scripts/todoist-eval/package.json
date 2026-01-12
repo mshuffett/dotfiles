@@ -1,0 +1,27 @@
+{
+  "name": "todoist-triage-eval",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "fetch": "tsx src/index.ts fetch",
+    "classify": "tsx src/index.ts classify",
+    "judge": "tsx src/index.ts judge",
+    "apply": "tsx src/index.ts apply",
+    "eval": "tsx src/index.ts eval",
+    "info": "tsx src/index.ts info"
+  },
+  "dependencies": {
+    "ai": "^4.3.0",
+    "@ai-sdk/anthropic": "^1.2.0",
+    "zod": "^3.24.0",
+    "commander": "^13.0.0",
+    "chalk": "^5.4.0",
+    "yaml": "^2.7.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0"
+  }
+}

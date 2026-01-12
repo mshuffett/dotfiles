@@ -1,0 +1,29 @@
+#!/bin/bash
+# claude-evening-trigger: Triggered by launchd at 9pm
+
+SESSION="claude-daily"
+NOTIFIER="/Applications/Utilities/Notifier.app/Contents/MacOS/Notifier"
+DAILY_SCRIPT="$HOME/.dotfiles/bin/claude-daily"
+
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+  # Session running - send evening command and notify
+  tmux send-keys -t "$SESSION" "/evening" Enter
+  "$NOTIFIER" \
+    --type alert \
+    --title "Claude Daily" \
+    --message "Evening shutdown started" \
+    --messagebutton "Open" \
+    --messagebuttonaction "/usr/bin/open -a Ghostty" \
+    --sound Glass
+else
+  # Session not running - start session then notify
+  "$DAILY_SCRIPT" evening &
+  sleep 2
+  "$NOTIFIER" \
+    --type alert \
+    --title "Claude Daily" \
+    --message "Time for evening review. Session started." \
+    --messagebutton "Open" \
+    --messagebuttonaction "/usr/bin/open -a Ghostty" \
+    --sound Glass
+fi

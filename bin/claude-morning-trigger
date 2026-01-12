@@ -1,0 +1,29 @@
+#!/bin/bash
+# claude-morning-trigger: Triggered by launchd at 7am
+
+SESSION="claude-daily"
+NOTIFIER="/Applications/Utilities/Notifier.app/Contents/MacOS/Notifier"
+DAILY_SCRIPT="$HOME/.dotfiles/bin/claude-daily"
+
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+  # Session running - send morning command and notify
+  tmux send-keys -t "$SESSION" "/morning" Enter
+  "$NOTIFIER" \
+    --type alert \
+    --title "Claude Daily" \
+    --message "Morning routine started" \
+    --messagebutton "Open" \
+    --messagebuttonaction "/usr/bin/open -a Ghostty" \
+    --sound Glass
+else
+  # Session not running - start session then notify
+  "$DAILY_SCRIPT" morning &
+  sleep 2
+  "$NOTIFIER" \
+    --type alert \
+    --title "Claude Daily" \
+    --message "Good morning! Session started." \
+    --messagebutton "Open" \
+    --messagebuttonaction "/usr/bin/open -a Ghostty" \
+    --sound Glass
+fi

@@ -154,8 +154,10 @@ No additional setup needed - just use `$TODOIST_API_TOKEN` in commands.
 - **🚢🏖️ Ship to Beach Dashboard**: 2360927142 (repo maintenance & improvements)
 - **🚢🏖️ Sprint Execution**: 2360927149 (actual sprint shipping work)
 
-### Default Project
+### Default Projects
 - **Inbox**: 377445380
+- **Daily Briefing**: 6cvj7XgXH4w93WgX - Use for one-off tasks, delegation to Michelle, and items that don't fit elsewhere
+  - URL: https://app.todoist.com/app/project/daily-briefing-6cvj7XgXH4w93WgX
 
 ### User IDs
 - **Michael (you)**: 486423

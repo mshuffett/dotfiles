@@ -17,8 +17,6 @@ zstyle ':z4h:bindkey' keyboard  'mac'
 
 # Start tmux if not already in tmux and not in cursor
 if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
-  # Use single session name "main" for all Ghostty windows
-  # (No reliable way to detect quick terminal vs regular window)
   zstyle ':z4h:' start-tmux command tmux -u new -A -D -t main
 else
   zstyle ':z4h:' start-tmux       no
@@ -409,3 +407,8 @@ fi
 
 # Added by Antigravity
 export PATH="/Users/michael/.antigravity/antigravity/bin:$PATH"
+
+# Claude Daily EA session
+alias ea='~/.dotfiles/bin/claude-daily'
+# Grouped session (independent view of same session)
+alias eag='tmux new-session -t claude-daily -s claude-quick 2>/dev/null || tmux attach -t claude-quick'

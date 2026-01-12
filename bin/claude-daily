@@ -1,0 +1,95 @@
+#!/bin/bash
+# claude-daily: Persistent Claude Code session manager
+# Usage: claude-daily [morning|evening|set-session <id>]
+
+SESSION="claude-daily"
+NOTES_DIR="$HOME/ws/notes"
+SESSION_FILE="$NOTES_DIR/.claude/ea-session-id"
+PROJECT_PATH="$HOME/.claude/projects/-Users-michael-ws-notes"
+
+# Set the EA session ID manually
+if [[ "$1" == "set-session" && -n "$2" ]]; then
+  echo "$2" > "$SESSION_FILE"
+  echo "EA session ID set to: $2"
+  exit 0
+fi
+
+# Get the stored EA session ID
+get_session_id() {
+  [[ -f "$SESSION_FILE" ]] && cat "$SESSION_FILE"
+}
+
+# Capture new session ID after starting claude
+capture_new_session() {
+  # List sessions before
+  local before=$(ls "$PROJECT_PATH"/*.jsonl 2>/dev/null | sort)
+
+  # Wait for new session to appear (max 10 seconds)
+  for i in {1..20}; do
+    sleep 0.5
+    local after=$(ls "$PROJECT_PATH"/*.jsonl 2>/dev/null | sort)
+    local new_session=$(comm -13 <(echo "$before") <(echo "$after") | head -1)
+    if [[ -n "$new_session" ]]; then
+      local session_id=$(basename "$new_session" .jsonl)
+      echo "$session_id" > "$SESSION_FILE"
+      echo "Captured EA session: $session_id"
+      return 0
+    fi
+  done
+  echo "Warning: Could not capture session ID"
+}
+
+# Build the claude command
+build_claude_cmd() {
+  local session_id=$(get_session_id)
+  if [[ -n "$session_id" ]]; then
+    # Verify session exists
+    if [[ -f "$PROJECT_PATH/$session_id.jsonl" ]]; then
+      echo "claude --resume $session_id"
+    else
+      echo "Stored session not found, starting fresh" >&2
+      rm -f "$SESSION_FILE"
+      echo "claude"
+    fi
+  else
+    echo "claude"
+  fi
+}
+
+# Check if tmux session exists
+if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+  # Create session with shell
+  tmux new-session -d -s "$SESSION" -c "$NOTES_DIR"
+
+  # Build claude command
+  CLAUDE_CMD=$(build_claude_cmd)
+
+  # If starting fresh, we need to capture the new session ID
+  NEED_CAPTURE=false
+  [[ "$CLAUDE_CMD" == "claude" ]] && NEED_CAPTURE=true
+
+  # Start claude
+  sleep 0.5
+  tmux send-keys -t "$SESSION" "$CLAUDE_CMD" Enter
+
+  # Capture new session ID in background if needed
+  if $NEED_CAPTURE; then
+    capture_new_session &
+  fi
+
+  # If called with morning/evening, trigger that after claude starts
+  if [[ "$1" == "morning" ]]; then
+    sleep 3
+    tmux send-keys -t "$SESSION" "/morning" Enter
+  elif [[ "$1" == "evening" ]]; then
+    sleep 3
+    tmux send-keys -t "$SESSION" "/evening" Enter
+  fi
+fi
+
+# Attach or switch to session
+if [[ -n "$TMUX" ]]; then
+  tmux switch-client -t "$SESSION"
+else
+  tmux attach -t "$SESSION"
+fi

@@ -77,8 +77,11 @@ font-feature = +calt
 # Quick Terminal - Press Ctrl+` to toggle drop-down terminal
 keybind = global:ctrl+grave_accent=toggle_quick_terminal
 
-# Quick Terminal Size - 30% height, 70% width
-quick-terminal-size = 30%,70%
+# Quick Terminal Size - 50% height, 80% width (bigger for EA session)
+quick-terminal-size = 50%,80%
+
+# NOTE: Quick terminal uses default shell. Run `claude-daily` to attach to EA session
+# Or add to ~/.zshrc: alias cd='claude-daily' (if you want auto-attach)
 
 # Shell Integration - enhanced features
 shell-integration-features = cursor,sudo,title

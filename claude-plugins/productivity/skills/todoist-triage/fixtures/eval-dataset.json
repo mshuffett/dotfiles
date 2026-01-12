@@ -1,0 +1,255 @@
+{
+  "version": "1.0.0",
+  "createdAt": "2025-12-30T00:44:45.950Z",
+  "updatedAt": "2025-12-30T00:44:45.951Z",
+  "examples": [
+    {
+      "task": {
+        "id": "9554289597",
+        "content": "keep or cancel shack desk",
+        "description": "",
+        "project_id": "2351862275",
+        "section_id": null,
+        "due": {
+          "date": "2025-12-29",
+          "string": "Dec 29",
+          "is_recurring": false
+        },
+        "labels": [],
+        "priority": 1,
+        "assignee_id": null,
+        "assigner_id": null,
+        "comment_count": 0,
+        "url": "https://app.todoist.com/app/task/9554289597",
+        "created_at": "2025-09-17T18:55:39.838213Z",
+        "project_name": "Tickler"
+      },
+      "expected": {
+        "taskId": "9554289597",
+        "quadrant": "Q3",
+        "action": "Quick",
+        "reasoning": "Explain why this classification is correct",
+        "confidence": 100
+      },
+      "criteria": "Explain why this classification is correct",
+      "source": "correction",
+      "addedAt": "2025-12-30T00:44:45.951Z"
+    },
+    {
+      "task": {
+        "id": "9806750212",
+        "content": "If I am getting into hyperfocus and it wasn't a pre-planned task assigned to outcome goal that is a sign to be careful",
+        "description": "",
+        "project_id": "2216540478",
+        "section_id": null,
+        "due": {
+          "date": "2025-12-29",
+          "string": "every day",
+          "is_recurring": true
+        },
+        "labels": [],
+        "priority": 1,
+        "assignee_id": null,
+        "assigner_id": null,
+        "comment_count": 0,
+        "url": "https://app.todoist.com/app/task/9806750212",
+        "created_at": "2025-12-08T00:58:00.368279Z",
+        "project_name": "R/Wisdom 🦉"
+      },
+      "expected": {
+        "taskId": "9806750212",
+        "quadrant": "Q4",
+        "action": "Obsidian",
+        "reasoning": "Explain why this classification is correct",
+        "confidence": 100
+      },
+      "criteria": "Explain why this classification is correct",
+      "source": "correction",
+      "addedAt": "2025-12-30T00:44:45.951Z"
+    },
+    {
+      "task": {
+        "id": "9807600776",
+        "content": "do ozempic",
+        "description": "",
+        "project_id": "2351862275",
+        "section_id": null,
+        "due": {
+          "date": "2025-12-29",
+          "string": "Dec 29",
+          "is_recurring": false
+        },
+        "labels": [],
+        "priority": 4,
+        "assignee_id": null,
+        "assigner_id": null,
+        "comment_count": 0,
+        "url": "https://app.todoist.com/app/task/9807600776",
+        "created_at": "2025-12-08T08:13:00.894658Z",
+        "project_name": "Tickler"
+      },
+      "expected": {
+        "taskId": "9807600776",
+        "quadrant": "Q1",
+        "action": "Notion",
+        "reasoning": "Explain why this classification is correct",
+        "confidence": 100
+      },
+      "criteria": "Explain why this classification is correct",
+      "source": "correction",
+      "addedAt": "2025-12-30T00:44:45.951Z"
+    },
+    {
+      "task": {
+        "id": "9826856333",
+        "content": "i've been limiting myself to people who aren't necessarily like the obviously best people to work with because i think i have felt like i wouldn't be able to get the best but if that's the case then i am probably fooling myself into thinking what i am working on or myself necessarily deserves that... tod",
+        "description": "",
+        "project_id": "2216540478",
+        "section_id": null,
+        "due": {
+          "date": "2025-12-29",
+          "string": "every 2 days",
+          "is_recurring": true
+        },
+        "labels": [],
+        "priority": 4,
+        "assignee_id": null,
+        "assigner_id": null,
+        "comment_count": 0,
+        "url": "https://app.todoist.com/app/task/9826856333",
+        "created_at": "2025-12-14T12:30:15.169842Z",
+        "project_name": "R/Wisdom 🦉"
+      },
+      "expected": {
+        "taskId": "9826856333",
+        "quadrant": "Q4",
+        "action": "Obsidian",
+        "reasoning": "Explain why this classification is correct",
+        "confidence": 100
+      },
+      "criteria": "Explain why this classification is correct",
+      "source": "correction",
+      "addedAt": "2025-12-30T00:44:45.951Z"
+    },
+    {
+      "task": {
+        "id": "9832050331",
+        "content": "REVIEW & TRANSFER $3700 to Compose by 12/22 to cover 2025 EoY expenses",
+        "description": "I've updated the Notion doc [here](https://www.notion.so/composeai/FINAL-2025-Compose-Proposal-2a9577f82e2880968778db3ad614cfcb?source=copy_link#2cb577f82e2880c89a39e78caca3a184)",
+        "project_id": "2360279496",
+        "section_id": "202613643",
+        "due": {
+          "date": "2025-12-29",
+          "string": "Dec 29",
+          "is_recurring": false
+        },
+        "labels": [],
+        "priority": 1,
+        "assignee_id": "486423",
+        "assigner_id": "42258732",
+        "comment_count": 0,
+        "url": "https://app.todoist.com/app/task/9832050331",
+        "created_at": "2025-12-16T00:27:07.309908Z",
+        "project_name": "📆 Daily Briefing"
+      },
+      "expected": {
+        "taskId": "9832050331",
+        "quadrant": "Q1",
+        "action": "Notion",
+        "reasoning": "Explain why this classification is correct",
+        "confidence": 100
+      },
+      "criteria": "Explain why this classification is correct",
+      "source": "correction",
+      "addedAt": "2025-12-30T00:44:45.951Z"
+    },
+    {
+      "task": {
+        "id": "9835603584",
+        "content": "CHECK EAI Brex card is over the limit",
+        "description": "",
+        "project_id": "2360279496",
+        "section_id": "202613643",
+        "due": {
+          "date": "2025-12-29",
+          "string": "Dec 29",
+          "is_recurring": false
+        },
+        "labels": [],
+        "priority": 1,
+        "assignee_id": "486423",
+        "assigner_id": "42258732",
+        "comment_count": 1,
+        "url": "https://app.todoist.com/app/task/9835603584",
+        "created_at": "2025-12-17T02:22:02.599873Z",
+        "project_name": "📆 Daily Briefing",
+        "comments": [
+          {
+            "id": "3936466822",
+            "task_id": "9835603584",
+            "project_id": null,
+            "content": "",
+            "posted_at": "2025-12-17T02:22:17.298000Z",
+            "posted_by_id": "42258732",
+            "updated_at": "2025-12-17T02:22:17.614854Z",
+            "attachment": {
+              "file_name": "Screenshot 2025-12-16 at 6.21.26 PM.png",
+              "file_size": 54467,
+              "file_type": "image/png",
+              "file_url": "https://files.todoist.com/qIGwDk5INPrq6g92sr_cluKDX8Jl4jLUHVElLxxrqHpJJ9Txn3LXHaQr7APlDtOR/by/42258732/as/file.png",
+              "image": "https://files.todoist.com/qIGwDk5INPrq6g92sr_cluKDX8Jl4jLUHVElLxxrqHpJJ9Txn3LXHaQr7APlDtOR/by/42258732/as/file.png",
+              "image_height": 539,
+              "image_width": 668,
+              "resource_type": "image",
+              "upload_state": "completed",
+              "tn_s": [
+                "https://image-resize.todoist.com?maxheight=96&url=https%3A%2F%2Ffiles.todoist.com%2FqIGwDk5INPrq6g92sr_cluKDX8Jl4jLUHVElLxxrqHpJJ9Txn3LXHaQr7APlDtOR%2Fby%2F42258732%2Fas%2Ffile.png",
+                96,
+                96
+              ],
+              "tn_m": [
+                "https://image-resize.todoist.com?maxheight=288&url=https%3A%2F%2Ffiles.todoist.com%2FqIGwDk5INPrq6g92sr_cluKDX8Jl4jLUHVElLxxrqHpJJ9Txn3LXHaQr7APlDtOR%2Fby%2F42258732%2Fas%2Ffile.png",
+                288,
+                288
+              ],
+              "tn_l": [
+                "https://image-resize.todoist.com?maxheight=528&url=https%3A%2F%2Ffiles.todoist.com%2FqIGwDk5INPrq6g92sr_cluKDX8Jl4jLUHVElLxxrqHpJJ9Txn3LXHaQr7APlDtOR%2Fby%2F42258732%2Fas%2Ffile.png",
+                528,
+                528
+              ]
+            },
+            "upload_id": "2236805095",
+            "reactions": {},
+            "uids_to_notify": []
+          }
+        ]
+      },
+      "expected": {
+        "taskId": "9835603584",
+        "quadrant": "Q3",
+        "action": "Quick",
+        "reasoning": "CHECK prefix means quick verification, not a tracked Notion item",
+        "confidence": 100
+      },
+      "criteria": "CHECK prefix means quick verification, not a tracked Notion item",
+      "source": "correction",
+      "addedAt": "2025-12-30T00:44:45.951Z"
+    }
+  ],
+  "metadata": {
+    "totalExamples": 6,
+    "byAction": {
+      "Quick": 2,
+      "Obsidian": 2,
+      "Notion": 2
+    },
+    "byQuadrant": {
+      "Q3": 2,
+      "Q4": 2,
+      "Q1": 2
+    },
+    "bySource": {
+      "correction": 6
+    }
+  }
+}

@@ -1,10 +1,10 @@
 ---
-description: Use when generating images; choose provider (Gemini/Gemini Pro/OpenAI/Imagen), ensure API keys, and select size/output options.
+description: Use when generating images; choose provider (OpenAI/Gemini Pro/Gemini/Imagen), ensure API keys, and select size/output options.
 ---
 
 # Image Generation
 
-Use the `generate-image` command to create images with Google Gemini, Imagen, or OpenAI:
+Use the `generate-image` command to create images with OpenAI GPT Image 1.5, Google Gemini, or Imagen:
 
 ## When to Use (Triggers)
 - You are asked to generate images or visual assets
@@ -15,46 +15,67 @@ Use the `generate-image` command to create images with Google Gemini, Imagen, or
 - [ ] Size/output options selected appropriately
 
 ## Provider Selection
-- **gemini-pro** (default) — Better text rendering, higher resolution (up to 4K), best quality
-- **gemini** — Faster generation, use when speed matters over quality
+- **openai** (default) — GPT Image 1.5, best quality, supports image editing, excellent text rendering
+- **gemini-pro** — Nano Banana Pro, high resolution (up to 4K), great text rendering
+- **gemini** — Nano Banana, faster generation, use when speed matters
 - **imagen** — Google Imagen 4.0, photorealistic
-- **openai** — DALL-E 3, good for creative/artistic images
 
 ## Commands
-- `generate-image "prompt"` — generates a 1024x1024 image with Gemini Pro (default)
-- `generate-image "prompt" --provider gemini` — uses Nano Banana (faster)
+- `generate-image "prompt"` — generates a 1024x1024 image with GPT Image 1.5 (default)
+- `generate-image "prompt" --quality high` — higher fidelity, slower generation
+- `generate-image "prompt" --provider gemini-pro` — uses Nano Banana Pro
 - `generate-image "prompt" --provider gemini-pro --size 2048x2048` — high-res with Pro
-- `generate-image "prompt" --provider openai` — generates image with OpenAI DALL‑E 3
+- `generate-image "prompt" --provider gemini` — uses Nano Banana (faster)
 - `generate-image "prompt" --provider imagen` — generates image with Imagen 4.0
 - `generate-image "prompt" --size 1024x1536` — portrait
 - `generate-image "prompt" --output filename.png` — saves with specific filename
 - `generate-image "prompt" -i input.png` — edit/transform an input image
+- `generate-image "prompt" -i input.png --mask mask.png` — targeted edit with mask (OpenAI)
 - `generate-image "prompt" -i style.png -i content.png` — multi-image (style transfer, composition)
 - `generate-image "prompt" --url-only` — returns URL without downloading (OpenAI only)
 - `generate-image --help` — shows all available options
 
-## Input Images (Gemini only)
-Use `-i` or `--input` to provide reference images for editing, style transfer, or composition:
-- **Single image editing**: `generate-image "Make this more vibrant" -i photo.png`
-- **Style transfer**: `generate-image "Apply the style of first image to second" -i style.png -i content.png`
-- **Multi-image composition**: Up to 14 images with Gemini Pro, 3 with Gemini Flash
-- Supports: PNG, JPEG, WebP, GIF
+## Input Images
+Use `-i` or `--input` to provide images for editing, style transfer, or composition:
+
+| Provider | Max Images | Behavior |
+|----------|------------|----------|
+| OpenAI | 16 | Uses `/edits` endpoint, supports mask |
+| Gemini Pro | 14 | Multimodal reference/editing |
+| Gemini | 3 | Multimodal reference/editing |
+| Imagen | 0 | Generation only |
+
+**OpenAI editing examples:**
+- `generate-image "Make this more vibrant" -i photo.png`
+- `generate-image "Add a cat on the chair" -i room.png --mask chair-area.png`
+- `generate-image "Combine products into gift basket" -i item1.png -i item2.png -i item3.png`
+
+**Gemini reference examples:**
+- `generate-image "Apply style of first to second" -i style.png -i content.png --provider gemini-pro`
+- `generate-image "Generate in this style" -i reference.png --provider gemini`
+
+## Mask Parameter (OpenAI only)
+Use `-k` or `--mask` for targeted edits:
+- Mask must be PNG with **transparent areas** indicating where to edit
+- Must have same dimensions as input image
+- Applied to first input image only
+- Example: `generate-image "Replace with a lake" -i landscape.png --mask sky-mask.png`
 
 ## Providers & Models
 | Provider | Model ID | Codename | Best For |
 |----------|----------|----------|----------|
-| `gemini-pro` | gemini-3-pro-image-preview | Nano Banana Pro | Best quality, text (default) |
+| `openai` | gpt-image-1.5 | GPT Image 1.5 | Best quality, editing (default) |
+| `gemini-pro` | gemini-3-pro-image-preview | Nano Banana Pro | High-res, text rendering |
 | `gemini` | gemini-2.5-flash-image | Nano Banana | Faster, general use |
 | `imagen` | imagen-4.0-generate-001 | Imagen 4.0 | Photorealistic |
-| `openai` | dall-e-3 | DALL-E 3 | Creative/artistic |
 
 ## Sizes
 - Standard (all providers): 1024x1024, 1024x1536, 1536x1024
 - Gemini Pro only: 2048x2048, 2048x3072, 3072x2048
 
 ## Environment Variables
+- `OPENAI_API_KEY` — required for openai provider (default)
 - `GEMINI_API_KEY` — required for gemini, gemini-pro, and imagen providers
-- `OPENAI_API_KEY` — required for openai provider
 
 ## Prompting Tips for Gemini Pro (Nano Banana Pro)
 Nano Banana Pro excels with highly detailed prompts. Include:
