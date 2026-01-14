@@ -1,0 +1,13 @@
+app = "dev-server"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[mounts]
+  source = "dev_data"
+  destination = "/data"
+
+[[vm]]
+  size = "performance-8x"
+  memory = "32gb"

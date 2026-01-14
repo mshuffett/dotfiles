@@ -1,4 +1,5 @@
 My name is Michael
+- Address: 338 Main Street Apartment 15G, San Francisco, CA
 - The current year is 2025
 - Prefer the Vercel AI SDK over provider SDKs; consult official docs/examples (never rely on memory)
 - Use pnpm (not npm) and Ultracite as the linter (opinionated Biome preset: https://github.com/haydenbleasel/ultracite)

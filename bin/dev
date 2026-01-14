@@ -1,0 +1,40 @@
+#!/bin/bash
+# Connect to Fly.io dev server
+#
+# Usage:
+#   dev           # SSH and attach to tmux session 'main'
+#   dev -n        # SSH without tmux (new shell)
+#   dev <cmd>     # Run a command on the server
+#   dev stop      # Stop the server (save credits)
+#   dev start     # Start the server
+#   dev status    # Check server status
+
+set -e
+
+APP="dev-server"
+MACHINE="e827400b0e42e8"
+
+case "${1:-}" in
+  stop)
+    fly machine stop "$MACHINE" -a "$APP"
+    echo "Server stopped"
+    ;;
+  start)
+    fly machine start "$MACHINE" -a "$APP"
+    echo "Server started"
+    ;;
+  status)
+    fly machines list -a "$APP"
+    ;;
+  -n|--no-tmux)
+    fly ssh console -a "$APP" -u michael --pty
+    ;;
+  "")
+    # Default: SSH and attach to tmux (or create if doesn't exist)
+    fly ssh console -a "$APP" -u michael --pty -C "tmux new -A -s main"
+    ;;
+  *)
+    # Run arbitrary command
+    fly ssh console -a "$APP" -u michael -C "$*"
+    ;;
+esac

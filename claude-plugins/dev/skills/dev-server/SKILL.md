@@ -21,14 +21,17 @@ Remote development server on Fly.io for working when disconnected from internet 
 ### Connect to Server
 
 ```bash
-# SSH into server
-fly ssh console -a dev-server
+dev              # SSH and attach to tmux session 'main'
+dev -n           # SSH without tmux (new shell)
+dev <cmd>        # Run a command on the server
+dev stop         # Stop the server (save credits)
+dev start        # Start the server
+dev status       # Check server status
+```
 
-# Connect as michael user
+Or manually:
+```bash
 fly ssh console -a dev-server -u michael
-
-# Run a command
-fly ssh console -a dev-server -C "command here"
 ```
 
 ### Check Status
@@ -44,11 +47,8 @@ fly machines list -a dev-server
 ### Start/Stop Server
 
 ```bash
-# Stop (saves credits when not in use)
-fly machine stop e827400b0e42e8 -a dev-server
-
-# Start
-fly machine start e827400b0e42e8 -a dev-server
+dev stop         # Stop (saves credits when not in use)
+dev start        # Start the server
 ```
 
 ## Server Setup
@@ -81,46 +81,77 @@ fly machine start e827400b0e42e8 -a dev-server
 - Shell: zsh
 - Sudo: passwordless
 
-## First-Time Setup
+## Reproducible Setup (Dockerfile)
 
-### 1. Add SSH Key to GitHub
+The dev server can be rebuilt from scratch using the Dockerfile at `~/.dotfiles/dev-server/`.
 
-The server has an SSH key that needs to be added to GitHub:
+### Files
 
-```
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICDLBDBTSMfi2B3H8kp7Gdj+/01TGvbss7OMaGWUwT6v dev-server-fly
-```
+- `~/.dotfiles/dev-server/Dockerfile` - Container image definition
+- `~/.dotfiles/dev-server/fly.toml` - Fly.io deployment config
+- `~/.dotfiles/dev-server/setup.sh` - First-time setup script
 
-Add at: https://github.com/settings/ssh/new
-
-### 2. Clone Repositories
+### Rebuild Server
 
 ```bash
-fly ssh console -a dev-server -u michael
+cd ~/.dotfiles/dev-server
 
-# Clone repos to persistent volume
-cd ~/ws
-git clone git@github.com:compose-ai/compose-monorepo.git
-git clone git@github.com:michaelfromyeg/everything-monorepo.git
+# Deploy new image (preserves volume data)
+fly deploy
 
-# Clone dotfiles
-cd ~
-git clone git@github.com:michaelfromyeg/dotfiles.git .dotfiles
-
-# Install dependencies
-cd ~/ws/compose-monorepo && pnpm install
-cd ~/ws/everything-monorepo && pnpm install
+# Run setup script (only needed on fresh volume)
+fly ssh console -a dev-server -u michael -C "bash ~/.dotfiles/dev-server/setup.sh"
 ```
 
-### 3. Set Up Claude Code
+### Fresh Deploy (New Server) - One-Step Setup
 
 ```bash
-# Set API key
-export ANTHROPIC_API_KEY="your-key"
+cd ~/.dotfiles/dev-server
 
-# Or add to ~/.zshrc
-echo 'export ANTHROPIC_API_KEY="your-key"' >> ~/.zshrc
+# 1. Create app and volume
+fly apps create dev-server -o compose-ai
+fly volumes create dev_data --size 100 --region iad
+
+# 2. Deploy the container
+fly deploy
+
+# 3. Generate SSH key and add to GitHub
+fly ssh console -a dev-server -C 'su - michael -c "ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N \"\""'
+fly ssh console -a dev-server -C 'cat /home/michael/.ssh/id_ed25519.pub'
+# → Copy output and add to GitHub: gh ssh-key add - --title "dev-server"
+
+# 4. Run setup with API key (one command!)
+KEY=$(source ~/.env.zsh && echo $ANTHROPIC_API_KEY)
+fly ssh console -a dev-server -u michael -C "ANTHROPIC_API_KEY='$KEY' bash /data/dotfiles/dev-server/setup.sh"
 ```
+
+This clones repos, sets up dotfiles symlinks, installs pnpm dependencies, and configures the API key.
+
+## Persistence Model
+
+Fly.io persistence works through **volumes** and **persistent machines**:
+
+1. **Volume (`/data`)**: 100GB persistent storage survives container restarts and redeployments
+   - Repos live here (`/data/ws/`)
+   - Dotfiles live here (`/data/dotfiles/`)
+   - Changes are preserved even when container image is updated
+
+2. **Machine**: Unlike serverless, this is a persistent VM that stays running
+   - Container entrypoint (`tail -f /dev/null`) keeps it alive
+   - Machine persists until explicitly stopped or deleted
+
+3. **Redeploy behavior**: `fly deploy` replaces the container but preserves:
+   - All data in `/data` (repos, dotfiles, pnpm cache)
+   - Machine identity and volume attachment
+
+## Current Setup (Already Configured)
+
+The server is fully set up with:
+- Dotfiles cloned and symlinked
+- compose-monorepo and everything-monorepo cloned
+- pnpm dependencies installed
+- SSH key added to GitHub
+- ANTHROPIC_API_KEY configured for Claude Code
 
 ## Working with tmux
 
