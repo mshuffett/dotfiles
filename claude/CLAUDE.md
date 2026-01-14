@@ -91,6 +91,7 @@ With plugins, you no longer need to manually read procedure files for most topic
 
 **Universal Guardrails**
 - Subagents: Default to `run_in_background: true` for Task tool calls to avoid blocking. Use `TaskOutput` to retrieve results when needed. Only use blocking execution when results are immediately required for the next step.
+- Long-running scripts: Run potentially long-running commands (API calls, data extraction, optimization, builds >30s) in background using `run_in_background: true`. Check results with `TaskOutput` or `Read` on the output file.
 - Procedures: ALWAYS consult the correct on‑demand guide when its trigger applies; proceed only after acceptance checks pass.
 - Complex tasks: For multi‑step tasks with 3+ dependent steps, use an internal todo list/checklist to track progress and ensure completion.
 - Git worktrees: Before any git worktree operation, complete a pre‑flight checklist; ensure `.env` files are copied and dependencies installed. If unclear, pause and ask.
@@ -99,6 +100,7 @@ With plugins, you no longer need to manually read procedure files for most topic
 - Pull requests: Merge latest base locally, resolve conflicts, run tests, then create the PR. After creating, watch checks in background (`gh pr checks --watch`) and fix any failures before moving on.
 - Third‑party docs: Use Context7 to fetch up‑to‑date API documentation at execution time.
 - Computer use agent: Only use when explicitly asked.
+- Browser automation: Default to headless mode for Playwright/browser automation. Only use visible browsers when explicitly needed for debugging or user observation. Prefer headless → minimized → unfocused → visible (in that order).
 
 **Environment Variables and Secrets**
 - Use `~/.env.zsh` for global secrets and `.env.local` for project‑specific secrets; document variable names in `.env.example` (never values). `.zshrc` and `direnv` handle loading.
