@@ -1,6 +1,10 @@
 ---
 name: Tmux Patterns
-description: Use when working with tmux panes, splitting terminal windows, sending commands to specific panes, viewing images in terminal, or running background processes. Critical patterns for reliable pane targeting.
+description: >-
+  ALWAYS consult when: (1) splitting, moving, or targeting tmux panes,
+  (2) sending commands to specific panes, (3) moving panes/windows between sessions,
+  (4) any tmux operation where you need a pane ID. Critical because user may switch
+  panes while Claude is thinking - must use $TMUX_PANE not dynamic queries.
 version: 0.1.0
 ---
 
