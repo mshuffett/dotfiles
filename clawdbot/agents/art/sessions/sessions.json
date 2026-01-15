@@ -1,0 +1,378 @@
+{
+  "agent:art:main": {
+    "sessionId": "0e71997f-bde2-4c6e-830c-84a9f6e941fb",
+    "updatedAt": 1768427283231,
+    "systemSent": true,
+    "abortedLastRun": false,
+    "chatType": "direct",
+    "skillsSnapshot": {
+      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\n\n<available_skills>\n  <skill>\n    <name>1password</name>\n    <description>Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in (single or multi-account), or reading/injecting/running secrets via op.</description>\n    <location>/Users/michael/ws/clawdbot/skills/1password/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>coding-agent</name>\n    <description>Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.</description>\n    <location>/Users/michael/ws/clawdbot/skills/coding-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>discord</name>\n    <description>Use when you need to control Discord from Clawdbot via the discord tool: send messages, react, post or upload stickers, upload emojis, run polls, manage threads/pins/search, fetch permissions or member/role/channel info, or handle moderation actions in Discord DMs or channels.</description>\n    <location>/Users/michael/ws/clawdbot/skills/discord/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>gemini</name>\n    <description>Gemini CLI for one-shot Q&amp;A, summaries, and generation.</description>\n    <location>/Users/michael/ws/clawdbot/skills/gemini/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>github</name>\n    <description>Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.</description>\n    <location>/Users/michael/ws/clawdbot/skills/github/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>himalaya</name>\n    <description>CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple accounts and message composition with MML (MIME Meta Language).</description>\n    <location>/Users/michael/ws/clawdbot/skills/himalaya/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>imsg</name>\n    <description>iMessage/SMS CLI for listing chats, history, watch, and sending.</description>\n    <location>/Users/michael/ws/clawdbot/skills/imsg/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>notion</name>\n    <description>Notion API for creating and managing pages, databases, and blocks.</description>\n    <location>/Users/michael/ws/clawdbot/skills/notion/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>openai-image-gen</name>\n    <description>Batch-generate images via OpenAI Images API. Random prompt sampler + `index.html` gallery.</description>\n    <location>/Users/michael/ws/clawdbot/skills/openai-image-gen/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>openai-whisper-api</name>\n    <description>Transcribe audio via OpenAI Audio Transcriptions API (Whisper).</description>\n    <location>/Users/michael/ws/clawdbot/skills/openai-whisper-api/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>session-logs</name>\n    <description>Search and analyze your own conversation history from session log files using jq.</description>\n    <location>/Users/michael/ws/clawdbot/skills/session-logs/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>slack</name>\n    <description>Use when you need to control Slack from Clawdbot via the slack tool, including reacting to messages or pinning/unpinning items in Slack channels or DMs.</description>\n    <location>/Users/michael/ws/clawdbot/skills/slack/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tmux</name>\n    <description>Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output.</description>\n    <location>/Users/michael/ws/clawdbot/skills/tmux/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>video-frames</name>\n    <description>Extract frames or short clips from videos using ffmpeg.</description>\n    <location>/Users/michael/ws/clawdbot/skills/video-frames/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>weather</name>\n    <description>Get current weather and forecasts (no API key required).</description>\n    <location>/Users/michael/ws/clawdbot/skills/weather/SKILL.md</location>\n  </skill>\n</available_skills>",
+      "skills": [
+        {
+          "name": "1password"
+        },
+        {
+          "name": "coding-agent"
+        },
+        {
+          "name": "discord"
+        },
+        {
+          "name": "gemini"
+        },
+        {
+          "name": "github"
+        },
+        {
+          "name": "himalaya"
+        },
+        {
+          "name": "imsg"
+        },
+        {
+          "name": "notion"
+        },
+        {
+          "name": "openai-image-gen",
+          "primaryEnv": "OPENAI_API_KEY"
+        },
+        {
+          "name": "openai-whisper-api",
+          "primaryEnv": "OPENAI_API_KEY"
+        },
+        {
+          "name": "session-logs"
+        },
+        {
+          "name": "slack"
+        },
+        {
+          "name": "tmux"
+        },
+        {
+          "name": "video-frames"
+        },
+        {
+          "name": "weather"
+        }
+      ],
+      "resolvedSkills": [
+        {
+          "name": "1password",
+          "description": "Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in (single or multi-account), or reading/injecting/running secrets via op.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/1password/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/1password",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "coding-agent",
+          "description": "Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/coding-agent/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/coding-agent",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "discord",
+          "description": "Use when you need to control Discord from Clawdbot via the discord tool: send messages, react, post or upload stickers, upload emojis, run polls, manage threads/pins/search, fetch permissions or member/role/channel info, or handle moderation actions in Discord DMs or channels.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/discord/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/discord",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "gemini",
+          "description": "Gemini CLI for one-shot Q&A, summaries, and generation.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/gemini/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/gemini",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "github",
+          "description": "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/github/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/github",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "himalaya",
+          "description": "CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple accounts and message composition with MML (MIME Meta Language).",
+          "filePath": "/Users/michael/ws/clawdbot/skills/himalaya/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/himalaya",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "imsg",
+          "description": "iMessage/SMS CLI for listing chats, history, watch, and sending.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/imsg/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/imsg",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "notion",
+          "description": "Notion API for creating and managing pages, databases, and blocks.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/notion/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/notion",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "openai-image-gen",
+          "description": "Batch-generate images via OpenAI Images API. Random prompt sampler + `index.html` gallery.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/openai-image-gen/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/openai-image-gen",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "openai-whisper-api",
+          "description": "Transcribe audio via OpenAI Audio Transcriptions API (Whisper).",
+          "filePath": "/Users/michael/ws/clawdbot/skills/openai-whisper-api/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/openai-whisper-api",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "session-logs",
+          "description": "Search and analyze your own conversation history from session log files using jq.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/session-logs/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/session-logs",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "slack",
+          "description": "Use when you need to control Slack from Clawdbot via the slack tool, including reacting to messages or pinning/unpinning items in Slack channels or DMs.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/slack/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/slack",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "tmux",
+          "description": "Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/tmux/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/tmux",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "video-frames",
+          "description": "Extract frames or short clips from videos using ffmpeg.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/video-frames/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/video-frames",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "weather",
+          "description": "Get current weather and forecasts (no API key required).",
+          "filePath": "/Users/michael/ws/clawdbot/skills/weather/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/weather",
+          "source": "clawdbot-bundled"
+        }
+      ]
+    },
+    "lastTo": "723773246",
+    "lastAccountId": "default",
+    "sessionFile": "/Users/michael/.clawdbot/agents/art/sessions/0e71997f-bde2-4c6e-830c-84a9f6e941fb.jsonl",
+    "modelProvider": "anthropic",
+    "model": "claude-opus-4-5",
+    "contextTokens": 200000,
+    "inputTokens": 8,
+    "outputTokens": 376,
+    "totalTokens": 117424,
+    "lastChannel": "telegram"
+  },
+  "agent:main:main": {
+    "sessionId": "50520dd4-eaea-4a4a-b98f-c5d5c7169d1c",
+    "updatedAt": 1768444611190,
+    "systemSent": true,
+    "abortedLastRun": false,
+    "chatType": "direct",
+    "sessionFile": "/Users/michael/.clawdbot/agents/art/sessions/50520dd4-eaea-4a4a-b98f-c5d5c7169d1c.jsonl",
+    "skillsSnapshot": {
+      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\n\n<available_skills>\n  <skill>\n    <name>1password</name>\n    <description>Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in (single or multi-account), or reading/injecting/running secrets via op.</description>\n    <location>/Users/michael/ws/clawdbot/skills/1password/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>coding-agent</name>\n    <description>Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.</description>\n    <location>/Users/michael/ws/clawdbot/skills/coding-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>discord</name>\n    <description>Use when you need to control Discord from Clawdbot via the discord tool: send messages, react, post or upload stickers, upload emojis, run polls, manage threads/pins/search, create/edit/delete channels and categories, fetch permissions or member/role/channel info, or handle moderation actions in Discord DMs or channels.</description>\n    <location>/Users/michael/ws/clawdbot/skills/discord/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>gemini</name>\n    <description>Gemini CLI for one-shot Q&amp;A, summaries, and generation.</description>\n    <location>/Users/michael/ws/clawdbot/skills/gemini/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>github</name>\n    <description>Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.</description>\n    <location>/Users/michael/ws/clawdbot/skills/github/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>himalaya</name>\n    <description>CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple accounts and message composition with MML (MIME Meta Language).</description>\n    <location>/Users/michael/ws/clawdbot/skills/himalaya/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>imsg</name>\n    <description>iMessage/SMS CLI for listing chats, history, watch, and sending.</description>\n    <location>/Users/michael/ws/clawdbot/skills/imsg/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>notion</name>\n    <description>Notion API for creating and managing pages, databases, and blocks.</description>\n    <location>/Users/michael/ws/clawdbot/skills/notion/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>openai-image-gen</name>\n    <description>Batch-generate images via OpenAI Images API. Random prompt sampler + `index.html` gallery.</description>\n    <location>/Users/michael/ws/clawdbot/skills/openai-image-gen/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>openai-whisper-api</name>\n    <description>Transcribe audio via OpenAI Audio Transcriptions API (Whisper).</description>\n    <location>/Users/michael/ws/clawdbot/skills/openai-whisper-api/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>session-logs</name>\n    <description>Search and analyze your own conversation history from session log files using jq.</description>\n    <location>/Users/michael/ws/clawdbot/skills/session-logs/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Create or update AgentSkills. Use when designing, structuring, or packaging skills with scripts, references, and assets.</description>\n    <location>/Users/michael/ws/clawdbot/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>slack</name>\n    <description>Use when you need to control Slack from Clawdbot via the slack tool, including reacting to messages or pinning/unpinning items in Slack channels or DMs.</description>\n    <location>/Users/michael/ws/clawdbot/skills/slack/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tmux</name>\n    <description>Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output.</description>\n    <location>/Users/michael/ws/clawdbot/skills/tmux/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>video-frames</name>\n    <description>Extract frames or short clips from videos using ffmpeg.</description>\n    <location>/Users/michael/ws/clawdbot/skills/video-frames/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>wacli</name>\n    <description>Send WhatsApp messages to other people or search/sync WhatsApp history via the wacli CLI (not for normal user chats).</description>\n    <location>/Users/michael/ws/clawdbot/skills/wacli/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>weather</name>\n    <description>Get current weather and forecasts (no API key required).</description>\n    <location>/Users/michael/ws/clawdbot/skills/weather/SKILL.md</location>\n  </skill>\n</available_skills>",
+      "skills": [
+        {
+          "name": "1password"
+        },
+        {
+          "name": "coding-agent"
+        },
+        {
+          "name": "discord"
+        },
+        {
+          "name": "gemini"
+        },
+        {
+          "name": "github"
+        },
+        {
+          "name": "himalaya"
+        },
+        {
+          "name": "imsg"
+        },
+        {
+          "name": "notion"
+        },
+        {
+          "name": "openai-image-gen",
+          "primaryEnv": "OPENAI_API_KEY"
+        },
+        {
+          "name": "openai-whisper-api",
+          "primaryEnv": "OPENAI_API_KEY"
+        },
+        {
+          "name": "session-logs"
+        },
+        {
+          "name": "skill-creator"
+        },
+        {
+          "name": "slack"
+        },
+        {
+          "name": "tmux"
+        },
+        {
+          "name": "video-frames"
+        },
+        {
+          "name": "wacli"
+        },
+        {
+          "name": "weather"
+        }
+      ],
+      "resolvedSkills": [
+        {
+          "name": "1password",
+          "description": "Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in (single or multi-account), or reading/injecting/running secrets via op.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/1password/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/1password",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "coding-agent",
+          "description": "Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/coding-agent/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/coding-agent",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "discord",
+          "description": "Use when you need to control Discord from Clawdbot via the discord tool: send messages, react, post or upload stickers, upload emojis, run polls, manage threads/pins/search, create/edit/delete channels and categories, fetch permissions or member/role/channel info, or handle moderation actions in Discord DMs or channels.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/discord/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/discord",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "gemini",
+          "description": "Gemini CLI for one-shot Q&A, summaries, and generation.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/gemini/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/gemini",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "github",
+          "description": "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/github/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/github",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "himalaya",
+          "description": "CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple accounts and message composition with MML (MIME Meta Language).",
+          "filePath": "/Users/michael/ws/clawdbot/skills/himalaya/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/himalaya",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "imsg",
+          "description": "iMessage/SMS CLI for listing chats, history, watch, and sending.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/imsg/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/imsg",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "notion",
+          "description": "Notion API for creating and managing pages, databases, and blocks.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/notion/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/notion",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "openai-image-gen",
+          "description": "Batch-generate images via OpenAI Images API. Random prompt sampler + `index.html` gallery.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/openai-image-gen/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/openai-image-gen",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "openai-whisper-api",
+          "description": "Transcribe audio via OpenAI Audio Transcriptions API (Whisper).",
+          "filePath": "/Users/michael/ws/clawdbot/skills/openai-whisper-api/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/openai-whisper-api",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "session-logs",
+          "description": "Search and analyze your own conversation history from session log files using jq.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/session-logs/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/session-logs",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "skill-creator",
+          "description": "Create or update AgentSkills. Use when designing, structuring, or packaging skills with scripts, references, and assets.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/skill-creator/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/skill-creator",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "slack",
+          "description": "Use when you need to control Slack from Clawdbot via the slack tool, including reacting to messages or pinning/unpinning items in Slack channels or DMs.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/slack/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/slack",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "tmux",
+          "description": "Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/tmux/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/tmux",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "video-frames",
+          "description": "Extract frames or short clips from videos using ffmpeg.",
+          "filePath": "/Users/michael/ws/clawdbot/skills/video-frames/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/video-frames",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "wacli",
+          "description": "Send WhatsApp messages to other people or search/sync WhatsApp history via the wacli CLI (not for normal user chats).",
+          "filePath": "/Users/michael/ws/clawdbot/skills/wacli/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/wacli",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "weather",
+          "description": "Get current weather and forecasts (no API key required).",
+          "filePath": "/Users/michael/ws/clawdbot/skills/weather/SKILL.md",
+          "baseDir": "/Users/michael/ws/clawdbot/skills/weather",
+          "source": "clawdbot-bundled"
+        }
+      ]
+    },
+    "inputTokens": 8,
+    "outputTokens": 123,
+    "totalTokens": 10165,
+    "modelProvider": "anthropic",
+    "model": "claude-opus-4-5",
+    "contextTokens": 200000
+  },
+  "agent:art:whatsapp:group:120363406163015443@g.us": {
+    "updatedAt": 1768445362601,
+    "lastChannel": "whatsapp",
+    "lastTo": "120363406163015443@g.us",
+    "lastAccountId": "default",
+    "sessionId": "6c9a13bc-a2fd-41bf-b970-3ece2ac0e768"
+  }
+}

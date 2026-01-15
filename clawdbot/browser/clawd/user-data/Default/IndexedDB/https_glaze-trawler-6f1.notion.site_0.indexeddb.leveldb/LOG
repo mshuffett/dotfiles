@@ -1,0 +1,6 @@
+2026/01/14-11:44:07.436 30211b0 Creating DB /Users/michael/.clawdbot/browser/clawd/user-data/Default/IndexedDB/https_glaze-trawler-6f1.notion.site_0.indexeddb.leveldb since it was missing.
+2026/01/14-11:44:07.438 30211b0 Reusing MANIFEST /Users/michael/.clawdbot/browser/clawd/user-data/Default/IndexedDB/https_glaze-trawler-6f1.notion.site_0.indexeddb.leveldb/MANIFEST-000001
+2026/01/14-11:44:07.715 30211b0 Level-0 table #5: started
+2026/01/14-11:44:07.716 30211b0 Level-0 table #5: 2203 bytes OK
+2026/01/14-11:44:07.721 30211b0 Delete type=0 #3
+2026/01/14-11:44:07.721 30211b0 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)

@@ -1,0 +1,6 @@
+2026/01/14-12:53:05.654 30211b0 Creating DB /Users/michael/.clawdbot/browser/clawd/user-data/Default/IndexedDB/https_app.todoist.com_0.indexeddb.leveldb since it was missing.
+2026/01/14-12:53:05.655 30211b0 Reusing MANIFEST /Users/michael/.clawdbot/browser/clawd/user-data/Default/IndexedDB/https_app.todoist.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/01/14-12:53:36.999 30211b3 Level-0 table #5: started
+2026/01/14-12:53:37.000 30211b3 Level-0 table #5: 1424 bytes OK
+2026/01/14-12:53:37.001 30211b3 Delete type=0 #3
+2026/01/14-12:53:37.001 30211b3 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

@@ -11,3 +11,4 @@ cache/
 **/local.env
 .zsh_secrets
 .worktrees/
+clawdbot/credentials/

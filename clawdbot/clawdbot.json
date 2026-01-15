@@ -1,8 +1,8 @@
 {
   "wizard": {
-    "lastRunAt": "2026-01-12T23:44:02.561Z",
-    "lastRunVersion": "2026.1.11-4",
-    "lastRunCommand": "onboard",
+    "lastRunAt": "2026-01-15T03:19:30.860Z",
+    "lastRunVersion": "2026.1.13",
+    "lastRunCommand": "configure",
     "lastRunMode": "local"
   },
   "auth": {
@@ -40,8 +40,8 @@
         "id": "founders",
         "workspace": "/Users/michael/clawd-founders",
         "identity": {
-          "name": "Founders Assistant",
-          "emoji": "🚀"
+          "name": "Michael",
+          "emoji": "👋"
         }
       }
     ]
@@ -91,39 +91,45 @@
   "commands": {
     "native": "auto"
   },
-  "whatsapp": {
-    "dmPolicy": "allowlist",
-    "groupPolicy": "allowlist",
-    "mediaMaxMb": 50,
-    "allowFrom": [
-      "+17035173349",
-      "+14454004781"
-    ]
-  },
-  "telegram": {
-    "enabled": true,
-    "dmPolicy": "allowlist",
-    "botToken": "8580595353:AAHgMgklBPZnM80CtXwkacaYpehQgezdY_o",
-    "allowFrom": [
-      "*",
-      "723773246"
-    ],
-    "groupPolicy": "open",
-    "streamMode": "partial"
-  },
-  "imessage": {
-    "enabled": true,
-    "cliPath": "/Users/michael/.local/bin/imsg",
-    "dmPolicy": "allowlist",
-    "allowFrom": [
-      "+13108013336"
-    ],
-    "groupPolicy": "open"
+  "channels": {
+    "whatsapp": {
+      "dmPolicy": "allowlist",
+      "allowFrom": [
+        "+17035173349",
+        "+14454004781"
+      ],
+      "groupPolicy": "allowlist",
+      "mediaMaxMb": 50
+    },
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "disabled",
+      "botToken": "8580595353:AAHgMgklBPZnM80CtXwkacaYpehQgezdY_o",
+      "allowFrom": [
+        "*",
+        "723773246"
+      ],
+      "groupPolicy": "open",
+      "streamMode": "partial"
+    },
+    "imessage": {
+      "enabled": true,
+      "cliPath": "/Users/michael/.local/bin/imsg",
+      "dmPolicy": "allowlist",
+      "allowFrom": [
+        "+13108013336"
+      ],
+      "groupPolicy": "open"
+    }
   },
   "gateway": {
     "port": 18789,
     "mode": "local",
-    "bind": "loopback",
+    "bind": "auto",
+    "auth": {
+      "mode": "token",
+      "token": "490a7888924392c456b4897d5ecf710b53e7510afc2e0f4f"
+    },
     "tailscale": {
       "mode": "off",
       "resetOnExit": false

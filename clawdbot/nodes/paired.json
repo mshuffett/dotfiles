@@ -1,0 +1,41 @@
+{
+  "mac-37ae5a2a-a831-4a6f-a8bd-f9f1d837202e": {
+    "nodeId": "mac-37ae5a2a-a831-4a6f-a8bd-f9f1d837202e",
+    "token": "32742542cd35489db00370d6ffd48ff4",
+    "displayName": "Michael’s MacBook Pro",
+    "platform": "macos",
+    "version": "2026.1.11-4",
+    "deviceFamily": "Mac",
+    "modelIdentifier": "Mac17,2",
+    "caps": [
+      "canvas",
+      "screen"
+    ],
+    "commands": [
+      "canvas.present",
+      "canvas.hide",
+      "canvas.navigate",
+      "canvas.eval",
+      "canvas.snapshot",
+      "canvas.a2ui.push",
+      "canvas.a2ui.pushJSONL",
+      "canvas.a2ui.reset",
+      "screen.record",
+      "system.run",
+      "system.notify"
+    ],
+    "remoteIp": "127.0.0.1",
+    "createdAtMs": 1768366183865,
+    "approvedAtMs": 1768366183865,
+    "permissions": {
+      "screenRecording": false,
+      "speechRecognition": false,
+      "camera": false,
+      "location": false,
+      "accessibility": false,
+      "appleScript": true,
+      "microphone": false,
+      "notifications": false
+    }
+  }
+}
