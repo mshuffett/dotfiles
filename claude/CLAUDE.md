@@ -24,67 +24,19 @@ rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec,
   - Documentation: Run `task --help` or see `~/ws/everything-monorepo/apps/web/scripts/README.md`
   - Auto-finds CLI in worktrees or main repo - no manual linking needed
 
-**Governance Summary**
-- Keep universal rules here; place procedures and specifics in plugins (skills + commands).
-- Invoke skills via Skill tool when context matches their description; commands require explicit `/command` invocation.
-- For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
-- If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
+**Skills**
 
-**Plugin Philosophy**
+Skills are how I learn and improve. Available skill descriptions are in my context—when my task matches one, invoke it via the Skill tool before proceeding.
 
-Plugins are evolving tools and memory—not static, they grow with use:
-- **Skills** = Contextual knowledge (invoke via Skill tool when context matches description). Use for: safety protocols, best practices, domain knowledge. Example: invoke git-safety skill before git stash operations.
-- **Commands** = Explicit user actions (invoked via `/command`). Use for: workflows, routines, actions. Example: `/morning` starts the day.
-- **`.local.md`** = Per-project state and config (`.claude/plugin-name.local.md`). YAML frontmatter + markdown body for plugin-specific settings.
+When creating or updating skills, first invoke `plugin-dev:skill-development` for guidance.
 
-**Installed Plugins** (`~/.dotfiles/claude-plugins/`):
-| Plugin | Purpose |
-|--------|---------|
-| `productivity` | PPV Notion, GTD, coaching, task management, day planning |
-| `dev` | Git, PR workflow, testing, ports, Linear, Context7 |
-| `terminal` | Tmux, image viewing, themes, sounds |
-| `media` | TTS, image generation, notifications |
-| `claude-meta` | Codex reasoning, session management, prototyping |
-| `memory` | Docs, notes, mistakes, prompt engineering, configs |
-| `misc` | Hammerspoon, Sphere mobile, specialized tools |
-
-**How Plugins Work**
-1. **Skills are invoked**: When context matches a skill description, invoke it via the Skill tool to load that knowledge
-2. **Commands are invoked**: User types `/plugin:command` or just `/command` if unique
-3. **Both can read `.local.md`**: For per-project configuration
-
-**Project-Specific Commands**
-- `<project>/.claude/commands/` - Procedures specific to that repository's codebase (API patterns, testing patterns, etc.)
-
-**When to Invoke Skills**
-
-Skill descriptions are in your context. When your task matches a skill's description, invoke it via the Skill tool before proceeding:
-
-**Common skill triggers**:
-- `git-safety` → Before git stash operations
-- `port-safety` → Before killing processes on ports
-- `skill-development` → When creating or updating skills
-- `memory-placement` → When deciding where to store information
-- `ppv-query` → When user asks about tasks/projects/PPV
-
-**Project-Specific Patterns** (read when working in that repo):
-- **API patterns** → Read `<project>/.claude/commands/api-patterns.md` when working on API routes
-- **Testing patterns** → Read `<project>/.claude/commands/testing-patterns.md` when writing tests
-- **Firebase Auth** → Read `<project>/.claude/commands/firebase-auth-patterns.md` for Firebase Auth patterns
-
-**Invoking Commands** (user types `/command`):
-- `/dev:pr` or `/pr` - Create pull request workflow
-- `/dev:worktrees` - Git worktree management
-- `/dev:tests` - Test debugging workflow
-- `/media:tts` or `/tts` - Text-to-speech generation
-- `/productivity:morning` or `/morning` - Start the day
-- Full list in each plugin's `commands/` directory
+If no relevant skill exists but the work involves reusable knowledge, create one.
 
 **Editing Policy (this file)**
-- **REQUIRED**: The `memory-placement` skill auto-loads when editing CLAUDE.md—follow its guidance
+- **REQUIRED**: Invoke `memory-placement` skill before editing CLAUDE.md
 - Before editing this file, commit the current state in the dotfiles repo
 - After making changes, commit again with a clear message summarizing what changed and why
-- Ask yourself: "Do I need this MOST OF THE TIME or might I make a mistake without it?" If NO → create a skill or command in a plugin instead
+- Ask yourself: "Do I need this MOST OF THE TIME or might I make a mistake without it?" If NO → create a skill instead
 
 **MCP Servers (Context Management)**
 - Heavy MCP servers (Notion, Linear, Playwright) are disabled by default to save context (~30k+ tokens).
