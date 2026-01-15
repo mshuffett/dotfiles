@@ -26,14 +26,14 @@ rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec,
 
 **Governance Summary**
 - Keep universal rules here; place procedures and specifics in plugins (skills + commands).
-- Skills auto-load when context matches their description; commands require explicit `/command` invocation.
+- Invoke skills via Skill tool when context matches their description; commands require explicit `/command` invocation.
 - For third‑party APIs, never trust memory—fetch current docs on demand (Context7).
 - If a user request appears to conflict with a rule, clearly state the conflict and ask whether to perform a temporary override or update the rule; proceed only after explicit confirmation.
 
 **Plugin Philosophy**
 
 Plugins are evolving tools and memory—not static, they grow with use:
-- **Skills** = Contextual knowledge (auto-loaded when context matches). Use for: safety protocols, best practices, domain knowledge. Example: git-safety skill auto-loads when about to git stash.
+- **Skills** = Contextual knowledge (invoke via Skill tool when context matches description). Use for: safety protocols, best practices, domain knowledge. Example: invoke git-safety skill before git stash operations.
 - **Commands** = Explicit user actions (invoked via `/command`). Use for: workflows, routines, actions. Example: `/morning` starts the day.
 - **`.local.md`** = Per-project state and config (`.claude/plugin-name.local.md`). YAML frontmatter + markdown body for plugin-specific settings.
 
@@ -49,23 +49,23 @@ Plugins are evolving tools and memory—not static, they grow with use:
 | `misc` | Hammerspoon, Sphere mobile, specialized tools |
 
 **How Plugins Work**
-1. **Skills auto-load**: When context matches a skill description, Claude automatically loads that knowledge
+1. **Skills are invoked**: When context matches a skill description, invoke it via the Skill tool to load that knowledge
 2. **Commands are invoked**: User types `/plugin:command` or just `/command` if unique
 3. **Both can read `.local.md`**: For per-project configuration
 
 **Project-Specific Commands**
 - `<project>/.claude/commands/` - Procedures specific to that repository's codebase (API patterns, testing patterns, etc.)
 
-**Skills Auto-Load, Commands Are Invoked**
+**When to Invoke Skills**
 
-With plugins, you no longer need to manually read procedure files for most topics. Skills auto-load when their context matches:
+Skill descriptions are in your context. When your task matches a skill's description, invoke it via the Skill tool before proceeding:
 
-**Auto-loading Skills** (no manual read needed):
-- `git-safety` → Loads when about to git stash
-- `port-safety` → Loads when killing processes on ports
-- `tmux-patterns` → Loads when working with tmux panes
-- `memory-placement` → Loads when deciding where to store information
-- `ppv-query` → Loads when user asks about tasks/projects/PPV
+**Common skill triggers**:
+- `git-safety` → Before git stash operations
+- `port-safety` → Before killing processes on ports
+- `skill-development` → When creating or updating skills
+- `memory-placement` → When deciding where to store information
+- `ppv-query` → When user asks about tasks/projects/PPV
 
 **Project-Specific Patterns** (read when working in that repo):
 - **API patterns** → Read `<project>/.claude/commands/api-patterns.md` when working on API routes
