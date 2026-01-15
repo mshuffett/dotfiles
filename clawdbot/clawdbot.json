@@ -35,6 +35,14 @@
       {
         "id": "michael",
         "workspace": "/Users/michael/clawd-michael"
+      },
+      {
+        "id": "founders",
+        "workspace": "/Users/michael/clawd-founders",
+        "identity": {
+          "name": "Founders Assistant",
+          "emoji": "🚀"
+        }
       }
     ]
   },
@@ -43,10 +51,30 @@
     {
       "agentId": "michael",
       "match": {
-        "provider": "imessage",
+        "channel": "imessage",
         "peer": {
           "kind": "dm",
           "id": "+13108013336"
+        }
+      }
+    },
+    {
+      "agentId": "founders",
+      "match": {
+        "channel": "whatsapp",
+        "peer": {
+          "kind": "dm",
+          "id": "+17035173349"
+        }
+      }
+    },
+    {
+      "agentId": "founders",
+      "match": {
+        "channel": "whatsapp",
+        "peer": {
+          "kind": "dm",
+          "id": "+14454004781"
         }
       }
     }
@@ -66,7 +94,11 @@
   "whatsapp": {
     "dmPolicy": "allowlist",
     "groupPolicy": "allowlist",
-    "mediaMaxMb": 50
+    "mediaMaxMb": 50,
+    "allowFrom": [
+      "+17035173349",
+      "+14454004781"
+    ]
   },
   "telegram": {
     "enabled": true,
