@@ -61,7 +61,7 @@ Michael — 338 Main Street Apartment 15G, San Francisco, CA
 - Placement decision:
   - Universal, always‑on rules → a short line here (no examples).
   - Procedural/runbook with a clear trigger → an on‑demand guide with purpose, triggers, acceptance checks, and quick‑path examples.
-  - Repo‑specific setup/commands → the repo's README (quickstart) and docs/ (deep guides, troubleshooting); the repo agent file keeps only Hot Commands and minimal rules.
+  - Repo‑specific setup → the repo's README (quickstart) and docs/ (deep guides, troubleshooting).
   - Third‑party libraries → consult current docs via Context7 at execution time (do not embed API signatures here).
   - Historical logs or learnings → a dedicated log doc; link from here.
 - Implementation steps when the user says "remember this" or provides learnings:
@@ -88,10 +88,9 @@ After completing operational work, before ending the turn—ask if anything lear
 - Cooldown: after 14–30 quiet days, propose removing the added one‑liner; the guide remains.
 
 **Plugin Locations**
-- **Global plugins**: `~/.dotfiles/claude-plugins/` - Version-controlled plugins with skills and commands
+- **Global plugins**: `~/.dotfiles/claude-plugins/` - Version-controlled skills
 - **Symlinked to**: `~/.claude/plugins/marketplaces/local-plugins/plugins/`
-- **Project-specific commands**: `<project>/.claude/commands/` - Patterns specific to that repository (API patterns, testing patterns, etc.)
-- **Placement rule**: If functionality applies to multiple projects → global plugin. If it's specific to one codebase → project commands.
+- **Project-specific**: `<project>/.claude/` - Patterns specific to that repository
 
 **Documentation Guidelines (Pointer)**
 - Prefer updating existing docs; place feature guides and deep explanations in `docs/`; avoid top‑level clutter.
