@@ -71,55 +71,9 @@ Michael — 338 Main Street Apartment 15G, San Francisco, CA
 - When in doubt:
   - Ask whether it should apply to every interaction (here) or only when working on a specific topic (on‑demand guide or repo docs).
 
-**Creating New Plugin Content**
-
-When adding new functionality, decide: **Skill** (auto-loads) or **Command** (user-invoked)?
-
-**Creating a Skill** (contextual knowledge that should auto-load):
-1. Choose the appropriate plugin from the table above
-2. Create `~/.dotfiles/claude-plugins/<plugin>/skills/<skill-name>/SKILL.md`
-3. Write a clear `description` in frontmatter that triggers loading
-4. Commit the new skill
-
-**Creating a Command** (explicit user action):
-1. Choose the appropriate plugin
-2. Create `~/.dotfiles/claude-plugins/<plugin>/commands/<command>.md`
-3. Add frontmatter with `description` and optional `allowed-tools`
-4. Commit the new command
-
-**Example - Adding a new skill**:
-```
-~/.dotfiles/claude-plugins/dev/skills/deployment-safety/SKILL.md
----
-name: Deployment Safety
-description: Use when about to deploy to production, running deploy commands, or discussing deployment strategies.
----
-# Deployment Safety Protocol
-...
-```
-
-**Keeping Skills & Commands Updated**
-- When working with a topic that has a skill or command, actively watch for:
-  - New insights, gotchas, or better approaches discovered during work
-  - User corrections or clarifications that improve understanding
-  - Edge cases or context-dependent decisions not covered
-  - More reliable methods than what's currently documented
-- **Action when new information is discovered:**
-  - Update the relevant skill or command immediately while context is fresh
-  - Commit the update with a clear message explaining what was learned
-  - Inform the user that the documentation has been improved
-- This keeps plugins living, accurate, and continuously improving based on real-world usage
-
 **End-of-Task Knowledge Check**
-After completing operational work (configuration, setup, debugging, tool usage), before ending the turn:
-1. **No skill exists?** Ask: "Should I create a skill to document [tool/process] for future sessions?"
-2. **Skill exists but missing info?** Ask: "I discovered [fact]. Should I add this to the [skill] skill?"
-3. **New fact learned?** Ask: "I learned [X]. Should I document this somewhere?"
 
-This ensures institutional knowledge isn't lost just because the immediate task is done.
-
-**Proactive Memory Improvements**
-- Proactively suggest improvements to memory when you notice repeated friction, missing triggers, or unclear acceptance checks. Propose exact wording and destination (root vs on‑demand guide vs repo docs) and ask for approval before updating.
+After completing operational work, before ending the turn—ask if anything learned should become a skill.
 
 **Task Switching & Interrupts**
 - When a new user request arrives while you’re mid‑task, quickly assess whether doing it now benefits the user (e.g., trivial/quick, safety‑critical, or unblocks them) or should be queued.

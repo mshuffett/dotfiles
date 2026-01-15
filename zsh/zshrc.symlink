@@ -358,7 +358,7 @@ eval "$(direnv hook zsh)"
 # fnm (Fast Node Manager)
 # Uses Node from .nvmrc/.node-version on cd; sets default otherwise
 if command -v fnm >/dev/null 2>&1; then
-  eval "$(fnm env --use-on-cd --shell zsh)"
+  eval "$(fnm env --use-on-cd --log-level=quiet --shell zsh)"
   # Ensure old NVM bins don't shadow fnm-managed Node
   path=(${path:#$HOME/.nvm/versions/*/bin})
   # Re-prioritize Bun bin after fnm prepends its path

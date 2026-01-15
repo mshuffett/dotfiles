@@ -1,0 +1,148 @@
+{
+  "wizard": {
+    "lastRunAt": "2026-01-15T03:31:31.248Z",
+    "lastRunVersion": "2026.1.14",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "auth": {
+    "profiles": {
+      "anthropic:claude-cli": {
+        "provider": "anthropic",
+        "mode": "oauth"
+      },
+      "anthropic:default": {
+        "provider": "anthropic",
+        "mode": "oauth"
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "/Users/michael/clawd"
+    },
+    "list": [
+      {
+        "id": "art",
+        "default": true,
+        "workspace": "/Users/michael/clawd",
+        "identity": {
+          "name": "Art",
+          "theme": "Owl — wise, cool, philosophical (Aristotle)",
+          "emoji": "🦉"
+        }
+      },
+      {
+        "id": "michael",
+        "workspace": "/Users/michael/clawd-michael"
+      },
+      {
+        "id": "founders",
+        "workspace": "/Users/michael/clawd-founders",
+        "identity": {
+          "name": "Michael",
+          "emoji": "👋"
+        }
+      }
+    ]
+  },
+  "tools": {},
+  "bindings": [
+    {
+      "agentId": "michael",
+      "match": {
+        "channel": "imessage",
+        "peer": {
+          "kind": "dm",
+          "id": "+13108013336"
+        }
+      }
+    },
+    {
+      "agentId": "founders",
+      "match": {
+        "channel": "whatsapp",
+        "peer": {
+          "kind": "dm",
+          "id": "+17035173349"
+        }
+      }
+    },
+    {
+      "agentId": "founders",
+      "match": {
+        "channel": "whatsapp",
+        "peer": {
+          "kind": "dm",
+          "id": "+14454004781"
+        }
+      }
+    }
+  ],
+  "messages": {
+    "groupChat": {
+      "mentionPatterns": [
+        "\\b@?Art\\b"
+      ]
+    },
+    "ackReaction": "👀",
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto"
+  },
+  "channels": {
+    "whatsapp": {
+      "dmPolicy": "allowlist",
+      "allowFrom": [
+        "+17035173349",
+        "+14454004781"
+      ],
+      "groupPolicy": "allowlist",
+      "mediaMaxMb": 50,
+      "ackReaction": {
+        "emoji": "👀",
+        "direct": false,
+        "group": "mentions"
+      }
+    },
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "disabled",
+      "botToken": "8580595353:AAHgMgklBPZnM80CtXwkacaYpehQgezdY_o",
+      "allowFrom": [
+        "*",
+        "723773246"
+      ],
+      "groupPolicy": "open",
+      "streamMode": "partial"
+    },
+    "imessage": {
+      "enabled": true,
+      "cliPath": "/Users/michael/.local/bin/imsg",
+      "dmPolicy": "allowlist",
+      "allowFrom": [
+        "+13108013336"
+      ],
+      "groupPolicy": "open"
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "auto",
+    "auth": {
+      "mode": "token",
+      "token": "490a7888924392c456b4897d5ecf710b53e7510afc2e0f4f"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "pnpm"
+    }
+  }
+}

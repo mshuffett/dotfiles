@@ -1,0 +1,2716 @@
+{
+  "companies": [
+    {
+      "name": "Waycraft",
+      "slug": "waycraft",
+      "group": 1,
+      "demoGoal": "Ship Waycraft—an AI coach for founders—to every founder in this batch. Free during the batch. Success is half of you having breakthroughs and at least 10 teams continuing at $200/month.",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Vly AI",
+      "slug": "vly-ai",
+      "group": 1,
+      "demoGoal": "$10k mrr",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "roll out payments to everyone and hit $1k mrr",
+          "progress": ""
+        }
+      ],
+      "founders": [
+        {
+          "name": "Hildebrand",
+          "phone": "15033198708",
+          "email": "rhildebrand@mybankwell.com",
+          "batch": "W15",
+          "location": "Portland Oregon",
+          "stage": "Building MVP",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "AI-Native Commercial Bank - adjacent - W15 batch. Building MVP, no funding. Solo founder. Based in Portland Oregon (marked 'In SF? Yes' but actually remote). Virtual weekly, prefers virtual, 3/5 kickoff. AI fintech is adjacent but not actually SF-based and prefers virtual.",
+          "hasCofounder": "No, solo",
+          "cofounderLinks": "",
+          "inWhatsApp": true
+        },
+        {
+          "name": "Shreyas Bharadwaj",
+          "phone": "",
+          "email": "shreyas@assemblyhoa.com",
+          "batch": "S24",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/383321",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Superset",
+      "slug": "superset",
+      "group": 1,
+      "demoGoal": "10k MRR",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Winter Comics",
+      "slug": "winter-comics",
+      "group": 1,
+      "demoGoal": "50k MRR, Training the first animation foundational model",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Deep24",
+      "slug": "deep24",
+      "group": 1,
+      "demoGoal": "Place 100 people into jobs using Deep24",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Get first round of common gap users onto Deep24 and have them send their data to employers. Get founders using the software too, true V2 out (hopefully launched software on it's own).",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Agent Viz",
+      "slug": "agent-viz",
+      "group": 1,
+      "demoGoal": "1000 users",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "10 users",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "denormalized",
+      "slug": "denormalized",
+      "group": 1,
+      "demoGoal": "3 customer LOIs",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Book 50 discovery calls",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Clarum",
+      "slug": "clarum",
+      "group": 2,
+      "demoGoal": "Ship V2 to existing customers and 500k ARR",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "",
+          "progress": "Demo by Monday"
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Friday",
+      "slug": "friday",
+      "group": 2,
+      "demoGoal": "$1M ARR + Get the product to a point where we can ramp up GTM",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Onboard 2 people to the $500/month tier of Friday",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Assembly HOA",
+      "slug": "assembly-hoa",
+      "group": 2,
+      "demoGoal": "$1M ARR",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "$800k ARR (+$80k), +20 leads, metric for AI agent success",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Articulate",
+      "slug": "articulate",
+      "group": 2,
+      "demoGoal": "$300k ARR",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Get 1 more pilot initiated",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Unknown",
+      "slug": "unknown",
+      "group": 2,
+      "demoGoal": "",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Postquant Labs",
+      "slug": "postquant-labs",
+      "group": 2,
+      "demoGoal": "two more quantum suppliers signed\nthree quantum consumers purchasing services\npublic testnet launched with 1000+ H100 equivalents mining",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "5 employees fully onboarded\n$5M wired from committed investors\n30 meetings on the calendar with suppliers and consumers",
+          "progress": "4 employees onboarded\n$0 wired\n0 meetings on the calendar"
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "LunaBill",
+      "slug": "lunabill",
+      "group": 3,
+      "demoGoal": "$5m in arr",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "automate 10,000 calls weekly; onboard ucsf fully; finalize housing; send investor updates",
+          "progress": "~6000 calls weekly, fixing QA agent"
+        }
+      ],
+      "founders": [
+        {
+          "name": "Suhail Parry",
+          "phone": "",
+          "email": "suhail@lunabill.com",
+          "batch": "F25",
+          "location": "berkeley",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/yashraj22\nhttps://www.linkedin.com/in/davidtw",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Adapted",
+      "slug": "adapted",
+      "group": 3,
+      "demoGoal": "20 users who maintain >80% session compliance for over 4 weeks",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Onboard 5 users who stick at least 1 week",
+          "progress": "Onboarded 7 users, however only 3 have completed 1 week"
+        }
+      ],
+      "founders": [
+        {
+          "name": "Albert Jo",
+          "phone": "14084802672",
+          "email": "jo@adapted.app",
+          "batch": "W24",
+          "location": "San Mateo, CA",
+          "stage": "Building MVP",
+          "fitScore": "6",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "AI physical therapist - adjacent - Building Adapted: AI physical therapist for athletes. W24 batch. Building MVP, angel funded. Has cofounders (non-YC). Based in San Mateo (Bay Area). Virtual weekly but 4/5 kickoff, wants to help organize. AI adjacent but virtual preference.",
+          "hasCofounder": "Yes",
+          "cofounderLinks": "My cofounder is non YC. ",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "Kaymo AI",
+      "slug": "kaymo-ai",
+      "group": 3,
+      "demoGoal": "Public launch and 20 organic users with uploaded data",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "E2E segmentation workflow bug free on staging for Prenuvo and Q Bio zip files",
+          "progress": "Implemented core support for multi-study uploads. Next improve frontend UI for this.\nDistractions: a16z Speedrun video submission, research on synthetic medical data"
+        }
+      ],
+      "founders": [
+        {
+          "name": "Marcus Foster",
+          "phone": "",
+          "email": "marcus@kaymo.ai",
+          "batch": "S15",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "6",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Healthcare tech - looking for cofounder (BONUS) - Building KAYMO: medical imaging platform for patients. S15 batch (experienced). Building MVP, angel funded. Looking for technical generalist cofounders. In-person weekly, 4/5 kickoff, wants to help organize. Can bring 3 investors. Healthcare adjacent, cofounder bonus applies.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "DrSwarm",
+      "slug": "drswarm",
+      "group": 3,
+      "demoGoal": "Ship v1 Complete 500 real tasks across 3 clinics, with <5% manual rescue.",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Do 10 investor calls, Do 10 customer calls, Talk to 5 partners",
+          "progress": "Built out Spreadsheet CRM and Investor target list, behind on calls, need to crank out more calls/emails to get meetings"
+        }
+      ],
+      "founders": [
+        {
+          "name": "Michael Nusimow",
+          "phone": "19175861476",
+          "email": "nusimow@gmail.com",
+          "batch": "W11",
+          "location": "Mountain View, CA",
+          "stage": "Building MVP",
+          "fitScore": "7",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI + Healthcare - seeking cofounder (BONUS) - Building DrSwarm: AI + Healthcare. W11 batch (very experienced). Building MVP, no funding. Looking for CTO, CRO/CSO cofounders. Based in Mountain View (Bay Area). In-person weekly, 5/5 kickoff, wants to help organize. Can bring 10 investors! AI adjacent, cofounder bonus, strong network.",
+          "hasCofounder": "Looking for co-founders",
+          "cofounderLinks": "",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "Vishal AI Healthcare",
+      "slug": "vishal-ai-healthcare",
+      "group": 3,
+      "demoGoal": "250k ARR signed/committed",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Sign 1 customer",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Sidepilot",
+      "slug": "sidepilot",
+      "group": 4,
+      "demoGoal": "$600k ARR",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Flair Labs",
+      "slug": "flair-labs",
+      "group": 4,
+      "demoGoal": "",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Awesomic",
+      "slug": "awesomic",
+      "group": 4,
+      "demoGoal": "",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Eureka Health",
+      "slug": "eureka-health",
+      "group": 4,
+      "demoGoal": "",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "skylarq.ai",
+      "slug": "skylarq-ai",
+      "group": 4,
+      "demoGoal": "50 Customers",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "AI Expert Clones",
+      "slug": "ai-expert-clones",
+      "group": 4,
+      "demoGoal": "50 creators monetising their clones or paying to us for using the broadcasting feature of the platform",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Launch monetizable clones forEnglish tutor creator. And Sell 10 subsriptions for it, onboard 5 course selling creators based out of usa",
+          "progress": "-Launched monetizable clone of english tutor"
+        }
+      ],
+      "founders": [
+        {
+          "name": "Richard Hwang",
+          "phone": "19736475056",
+          "email": "richard.hwang201@gmail.com",
+          "batch": "W23",
+          "location": "SF",
+          "stage": "Launched, some revenue",
+          "fitScore": "3",
+          "fitTier": "C",
+          "inSF": "Yes",
+          "notes": "Not AI adjacent - Building snow conditions forecast for skiers. W23 batch. Launched with revenue, no funding. Solo founder. SF-based. Virtual weekly, 3/5 kickoff. Note: Wife's due date 3/21 = potential availability concerns near demo day. Not AI adjacent, some scheduling constraints.",
+          "hasCofounder": "No, solo",
+          "cofounderLinks": "",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "Rubbrband",
+      "slug": "rubbrband",
+      "group": 5,
+      "demoGoal": "$600K ARR",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Finish delivery of 3 additional videos for existing clients, close $25k in revenue ",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "AI Video Studio",
+      "slug": "ai-video-studio",
+      "group": 5,
+      "demoGoal": "$100k ARR",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Deliver 25 videos for our client",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Ottoclip",
+      "slug": "ottoclip",
+      "group": 5,
+      "demoGoal": "Create complete product tour videos/onboarding guides for every company in batch. Get 10 as customers.",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Create automated product tour videos for every company in the group.",
+          "progress": ""
+        }
+      ],
+      "founders": [
+        {
+          "name": "Tuyen Truong",
+          "phone": "",
+          "email": "tuyen@ottoclip.com",
+          "batch": "W12",
+          "location": "San Carlos, CA",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Alphie",
+      "slug": "alphie",
+      "group": 5,
+      "demoGoal": "20 paying customers",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "3 paying customers",
+          "progress": ""
+        }
+      ],
+      "founders": [
+        {
+          "name": "Yura Riphyak",
+          "phone": "",
+          "email": "yura@riphyak.com",
+          "batch": "W18",
+          "location": "Walnut Creek",
+          "stage": "",
+          "fitScore": "7",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI/GTM Assistant - adjacent - Building Alphie: intelligent GTM assistant that qualifies leads in real time. W18 batch (experienced). Based in Walnut Creek (Bay Area). Launched pre-revenue, angel funded. Has cofounders (Olena Vozna - experienced PM from YouTeam W18). In-person weekly, 5/5 kickoff, wants to help organize. Can bring 3 investors.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/alionavozna/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Vortex Software",
+      "slug": "vortex-software",
+      "group": 5,
+      "demoGoal": "3 case studies",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Launch AI-driven demo",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Benchify",
+      "slug": "benchify",
+      "group": 5,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Juan Castano",
+          "phone": "",
+          "email": "juan@benchify.com",
+          "batch": "S24",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/maxvonhippel/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Tweeks.io",
+      "slug": "tweeks-io",
+      "group": 6,
+      "demoGoal": "10k WAU",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "1k WAU",
+          "progress": "01/12: ~500WAU"
+        }
+      ],
+      "founders": [
+        {
+          "name": "Jason Madeano",
+          "phone": "",
+          "email": "jason@trynextbyte.com",
+          "batch": "W25",
+          "location": "SF",
+          "stage": "",
+          "fitScore": "7",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "Generative UI / AI-adjacent - Building Tweeks ('Lovable for browser extensions'). W25 batch = recent. Launched pre-revenue but raised pre-seed. Committed to in-person weekly. Wants 'high-energy builders' and structure like YC. Has cofounders. Can bring 2 investors. Good space alignment, strong commitment.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/2304301",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Wildcard",
+      "slug": "wildcard",
+      "group": 6,
+      "demoGoal": "10K MRR, 2 killer casestudies",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "10 booked calls",
+          "progress": "01/12 - 0 new calls"
+        }
+      ],
+      "founders": [
+        {
+          "name": "Kaushik Mahorker",
+          "phone": "",
+          "email": "kaushik@wild-card.ai",
+          "batch": "W25",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "TypeOS",
+      "slug": "typeos",
+      "group": 6,
+      "demoGoal": "10,000 WAU",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "1000 more users + Understand what the biggest use case is",
+          "progress": "Absent"
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Orvyn",
+      "slug": "orvyn",
+      "group": 6,
+      "demoGoal": "100 Firms",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Finish next major milestone in product development",
+          "progress": "Absent"
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "AutoStep",
+      "slug": "autostep",
+      "group": 6,
+      "demoGoal": "More enterprise contracts/add 500k ARR (TLDR: 5 enterprise contracts)",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Another paid",
+          "progress": "2 qualifieds booked, (labels in progress)"
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Pally",
+      "slug": "pally",
+      "group": 6,
+      "demoGoal": "1,000 DAU (3+ messages sent in a day)",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "50 WAU",
+          "progress": "13 WAU, 25 onboardings booked"
+        }
+      ],
+      "founders": [
+        {
+          "name": "Haz Hubble",
+          "phone": "",
+          "email": "haz@pally.com",
+          "batch": "S25",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/1287862",
+          "inWhatsApp": false
+        },
+        {
+          "name": "Wyatt Lansford",
+          "phone": "",
+          "email": "wyatt@pally.com",
+          "batch": "S25",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/hazhubble/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "ThunderPhone",
+      "slug": "thunderphone",
+      "group": 6,
+      "demoGoal": "10,000 weekly usage minutes",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Launch live landing page, API, API docs, web front end by 1/21",
+          "progress": "Landing page 1/3 done, web app 1% done, API not started but underlying products 1/3 done"
+        }
+      ],
+      "founders": [
+        {
+          "name": "Alex Kolchinski",
+          "phone": "",
+          "email": "alex@thunderphone.com",
+          "batch": "W21",
+          "location": "SF",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/1161431",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Irving Technology",
+      "slug": "irving-technology",
+      "group": 7,
+      "demoGoal": "Launch our law firm, which has $XM run rate from acquired clients from our hired partners",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "4 partners closed, demo ready for fundraising",
+          "progress": ""
+        }
+      ],
+      "founders": [
+        {
+          "name": "Ajay Vasisht",
+          "phone": "",
+          "email": "ajay@irv.ai",
+          "batch": "S24",
+          "location": "New York",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/2001564",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Pixie",
+      "slug": "pixie",
+      "group": 7,
+      "demoGoal": "50 paying customers",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "2 CPA partners",
+          "progress": ""
+        }
+      ],
+      "founders": [
+        {
+          "name": "Amit Patel",
+          "phone": "",
+          "email": "patelamit@gmail.com",
+          "batch": "S17",
+          "location": "New York",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Eden",
+      "slug": "eden",
+      "group": 7,
+      "demoGoal": "250k ARR",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Arcimus",
+      "slug": "arcimus",
+      "group": 7,
+      "demoGoal": "8k MRR + 2 hires ",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "2 customers landed",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "MISTASHO",
+      "slug": "mistasho",
+      "group": 7,
+      "demoGoal": "15 DAU",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Launch V1, complete 2 user interviews (watch them use it)",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "GhostEye",
+      "slug": "ghosteye",
+      "group": 7,
+      "demoGoal": "25 Customers + 10 Enterprise Pilots ",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Mohammad Eshan",
+          "phone": "",
+          "email": "eshan@ghosteye.ai",
+          "batch": "S25",
+          "location": "NYC",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Dream",
+      "slug": "dream",
+      "group": 7,
+      "demoGoal": "",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "UBiosis Health",
+      "slug": "ubiosis-health",
+      "group": 8,
+      "demoGoal": "25 clinics, 200 patients enrolled, decide on a cofounder ±",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "establish relationships with anchor 3 GI relationships ",
+          "progress": "met with mayo, ut health, and BCM"
+        },
+        {
+          "period": "01/21/26",
+          "goal": "prep demo",
+          "progress": ""
+        }
+      ],
+      "founders": [
+        {
+          "name": "Alex Arevalos",
+          "phone": "",
+          "email": "alex@ubiosis.ai",
+          "batch": "W22",
+          "location": "Houston",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Autonomous AI Nurse - adjacent but REMOTE - W22 batch. UBiosis building UBi, autonomous AI nurse for chronic care. Looking for CTO cofounder (AI + health). Launched with revenue. Houston-based, virtual weekly. Can bring 10 investors (Rebel Fund, GC, First Round). Strong AI adjacency and investor network, but not SF-based. Said 'Yes' to SF but based in Houston.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "NearWave",
+      "slug": "nearwave",
+      "group": 8,
+      "demoGoal": "Newest device shipped to 10 new customers. $2M seed+ closed.",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Strategy meeting done w/ stakeholders, vB device completed, begin testing.",
+          "progress": "device testing strated [DONE]. vB still in progress.[IN PROG] Strategy meeting booked. [DONE]"
+        },
+        {
+          "period": "01/21/26",
+          "goal": "-Demo next week.\n-vB fully built out \n- 30 outreach emails on seed+",
+          "progress": ""
+        }
+      ],
+      "founders": [
+        {
+          "name": "Roy Stillwell",
+          "phone": "",
+          "email": "roy@nearwave.co",
+          "batch": "W22",
+          "location": "Austin",
+          "stage": "",
+          "fitScore": "4",
+          "fitTier": "C",
+          "inSF": "No",
+          "notes": "AI for healthcare/oncology - Building Nearwave: AI platform helping oncologists select right chemotherapy. W22 batch. Launched with revenue, raised pre-seed. Solo founder. Based in Austin (not SF). Virtual weekly, prefers virtual. Hardware component. Can bring 5 investors. Good AI space but not SF-based and prefers virtual.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "10xR",
+      "slug": "10xr",
+      "group": 8,
+      "demoGoal": "10K MRR + >80% usage ",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Vamsee",
+          "phone": "",
+          "email": "vamsee.k@10xr.co",
+          "batch": "W22",
+          "location": "Dallas",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "AI/Voice for healthcare - adjacent - Building 10xR: voice-first documentation and QA co-pilot for home health/hospice. W22 batch. Launched with revenue, angel funded. Has cofounders. Based in Dallas (not SF). Virtual weekly but 5/5 kickoff interest, wants to help organize. Can bring 3 investors. Good AI/voice space but not SF-based.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/jaswanth-reddy-ganapa/\nhttps://www.linkedin.com/in/saisatwik99/\n",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "MedPiper",
+      "slug": "medpiper",
+      "group": 8,
+      "demoGoal": "5k policies/month ($50k MRR)",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "go live with D2C launch (move out of waitlist)",
+          "progress": "product filed with regulator for approval [DONE]"
+        },
+        {
+          "period": "01/21/26",
+          "goal": "50 payouts. Investor deck prep",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "35Financial",
+      "slug": "35financial",
+      "group": 8,
+      "demoGoal": "Autonomous loan/bank account opening",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Account opening works end-to-end",
+          "progress": "Built account opening and loans. [Done] Unblocked 1.14.26 being able to call bank core to post in sandbox.  [In-progress]"
+        },
+        {
+          "period": "01/21/26",
+          "goal": "Record Demo. Get positioning tight.",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Marketfit.xyz",
+      "slug": "marketfit-xyz",
+      "group": 8,
+      "demoGoal": "100 paid users ",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "- release working v0.2 product and share with batchmates \n- use MarketFit to grow MarketFit and get 3 users\n- set up Evals with real user data ",
+          "progress": "- 1/14 halfway building MVP for v0.2"
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Yuzu Labs",
+      "slug": "yuzu-labs",
+      "group": 8,
+      "demoGoal": "$30k mrr and 5 full launch programs sold $50k (80 customers? Is this possible) lol ",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Theme: discovery + alignment\n- shift website, blurb, deck to video as GTM (turn any conversation into content that drives revenue)\n- Identify the 1-2 icp's and start outreach on Linkedin DM's and Outbound email by monday 1/16\n- 2 Product Flows for lead gen (source --> processing for script --> video gen)\n\n- Record demo for 1/21 meeting\n\nFeb - start growth with customers and tracking",
+          "progress": "- $10k in angel signed\n- talked to users and tested on new messaging\n- working on structuring the next few weeks through end of March, with 3/10 demo day\n- Wrote one random viral linkedin ;) \n- Get 10 of our existing customers to use it regularly by end of month"
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Vespper",
+      "slug": "vespper",
+      "group": 9,
+      "demoGoal": "",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Tendered",
+      "slug": "tendered",
+      "group": 9,
+      "demoGoal": "",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "MCPBundles.com",
+      "slug": "mcpbundles-com",
+      "group": 9,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Tony Lewis",
+          "phone": "",
+          "email": "tony@thinkchain.ai",
+          "batch": "S15",
+          "location": "London",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Hey Telo",
+      "slug": "hey-telo",
+      "group": 9,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Christopher Grittner",
+          "phone": "",
+          "email": "chris@heytelo.com",
+          "batch": "W25",
+          "location": "Munich, Germany",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/1069014",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Oversteer",
+      "slug": "oversteer",
+      "group": 10,
+      "demoGoal": "",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Bilanc",
+      "slug": "bilanc",
+      "group": 10,
+      "demoGoal": "$16K MRR",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "$13K MRR",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Cuanto",
+      "slug": "cuanto",
+      "group": 10,
+      "demoGoal": "Payment infra to process and pay out merchants in new countries",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Year kickoff customer feedback quick wins — kill this list",
+          "progress": ""
+        },
+        {
+          "period": "01/21/26",
+          "goal": "Unit economics clarity for expansion",
+          "progress": ""
+        },
+        {
+          "period": "02/04/26",
+          "goal": "KYC + Merchant validation revamp for expansion",
+          "progress": ""
+        },
+        {
+          "period": "02/18/26",
+          "goal": "Regional payins/payouts foundation",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Repacket",
+      "slug": "repacket",
+      "group": 10,
+      "demoGoal": "0 > 100K ARR (our YC demo day goal)",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Book 10-15 calls or kick off 1 pilot",
+          "progress": ""
+        }
+      ],
+      "founders": [
+        {
+          "name": "Noah Stanford",
+          "phone": "",
+          "email": "noah@repacket.com",
+          "batch": "W23",
+          "location": "Vancouver, British Columbia, Canada",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Tau9 Labs",
+      "slug": "tau9-labs",
+      "group": 10,
+      "demoGoal": "Sign >$300k of enterprise deals (1-2 deals)",
+      "goals": [
+        {
+          "period": "01/07/26",
+          "goal": "Book calls with 5 prospects from the funnel. ",
+          "progress": ""
+        }
+      ],
+      "founders": []
+    },
+    {
+      "name": "Short Story",
+      "slug": "short-story",
+      "group": 10,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Isabella Sun",
+          "phone": "",
+          "email": "isabella@shortstorybox.com",
+          "batch": "S19",
+          "location": "SF",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/332332",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Portfolio Pilot",
+      "slug": "portfolio-pilot",
+      "group": 10,
+      "demoGoal": "",
+      "goals": [],
+      "founders": []
+    },
+    {
+      "name": "Coach",
+      "slug": "coach",
+      "group": 10,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Divij",
+          "phone": "",
+          "email": "divij@tradexapp.co",
+          "batch": "W22",
+          "location": "SF",
+          "stage": "",
+          "fitScore": "6",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "AI clones of experts - adjacent - Building AI clones of coaches/founders/authors trained on their knowledge. W22 batch. Launched pre-revenue, no funding. Has cofounders. SF-based. Virtual weekly, can't start until Jan 20. 3/5 kickoff. Can bring 5 investors. AI adjacent but late start and virtual preference.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/588368\n\nhttps://bookface.ycombinator.com/user/945487",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI document authoring tool for long",
+      "slug": "ai-document-authoring-tool-for-long",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Dudu",
+          "phone": "972522899252",
+          "email": "dudu@vespper.com",
+          "batch": "F24",
+          "location": "Tel Aviv",
+          "stage": "Building MVP",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "Yes",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/316431",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "We're two exited",
+      "slug": "we-re-two-exited",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Jakub Langr",
+          "phone": "447511624004",
+          "email": "jl@contextlane.com",
+          "batch": "S20",
+          "location": "London; some presenence in SF",
+          "stage": "Launched, some revenue",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Data Context for AI Agents - adjacent but REMOTE - S20 batch. Two exited founders (was CTO of Tenderd YC S18, worked at PLTR). Building 'data context engine' that improves AI agent accuracy by >75%. Has cofounders, launched with revenue. BUT based in London with 'some presence in SF', prefers virtual weekly. Strong AI agents adjacency and prior exit, but location mismatch for in-person group. Wants to help organize and can bring 5 investors (Index, Accel, Khosla).",
+          "hasCofounder": "Yes",
+          "cofounderLinks": "not from yc",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "In stealth",
+      "slug": "in-stealth",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Aidan Pratt",
+          "phone": "14702984575",
+          "email": "aidan@accrued.ai",
+          "batch": "X25",
+          "location": "Sf",
+          "stage": "Growing",
+          "fitScore": "4",
+          "fitTier": "C",
+          "inSF": "Yes",
+          "notes": "In stealth - can't evaluate - X25 batch. Company is 'in stealth' so can't assess space adjacency. Growing stage, raised pre-seed. Solo founder. SF-based. 'Maybe' for weekly meetings = uncertain commitment. Lower fit due to stealth mode and uncertain commitment.",
+          "hasCofounder": "No, solo",
+          "cofounderLinks": "",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "Risk detection agents",
+      "slug": "risk-detection-agents",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Daniel Chua",
+          "phone": "6590616593",
+          "email": "dan@refinetrain.ai",
+          "batch": "W22",
+          "location": "Singapore",
+          "stage": "Building MVP",
+          "fitScore": "6",
+          "fitTier": "B",
+          "inSF": "No",
+          "notes": "AI Agents - STRONG adjacency but remote - Building RefineTrain AI: Risk detection agents using computer use for compliance. W22 batch. Building MVP, no funding. Solo founder. Based in Singapore (not SF). Virtual weekly, 3/5 kickoff. Excellent AI agents space alignment but geography makes less ideal for SF group.",
+          "hasCofounder": "No, solo",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI on call",
+      "slug": "ai-on-call",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Pablo Hansen",
+          "phone": "14152384586",
+          "email": "pablo@withkeystone.com",
+          "batch": "S25",
+          "location": "SF",
+          "stage": "Launched, some revenue",
+          "fitScore": "8",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI on-call engineer - STRONG adjacency - Building Keystone: AI on-call engineer. S25 batch (very recent). Launched with revenue, raised pre-seed. Solo founder. SF-based. In-person weekly, 3/5 kickoff, wants to help organize. Can bring 10 investors! Excellent AI/DevOps alignment, strong investor network.",
+          "hasCofounder": "No, solo",
+          "cofounderLinks": "",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "AI Analyst for",
+      "slug": "ai-analyst-for",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Connor Engelsberg",
+          "phone": "19417185370",
+          "email": "connor@getorvyn.com",
+          "batch": "X25",
+          "location": "San Francisco",
+          "stage": "Launched, pre-revenue",
+          "fitScore": "7",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI Analyst for Finance - adjacent - Building Orvyn: AI Analyst for Finance. X25 batch (recent). Launched pre-revenue, no funding yet. Has cofounders (non-YC). SF-based. In-person weekly, 5/5 kickoff, wants to help organize. Can bring 5 investors. Strong AI space alignment, very committed.",
+          "hasCofounder": "Yes",
+          "cofounderLinks": "Not a YC Alum",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "We enable airlines in India unlock additional revenues from ancillary products across baggage",
+      "slug": "we-enable-airlines-in-india-unlock-additional-reve",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Nitthin Nair",
+          "phone": "919740603291",
+          "email": "nitthin@medpiper.com",
+          "batch": "S20",
+          "location": "Bengaluru",
+          "stage": "Launched, some revenue",
+          "fitScore": "3",
+          "fitTier": "C",
+          "inSF": "No",
+          "notes": "Not AI adjacent - Building MedPiper: airline ancillary revenues in India. S20 batch. Launched with revenue, raised pre-seed. Has cofounders. Based in Bengaluru (not SF). Virtual weekly, prefers virtual for demo day. Not AI adjacent, not SF-based.",
+          "hasCofounder": "Yes",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/479722",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "Arden Health (ardenbio.com)",
+      "slug": "arden-health-ardenbio-com",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Bala Raja",
+          "phone": "17607092230",
+          "email": "bala@balaraja.net",
+          "batch": "S16",
+          "location": "Salt Lake City",
+          "stage": "Launched, some revenue",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "No, solo",
+          "cofounderLinks": "",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "Invitations as a",
+      "slug": "invitations-as-a",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Peter Pezaris",
+          "phone": "16463735251",
+          "email": "pez@vortexsoftware.com",
+          "batch": "W18",
+          "location": "SF",
+          "stage": "Launched, pre-revenue",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "B2B SaaS - not AI adjacent - Building Vortex: invitations as a service for B2B SaaS growth. W18 batch. Launched pre-revenue, raised pre-seed. Has cofounders. SF-based. In-person weekly, 5/5 kickoff, wants to help organize. Can bring 2 investors. Committed but not AI adjacent.",
+          "hasCofounder": "Yes",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/217990\nhttps://bookface.ycombinator.com/user/584997",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "still exploring idea",
+      "slug": "still-exploring-idea",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Dave Schukin",
+          "phone": "14152500002",
+          "email": "daveschukin@gmail.com",
+          "batch": "W18",
+          "location": "San Francisco",
+          "stage": "Idea stage",
+          "fitScore": "6",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Prior exit, exploring - W18 batch. Co-founded Buglife (mobile bug reporting tool) which went through YC. Still exploring idea maze, looking for CTO cofounder (is technical himself). SF-based, in-person weekly, 5/5 kickoff, wants to help organize, can bring 5 investors. Prior YC company experience is strong signal. High learning potential - experienced founder starting fresh.",
+          "hasCofounder": "Looking for co-founders",
+          "cofounderLinks": "",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "AI video production",
+      "slug": "ai-video-production",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Darwin Lo",
+          "phone": "14153859063",
+          "email": "darwinrlo@gmail.com",
+          "batch": "W15",
+          "location": "San Francisco, CA",
+          "stage": "Launched, some revenue",
+          "fitScore": "8",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI Video - strong adjacency - Building AI video production studio. W15 batch (experienced). Launched with revenue, angel funded. Has cofounders. SF-based. In-person weekly, 5/5 kickoff, wants to help organize. Can bring 5 investors (mentions Dent Capital). Earlier web research found he raised from a16z Speedrun for Wayve AI video remixing platform. Strong AI video alignment.",
+          "hasCofounder": "Yes",
+          "cofounderLinks": "",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "Engineering Productivity Platform",
+      "slug": "engineering-productivity-platform",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Samuel Akinwunmi",
+          "phone": "447960716129",
+          "email": "sam@bilanc.co",
+          "batch": "W24",
+          "location": "SF",
+          "stage": "Launched, some revenue",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Engineering Productivity Platform - dev tools adjacent - W24 batch. Launched with revenue, raised pre-seed. Solo founder. SF-based. 'Maybe' for weekly meetings - uncertain commitment. 2/5 kickoff interest. Dev tools/productivity is adjacent but low commitment signals.",
+          "hasCofounder": "No, solo",
+          "cofounderLinks": "",
+          "inWhatsApp": true
+        }
+      ]
+    },
+    {
+      "name": "main focus",
+      "slug": "main-focus",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "luke iseman",
+          "phone": "14156236817",
+          "email": "luke@lukeiseman.com",
+          "batch": "w17",
+          "location": "oakland",
+          "stage": "Launched, some revenue",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Climate tech - looking for cofounder (BONUS) - Building Make Sunsets: reflective clouds to cool earth. W17 batch. Launched with revenue, raised pre-seed. Looking for cofounders (TBD variety of projects). Based in Oakland (Bay Area). In-person weekly, 4/5 kickoff, wants to help organize. Not AI adjacent but cofounder bonus applies.",
+          "hasCofounder": "Looking for co-founders",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Building an AI",
+      "slug": "building-an-ai",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Zain Memon",
+          "phone": "",
+          "email": "zain@inzain.net",
+          "batch": "W2011, S2020, W2011",
+          "location": "Sydney",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "AI doctor - adjacent - Multiple YC batches (W2011, S2020) = very experienced serial founder. Launched with revenue, raised pre-seed. Has cofounders. Based in Sydney (not SF). Virtual weekly, 1/5 kickoff interest - very low in-person commitment. Experienced but geography and commitment make less ideal for SF group.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/sinahartung/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI for GTM",
+      "slug": "ai-for-gtm",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Phillip",
+          "phone": "",
+          "email": "phillip@allstonlabs.com",
+          "batch": "w21",
+          "location": "Beijing",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "(Category: Hardware consumer",
+      "slug": "category-hardware-consumer",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Alex Andon",
+          "phone": "",
+          "email": "alexander.andon@gmail.com",
+          "batch": "W12",
+          "location": "Menlo Park, CA",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Generate product videos",
+      "slug": "generate-product-videos",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Sourav Sanyal",
+          "phone": "",
+          "email": "sourav@getlookup.ai",
+          "batch": "W22",
+          "location": "Bangalore / SF",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "AI Video generation - adjacent - Building Lookup AI: 'Generate product videos from your product in one query'. W22 batch. Building MVP, raised pre-seed. Has cofounders. Based in Bangalore/SF split. Virtual weekly only, 2/5 kickoff interest - low in-person commitment. Can bring 5 investors. Good space alignment but commitment concerns.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/ajaykumar1018/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Videos for gtm",
+      "slug": "videos-for-gtm",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Emmie Chang ",
+          "phone": "",
+          "email": "emmie.chang@gmail.com",
+          "batch": "W14 ",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "8",
+          "fitTier": "C",
+          "inSF": "Yes",
+          "notes": "Eliminated because of reputational considerations\n\nSerial founder, W14 alum - Previously founded Camperoo (YC W14, kids camps booking). Now building HAC/Yuzu Labs 'Videos for GTM'. Has office at 300 Grant Ave and offered to co-host meetups! Launched with revenue, raised pre-seed. In-person weekly, 5/5 kickoff interest. Wants to help organize. Can bring 3 investors (Hustle Fund, AI Sprouts). Learning: experienced operator who's seen what works/doesn't. Very high engagement.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/nagendra-yadav93?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "We help Latin",
+      "slug": "we-help-latin",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Felipe Echandi",
+          "phone": "",
+          "email": "felipe@cuanto.app",
+          "batch": "W19",
+          "location": "Panama",
+          "stage": "",
+          "fitScore": "2",
+          "fitTier": "C",
+          "inSF": "Yes",
+          "notes": "LatAm creator commerce - not adjacent - W19 batch. Cuanto helps Latin American creators sell online. Has cofounders, growing, raised seed. Panama-based, virtual weekly. Not AI/agents adjacent. Would come to SF but not local.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/jgarciach\nhttps://www.linkedin.com/in/jose-varela-9a345813",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "A CRM for the dog industry",
+      "slug": "a-crm-for-the-dog-industry",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "james spoor",
+          "phone": "",
+          "email": "james.spoor7@gmail.com",
+          "batch": "w23",
+          "location": "Zurich",
+          "stage": "",
+          "fitScore": "3",
+          "fitTier": "C",
+          "inSF": "No",
+          "notes": "Not actually SF-based - Based in Zurich (mistakenly in SF filter). Building CRM for dog industry - not AI adjacent. Solo founder. Virtual weekly only. Would bring 5 investors. Lower fit due to location and space mismatch.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Cinematic AI videos",
+      "slug": "cinematic-ai-videos",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Abhinav Gopal",
+          "phone": "",
+          "email": "abhinav@rubbrband.com",
+          "batch": "W23",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "8",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI Video - strong adjacency - Building Rubbrband: 'Cinematic AI videos for companies'. W23 batch. Launched with revenue, raised pre-seed. Has cofounders. In-person weekly, 5/5 kickoff interest, wants to help organize. Note: This is 'Nav' - key ally for batch coordination! AI video production is directly adjacent to your interests.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/1002501\nhttps://bookface.ycombinator.com/user/270510",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Marketplace of vetted",
+      "slug": "marketplace-of-vetted",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Roman Sevast",
+          "phone": "",
+          "email": "hi@awesomic.io",
+          "batch": "S21",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Talent Marketplace → Data Labeling pivot - adjacent - S21 batch. Awesomic is marketplace of vetted talents (growing, raised pre-seed). Wants to launch 'Awesomic for Data Labeling (like Mercor)' - AI-adjacent pivot. Has cofounders. SF-based, in-person weekly, 4/5 kickoff (available after Jan 10 - CES), wants to help organize. Data labeling is AI-adjacent but not agents space.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI for healthcare",
+      "slug": "ai-for-healthcare",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Vishal",
+          "phone": "",
+          "email": "vishal@ironleap.io",
+          "batch": "W22",
+          "location": "SF",
+          "stage": "",
+          "fitScore": "6",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "AI for healthcare - W22 batch. Building MVP, raised pre-seed. Has cofounders. Committed to in-person weekly, wants to help organize. Can bring 4 investors. Healthcare AI is adjacent but more specialized/regulated space.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Bujo AI",
+      "slug": "bujo-ai",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Nalin Gupta",
+          "phone": "",
+          "email": "nalin@getbujo.com",
+          "batch": "S15 and X26",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "7",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI Agent space - strong adjacency - Building Bujo AI: voice + chat conversational AI agents for sales/customer support at B2C enterprises. S15 + X26 = experienced. Launched with revenue, raised pre-seed. Solo founder. Virtual weekly but in-person for demo day. Can bring 5 investors. Strong AI agents alignment.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "LLM",
+      "slug": "llm",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Hardik Vala",
+          "phone": "",
+          "email": "hardikvala24@gmail.com",
+          "batch": "S23",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "6",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "LLM-powered search for places - dev tools adjacent, seeking cofounder (BONUS) - S23 batch. Idea stage, just started, no funding. Looking for CEO/CTO cofounders. SF-based. Virtual weekly, 3/5 kickoff. Can bring 3 investors. LLM/dev tools adjacent, cofounder bonus, but very early stage.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Entropy",
+      "slug": "entropy",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Rabii Malik",
+          "phone": "",
+          "email": "rabii@withentropy.ai",
+          "batch": "S24",
+          "location": "Dubai",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Automated patient intake - AI adjacent but REMOTE - S24 batch. Entropy does automated patient intake and revenue cycle management. Has cofounders, launched with revenue, raised pre-seed. Dubai-based, virtual weekly. Can bring 3 investors. AI automation in healthcare is adjacent. Wants to help organize.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/hashimrehman/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI native code",
+      "slug": "ai-native-code",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Paul Sangle-Ferriere",
+          "phone": "",
+          "email": "paul@cubic.dev",
+          "batch": "X25",
+          "location": "London",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "No",
+          "notes": "AI native code reviews - dev tools adjacent - X25 batch. Launched with revenue, raised pre-seed. Solo founder. Based in London (not SF). Virtual weekly, prefers virtual, 2/5 kickoff. Can't start until 3rd/4th week Jan. Good space but remote and late start.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "FP&A Platform",
+      "slug": "fp-a-platform",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Leandro Castro",
+          "phone": "",
+          "email": "leandro.castro@logica.cloud",
+          "batch": "W21",
+          "location": "Omaha",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/488975",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI Front Office",
+      "slug": "ai-front-office",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Aschkan Abdul Malek",
+          "phone": "",
+          "email": "aamalek@alemhealth.com",
+          "batch": "W17",
+          "location": "Singapore/SF",
+          "stage": "",
+          "fitScore": "7",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI Front Office Workers for Medical Imaging - strong adjacency - W17 batch (experienced). Building MVP, no funding. Solo founder. Singapore/SF based. Virtual weekly but 4/5 kickoff. Can bring 5 investors. Wants 'technical sharing and discussions with other builders'. AI agents for healthcare, good fit.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Terminal for running",
+      "slug": "terminal-for-running",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Kiet Ho",
+          "phone": "",
+          "email": "kiet@superset.sh",
+          "batch": "W25, X26",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "8",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "Strong AI/Agent adjacency - Building Superset, a terminal for running CLI agents in parallel. W25 + X26 batch = very recent YC experience. Launched with some revenue already. Committed to in-person weekly. Has cofounders. Wants 'well-ran GOH' and serious participants - good cultural fit. Can bring 2 investors. Perfect space alignment with AI agents.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/667926\nhttps://bookface.ycombinator.com/user/230159",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "BizMCP",
+      "slug": "bizmcp",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "David Marquez",
+          "phone": "",
+          "email": "david@dayvough.com",
+          "batch": "S22",
+          "location": "Manila, Philippines",
+          "stage": "",
+          "fitScore": "4",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "BizMCP - AI adjacent but REMOTE + EARLY - S22 batch. Building BizMCP - helping offline businesses get online on ChatGPT. MCP/ChatGPT integration is AI-adjacent. Solo founder, idea stage, just started. Manila-based, virtual weekly, 5/5 kickoff interest but unavailable Jan 1-6. Very early stage and remote.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Communications platform for",
+      "slug": "communications-platform-for",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Samir Sen",
+          "phone": "",
+          "email": "samir@flairlabs.ai",
+          "batch": "W23",
+          "location": "SF",
+          "stage": "",
+          "fitScore": "3",
+          "fitTier": "C",
+          "inSF": "Yes",
+          "notes": "Mortgage communications - not adjacent - W23 batch. Flair Labs is communications platform for mortgage. Solo founder, launched with revenue, raised pre-seed. SF-based, in-person weekly, 3/5 kickoff (lower engagement). Can bring 2 investors. Fintech/mortgage is not AI/agents adjacent. Lower fit for space alignment.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI for public",
+      "slug": "ai-for-public",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Sandy Suh",
+          "phone": "",
+          "email": "sandy@parsagon.io",
+          "batch": "W21",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "6",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "AI for public affairs - adjacent - W21 batch (covid virtual batch). Growing stage, raised pre-seed. Solo founder. SF-based. In-person weekly, 5/5 kickoff, wants to help organize. 'Just wants to meet more people'. AI adjacent, committed to in-person.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Automatic Construction Drawing",
+      "slug": "automatic-construction-drawing",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Milind Sagaram",
+          "phone": "",
+          "email": "milind@usearticulate.com",
+          "batch": "F25",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "7",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI for Construction - adjacent, CURRENT BATCH - F25 batch (current YC!). Articulate does automatic construction drawing clash detection using AI. Has cofounders, launched with revenue, raised pre-seed. SF-based, in-person weekly, 5/5 kickoff, wants to help organize. Web research confirms Articulate is 'Speeding Up Construction with AI' - auditing designs for code compliance, detecting clashes early, generating RFIs from drawings. Current batch founder brings fresh YC energy.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/2578175",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Strava for Work",
+      "slug": "strava-for-work",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Oliver Zou",
+          "phone": "",
+          "email": "oliverzou0@gmail.com",
+          "batch": "W24",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Strava for Work - looking for cofounder (BONUS) - W24 batch. Launched pre-revenue, raised pre-seed. Looking for CTO 'technical dictator'. SF-based. In-person weekly but 2/5 kickoff interest. Can bring 5 investors (mentions Accel). Not AI adjacent but cofounder bonus applies.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Virtual front desk",
+      "slug": "virtual-front-desk",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Rune Hauge",
+          "phone": "",
+          "email": "rune@sidepilot.com",
+          "batch": "S21",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "7",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI Agents for gyms - adjacent - Building SidePilot: virtual front desk using AI agents for lead nurturing, payments, cancellations. S21 batch. Growing stage, angel funded. Has cofounders. SF-based. In-person weekly. Can bring 5 investors. Wants 'brutal honesty, feedback, experience shares'. Note: This is Rune - Nav's cofounder you mentioned.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/nikhildesai/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "A specialized sourcing firm focused on engineers",
+      "slug": "a-specialized-sourcing-firm-focused-on-engineers",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Hussein Syed",
+          "phone": "",
+          "email": "husseinsyed73@gmail.com",
+          "batch": "S23",
+          "location": "New York City ",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Engineer sourcing with AI signals - adjacent but REMOTE - S23 batch. Specialized sourcing firm using GitHub, research signals. Solo founder, launched with revenue. NYC-based, virtual weekly, 3/5 kickoff. Using AI signals for hiring is adjacent to AI space. Would come to SF for demo day.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Building a lovable competitor that",
+      "slug": "building-a-lovable-competitor-that",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Victor",
+          "phone": "",
+          "email": "victorchengthesecond@gmail.com",
+          "batch": "F24",
+          "location": "SF",
+          "stage": "",
+          "fitScore": "7",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "Lovable competitor - dev tools adjacent - F24 batch. Launched with revenue, raised pre-seed. Solo founder. SF-based. In-person weekly, 5/5 kickoff, wants to HELP ORGANIZE/BUILD. Can't start until Jan 12. Wants 'heavy accountability emphasis'. Dev tools space, very engaged.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI Workflow Automation",
+      "slug": "ai-workflow-automation",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Albert Mao",
+          "phone": "",
+          "email": "albert@vectorshift.ai",
+          "batch": "S23",
+          "location": "New York City",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/1325593",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI videos to",
+      "slug": "ai-videos-to",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Vince Mundy",
+          "phone": "",
+          "email": "vince.mundy@gmail.com",
+          "batch": "W12",
+          "location": "San Jose",
+          "stage": "",
+          "fitScore": "7",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI videos to accelerate growth - strong adjacency - W12 batch (very experienced, previously founded InstallMonetizer). Launched with revenue, no external funding. Solo founder. San Jose (Bay Area). Virtual weekly but 5/5 kickoff, wants to help organize. AI video space aligned. Wants 'strong launch and VC exposure'.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Invofox",
+      "slug": "invofox",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Alberto Gimeno",
+          "phone": "",
+          "email": "alberto@invofox.com",
+          "batch": "S22",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "6",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "Document parsing API - dev tools adjacent - S22 batch. Growing stage, raised Series A+. Has cofounders. SF-based. In-person weekly, 3/5 kickoff. Not raising - aiming for 3x revenue in 2026. More mature company, good learning potential but different stage.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/1012426\nhttps://bookface.ycombinator.com/user/1012489",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI avatars based",
+      "slug": "ai-avatars-based",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "saurav",
+          "phone": "",
+          "email": "sauravalgs@gmail.com",
+          "batch": "W20",
+          "location": "Bengaluru",
+          "stage": "",
+          "fitScore": "3",
+          "fitTier": "C",
+          "inSF": "Yes",
+          "notes": "AI avatars for kids - adjacent but REMOTE + EARLY - W20 batch. Building AI avatars learning app for kids (3-8 yo). Looking for CTO (deep tech AI avatars). Idea stage, just started. Bengaluru-based, virtual weekly, 2/5 kickoff (low). AI avatars is adjacent but very early and remote with low commitment signals.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "This",
+      "slug": "this",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Anton Otaner",
+          "phone": "",
+          "email": "anton@clarum.ai",
+          "batch": "W24",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "AI for LPs - adjacent - W24 batch. Pivoting Clarum from due diligence product to 'operating system for LPs' after cofounder departure. Now solo. Building MVP, SF-based. In-person weekly, 4/5 kickoff (Jan 12 start). Can bring 2 investors. Web research shows Clarum raised $500K, was doing AI-powered due diligence for PE firms. AI/fintech is adjacent but not in agents space. Earlier stage after pivot.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Ai Trade Arena.",
+      "slug": "ai-trade-arena",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Kam Leung",
+          "phone": "",
+          "email": "kamleung911@gmail.com",
+          "batch": "S20",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "5",
+          "fitTier": "B",
+          "inSF": "Yes",
+          "notes": "AI/Agentic space - Building AI Trade Arena (agentic financial analysis tools). S20 batch. MVP stage. Has cofounders. BUT: prefers virtual for demo day, only 2/5 kickoff interest, virtual weekly meetings. Good space adjacency but low in-person commitment makes less ideal for your SF-focused group.",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/jlevy/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "ArchForm makes clear",
+      "slug": "archform-makes-clear",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Andrew Martz",
+          "phone": "",
+          "email": "drew8421@gmail.com",
+          "batch": "w18",
+          "location": "Santa Clara",
+          "stage": "",
+          "fitScore": "3",
+          "fitTier": "C",
+          "inSF": "Yes",
+          "notes": "Clear aligners - not adjacent - W18 batch. ArchForm makes clear aligners for orthodontists. Solo founder, Growing, Series A+ stage. Santa Clara-based but prefers virtual weekly. 3/5 kickoff. Healthtech/dental but not AI/agents adjacent. More mature stage (Series A+).",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "We are building",
+      "slug": "we-are-building",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Maria Doliashvili",
+          "phone": "",
+          "email": "m@wintercomics.com",
+          "batch": "w22",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "8",
+          "fitTier": "A",
+          "inSF": "Yes",
+          "notes": "AI Animation Agents - STRONG adjacency - Winter Comics is building AI agents for animations + training the first animation foundational model. W22 batch. Solo founder, SF-based. Launched with revenue, angel funded. In-person weekly, 4/5 kickoff. Can bring 3 investors. Web research confirms Winter Comics is democratizing comic/animation production with AI tools that let creators produce polished comics/animations in minutes while retaining 100% IP. Very strong AI/agents alignment.",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "It’s an intellegent",
+      "slug": "it-s-an-intellegent",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Olena Vozna",
+          "phone": "",
+          "email": "olena@h34rt.ai",
+          "batch": "-",
+          "location": "Kyiv, Ukraine",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/riphyak/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "fdggfghgh",
+      "slug": "fdggfghgh",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "gggg",
+          "phone": "",
+          "email": "michelle@compose.ai",
+          "batch": "Non-YC",
+          "location": "hfhfhj",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "https",
+      "slug": "https",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Weiting Liu",
+          "phone": "",
+          "email": "weitingl@gmail.com",
+          "batch": "S07 & S12",
+          "location": "Vancouver, BC, Canada",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Cursor for Google",
+      "slug": "cursor-for-google",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Musa Aqeel",
+          "phone": "",
+          "email": "musa@typeos.com",
+          "batch": "X26",
+          "location": "SF",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/1435004",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Building data",
+      "slug": "building-data",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Jason He",
+          "phone": "",
+          "email": "jason.he@tryeden.ai",
+          "batch": "S25",
+          "location": "New York",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://bookface.ycombinator.com/user/2351489",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "I have two ideas",
+      "slug": "i-have-two-ideas",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Noah Debrincat",
+          "phone": "",
+          "email": "debrincatnoah@gmail.com",
+          "batch": "S19",
+          "location": "Waterloo, Ontario",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "We’re building an",
+      "slug": "we-re-building-an",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Allen Naliath",
+          "phone": "",
+          "email": "allen@friday.so",
+          "batch": "F24",
+          "location": "SF, but in Boston rn",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Velos helps Insurance",
+      "slug": "velos-helps-insurance",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Oscar",
+          "phone": "",
+          "email": "oscar@tryvelos.com",
+          "batch": "W23",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/vanessa-chesnut/\nhttps://www.linkedin.com/in/sam-nickolay-25a72566/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Better way to",
+      "slug": "better-way-to",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Justin Wei",
+          "phone": "",
+          "email": "wei.justin.a@gmail.com",
+          "batch": "W22",
+          "location": "San Francisco",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "Pump Up lets the best skilled tradespeople to go solo without the mountain of back",
+      "slug": "pump-up-lets-the-best-skilled-tradespeople-to-go-s",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Leo Anthias",
+          "phone": "",
+          "email": "leo@pumpup.com",
+          "batch": "S13",
+          "location": "SF",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/mandeep-gill-b5591a2/",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "AI Financial Advisor as part of an all",
+      "slug": "ai-financial-advisor-as-part-of-an-all",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Alexander Harmsen",
+          "phone": "",
+          "email": "alex@portfoliopilot.com",
+          "batch": "S16",
+          "location": "San Francisco ",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "Yes",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "Doesn't have LinkedIn, didn't go through YC",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "The authenticated browser",
+      "slug": "the-authenticated-browser",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Alexander Halpern",
+          "phone": "",
+          "email": "halperna22@gmail.com",
+          "batch": "W26",
+          "location": "Charlottesville ",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "https://www.linkedin.com/in/rylandbirchmeier?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+          "inWhatsApp": false
+        }
+      ]
+    },
+    {
+      "name": "I am working on AI",
+      "slug": "i-am-working-on-ai",
+      "group": null,
+      "demoGoal": "",
+      "goals": [],
+      "founders": [
+        {
+          "name": "Jennifer",
+          "phone": "",
+          "email": "jenn@getcoach.io",
+          "batch": "S18",
+          "location": "Boulder",
+          "stage": "",
+          "fitScore": "",
+          "fitTier": "",
+          "inSF": "No",
+          "notes": "",
+          "hasCofounder": "",
+          "cofounderLinks": "",
+          "inWhatsApp": false
+        }
+      ]
+    }
+  ],
+  "unmatchedWhatsAppPhones": [
+    "+19073069955",
+    "+447515914685",
+    "+16503092217",
+    "+13364552702",
+    "+16502729464",
+    "+14153085034",
+    "+19176878229",
+    "+918328352202",
+    "+17324919080",
+    "+919959736189",
+    "+14155704565",
+    "+919799143281",
+    "+15129863324",
+    "+17036398107",
+    "+14158664954",
+    "+13038775964",
+    "+13609537945",
+    "+919795940392",
+    "+14164090926",
+    "+17038616908",
+    "+16506861803",
+    "+14159993618",
+    "+19088920725",
+    "+14159050495",
+    "+17035173349",
+    "+16469456136",
+    "+15108476106",
+    "+14074175015",
+    "+19498361199",
+    "+919999781759",
+    "+12405155510",
+    "+15145780275",
+    "+12107732058",
+    "+4915222824063",
+    "+447578359851",
+    "+16265127719",
+    "+14083906065",
+    "+14084317342",
+    "+14158103343",
+    "+639174223311",
+    "+14088397211",
+    "+14159366889",
+    "+15105126004",
+    "+13057242804",
+    "+14174382980",
+    "+16506699579",
+    "+6598967047",
+    "+16692262849",
+    "+639165563948",
+    "+18582422996",
+    "+12672835951",
+    "+13107394208",
+    "+19498360632",
+    "+19257758885",
+    "+13612327072",
+    "+919582885732",
+    "+918121016516",
+    "+919971259901",
+    "+16179090151",
+    "+13102547250",
+    "+14255269456",
+    "+447579061333",
+    "+14087991764",
+    "+919113675860",
+    "+17815076692",
+    "+19492950524",
+    "+13143592522",
+    "+972559861342",
+    "+12178983958",
+    "+16475628292",
+    "+14454004781",
+    "+19499230428",
+    "+16503055064",
+    "+14439774653",
+    "+12162622772",
+    "+14385272108",
+    "+15083672842",
+    "+15137061124",
+    "+14027795871",
+    "+14157227714",
+    "+380505901928",
+    "+41798539424",
+    "+14158715307",
+    "+16304999932",
+    "+50764842600",
+    "+18082787004",
+    "+12034518641",
+    "+18323495045"
+  ],
+  "summary": {
+    "totalCompanies": 122,
+    "companiesWithFounders": 83,
+    "foundersWithPhone": 17,
+    "foundersInWhatsApp": 15,
+    "unmatchedWhatsApp": 88
+  }
+}

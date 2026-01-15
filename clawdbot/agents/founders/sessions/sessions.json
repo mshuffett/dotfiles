@@ -1,8 +1,8 @@
 {
   "agent:founders:main": {
-    "updatedAt": 1768446433852,
+    "updatedAt": 1768505451320,
     "lastChannel": "whatsapp",
-    "lastTo": "+17035173349",
+    "lastTo": "+14454004781",
     "lastAccountId": "default",
     "sessionId": "e835b09d-0808-45ad-b854-44b6c28dc749",
     "systemSent": true,
@@ -188,9 +188,9 @@
         }
       ]
     },
-    "inputTokens": 10,
-    "outputTokens": 335,
-    "totalTokens": 10409,
+    "inputTokens": 8,
+    "outputTokens": 266,
+    "totalTokens": 14786,
     "modelProvider": "anthropic",
     "model": "claude-opus-4-5",
     "contextTokens": 200000

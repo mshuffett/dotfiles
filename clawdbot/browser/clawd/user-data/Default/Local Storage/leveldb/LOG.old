@@ -1,3 +1,6 @@
-2026/01/07-00:45:31.554 56faaf Reusing MANIFEST /Users/michael/.clawdbot/browser/clawd/user-data/Default/Local Storage/leveldb/MANIFEST-000001
-2026/01/07-00:45:31.556 56faaf Recovering log #3
-2026/01/07-00:45:31.578 56faaf Reusing old log /Users/michael/.clawdbot/browser/clawd/user-data/Default/Local Storage/leveldb/000003.log 
+2026/01/14-11:44:06.371 30211fa Reusing MANIFEST /Users/michael/.clawdbot/browser/clawd/user-data/Default/Local Storage/leveldb/MANIFEST-000001
+2026/01/14-11:44:06.375 30211fa Recovering log #3
+2026/01/14-11:44:06.375 30211fa Reusing old log /Users/michael/.clawdbot/browser/clawd/user-data/Default/Local Storage/leveldb/000003.log 
+2026/01/14-11:45:06.464 30211fd Level-0 table #5: started
+2026/01/14-11:45:06.474 30211fd Level-0 table #5: 295402 bytes OK
+2026/01/14-11:45:06.476 30211fd Delete type=0 #3

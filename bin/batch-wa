@@ -1,0 +1,91 @@
+#!/bin/bash
+# batch-wa - Batch WhatsApp send with human-like delays
+#
+# Usage:
+#   batch-wa --message "Hey!" --file numbers.txt
+#   batch-wa --message "Hey!" --file numbers.txt --dry-run
+#   batch-wa --message "Hey!" --file numbers.txt --delay-min 10 --delay-max 30
+#
+# File format: one phone number per line (E.164 format, e.g. +14155551234)
+
+set -euo pipefail
+
+DELAY_MIN=5
+DELAY_MAX=15
+DRY_RUN=""
+MESSAGE=""
+NUMBERS_FILE=""
+
+usage() {
+  echo "Usage: batch-wa --message <text> --file <numbers.txt> [options]"
+  echo ""
+  echo "Options:"
+  echo "  --message <text>     Message to send (required)"
+  echo "  --file <path>        File with phone numbers, one per line (required)"
+  echo "  --delay-min <sec>    Minimum delay between sends (default: 5)"
+  echo "  --delay-max <sec>    Maximum delay between sends (default: 15)"
+  echo "  --dry-run            Preview without sending"
+  echo "  -h, --help           Show this help"
+  exit 1
+}
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --dry-run) DRY_RUN="--dry-run"; shift ;;
+    --message) MESSAGE="$2"; shift 2 ;;
+    --file) NUMBERS_FILE="$2"; shift 2 ;;
+    --delay-min) DELAY_MIN="$2"; shift 2 ;;
+    --delay-max) DELAY_MAX="$2"; shift 2 ;;
+    -h|--help) usage ;;
+    *) echo "Unknown option: $1"; usage ;;
+  esac
+done
+
+if [[ -z "$MESSAGE" ]]; then
+  echo "Error: --message is required"
+  usage
+fi
+
+if [[ -z "$NUMBERS_FILE" ]]; then
+  echo "Error: --file is required"
+  usage
+fi
+
+if [[ ! -f "$NUMBERS_FILE" ]]; then
+  echo "Error: File not found: $NUMBERS_FILE"
+  exit 1
+fi
+
+# Count total numbers
+TOTAL=$(wc -l < "$NUMBERS_FILE" | tr -d ' ')
+CURRENT=0
+
+echo "Batch send: $TOTAL recipients"
+echo "Delay: ${DELAY_MIN}-${DELAY_MAX}s between messages"
+[[ -n "$DRY_RUN" ]] && echo "Mode: DRY RUN (no messages will be sent)"
+echo ""
+
+while IFS= read -r number || [[ -n "$number" ]]; do
+  # Skip empty lines and comments
+  [[ -z "$number" || "$number" == \#* ]] && continue
+
+  CURRENT=$((CURRENT + 1))
+  delay=$((RANDOM % (DELAY_MAX - DELAY_MIN + 1) + DELAY_MIN))
+
+  echo "[$CURRENT/$TOTAL] Sending to $number..."
+
+  if [[ -n "$DRY_RUN" ]]; then
+    echo "  [dry-run] Would send: \"${MESSAGE:0:50}...\" (delay: ${delay}s)"
+  else
+    # Use heredoc to avoid exclamation mark escaping issues
+    clawdbot message send --channel whatsapp --to "$number" --message "$(cat <<EOF
+$MESSAGE
+EOF
+)"
+    echo "  Sent. Waiting ${delay}s..."
+    sleep "$delay"
+  fi
+done < "$NUMBERS_FILE"
+
+echo ""
+echo "Done. Sent to $CURRENT recipients."

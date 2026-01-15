@@ -4,9 +4,9 @@
     "anthropic:default": {
       "type": "oauth",
       "provider": "anthropic",
-      "refresh": "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",
-      "access": "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",
-      "expires": 1768461156359
+      "refresh": "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",
+      "access": "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",
+      "expires": 1768519301378
     },
     "anthropic:claude-cli": {
       "type": "oauth",
@@ -25,16 +25,16 @@
     }
   },
   "lastGood": {
-    "anthropic": "anthropic:default"
+    "anthropic": "anthropic:claude-cli"
   },
   "usageStats": {
     "anthropic:default": {
-      "lastUsed": 1768446433846,
+      "lastUsed": 1768505432694,
       "errorCount": 0,
       "lastFailureAt": 1768421856149
     },
     "anthropic:claude-cli": {
-      "lastUsed": 1768441102769,
+      "lastUsed": 1768505451319,
       "errorCount": 0
     }
   }

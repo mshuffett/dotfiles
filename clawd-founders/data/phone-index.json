@@ -1,0 +1,564 @@
+{
+  "19073069955": {
+    "name": null,
+    "source": "unknown",
+    "subgroup": "Group 5"
+  },
+  "447515914685": {
+    "name": null,
+    "source": "unknown"
+  },
+  "16503092217": {
+    "name": "Yura",
+    "source": "existing",
+    "group": 5
+  },
+  "13364552702": {
+    "name": "Wyatt Lansford",
+    "source": "whatsapp-screenshots-full",
+    "group": 6,
+    "subgroup": "Group 6"
+  },
+  "16502729464": {
+    "name": "Alexander Harmsen",
+    "source": "unknown",
+    "subgroup": "Group 10"
+  },
+  "14153085034": {
+    "name": "Zain Memon",
+    "source": "whatsapp-group-screenshot",
+    "group": null
+  },
+  "19176878229": {
+    "name": "Amit Patel",
+    "source": "unknown",
+    "subgroup": "Group 7"
+  },
+  "918328352202": {
+    "name": "Jaswanth",
+    "source": "whatsapp-group-screenshot",
+    "subgroup": "Group 8"
+  },
+  "17324919080": {
+    "name": "Ajay Vasisht",
+    "source": "existing",
+    "group": 7,
+    "subgroup": "Group 7"
+  },
+  "919959736189": {
+    "name": "Allen Nallath",
+    "source": "whatsapp-group-screenshot",
+    "group": null,
+    "subgroup": "Group 8",
+    "company": "Friday"
+  },
+  "14155704565": {
+    "name": "Noah",
+    "source": "existing",
+    "group": 10,
+    "subgroup": "Group 7",
+    "company": "MISTASHO"
+  },
+  "919799143281": {
+    "name": "Mudit",
+    "source": "whatsapp-group-screenshot",
+    "subgroup": "Group 4"
+  },
+  "15129863324": {
+    "name": "Justin",
+    "source": "whatsapp-screenshots-full",
+    "group": null,
+    "subgroup": "Group 1",
+    "company": "Agent Viz"
+  },
+  "17036398107": {
+    "name": "Kam",
+    "source": "whatsapp-group-screenshot",
+    "group": null
+  },
+  "14158664954": {
+    "name": "Rune Hauge",
+    "source": "existing",
+    "group": null,
+    "subgroup": "Group 4"
+  },
+  "13038775964": {
+    "name": "Roy",
+    "source": "existing",
+    "group": 8,
+    "subgroup": "Group 8"
+  },
+  "14702984575": {
+    "name": "Aidan Pratt",
+    "source": "notion-csv",
+    "group": null,
+    "subgroup": "Group 6"
+  },
+  "13609537945": {
+    "name": "Samir Sen",
+    "source": "whatsapp-screenshots-full",
+    "group": null,
+    "subgroup": "Group 4"
+  },
+  "919795940392": {
+    "name": "Nagendra Yadav",
+    "source": "existing",
+    "subgroup": "Group 8"
+  },
+  "14164090926": {
+    "name": null,
+    "source": "unknown",
+    "subgroup": "Group 6"
+  },
+  "17038616908": {
+    "name": "Jason He",
+    "source": "whatsapp-screenshots-full",
+    "group": null,
+    "subgroup": "Group 7"
+  },
+  "16506861803": {
+    "name": "Kiet Ho",
+    "source": "whatsapp-group-screenshot",
+    "group": null,
+    "subgroup": "Group 8"
+  },
+  "14159993618": {
+    "name": "Tuyen Truong",
+    "source": "existing",
+    "group": 5,
+    "subgroup": "Group 5"
+  },
+  "19088920725": {
+    "name": "Jason Mad",
+    "source": "whatsapp-group-screenshot",
+    "group": 6,
+    "subgroup": "Group 6"
+  },
+  "19417185370": {
+    "name": "Connor Engelsberg",
+    "source": "notion-csv",
+    "group": null,
+    "subgroup": "Group 6"
+  },
+  "14159050495": {
+    "name": "Amit Patel",
+    "source": "whatsapp-group-screenshot",
+    "group": 7,
+    "subgroup": "Group 7"
+  },
+  "17035173349": {
+    "name": "Michael Shuffett",
+    "source": "existing",
+    "subgroup": "Group 10"
+  },
+  "16469456136": {
+    "name": "Mohammad Eshan",
+    "source": "whatsapp-screenshots-full",
+    "group": 7,
+    "subgroup": "Group 7"
+  },
+  "15108476106": {
+    "name": "Avi",
+    "source": "unknown",
+    "subgroup": "Group 1"
+  },
+  "14074175015": {
+    "name": "Satya",
+    "source": "whatsapp-screenshots-full"
+  },
+  "19498361199": {
+    "name": "Jack Z",
+    "source": "whatsapp-group-screenshot",
+    "subgroup": "Group 1"
+  },
+  "919999781759": {
+    "name": "divij goyal",
+    "source": "whatsapp-screenshots-full",
+    "group": 10,
+    "subgroup": "Group 4"
+  },
+  "12405155510": {
+    "name": "Sandy Suh",
+    "source": "whatsapp-group-screenshot",
+    "group": null
+  },
+  "15145780275": {
+    "name": "Anton",
+    "source": "existing",
+    "group": null,
+    "subgroup": "Group 2",
+    "company": "Clarum"
+  },
+  "12107732058": {
+    "name": null,
+    "source": "unknown",
+    "subgroup": "Group 5"
+  },
+  "4915222824063": {
+    "name": "Christopher Grittner",
+    "source": "unknown",
+    "subgroup": "Group 9"
+  },
+  "447578359851": {
+    "name": "Tony",
+    "source": "whatsapp-screenshots-full",
+    "group": 9,
+    "subgroup": "Group 9"
+  },
+  "16265127719": {
+    "name": "Michael C",
+    "source": "existing",
+    "subgroup": "Group 5"
+  },
+  "14083906065": {
+    "name": "Victor Cheng",
+    "source": "whatsapp-group-screenshot",
+    "group": null,
+    "subgroup": "Group 2"
+  },
+  "19175861476": {
+    "name": "Mike N",
+    "source": "existing"
+  },
+  "14084317342": {
+    "name": "Nalin Gupta",
+    "source": "whatsapp-group-screenshot",
+    "group": null
+  },
+  "14158103343": {
+    "name": null,
+    "source": "unknown"
+  },
+  "639174223311": {
+    "name": "Michelle Soriano",
+    "source": "whatsapp-group-screenshot",
+    "subgroup": "Group 10"
+  },
+  "14088397211": {
+    "name": "sb",
+    "source": "whatsapp-group-screenshot",
+    "subgroup": "Group 6"
+  },
+  "14159366889": {
+    "name": "Justin",
+    "source": "whatsapp-group-screenshot",
+    "group": null,
+    "company": "Agent Viz"
+  },
+  "15105126004": {
+    "name": null,
+    "source": "unknown",
+    "subgroup": "Group 6"
+  },
+  "13057242804": {
+    "name": "Santiago",
+    "source": "existing",
+    "subgroup": "Group 5"
+  },
+  "14174382980": {
+    "name": "Alex Arevalos - Starling",
+    "source": "unknown",
+    "subgroup": "Group 8"
+  },
+  "16506699579": {
+    "name": "Abhinav Gopal",
+    "source": "existing",
+    "group": null,
+    "subgroup": "Group 5"
+  },
+  "16463735251": {
+    "name": "Peter Pezaris",
+    "source": "notion-csv",
+    "group": null,
+    "subgroup": "Group 5"
+  },
+  "6598967047": {
+    "name": "Felipe E.",
+    "source": "whatsapp-group-screenshot",
+    "group": null
+  },
+  "447960716129": {
+    "name": "Samuel Akinwunmi",
+    "source": "notion-csv",
+    "group": null,
+    "subgroup": "Group 10"
+  },
+  "16692262849": {
+    "name": "Hardik",
+    "source": "existing",
+    "group": null,
+    "subgroup": "Group 1",
+    "company": "denormalized"
+  },
+  "639165563948": {
+    "name": "Michelle - Batch Ops",
+    "source": "existing"
+  },
+  "15033198708": {
+    "name": "Hildebrand",
+    "source": "notion-csv",
+    "group": 1,
+    "subgroup": "Group 8"
+  },
+  "14153859063": {
+    "name": "Darwin Lo",
+    "source": "existing",
+    "group": null,
+    "subgroup": "Group 5",
+    "company": "AI Video Studio"
+  },
+  "972522899252": {
+    "name": "Dudu",
+    "source": "notion-csv",
+    "group": null,
+    "subgroup": "Group 9"
+  },
+  "18582422996": {
+    "name": null,
+    "source": "unknown"
+  },
+  "14152500002": {
+    "name": "Dave Schukin",
+    "source": "notion-csv",
+    "group": null
+  },
+  "12672835951": {
+    "name": "Praneeth",
+    "source": "existing",
+    "subgroup": "Group 1"
+  },
+  "13107394208": {
+    "name": "Noah (2)",
+    "source": "whatsapp-group-screenshot",
+    "group": 10,
+    "subgroup": "Group 10",
+    "company": "MISTASHO"
+  },
+  "19498360632": {
+    "name": "tim",
+    "source": "whatsapp-screenshots-full",
+    "subgroup": "Group 10"
+  },
+  "14084802672": {
+    "name": "Albert Jo",
+    "source": "existing",
+    "group": 3,
+    "subgroup": "Group 3"
+  },
+  "19257758885": {
+    "name": "Vishal",
+    "source": "existing",
+    "group": null,
+    "subgroup": "Group 3",
+    "company": "Vishal AI Healthcare"
+  },
+  "13612327072": {
+    "name": "Milind Sagaram",
+    "source": "whatsapp-group-screenshot",
+    "group": null,
+    "company": "Articulate"
+  },
+  "447511624004": {
+    "name": "Jakub Langr",
+    "source": "notion-csv",
+    "group": null,
+    "subgroup": "Group 9"
+  },
+  "919582885732": {
+    "name": "Indrajeet Roy",
+    "source": "whatsapp-group-screenshot",
+    "subgroup": "Group 4"
+  },
+  "918121016516": {
+    "name": "Vamsee Krishna",
+    "source": "existing",
+    "group": 8,
+    "subgroup": "Group 8"
+  },
+  "919971259901": {
+    "name": "Saurav Kumar",
+    "source": "whatsapp-screenshots-full",
+    "group": null
+  },
+  "16179090151": {
+    "name": "Sina",
+    "source": "whatsapp-group-screenshot"
+  },
+  "17607092230": {
+    "name": "Bala Raja",
+    "source": "notion-csv",
+    "group": null
+  },
+  "13102547250": {
+    "name": "Phillip",
+    "source": "whatsapp-group-screenshot",
+    "group": null,
+    "subgroup": "Group 5"
+  },
+  "14255269456": {
+    "name": "Victor Cheng",
+    "source": "whatsapp-screenshots-full",
+    "group": null,
+    "subgroup": "Group 1"
+  },
+  "447579061333": {
+    "name": "Paul Sanglé-Ferrière",
+    "source": "whatsapp-screenshots-full",
+    "group": null
+  },
+  "14152384586": {
+    "name": "Pablo Hansen",
+    "source": "notion-csv",
+    "group": null
+  },
+  "14087991764": {
+    "name": "Vince",
+    "source": "whatsapp-screenshots-full",
+    "group": null
+  },
+  "919113675860": {
+    "name": "Sourav Sanyal",
+    "source": "whatsapp-group-screenshot",
+    "group": null
+  },
+  "17815076692": {
+    "name": "Alex Kolchinski",
+    "source": "unknown",
+    "subgroup": "Group 6"
+  },
+  "19492950524": {
+    "name": "cadillion",
+    "source": "existing",
+    "subgroup": "Group 2"
+  },
+  "13143592522": {
+    "name": "Phillip",
+    "source": "whatsapp-screenshots-full",
+    "group": null,
+    "subgroup": "Group 4"
+  },
+  "972559861342": {
+    "name": "topaz",
+    "source": "whatsapp-screenshots-full"
+  },
+  "12178983958": {
+    "name": null,
+    "source": "unknown",
+    "subgroup": "Group 10"
+  },
+  "16475628292": {
+    "name": "Musa",
+    "source": "existing",
+    "group": null,
+    "subgroup": "Group 6"
+  },
+  "14454004781": {
+    "name": "Oliver Zoy",
+    "source": "existing",
+    "group": null
+  },
+  "19499230428": {
+    "name": "Jack Z",
+    "source": "whatsapp-screenshots-full",
+    "subgroup": "Group 4"
+  },
+  "16503055064": {
+    "name": "Leo",
+    "source": "whatsapp-screenshots-full",
+    "group": null
+  },
+  "14439774653": {
+    "name": null,
+    "source": "unknown",
+    "subgroup": "Group 2"
+  },
+  "12162622772": {
+    "name": "Daniel Jacobs",
+    "source": "existing",
+    "subgroup": "Group 5"
+  },
+  "14385272108": {
+    "name": "Soheil Parry",
+    "source": "existing",
+    "group": 3,
+    "subgroup": "Group 3"
+  },
+  "15083672842": {
+    "name": "Samir Sen",
+    "source": "whatsapp-group-screenshot",
+    "group": null,
+    "subgroup": "Group 2"
+  },
+  "15137061124": {
+    "name": null,
+    "source": "unknown",
+    "subgroup": "Group 6"
+  },
+  "14027795871": {
+    "name": null,
+    "source": "unknown"
+  },
+  "14157227714": {
+    "name": "AG",
+    "source": "whatsapp-group-screenshot",
+    "company": "Articulate"
+  },
+  "19736475056": {
+    "name": "Richard Hwang",
+    "source": "notion-csv",
+    "group": 4,
+    "company": "Postquant Labs"
+  },
+  "380505901928": {
+    "name": "Aliona Vozna",
+    "source": "whatsapp-group-screenshot",
+    "group": null,
+    "subgroup": "Group 5"
+  },
+  "919740603291": {
+    "name": "Nitthin Nair",
+    "source": "notion-csv",
+    "group": null,
+    "subgroup": "Group 8"
+  },
+  "41798539424": {
+    "name": "James Spoor",
+    "source": "whatsapp-screenshots-full",
+    "group": null
+  },
+  "14158715307": {
+    "name": "Emmie Chang",
+    "source": "existing",
+    "group": null,
+    "subgroup": "Group 8"
+  },
+  "16304999932": {
+    "name": "Milind Sagaram",
+    "source": "whatsapp-screenshots-full",
+    "group": null,
+    "subgroup": "Group 2",
+    "company": "Articulate"
+  },
+  "50764842600": {
+    "name": "Felipe E.",
+    "source": "whatsapp-screenshots-full",
+    "group": null,
+    "subgroup": "Group 10"
+  },
+  "18082787004": {
+    "name": "Maria Day",
+    "source": "whatsapp-group-screenshot",
+    "subgroup": "Group 1"
+  },
+  "12034518641": {
+    "name": null,
+    "source": "unknown",
+    "subgroup": "Group 7"
+  },
+  "18323495045": {
+    "name": "Hussein Syed",
+    "source": "existing",
+    "group": null,
+    "subgroup": "Group 7"
+  }
+}
