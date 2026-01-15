@@ -165,6 +165,14 @@ description: Use when about to deploy to production, running deploy commands, or
   - Inform the user that the documentation has been improved
 - This keeps plugins living, accurate, and continuously improving based on real-world usage
 
+**End-of-Task Knowledge Check**
+After completing operational work (configuration, setup, debugging, tool usage), before ending the turn:
+1. **No skill exists?** Ask: "Should I create a skill to document [tool/process] for future sessions?"
+2. **Skill exists but missing info?** Ask: "I discovered [fact]. Should I add this to the [skill] skill?"
+3. **New fact learned?** Ask: "I learned [X]. Should I document this somewhere?"
+
+This ensures institutional knowledge isn't lost just because the immediate task is done.
+
 **Proactive Memory Improvements**
 - Proactively suggest improvements to memory when you notice repeated friction, missing triggers, or unclear acceptance checks. Propose exact wording and destination (root vs on‑demand guide vs repo docs) and ask for approval before updating.
 
