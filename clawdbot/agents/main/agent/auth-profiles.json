@@ -25,11 +25,11 @@
     }
   },
   "lastGood": {
-    "anthropic": "anthropic:claude-cli"
+    "anthropic": "anthropic:default"
   },
   "usageStats": {
     "anthropic:default": {
-      "lastUsed": 1768505432694,
+      "lastUsed": 1768508070762,
       "errorCount": 0,
       "lastFailureAt": 1768421856149
     },
