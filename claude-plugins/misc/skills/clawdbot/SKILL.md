@@ -85,4 +85,11 @@ Always validate JSON after editing:
 cat ~/.dotfiles/clawdbot/clawdbot.json | jq . > /dev/null && echo "Valid"
 ```
 
+**Restart required**: Config is loaded at startup. After editing, restart the gateway:
+```bash
+clawdbot daemon restart
+```
+
+Verify with `clawdbot health` to confirm channels are connected.
+
 Then commit to dotfiles if the change should persist.
