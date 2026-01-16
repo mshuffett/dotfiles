@@ -17,7 +17,7 @@ const db = new Database(DB_PATH, { readonly: true });
 
 const [command, ...args] = process.argv.slice(2);
 
-function formatFounder(f: any) {
+function formatFounder(f: any, includeGoals = false) {
   console.log(`\n=== ${f.name} ===`);
   console.log(`Company: ${f.company || "Unknown"}`);
   console.log(`Brief: ${f.company_brief || "N/A"}`);
@@ -26,9 +26,26 @@ function formatFounder(f: any) {
   console.log(`Location: ${f.location || "N/A"}`);
   console.log(`Subgroup: ${f.subgroup || "N/A"}`);
   console.log(`Batch: ${f.batch || "N/A"}`);
+  if (f.demo_goal) console.log(`Demo Goal: ${f.demo_goal}`);
   if (f.co_founder) console.log(`Co-founder: ${f.co_founder}`);
   if (f.linkedin) console.log(`LinkedIn: ${f.linkedin}`);
   if (f.notes) console.log(`Notes: ${f.notes}`);
+
+  if (includeGoals && f.company) {
+    const goals = db.query(`
+      SELECT period, goal, progress FROM goals
+      WHERE company = ?
+      ORDER BY period ASC
+    `).all(f.company) as { period: string; goal: string; progress: string }[];
+
+    if (goals.length > 0) {
+      console.log(`\nGoals:`);
+      for (const g of goals) {
+        console.log(`  [${g.period}] ${g.goal || "(no goal)"}`);
+        if (g.progress) console.log(`    Progress: ${g.progress}`);
+      }
+    }
+  }
 }
 
 switch (command) {
@@ -41,7 +58,7 @@ switch (command) {
       WHERE REPLACE(phone, '+', '') LIKE '%' || ? || '%'
     `).get(normalized);
     if (founder) {
-      formatFounder(founder);
+      formatFounder(founder, true);
     } else {
       console.log(`No founder found with phone containing: ${input}`);
     }
@@ -60,7 +77,49 @@ switch (command) {
     } else {
       console.log(`Found ${founders.length} founder(s) at "${search}":\n`);
       for (const f of founders) {
-        formatFounder(f);
+        formatFounder(f, true);
+      }
+    }
+    break;
+  }
+
+  case "goals": {
+    const search = args.join(" ");
+    if (!search) {
+      // Show all companies with goals
+      const goals = db.query(`
+        SELECT company, period, goal, progress
+        FROM goals
+        WHERE goal IS NOT NULL AND goal != ''
+        ORDER BY company, period
+      `).all() as { company: string; period: string; goal: string; progress: string }[];
+
+      let currentCompany = "";
+      for (const g of goals) {
+        if (g.company !== currentCompany) {
+          console.log(`\n=== ${g.company} ===`);
+          currentCompany = g.company;
+        }
+        console.log(`  [${g.period}] ${g.goal}`);
+        if (g.progress) console.log(`    Progress: ${g.progress}`);
+      }
+    } else {
+      // Show goals for specific company
+      const goals = db.query(`
+        SELECT company, period, goal, progress
+        FROM goals
+        WHERE company LIKE '%' || ? || '%'
+        ORDER BY period
+      `).all(search) as { company: string; period: string; goal: string; progress: string }[];
+
+      if (goals.length === 0) {
+        console.log(`No goals found for company: ${search}`);
+      } else {
+        console.log(`\n=== Goals for ${goals[0].company} ===\n`);
+        for (const g of goals) {
+          console.log(`[${g.period}] ${g.goal || "(no goal)"}`);
+          if (g.progress) console.log(`  Progress: ${g.progress}`);
+        }
       }
     }
     break;
@@ -146,8 +205,10 @@ switch (command) {
   default:
     console.log(`
 Usage:
-  bun query-db.ts phone +14155551234     # Find founder by phone
-  bun query-db.ts company "Superset"     # Find founders at company
+  bun query-db.ts phone +14155551234     # Find founder by phone (includes goals)
+  bun query-db.ts company "Superset"     # Find founders at company (includes goals)
+  bun query-db.ts goals                  # Show all company goals
+  bun query-db.ts goals "Superset"       # Show goals for specific company
   bun query-db.ts subgroup 1             # List founders in subgroup
   bun query-db.ts interactions +1415...  # Show interaction history
   bun query-db.ts followups pending      # Show pending follow-ups

@@ -2,15 +2,14 @@
 /**
  * sync-goals.ts
  *
- * Syncs the Google Sheet goals/progress to company markdown files.
+ * Syncs the Google Sheet goals/progress to the SQLite database.
  *
  * Usage:
  *   bun sync-goals.ts              # Uses cached CSV
  *   bun sync-goals.ts --fetch      # Fetches fresh from Google Sheets
- *
- * The script updates the "Current Progress" section in each company file.
  */
 
+import { Database } from "bun:sqlite";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { parse } from "csv-parse/sync";
 
@@ -18,20 +17,35 @@ import { parse } from "csv-parse/sync";
 const SHEET_ID = "1WrCH7jrhUmpBaIKLPlv39Yoeb_FnqukaAsPOC2wiBPo";
 const SHEET_GID = "0"; // First sheet
 const CSV_PATH = "/Users/michael/clawd-founders/data/google-sheet.csv";
-const FOUNDERS_DIR = "/Users/michael/clawd-founders/founders";
+const DB_PATH = "/Users/michael/clawd-founders/data/founders.db";
 
-// Slugify company name (must match generate-company-files.ts)
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 50);
-}
+// Open database
+const db = new Database(DB_PATH);
 
-// Extract just the company name (remove founder names in parens)
-function extractCompanyName(raw: string): string {
-  return raw.replace(/\s*\([^)]+\)\s*/g, "").replace(/\s*\n.*/g, "").trim();
+// Ensure goals table exists
+db.exec(`
+  CREATE TABLE IF NOT EXISTS goals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    founder_id INTEGER REFERENCES founders(id),
+    company TEXT NOT NULL,
+    period TEXT NOT NULL,
+    goal TEXT,
+    progress TEXT,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(company, period)
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_goals_company ON goals(company);
+  CREATE INDEX IF NOT EXISTS idx_goals_founder ON goals(founder_id);
+
+  -- Add demo_goal column to founders if not exists
+  -- SQLite doesn't have IF NOT EXISTS for columns, so we check first
+`);
+
+// Check if demo_goal column exists, add if not
+const columns = db.query("PRAGMA table_info(founders)").all() as { name: string }[];
+if (!columns.some(c => c.name === "demo_goal")) {
+  db.exec("ALTER TABLE founders ADD COLUMN demo_goal TEXT");
 }
 
 async function fetchGoogleSheet(): Promise<string> {
@@ -65,12 +79,22 @@ async function loadCSV(): Promise<string> {
   return readFileSync(CSV_PATH, "utf-8");
 }
 
+interface GoalPeriod {
+  period: string;
+  goal: string;
+  progress: string;
+}
+
 interface SheetRow {
   group: number | null;
   company: string;
-  slug: string;
   demoGoal: string;
-  goals: { period: string; goal: string; progress: string }[];
+  goals: GoalPeriod[];
+}
+
+// Extract just the company name (remove founder names in parens)
+function extractCompanyName(raw: string): string {
+  return raw.replace(/\s*\([^)]+\)\s*/g, "").replace(/\s*\n.*/g, "").trim();
 }
 
 function parseSheet(csv: string): SheetRow[] {
@@ -93,10 +117,10 @@ function parseSheet(csv: string): SheetRow[] {
     const companyName = extractCompanyName(rawName);
     const groupStr = record["Group"] || "";
 
-    const goals: SheetRow["goals"] = [];
+    const goals: GoalPeriod[] = [];
     for (const col of goalCols) {
-      const goal = record[col.goal] || "";
-      const progress = record[col.progress] || "";
+      const goal = (record[col.goal] || "").trim();
+      const progress = (record[col.progress] || "").trim();
       if (goal || progress) {
         goals.push({ period: col.period, goal, progress });
       }
@@ -105,8 +129,7 @@ function parseSheet(csv: string): SheetRow[] {
     rows.push({
       group: groupStr ? parseInt(groupStr, 10) : null,
       company: companyName,
-      slug: slugify(companyName),
-      demoGoal: record["Demo Day Goal"] || "",
+      demoGoal: (record["Demo Day Goal"] || "").trim(),
       goals,
     });
   }
@@ -114,80 +137,42 @@ function parseSheet(csv: string): SheetRow[] {
   return rows;
 }
 
-function updateCompanyFile(row: SheetRow): boolean {
-  const filePath = `${FOUNDERS_DIR}/${row.slug}.md`;
+function syncToDatabase(rows: SheetRow[]) {
+  // Prepare statements
+  const upsertGoal = db.prepare(`
+    INSERT INTO goals (company, period, goal, progress, founder_id, updated_at)
+    VALUES (?, ?, ?, ?, (SELECT id FROM founders WHERE company = ? LIMIT 1), CURRENT_TIMESTAMP)
+    ON CONFLICT(company, period) DO UPDATE SET
+      goal = excluded.goal,
+      progress = excluded.progress,
+      updated_at = CURRENT_TIMESTAMP
+  `);
 
-  if (!existsSync(filePath)) {
-    // Try alternative slugs
-    const altSlugs = [
-      row.slug.replace(/-ai$/, ""),
-      row.slug + "-ai",
-      row.slug.replace(/-labs$/, ""),
-    ];
-    for (const alt of altSlugs) {
-      const altPath = `${FOUNDERS_DIR}/${alt}.md`;
-      if (existsSync(altPath)) {
-        return updateCompanyFileAtPath(row, altPath);
-      }
+  const updateDemoGoal = db.prepare(`
+    UPDATE founders SET demo_goal = ? WHERE company = ?
+  `);
+
+  let goalsUpdated = 0;
+  let demoGoalsUpdated = 0;
+  let companiesProcessed = 0;
+
+  for (const row of rows) {
+    companiesProcessed++;
+
+    // Update demo goal for founders at this company
+    if (row.demoGoal) {
+      const result = updateDemoGoal.run(row.demoGoal, row.company);
+      if (result.changes > 0) demoGoalsUpdated++;
     }
-    return false;
-  }
 
-  return updateCompanyFileAtPath(row, filePath);
-}
-
-function updateCompanyFileAtPath(row: SheetRow, filePath: string): boolean {
-  const content = readFileSync(filePath, "utf-8");
-
-  // Find and replace the "Current Progress" section
-  const progressStart = content.indexOf("## Current Progress");
-  const progressEnd = content.indexOf("\n## ", progressStart + 1);
-
-  if (progressStart === -1) {
-    // Add section before "## Context" or at the end
-    const contextStart = content.indexOf("## Context");
-    const interactionStart = content.indexOf("## Interaction Log");
-
-    let insertPoint = contextStart;
-    if (insertPoint === -1) insertPoint = interactionStart;
-    if (insertPoint === -1) insertPoint = content.length;
-
-    const progressSection = buildProgressSection(row);
-    const newContent =
-      content.slice(0, insertPoint) + progressSection + "\n" + content.slice(insertPoint);
-
-    writeFileSync(filePath, newContent);
-    return true;
-  }
-
-  // Replace existing section
-  const endPoint = progressEnd === -1 ? content.indexOf("## Context") : progressEnd;
-  if (endPoint === -1) return false;
-
-  const progressSection = buildProgressSection(row);
-  const newContent = content.slice(0, progressStart) + progressSection + content.slice(endPoint);
-
-  writeFileSync(filePath, newContent);
-  return true;
-}
-
-function buildProgressSection(row: SheetRow): string {
-  const lines: string[] = [];
-  lines.push("## Current Progress");
-
-  if (row.goals.length === 0) {
-    lines.push("*No goals set yet*");
-    lines.push("");
-  } else {
+    // Insert/update goals
     for (const g of row.goals) {
-      lines.push(`### ${g.period}`);
-      if (g.goal) lines.push(`**Goal:** ${g.goal}`);
-      if (g.progress) lines.push(`**Progress:** ${g.progress}`);
-      lines.push("");
+      upsertGoal.run(row.company, g.period, g.goal, g.progress, row.company);
+      goalsUpdated++;
     }
   }
 
-  return lines.join("\n");
+  return { companiesProcessed, goalsUpdated, demoGoalsUpdated };
 }
 
 // Main
@@ -197,31 +182,26 @@ async function main() {
   const csv = await loadCSV();
   const rows = parseSheet(csv);
 
-  console.log(`\nParsed ${rows.length} companies from sheet\n`);
+  console.log(`Parsed ${rows.length} companies from sheet\n`);
 
-  let updated = 0;
-  let notFound = 0;
-  const notFoundList: string[] = [];
+  const stats = syncToDatabase(rows);
 
-  for (const row of rows) {
-    if (updateCompanyFile(row)) {
-      updated++;
-    } else {
-      notFound++;
-      notFoundList.push(`${row.company} (${row.slug})`);
-    }
-  }
+  console.log(`Companies processed: ${stats.companiesProcessed}`);
+  console.log(`Goal periods synced: ${stats.goalsUpdated}`);
+  console.log(`Demo goals updated: ${stats.demoGoalsUpdated}`);
 
-  console.log(`Updated: ${updated} company files`);
-  console.log(`Not found: ${notFound} companies`);
+  // Show summary of current goals
+  const withGoals = db.query(`
+    SELECT COUNT(DISTINCT company) as count FROM goals WHERE goal IS NOT NULL AND goal != ''
+  `).get() as { count: number };
 
-  if (notFoundList.length > 0 && notFoundList.length <= 20) {
-    console.log("\nMissing files for:");
-    for (const name of notFoundList) {
-      console.log(`  - ${name}`);
-    }
-  }
+  const totalGoals = db.query(`SELECT COUNT(*) as count FROM goals`).get() as { count: number };
 
+  console.log(`\nDatabase now has:`);
+  console.log(`  ${withGoals.count} companies with goals`);
+  console.log(`  ${totalGoals.count} total goal periods tracked`);
+
+  db.close();
   console.log("\nDone!");
 }
 
