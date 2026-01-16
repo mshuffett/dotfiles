@@ -38,8 +38,8 @@ For personalized messages (reading founder context), use the message tool direct
 ```
 
 When sending to multiple founders:
-1. Read each founder's context file from `founders/<name>.md`
-2. Personalize the message
+1. Query founder context from database: `bun ~/clawd-founders/scripts/query-db.ts phone +14155551234`
+2. Personalize the message using their name, company, goals
 3. Send with `dryRun: true` first to preview
 4. If looks good, send for real
 5. Wait 5-15 seconds between sends (use a natural pace)
@@ -53,7 +53,7 @@ When sending to multiple founders:
 
 ## Founder List
 
-Keep a list at `~/clawd-founders/founders.txt` with numbers to message:
+The list at `~/clawd-founders/founders.txt` contains phone numbers for batch messaging:
 ```
 # Active founders
 +14155551234
@@ -64,3 +64,11 @@ Keep a list at `~/clawd-founders/founders.txt` with numbers to message:
 ```
 
 Lines starting with # are ignored.
+
+## Querying Recipients by Subgroup
+
+To message a specific subgroup:
+```bash
+# Get all phones for subgroup 1
+sqlite3 ~/clawd-founders/data/founders.db "SELECT phone FROM founders WHERE subgroup = 1 AND phone IS NOT NULL"
+```
