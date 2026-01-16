@@ -95,6 +95,17 @@
       },
       "source": "./plugins/claude-meta",
       "category": "meta"
+    },
+    {
+      "name": "everything-loop",
+      "description": "Fully autonomous software development with continuous iteration loops",
+      "version": "1.0.0",
+      "author": {
+        "name": "Michael Shuffett",
+        "email": "michael@compose.ai"
+      },
+      "source": "./plugins/everything-loop",
+      "category": "development"
     }
   ]
 }
