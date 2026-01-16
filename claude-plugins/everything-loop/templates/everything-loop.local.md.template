@@ -1,0 +1,36 @@
+---
+# Everything Loop User Settings
+# Copy this to .claude/everything-loop.local.md to customize defaults
+
+# Default project type: "fixed" or "continuous"
+default_project_type: continuous
+
+# Default max iterations (0 = unlimited for continuous)
+default_max_iterations: 100
+
+# Enable parallel feature development by default
+default_parallel: false
+
+# Minimum confidence threshold for code review (0-100)
+review_confidence_threshold: 80
+
+# TDD coverage target percentage
+tdd_coverage_target: 80
+
+# Auto-generate work items when backlog empty (continuous mode only)
+auto_generate_work: true
+---
+
+# Everything Loop Local Settings
+
+These settings customize the default behavior of everything-loop for your projects.
+
+## Usage
+
+Place this file at `.claude/everything-loop.local.md` in your project root or `~/.claude/everything-loop.local.md` for global defaults.
+
+## Notes
+
+- Command-line flags override these defaults
+- Project-level settings override global settings
+- This file should be gitignored (contains local preferences)

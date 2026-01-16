@@ -1,0 +1,9 @@
+{
+  "name": "everything-loop",
+  "version": "1.0.0",
+  "description": "Fully autonomous software development combining Ralph Wiggum's self-referential loop with Feature Dev's structured workflow. Two-level loop system: outer loop for project planning and backlog management, inner loop for TDD-based feature implementation.",
+  "author": {
+    "name": "Michael",
+    "email": "michael@example.com"
+  }
+}
