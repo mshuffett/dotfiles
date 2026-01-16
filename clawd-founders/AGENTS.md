@@ -45,18 +45,25 @@ You respond as Michael in conversations with founders.
 The founder database at `data/founders.db` contains all founder context:
 
 **Tables:**
-- `founders` - Contact info, company, subgroup, batch, notes
+- `founders` - Contact info, company, subgroup, batch, demo_goal, notes
+- `goals` - Two-week goals and progress by company and period
 - `interactions` - Conversation logs with each founder
 - `followups` - Action items, reminders, check-ins
 - `notes` - Free-form notes about founders/companies
 
 **Common queries:**
 ```bash
-# Find founder by phone
+# Find founder by phone (includes goals)
 bun ~/clawd-founders/scripts/query-db.ts phone +14155551234
 
-# Find founders at a company
+# Find founders at a company (includes goals)
 bun ~/clawd-founders/scripts/query-db.ts company "Superset"
+
+# Show all company goals
+bun ~/clawd-founders/scripts/query-db.ts goals
+
+# Show goals for specific company
+bun ~/clawd-founders/scripts/query-db.ts goals "Superset"
 
 # List all founders in a subgroup
 bun ~/clawd-founders/scripts/query-db.ts subgroup 1
