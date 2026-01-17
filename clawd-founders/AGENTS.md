@@ -163,9 +163,12 @@ sqlite3 ~/clawd-founders/data/founders.db "SELECT phone FROM founders WHERE subg
 batch-wa --message "Your message here" --file phones.txt
 ```
 
-For personalized messages, use clawdbot directly:
+For personalized messages, use clawdbot with a heredoc (avoids escaping issues with `!`):
 ```bash
-clawdbot message send --channel whatsapp --to "+14155551234" --message "Your message" --json
+clawdbot message send --channel whatsapp --to "+14155551234" --json --message "$(cat <<'EOF'
+Hey! Your message here with punctuation!
+EOF
+)"
 ```
 
 ### Clawdbot Setup & Troubleshooting
