@@ -283,13 +283,11 @@ AND phone IS NOT NULL
 
 **Initial message** - Keep it simple and casual (lowercase, not marketing-y):
 
-> hey [name], how's it going? any intros i can help with?
-
-> hey [name], how's [company] going? anything i can help with?
+> hey [name], how's the batch going? any intros i can help with or investors on your wishlist?
 
 If there's specific context (notes about them, prior conversations), reference it naturally:
 
-> hey [name], how's it going? wanted to check in - still thinking about [thing from notes] or feeling good now?
+> hey [name], how's the batch going? how's the group working out - are you happy with it? any intros i can help with or investors on your wishlist?
 
 **After they reply** - Engage naturally. When there's a good moment, ask NPS:
 
