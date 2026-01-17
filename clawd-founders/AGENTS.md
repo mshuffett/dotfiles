@@ -293,7 +293,7 @@ If there's specific context (notes about them, prior conversations), reference i
 
 - If they mention intros/investors → follow up, get specifics, try to help
 - If they mention blockers → see if you can help or connect them
-- Ask about matches: "would you want to be matched with anyone for coffee chats or potential customers?"
+- If they want matches → ask what would be ideal / what they're looking for (type of company, stage, industry, etc.)
 - NPS (when appropriate): "btw curious - 1-10 how likely would you be to recommend the batch to other founders?"
 
 **For new people you haven't messaged before**, be clear about what you can help with:
