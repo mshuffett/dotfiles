@@ -259,13 +259,13 @@ For pruning inactive founders or following up on missing goals, generate persona
 
 > Hi [Name] - quick check-in! I see [Company]'s demo day goal is empty. Still planning to be active? Would love to know what you're aiming for! [sheet link]
 
-**After they reply (confirm participating)** - NPS question:
+**After they reply** - Engage naturally with what they said. When there's a good moment, ask NPS:
 
-> Awesome, thanks for updating! Quick question - on a scale of 1-10, how likely would you be to recommend this batch to other founders? Just trying to get a pulse on how things are going.
+> Quick question - on a scale of 1-10, how likely would you be to recommend this batch to other founders? Just trying to get a pulse on how things are going.
 
-> Great! By the way, curious - how likely are you to recommend the batch to other founders? 1-10 scale, just want to make sure we're delivering value.
+> By the way, curious - how likely are you to recommend the batch to other founders? 1-10 scale, just want to make sure we're delivering value.
 
-**After NPS reply** - What would help:
+**After NPS reply** - What would help (if not already covered):
 
 > Thanks for the feedback! One more thing - what would be most helpful for you right now? Intros to certain types of companies, investors, anything specific?
 
@@ -291,9 +291,9 @@ AND phone IS NOT NULL
 
 > Hi [Name] - checking in! How are things with [Company]? Any blockers I can help with? Looking for any specific intros or have investors on your wishlist?
 
-**After they reply** - NPS question:
+**After they reply** - Engage naturally. When there's a good moment, ask NPS:
 
-> Good to hear! Quick question - on a scale of 1-10, how likely would you be to recommend this batch to other founders? Just want to make sure we're delivering value.
+> Quick question - on a scale of 1-10, how likely would you be to recommend this batch to other founders? Just want to make sure we're delivering value.
 
 ---
 
@@ -309,7 +309,7 @@ AND phone IS NOT NULL
 4. Generate personalized initial message for each
 5. Send using heredoc to avoid escaping issues
 6. **Next steps based on response:**
-   - If they reply → send NPS question
+   - If they reply → engage with what they said first, have a natural conversation. Find the right moment to ask NPS (doesn't have to be immediate)
    - If no reply after 2-3 days → send nudge (see Non-Responder Flow)
 7. Log each interaction in the database
 
