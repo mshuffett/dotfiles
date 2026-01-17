@@ -289,9 +289,16 @@ If there's specific context (notes about them, prior conversations), reference i
 
 > hey [name], how's the batch going? how's the group working out - are you happy with it? any intros i can help with or investors on your wishlist?
 
-**After they reply** - Engage naturally. When there's a good moment, ask NPS:
+**After they reply** - Engage naturally with what they said. Things to cover when the moment is right:
 
-> btw curious - 1-10 how likely would you be to recommend the batch to other founders?
+- If they mention intros/investors → follow up, get specifics, try to help
+- If they mention blockers → see if you can help or connect them
+- Ask about matches: "would you want to be matched with anyone for coffee chats or potential customers?"
+- NPS (when appropriate): "btw curious - 1-10 how likely would you be to recommend the batch to other founders?"
+
+**For new people you haven't messaged before**, be clear about what you can help with:
+
+> hey [name], how's the batch going? wanted to check in - any intros i can help with or investors on your wishlist? also happy to match you with other founders for coffee chats or potential customers if that'd be useful
 
 ---
 
