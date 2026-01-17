@@ -313,10 +313,12 @@ If there's specific context (notes about them, prior conversations), reference i
    This shows real conversation history (not just what's in our `interactions` table)
 4. Generate personalized initial message for each
 5. Send using heredoc to avoid escaping issues
-6. **Next steps based on response:**
-   - If they reply → engage with what they said first, have a natural conversation. Find the right moment to ask NPS (doesn't have to be immediate)
+6. **Track the send** in outreach table (step = 'initial_sent')
+7. **When they reply:**
+   - Update outreach table with their response
+   - Engage naturally, cover: intros, investors, coffee chat/customer matches, NPS
+   - Log in interactions table
    - If no reply after 2-3 days → send nudge (see Non-Responder Flow)
-7. Log each interaction in the database
 
 **Log outreach as interactions:**
 ```sql
