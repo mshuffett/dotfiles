@@ -253,23 +253,19 @@ For pruning inactive founders or following up on missing goals, generate persona
 
 ### Message Flow: Founders Missing Goals
 
-**Initial message** - Check if still participating:
+**Initial message** - Keep it casual:
 
-> Hey [Name]! Going through the goals sheet and noticed [Company] doesn't have a demo day goal yet. Are you still planning to participate in the batch? If so, mind filling that in? Trying to make sure active folks are grouped together. [sheet link]
+> hey [name], noticed [company] doesn't have a demo day goal yet - still planning to participate? just trying to group active folks together [sheet link]
 
-> Hi [Name] - quick check-in! I see [Company]'s demo day goal is empty. Still planning to be active? Would love to know what you're aiming for! [sheet link]
+> hey [name], checking in - are you still active in the batch? don't see a goal for [company] yet [sheet link]
 
 **After they reply** - Engage naturally with what they said. When there's a good moment, ask NPS:
 
-> Quick question - on a scale of 1-10, how likely would you be to recommend this batch to other founders? Just trying to get a pulse on how things are going.
-
-> By the way, curious - how likely are you to recommend the batch to other founders? 1-10 scale, just want to make sure we're delivering value.
+> btw curious - 1-10 how likely would you be to recommend the batch to other founders?
 
 **After NPS reply** - What would help (if not already covered):
 
-> Thanks for the feedback! One more thing - what would be most helpful for you right now? Intros to certain types of companies, investors, anything specific?
-
-> Appreciate it! Last question - is there anything that would really help [Company] right now? Specific intros, investors on your wishlist, resources?
+> anything i can help with? intros, investors you want to meet?
 
 ---
 
@@ -285,15 +281,19 @@ AND phone IS NOT NULL
 "
 ```
 
-**Initial message** - Check-in on progress + ask what would help:
+**Initial message** - Keep it simple and casual (lowercase, not marketing-y):
 
-> Hey [Name]! How's [Company] going? Saw your demo day goal is [goal] - how's progress looking? Also curious - anything I can help with? Intros, investors you want to meet, resources?
+> hey [name], how's it going? any intros i can help with?
 
-> Hi [Name] - checking in! How are things with [Company]? Any blockers I can help with? Looking for any specific intros or have investors on your wishlist?
+> hey [name], how's [company] going? anything i can help with?
+
+If there's specific context (notes about them, prior conversations), reference it naturally:
+
+> hey [name], how's it going? wanted to check in - still thinking about [thing from notes] or feeling good now?
 
 **After they reply** - Engage naturally. When there's a good moment, ask NPS:
 
-> Quick question - on a scale of 1-10, how likely would you be to recommend this batch to other founders? Just want to make sure we're delivering value.
+> btw curious - 1-10 how likely would you be to recommend the batch to other founders?
 
 ---
 
@@ -484,13 +484,11 @@ AND julianday('now') - julianday(COALESCE(o.last_nudge_at, o.initial_sent_at)) >
 
 **First nudge (2-3 days after initial):**
 
-> Hey [Name]! Just circling back - are you still planning to participate in the batch? Let me know either way so I can update the groups.
-
-> Hi [Name] - wanted to follow up. Still active in the batch? No worries if not, just trying to get an accurate headcount.
+> hey [name], just circling back - still active in the batch? lmk either way
 
 **Second nudge (2-3 days after first nudge):**
 
-> Hey [Name], last check-in - haven't heard back. If you're still interested in participating, just let me know. Otherwise I'll assume you're sitting this one out. No pressure either way!
+> hey [name], last check-in - still interested in participating? no worries if not, just trying to get a headcount
 
 ### Record Nudge
 
