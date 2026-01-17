@@ -163,7 +163,36 @@ sqlite3 ~/clawd-founders/data/founders.db "SELECT phone FROM founders WHERE subg
 batch-wa --message "Your message here" --file phones.txt
 ```
 
-For personalized messages, use the message tool directly with `dryRun: true` to preview first.
+For personalized messages, use clawdbot directly:
+```bash
+clawdbot message send --channel whatsapp --to "+14155551234" --message "Your message" --json
+```
+
+### Clawdbot Setup & Troubleshooting
+
+The gateway runs as a background daemon (LaunchAgent). WhatsApp Web session is maintained by the daemon.
+
+**Check status:**
+```bash
+clawdbot daemon status      # Gateway daemon status
+clawdbot channels status    # Channel connection status
+```
+
+**If WhatsApp shows "disconnected" or "stopped":**
+```bash
+# Restart the daemon - usually fixes connection issues
+clawdbot daemon restart
+
+# If still disconnected, re-link WhatsApp (scan QR)
+clawdbot channels login --channel whatsapp
+```
+
+**Login process:** The `channels login` command shows a QR code. Scan it with WhatsApp on your phone (Settings → Linked Devices → Link a Device). After linking, you can close the terminal - the daemon maintains the session.
+
+**Common issues:**
+- "No active WhatsApp Web listener" → Run `clawdbot daemon restart`
+- "ENOTFOUND web.whatsapp.com" → Network issue, restart daemon
+- QR code not showing → Check `clawdbot daemon status`, restart if needed
 
 ## Outreach Process
 
