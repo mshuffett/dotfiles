@@ -206,24 +206,96 @@ For pruning inactive founders or following up on missing goals, generate persona
 - Asking them to update their goals
 - Include the Google Sheet link
 
-**Example messages (vary the wording naturally for each person):**
+**IMPORTANT: Don't bombard with questions.** Use a multi-message flow:
 
-> Hey [Name]! Quick check-in - I noticed your demo day goal isn't filled in yet on the sheet. Are you still planning to participate in the batch? If so, could you add your goal in the next day or two? [sheet link]
+1. **Initial message** - Goal check-in (wait for reply)
+2. **Follow-up #1** - NPS question (after they reply)
+3. **Follow-up #2** - What would help them most (after NPS reply)
 
-> Hi [Name], just doing a quick round of check-ins. I see [Company] doesn't have a demo day goal set yet. Still planning to be active in the batch? Would love to see what you're aiming for! [sheet link]
+---
 
-> Hey [Name]! Going through the goals sheet and noticed yours is empty. Wanted to check - are you still participating? If so, mind adding your demo day goal? Trying to make sure the active folks are grouped together. [sheet link]
+### Message Flow: Founders Missing Goals
 
-**Process:**
-1. Sync goals data
-2. Query for founders missing goals (with phone numbers)
-3. Generate a personalized message for each (use their name, company if relevant)
-4. Preview with `dryRun: true`
-5. Send one at a time with delays between messages
+**Initial message** - Check if still participating:
+
+> Hey [Name]! Going through the goals sheet and noticed [Company] doesn't have a demo day goal yet. Are you still planning to participate in the batch? If so, mind filling that in? Trying to make sure active folks are grouped together. [sheet link]
+
+> Hi [Name] - quick check-in! I see [Company]'s demo day goal is empty. Still planning to be active? Would love to know what you're aiming for! [sheet link]
+
+**After they reply (confirm participating)** - NPS question:
+
+> Awesome, thanks for updating! Quick question - on a scale of 1-10, how likely would you be to recommend this batch to other founders? Just trying to get a pulse on how things are going.
+
+> Great! By the way, curious - how likely are you to recommend the batch to other founders? 1-10 scale, just want to make sure we're delivering value.
+
+**After NPS reply** - What would help:
+
+> Thanks for the feedback! One more thing - what would be most helpful for you right now? Intros to certain types of companies, investors, anything specific?
+
+> Appreciate it! Last question - is there anything that would really help [Company] right now? Specific intros, investors on your wishlist, resources?
+
+---
+
+### Message Flow: Founders WITH Goals (Active Check-in)
+
+**Find founders who have goals set:**
+```sql
+sqlite3 ~/clawd-founders/data/founders.db "
+SELECT name, company, phone, demo_goal
+FROM founders
+WHERE demo_goal IS NOT NULL AND length(demo_goal) > 0
+AND phone IS NOT NULL
+"
+```
+
+**Initial message** - Check-in on progress:
+
+> Hey [Name]! How's [Company] going? Saw your demo day goal is [goal] - how's progress looking?
+
+> Hi [Name] - just checking in! How are things going with [Company]? Any blockers I can help with?
+
+**After they reply** - NPS question:
+
+> Good to hear! Quick question - on a scale of 1-10, how likely would you be to recommend this batch to other founders?
+
+**After NPS reply** - What would help:
+
+> Thanks! What would be most helpful for you right now? Any specific intros you're looking for - certain types of companies, investors on your wishlist?
+
+> Appreciate it! Anything I can help with? Intros to specific companies, investors you'd love to meet?
+
+---
+
+### Process
+
+1. Sync goals data: `bun ~/clawd-founders/scripts/sync-goals.ts --fetch`
+2. Query for founders (missing goals OR active check-in)
+3. Generate personalized initial message for each
+4. Preview with `dryRun: true`, then send
+5. **Wait for replies** before sending follow-ups
+6. Log each interaction in the database
 
 **Log outreach as interactions:**
 ```sql
+-- Initial outreach
 INSERT INTO interactions (founder_id, summary, topics)
 SELECT id, 'Sent goals check-in message', 'outreach,goals'
+FROM founders WHERE phone = '+14155551234';
+
+-- NPS response
+INSERT INTO interactions (founder_id, summary, topics)
+SELECT id, 'NPS score: 8 - positive feedback', 'nps,feedback'
+FROM founders WHERE phone = '+14155551234';
+
+-- Needs/asks
+INSERT INTO interactions (founder_id, summary, topics)
+SELECT id, 'Looking for intros to enterprise healthcare companies', 'needs,intros'
+FROM founders WHERE phone = '+14155551234';
+```
+
+**Add follow-ups for investor wishlists:**
+```sql
+INSERT INTO followups (founder_id, type, description, due_date)
+SELECT id, 'intro', 'Wants intro to Sequoia - check network', '2026-01-20'
 FROM founders WHERE phone = '+14155551234';
 ```
