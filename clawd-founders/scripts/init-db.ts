@@ -87,6 +87,28 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_notes_founder ON notes(founder_id);
   CREATE INDEX IF NOT EXISTS idx_notes_company ON notes(company);
+
+  -- Outreach table (track multi-step outreach state)
+  CREATE TABLE IF NOT EXISTS outreach (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    founder_id INTEGER REFERENCES founders(id) UNIQUE,
+    campaign TEXT DEFAULT 'goals_checkin',  -- campaign name for grouping
+    step TEXT DEFAULT 'not_started',  -- not_started, initial_sent, nps_sent, needs_sent, complete
+    initial_sent_at DATETIME,
+    initial_response TEXT,  -- their reply to initial message
+    nps_sent_at DATETIME,
+    nps_score INTEGER,  -- 1-10 score
+    nps_response TEXT,  -- their full reply
+    needs_sent_at DATETIME,
+    needs_response TEXT,  -- what they need (intros, investors, etc.)
+    last_nudge_at DATETIME,  -- for tracking follow-up nudges
+    nudge_count INTEGER DEFAULT 0,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_outreach_founder ON outreach(founder_id);
+  CREATE INDEX IF NOT EXISTS idx_outreach_step ON outreach(step);
+  CREATE INDEX IF NOT EXISTS idx_outreach_campaign ON outreach(campaign);
 `);
 
 console.log("Schema created/verified");

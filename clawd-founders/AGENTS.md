@@ -50,6 +50,7 @@ The founder database at `data/founders.db` contains all founder context:
 - `interactions` - Conversation logs with each founder
 - `followups` - Action items, reminders, check-ins
 - `notes` - Free-form notes about founders/companies
+- `outreach` - Track multi-step outreach state per founder (see Outreach State Tracking)
 
 **Common queries:**
 ```bash
@@ -298,4 +299,182 @@ FROM founders WHERE phone = '+14155551234';
 INSERT INTO followups (founder_id, type, description, due_date)
 SELECT id, 'intro', 'Wants intro to Sequoia - check network', '2026-01-20'
 FROM founders WHERE phone = '+14155551234';
+```
+
+---
+
+## Outreach State Tracking
+
+The `outreach` table tracks where each founder is in the multi-step flow.
+
+**Steps:**
+| Step | Meaning |
+|------|---------|
+| `not_started` | Haven't sent initial message yet |
+| `initial_sent` | Sent initial message, waiting for reply |
+| `nps_sent` | Received reply, sent NPS question |
+| `needs_sent` | Received NPS, sent needs question |
+| `complete` | All questions answered |
+
+### Check Outreach Status
+
+```sql
+-- See everyone's status
+sqlite3 ~/clawd-founders/data/founders.db "
+SELECT f.name, f.company, o.step, o.nps_score, o.nudge_count
+FROM founders f
+LEFT JOIN outreach o ON f.id = o.founder_id
+WHERE f.phone IS NOT NULL
+ORDER BY o.step, f.name
+"
+
+-- Who needs initial message?
+sqlite3 ~/clawd-founders/data/founders.db "
+SELECT f.name, f.company, f.phone
+FROM founders f
+LEFT JOIN outreach o ON f.id = o.founder_id
+WHERE f.phone IS NOT NULL
+AND (o.step IS NULL OR o.step = 'not_started')
+"
+
+-- Who hasn't replied to initial message? (sent > 2 days ago)
+sqlite3 ~/clawd-founders/data/founders.db "
+SELECT f.name, f.company, f.phone, o.initial_sent_at, o.nudge_count
+FROM founders f
+JOIN outreach o ON f.id = o.founder_id
+WHERE o.step = 'initial_sent'
+AND o.initial_sent_at < datetime('now', '-2 days')
+"
+
+-- Who's ready for NPS question? (replied to initial)
+sqlite3 ~/clawd-founders/data/founders.db "
+SELECT f.name, f.company, f.phone
+FROM founders f
+JOIN outreach o ON f.id = o.founder_id
+WHERE o.step = 'initial_sent' AND o.initial_response IS NOT NULL
+"
+
+-- Who's ready for needs question? (replied to NPS)
+sqlite3 ~/clawd-founders/data/founders.db "
+SELECT f.name, f.company, f.phone, o.nps_score
+FROM founders f
+JOIN outreach o ON f.id = o.founder_id
+WHERE o.step = 'nps_sent' AND o.nps_score IS NOT NULL
+"
+
+-- Summary stats
+sqlite3 ~/clawd-founders/data/founders.db "
+SELECT
+  COALESCE(o.step, 'not_started') as step,
+  COUNT(*) as count
+FROM founders f
+LEFT JOIN outreach o ON f.id = o.founder_id
+WHERE f.phone IS NOT NULL
+GROUP BY step
+"
+```
+
+### Update Outreach State
+
+```sql
+-- Start outreach (mark initial sent)
+INSERT INTO outreach (founder_id, step, initial_sent_at)
+SELECT id, 'initial_sent', datetime('now')
+FROM founders WHERE phone = '+14155551234'
+ON CONFLICT(founder_id) DO UPDATE SET
+  step = 'initial_sent',
+  initial_sent_at = datetime('now'),
+  updated_at = datetime('now');
+
+-- Record initial response
+UPDATE outreach SET
+  initial_response = 'Yes still participating, will update goal today',
+  updated_at = datetime('now')
+WHERE founder_id = (SELECT id FROM founders WHERE phone = '+14155551234');
+
+-- Mark NPS sent
+UPDATE outreach SET
+  step = 'nps_sent',
+  nps_sent_at = datetime('now'),
+  updated_at = datetime('now')
+WHERE founder_id = (SELECT id FROM founders WHERE phone = '+14155551234');
+
+-- Record NPS score
+UPDATE outreach SET
+  nps_score = 8,
+  nps_response = 'Probably an 8, the sessions have been helpful',
+  updated_at = datetime('now')
+WHERE founder_id = (SELECT id FROM founders WHERE phone = '+14155551234');
+
+-- Mark needs sent
+UPDATE outreach SET
+  step = 'needs_sent',
+  needs_sent_at = datetime('now'),
+  updated_at = datetime('now')
+WHERE founder_id = (SELECT id FROM founders WHERE phone = '+14155551234');
+
+-- Record needs response and complete
+UPDATE outreach SET
+  step = 'complete',
+  needs_response = 'Looking for intros to enterprise healthcare buyers',
+  updated_at = datetime('now')
+WHERE founder_id = (SELECT id FROM founders WHERE phone = '+14155551234');
+```
+
+---
+
+## Non-Responder Flow
+
+If someone doesn't reply within 2-3 days, send a gentle nudge. Max 2 nudges before marking inactive.
+
+### Check for Non-Responders
+
+```sql
+-- Initial message sent > 2 days ago, no response, < 2 nudges
+sqlite3 ~/clawd-founders/data/founders.db "
+SELECT f.name, f.company, f.phone, o.nudge_count,
+  julianday('now') - julianday(COALESCE(o.last_nudge_at, o.initial_sent_at)) as days_since
+FROM founders f
+JOIN outreach o ON f.id = o.founder_id
+WHERE o.step = 'initial_sent'
+AND o.initial_response IS NULL
+AND o.nudge_count < 2
+AND julianday('now') - julianday(COALESCE(o.last_nudge_at, o.initial_sent_at)) > 2
+"
+```
+
+### Nudge Messages
+
+**First nudge (2-3 days after initial):**
+
+> Hey [Name]! Just circling back - are you still planning to participate in the batch? Let me know either way so I can update the groups.
+
+> Hi [Name] - wanted to follow up. Still active in the batch? No worries if not, just trying to get an accurate headcount.
+
+**Second nudge (2-3 days after first nudge):**
+
+> Hey [Name], last check-in - haven't heard back. If you're still interested in participating, just let me know. Otherwise I'll assume you're sitting this one out. No pressure either way!
+
+### Record Nudge
+
+```sql
+UPDATE outreach SET
+  nudge_count = nudge_count + 1,
+  last_nudge_at = datetime('now'),
+  updated_at = datetime('now')
+WHERE founder_id = (SELECT id FROM founders WHERE phone = '+14155551234');
+```
+
+### Mark Inactive (after 2 nudges with no response)
+
+```sql
+-- Add note that they're inactive
+INSERT INTO notes (founder_id, category, content)
+SELECT id, 'status', 'Marked inactive - no response to outreach after 2 nudges'
+FROM founders WHERE phone = '+14155551234';
+
+-- Update founder notes
+UPDATE founders SET
+  notes = COALESCE(notes || ' | ', '') || 'Inactive - no response to Jan 2026 outreach'
+WHERE phone = '+14155551234';
 ```
