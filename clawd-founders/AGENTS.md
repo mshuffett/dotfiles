@@ -111,7 +111,6 @@ FROM founders WHERE phone = '+14155551234';
 | `data/founders.db` | SQLite database with founder context, interactions, follow-ups |
 | `data/founders.csv` | Source CSV (75 founders) - used to reinitialize DB |
 | `data/google-sheet.csv` | Goal tracking data (synced from Google Sheets) |
-| `founders.txt` | Phone numbers for batch messaging (68 with phones) |
 
 ## Syncing Fresh Data
 
@@ -154,9 +153,77 @@ The founder never sees this - it's just internal routing.
 
 ## Batch Messaging
 
-For sending to multiple founders, use `batch-wa`:
+For sending the same message to multiple founders:
 ```bash
-batch-wa founders.txt "Message here"
+# Create a file with phone numbers
+sqlite3 ~/clawd-founders/data/founders.db "SELECT phone FROM founders WHERE subgroup = 1 AND phone IS NOT NULL" > phones.txt
+
+# Send with human-like delays (5-15 seconds between messages)
+batch-wa --message "Your message here" --file phones.txt
 ```
 
-This sends with human-like delays (5-15 seconds between messages).
+For personalized messages, use the message tool directly with `dryRun: true` to preview first.
+
+## Outreach Process
+
+### Finding Founders Missing Goals
+
+Google Sheet link: https://docs.google.com/spreadsheets/d/1WrCH7jrhUmpBaIKLPlv39Yoeb_FnqukaAsPOC2wiBPo
+
+**Sync fresh data first:**
+```bash
+bun ~/clawd-founders/scripts/sync-goals.ts --fetch
+```
+
+**Find founders missing Demo Day goals:**
+```sql
+sqlite3 ~/clawd-founders/data/founders.db "
+SELECT name, company, phone
+FROM founders
+WHERE (demo_goal IS NULL OR length(demo_goal) = 0)
+AND phone IS NOT NULL
+AND notes NOT LIKE '%not a founder%'
+"
+```
+
+**Find founders missing 2-week goals (current period):**
+```sql
+sqlite3 ~/clawd-founders/data/founders.db "
+SELECT f.name, f.company, f.phone, g.goal
+FROM founders f
+JOIN goals g ON f.company = g.company
+WHERE g.period = '01/07/26'
+AND (g.goal IS NULL OR length(g.goal) = 0)
+AND f.phone IS NOT NULL
+"
+```
+
+### Generating Personalized Outreach
+
+For pruning inactive founders or following up on missing goals, generate personalized messages for each founder. The tone should be:
+- Casual, WhatsApp-style
+- Checking if they're still participating
+- Asking them to update their goals
+- Include the Google Sheet link
+
+**Example messages (vary the wording naturally for each person):**
+
+> Hey [Name]! Quick check-in - I noticed your demo day goal isn't filled in yet on the sheet. Are you still planning to participate in the batch? If so, could you add your goal in the next day or two? [sheet link]
+
+> Hi [Name], just doing a quick round of check-ins. I see [Company] doesn't have a demo day goal set yet. Still planning to be active in the batch? Would love to see what you're aiming for! [sheet link]
+
+> Hey [Name]! Going through the goals sheet and noticed yours is empty. Wanted to check - are you still participating? If so, mind adding your demo day goal? Trying to make sure the active folks are grouped together. [sheet link]
+
+**Process:**
+1. Sync goals data
+2. Query for founders missing goals (with phone numbers)
+3. Generate a personalized message for each (use their name, company if relevant)
+4. Preview with `dryRun: true`
+5. Send one at a time with delays between messages
+
+**Log outreach as interactions:**
+```sql
+INSERT INTO interactions (founder_id, summary, topics)
+SELECT id, 'Sent goals check-in message', 'outreach,goals'
+FROM founders WHERE phone = '+14155551234';
+```
