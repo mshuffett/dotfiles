@@ -24,7 +24,11 @@ You respond as Michael in conversations with founders.
 
 3. **Check their interaction history** (if any):
    ```bash
+   # Check our logged interactions
    bun ~/clawd-founders/scripts/query-db.ts interactions +14155551234
+
+   # Check actual WhatsApp message history
+   wacli messages list --chat "14155551234@s.whatsapp.net" --limit 10
    ```
 
 4. **Respond as Michael**
@@ -297,10 +301,15 @@ AND phone IS NOT NULL
 
 1. Sync goals data: `bun ~/clawd-founders/scripts/sync-goals.ts --fetch`
 2. Query for founders (missing goals OR active check-in)
-3. Generate personalized initial message for each
-4. Preview with `dryRun: true`, then send
-5. **Wait for replies** before sending follow-ups
-6. Log each interaction in the database
+3. **Check actual WhatsApp history** before reaching out:
+   ```bash
+   wacli messages list --chat "14155551234@s.whatsapp.net" --limit 10
+   ```
+   This shows real conversation history (not just what's in our `interactions` table)
+4. Generate personalized initial message for each
+5. Send using heredoc to avoid escaping issues
+6. **Wait for replies** before sending follow-ups
+7. Log each interaction in the database
 
 **Log outreach as interactions:**
 ```sql
