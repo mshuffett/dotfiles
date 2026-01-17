@@ -281,13 +281,17 @@ AND phone IS NOT NULL
 "
 ```
 
-**Initial message** - Keep it simple and casual (lowercase, not marketing-y):
+**Initial message** - Keep it simple and casual (lowercase, not marketing-y). Reference their specific goal:
 
-> hey [name], how's the batch going? any intros i can help with or investors on your wishlist?
+> hey [name], how's the [2-week goal] going? any intros i can help with or investors on your wishlist?
 
-If there's specific context (notes about them, prior conversations), reference it naturally:
+If they have progress notes, reference that:
 
-> hey [name], how's the batch going? how's the group working out - are you happy with it? any intros i can help with or investors on your wishlist?
+> hey [name], how's [goal] going? saw you're [progress] - any intros i can help with or investors on your wishlist?
+
+If there's specific context (notes about them, group issues, prior conversations):
+
+> hey [name], how's it going? how's the group working out - are you happy with it? any intros i can help with or investors on your wishlist?
 
 **After they reply** - Engage naturally with what they said. Things to cover when the moment is right:
 
@@ -296,9 +300,9 @@ If there's specific context (notes about them, prior conversations), reference i
 - If they want matches → ask what would be ideal / what they're looking for (type of company, stage, industry, etc.)
 - NPS (when appropriate): "btw curious - 1-10 how likely would you be to recommend the batch to other founders?"
 
-**For new people you haven't messaged before**, be clear about what you can help with:
+**For new people you haven't messaged before**, reference their goal and be clear about what you can help with:
 
-> hey [name], how's the batch going? wanted to check in - any intros i can help with or investors on your wishlist? also happy to match you with other founders for coffee chats or potential customers if that'd be useful
+> hey [name], how's [2-week goal] going? any intros i can help with or investors on your wishlist? also happy to match you with other founders for coffee chats or potential customers if that'd be useful
 
 ---
 
