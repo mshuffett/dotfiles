@@ -249,21 +249,15 @@ AND phone IS NOT NULL
 "
 ```
 
-**Initial message** - Check-in on progress:
+**Initial message** - Check-in on progress + ask what would help:
 
-> Hey [Name]! How's [Company] going? Saw your demo day goal is [goal] - how's progress looking?
+> Hey [Name]! How's [Company] going? Saw your demo day goal is [goal] - how's progress looking? Also curious - anything I can help with? Intros, investors you want to meet, resources?
 
-> Hi [Name] - just checking in! How are things going with [Company]? Any blockers I can help with?
+> Hi [Name] - checking in! How are things with [Company]? Any blockers I can help with? Looking for any specific intros or have investors on your wishlist?
 
 **After they reply** - NPS question:
 
-> Good to hear! Quick question - on a scale of 1-10, how likely would you be to recommend this batch to other founders?
-
-**After NPS reply** - What would help:
-
-> Thanks! What would be most helpful for you right now? Any specific intros you're looking for - certain types of companies, investors on your wishlist?
-
-> Appreciate it! Anything I can help with? Intros to specific companies, investors you'd love to meet?
+> Good to hear! Quick question - on a scale of 1-10, how likely would you be to recommend this batch to other founders? Just want to make sure we're delivering value.
 
 ---
 
