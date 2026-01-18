@@ -56,6 +56,19 @@ The founder database at `data/founders.db` contains all founder context:
 - `notes` - Free-form notes about founders/companies
 - `outreach` - Track multi-step outreach state per founder (see Outreach State Tracking)
 
+### Data Field Definitions
+
+| Field | Column | Meaning |
+|-------|--------|---------|
+| `demo_goal` | founders table | Demo day target (end goal) |
+| `two_week_goal` | goals.goal | What they're aiming for this 2-week period |
+| `progress` | goals.progress | Actual results/status updates |
+
+**In messages:**
+- Reference **two_week_goal** when asking how things are going (it's what they're working toward)
+- Reference **progress** as achievements/current status
+- Reference **demo_goal** as the bigger picture target
+
 **Common queries:**
 ```bash
 # Find founder by phone (includes goals)
@@ -156,7 +169,24 @@ For things needing real Michael input, use the message tool to ping Telegram:
 
 The founder never sees this - it's just internal routing.
 
-## Batch Messaging
+## Sending Messages
+
+**CRITICAL - Before sending ANY message:**
+1. **Think about intent** - What is the founder actually asking for? Don't apply templates literally. If someone asks YOU for an intro, don't ask them for an "intro path" - they're asking because they don't have one.
+2. **Draft first, send after approval** - Always write the draft in outreach-drafts.md and get Michael's approval before sending. Never send automatically.
+3. **Read it back** - Does this response actually make sense given what they said?
+
+**Use `clawdbot` to send WhatsApp messages, NOT `wacli send`.** The wacli tool is for reading/searching only - clawdbot handles sending through the gateway daemon.
+
+### Single Message
+```bash
+clawdbot message send --channel whatsapp --to "+14155551234" --json --message "$(cat <<'EOF'
+Your message here with punctuation!
+EOF
+)"
+```
+
+### Batch Messaging
 
 For sending the same message to multiple founders:
 ```bash
@@ -165,14 +195,6 @@ sqlite3 ~/clawd-founders/data/founders.db "SELECT phone FROM founders WHERE subg
 
 # Send with human-like delays (5-15 seconds between messages)
 batch-wa --message "Your message here" --file phones.txt
-```
-
-For personalized messages, use clawdbot with a heredoc (avoids escaping issues with `!`):
-```bash
-clawdbot message send --channel whatsapp --to "+14155551234" --json --message "$(cat <<'EOF'
-Hey! Your message here with punctuation!
-EOF
-)"
 ```
 
 ### Clawdbot Setup & Troubleshooting
@@ -200,6 +222,73 @@ clawdbot channels login --channel whatsapp
 - "No active WhatsApp Web listener" → Run `clawdbot daemon restart`
 - "ENOTFOUND web.whatsapp.com" → Network issue, restart daemon
 - QR code not showing → Check `clawdbot daemon status`, restart if needed
+
+## Pipeline Management
+
+Use `scripts/pipeline.ts` to track outreach state and process replies.
+
+### Pipeline Commands
+
+```bash
+bun ~/clawd-founders/scripts/pipeline.ts status              # Show pipeline overview
+bun ~/clawd-founders/scripts/pipeline.ts history +1415...    # Read messages (required before send)
+bun ~/clawd-founders/scripts/pipeline.ts context +1415...    # Show founder from DB
+bun ~/clawd-founders/scripts/pipeline.ts send +1415... "msg" # Send message
+bun ~/clawd-founders/scripts/pipeline.ts nps +1415... 8 "comment"     # Record NPS
+bun ~/clawd-founders/scripts/pipeline.ts needs +1415... "description" # Record needs
+bun ~/clawd-founders/scripts/pipeline.ts investor +1415... "Name" "notes"  # Record investor
+bun ~/clawd-founders/scripts/pipeline.ts check-all           # Refresh all founders
+```
+
+### Pipeline Stages
+
+| Stage | Meaning |
+|-------|---------|
+| `not_contacted` | Never messaged |
+| `awaiting_reply` | We sent, waiting on them |
+| `in_conversation` | They replied, may need our response |
+| `nps_collected` | Got NPS score |
+| `needs_collected` | Got needs/asks |
+| `complete` | All info gathered |
+
+### Message Approval Format
+
+When processing replies, present each founder in this format:
+
+**[Name]** ([Company]) | Group [N] | `[stage]`
+
+| | |
+|---|---|
+| **→ us** [time] | [our message] |
+| **← them** [time] | [their reply] |
+
+**Next:** [reasoning for response]
+
+Then use `AskUserQuestion` picker with 3 draft options. User can select one or type custom response.
+
+### Processing Replies
+
+1. Run `pipeline.ts status` to see who needs attention
+2. Identify founders where `last_wa_from = "them"` (they replied, we need to respond)
+3. For each founder, run `pipeline.ts history` and **READ THE OUTPUT** to see recent messages
+4. For each founder, include:
+   - Name, company, group, stage
+   - Last message exchange (table format)
+   - Goal status (demo goal, 2-week goal, progress)
+   - Reasoning for next message
+5. Present draft options via `AskUserQuestion` picker
+6. **CRITICAL: Before sending, re-run `pipeline.ts history` and READ the output** to check for new messages since you drafted. If they sent something new, revise the draft accordingly.
+7. On approval, send via `pipeline.ts send` **in background** (don't wait)
+8. Pre-fetch next 2-3 founders while presenting current one (pipeline for throughput)
+9. Record NPS/needs when mentioned
+
+**Why read history before sending?** The stale check exists because messages can arrive between when you draft and when you send. Running history without reading the output defeats the purpose - you must check if they sent anything new that changes your response.
+
+### Skip Rules
+
+- Skip founders with `notes LIKE '%not a founder%'` (e.g., Hannah Merrigan - VC observer)
+
+---
 
 ## Outreach Process
 
@@ -295,7 +384,10 @@ If there's specific context (notes about them, group issues, prior conversations
 
 **After they reply** - Engage naturally with what they said. Things to cover when the moment is right:
 
-- If they mention intros/investors → follow up, get specifics, try to help
+- If they mention investors on wishlist → "noted, will see if we can get them in"
+  - Only ask about "intro path" if context suggests they might have a loose connection
+  - If they're clearly asking YOU for the intro, don't ask them for a path - that makes no sense
+  - **Track in `data/investor-wishlist.md`** - add investor name, increment count if already listed, note who mentioned them
 - If they mention blockers → see if you can help or connect them
 - If they want matches → ask what would be ideal / what they're looking for (type of company, stage, industry, etc.)
 - NPS (when appropriate): "btw curious - 1-10 how likely would you be to recommend the batch to other founders?"
@@ -312,9 +404,27 @@ If there's specific context (notes about them, group issues, prior conversations
 2. Query for founders (missing goals OR active check-in)
 3. **Check actual WhatsApp history** before reaching out:
    ```bash
+   # Step 1: Check by phone JID
    wacli messages list --chat "14155551234@s.whatsapp.net" --limit 10
+
+   # Step 2: Check for @lid mapping (linked device conversations)
+   # The lid_map table reliably maps phone numbers to linked device IDs
+   LID=$(sqlite3 ~/.wacli/session.db "SELECT lid FROM whatsmeow_lid_map WHERE pn = '14155551234'")
+   if [ -n "$LID" ]; then
+     wacli messages list --chat "${LID}@lid" --limit 10
+   fi
+
+   # Step 3: Fallback - search by first name (catches edge cases)
+   wacli messages search "FirstName" --limit 10
    ```
-   This shows real conversation history (not just what's in our `interactions` table)
+
+   **Why both methods?**
+   - Phone JID (`14155551234@s.whatsapp.net`) - direct WhatsApp conversations
+   - @lid JID (`42280228503750@lid`) - linked device conversations (no way to derive from phone without the mapping table)
+
+   The `whatsmeow_lid_map` table in `~/.wacli/session.db` maps `lid` ↔ `pn` (phone number).
+
+   **Important:** Record the check timestamp in outreach-drafts.md header when doing batch checks.
 4. Generate personalized initial message for each
 5. Send using heredoc to avoid escaping issues
 6. **Track the send** in outreach table (step = 'initial_sent')

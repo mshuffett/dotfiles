@@ -33,6 +33,16 @@ Invoke `memory-placement` skill first. Commit before and after changes.
 - Never kill a port process you didn't start
 - Invoke worktrees skill before git worktree operations
 
+**Multi-Step Task Workflow**
+
+For non-trivial tasks with 3+ steps:
+1. **Plan first** - Use EnterPlanMode for complex implementation tasks
+2. **Create scratch file** - Write plan and track progress in a scratch-*.md file in the working directory
+3. **Use todo list** - Track tasks via TodoWrite tool, update status as you work
+4. **Log progress** - Append findings and decisions to scratch file as you go
+
+This provides visibility into progress and creates documentation of the work done.
+
 **End of Task**
 
 After operational work, ask if anything learned should become a skill.
