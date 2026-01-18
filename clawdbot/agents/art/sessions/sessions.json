@@ -177,7 +177,7 @@
   },
   "agent:main:main": {
     "sessionId": "5bd82f70-9e14-4db6-b6ba-f3ebc0eb432c",
-    "updatedAt": 1768508070769,
+    "updatedAt": 1768778443452,
     "systemSent": true,
     "abortedLastRun": false,
     "chatType": "direct",
@@ -370,8 +370,8 @@
       ]
     },
     "inputTokens": 10,
-    "outputTokens": 179,
-    "totalTokens": 17384,
+    "outputTokens": 186,
+    "totalTokens": 52929,
     "modelProvider": "anthropic",
     "model": "claude-opus-4-5",
     "contextTokens": 200000
