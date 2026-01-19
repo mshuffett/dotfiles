@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { Draft } from "../../scripts/shared/types";
+import type { Draft, SuggestedAction } from "../../scripts/shared/types";
 import { ConversationThread } from "./ConversationThread";
+import { AIChat } from "./AIChat";
 
 interface Props {
   draft: Draft;
@@ -10,6 +11,12 @@ interface Props {
   onSelectDraft: (index: number) => void;
   isEditing: boolean;
   onToggleEdit: () => void;
+  showAIChat: boolean;
+  onToggleChat: () => void;
+  currentMessage: string;
+  currentTone: string;
+  onMessageUpdate: (message: string, tone?: string) => void;
+  onActionsUpdate: (actions: SuggestedAction[]) => void;
   enabledActions: Set<string>;
   onToggleAction: (description: string) => void;
   onSend: () => void;
@@ -41,6 +48,12 @@ export function ConversationDetail({
   onSelectDraft,
   isEditing,
   onToggleEdit,
+  showAIChat,
+  onToggleChat,
+  currentMessage,
+  currentTone,
+  onMessageUpdate,
+  onActionsUpdate,
   enabledActions,
   onToggleAction,
   onSend,
@@ -84,9 +97,9 @@ export function ConversationDetail({
   if (draft.context.progress) goalParts.push(`Progress: ${draft.context.progress}`);
 
   return (
-    <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
-      {/* Header with goals */}
-      <div className="px-4 py-3 bg-gray-800/50">
+    <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden flex flex-col h-[calc(100vh-8.5rem)]">
+      {/* Header with goals - fixed */}
+      <div className="px-4 py-3 bg-gray-800/50 flex-shrink-0">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
             <div>
@@ -114,14 +127,14 @@ export function ConversationDetail({
         )}
       </div>
 
-      {/* Conversation */}
-      <div className="p-4 border-t border-gray-800">
+      {/* Conversation - fills available space, scrolls when needed */}
+      <div className="p-4 border-t border-gray-800 overflow-y-auto flex-1 min-h-0">
         <h4 className="text-xs text-gray-500 uppercase mb-3">Conversation</h4>
         <ConversationThread messages={messages} />
       </div>
 
-      {/* Drafts section */}
-      <div className="p-4 border-t border-gray-800">
+      {/* Drafts section - fixed size, always visible */}
+      <div className="p-4 border-t border-gray-800 flex-shrink-0">
         {/* Reasoning - collapsible */}
         {draft.reasoning && (
           <details className="mb-4">
@@ -206,10 +219,44 @@ export function ConversationDetail({
             </div>
           </div>
         )}
+
+        {/* Current message preview (if AI-edited) */}
+        {currentMessage !== (draftOptions[selectedDraftIndex]?.message || draft.message) && (
+          <div className="mb-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+            <h5 className="text-xs text-blue-400 uppercase mb-2">
+              AI-Refined Message
+            </h5>
+            <p className="text-sm text-white whitespace-pre-wrap">{currentMessage}</p>
+            <span className="text-xs text-blue-400 mt-1 inline-block">Tone: {currentTone}</span>
+          </div>
+        )}
       </div>
 
-      {/* Actions */}
-      <div className="px-4 py-3 bg-gray-800/30 border-t border-gray-800 flex items-center gap-2">
+      {/* AI Chat Panel */}
+      {showAIChat && (
+        <AIChat
+          draftId={draft.id}
+          currentMessage={currentMessage}
+          currentTone={currentTone}
+          suggestedActions={draft.suggested_actions || []}
+          founderContext={{
+            name: draft.founder_name,
+            company: draft.company,
+            phone: draft.phone,
+            demo_goal: draft.context.demo_goal,
+            two_week_goal: draft.context.two_week_goal,
+            progress: draft.context.progress,
+            stage: draft.context.stage,
+            messages: draft.context.messages,
+          }}
+          onMessageUpdate={onMessageUpdate}
+          onActionsUpdate={onActionsUpdate}
+          onClose={onToggleChat}
+        />
+      )}
+
+      {/* Actions - fixed footer */}
+      <div className="px-4 py-3 bg-gray-800/30 border-t border-gray-800 flex items-center gap-2 flex-shrink-0">
         <button
           onClick={onSnooze}
           className="px-3 py-1.5 text-sm rounded bg-gray-700 text-white hover:bg-gray-600 flex items-center gap-1"
@@ -219,10 +266,25 @@ export function ConversationDetail({
         </button>
         <button
           onClick={handleEdit}
-          className="px-3 py-1.5 text-sm rounded bg-gray-700 text-white hover:bg-gray-600 flex items-center gap-1"
+          className={`px-3 py-1.5 text-sm rounded flex items-center gap-1 ${
+            isEditing
+              ? "bg-blue-600 text-white"
+              : "bg-gray-700 text-white hover:bg-gray-600"
+          }`}
         >
           <span className="text-gray-400 text-xs">e</span>
           {isEditing ? "Cancel" : "Edit"}
+        </button>
+        <button
+          onClick={onToggleChat}
+          className={`px-3 py-1.5 text-sm rounded flex items-center gap-1 ${
+            showAIChat
+              ? "bg-purple-600 text-white"
+              : "bg-gray-700 text-white hover:bg-gray-600"
+          }`}
+        >
+          <span className="text-gray-400 text-xs">c</span>
+          Chat
         </button>
         <div className="flex-1" />
         <button

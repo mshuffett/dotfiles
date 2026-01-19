@@ -1,0 +1,1676 @@
+{
+  "drafts": [
+    {
+      "id": "draft_1768794282797_haa6c7",
+      "phone": "+12107732058",
+      "founder_name": "Juan Castano",
+      "company": "Benchify",
+      "message": "nice! glad it's sorted 👍 how's things going with benchify? any intros i can help with or investors on your wishlist?",
+      "status": "sent",
+      "created_at": "2026-01-19T03:44:42.797Z",
+      "updated_at": "2026-01-19T04:25:30.648Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": null,
+        "last_wa_message": "Looks like my founder added stuff in! Thanks for the reminder",
+        "last_wa_from": "them",
+        "reasoning": "Juan confirmed his cofounder added their goals to the sheet. This is a good moment to acknowledge that and pivot to offering help - intros, investors, etc. Since he's now actively participating, worth checking what support would be useful. Keeping it casual and not overloading with questions.",
+        "messages": [
+          {
+            "id": "3BCBF5F44868A0E75760",
+            "timestamp": "2026-01-18T17:15:15Z",
+            "from": "them",
+            "text": "Looks like my founder added stuff in! Thanks for the reminder"
+          },
+          {
+            "id": "3EB0BF8B0B1583A06DE038",
+            "timestamp": "2026-01-17T22:50:37Z",
+            "from": "us",
+            "text": "hey juan, noticed benchify doesn't have a demo day goal yet - still planning to participate? just trying to group active folks together. can you add your goal here when you get a chance? https://docs.google.com/spreadsheets/d/1WrCH7jrhUmpBaIKLPlv39Yoeb_FnqukaAsPOC2wiBPo"
+          }
+        ]
+      },
+      "alternatives": [
+        "perfect, thanks for getting that in! anything i can help with - intros, investors you want to meet?",
+        "great, appreciate it! let me know if there's anything i can help with on your end"
+      ],
+      "drafts": [
+        {
+          "message": "nice! glad it's sorted 👍 how's things going with benchify? any intros i can help with or investors on your wishlist?",
+          "tone": "casual, opens door for help"
+        },
+        {
+          "message": "perfect, thanks for getting that in! anything i can help with - intros, investors you want to meet?",
+          "tone": "brief, helpful"
+        },
+        {
+          "message": "great, appreciate it! let me know if there's anything i can help with on your end",
+          "tone": "short, leaves ball in their court"
+        }
+      ],
+      "reasoning": "Juan confirmed his cofounder added their goals to the sheet. This is a good moment to acknowledge that and pivot to offering help - intros, investors, etc. Since he's now actively participating, worth checking what support would be useful. Keeping it casual and not overloading with questions.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Juan confirmed cofounder added goals to sheet. Good engagement.",
+            "topics": "goals, check-in"
+          },
+          "description": "Log that goals were added by cofounder",
+          "enabled": true
+        },
+        {
+          "type": "update_outreach",
+          "params": {
+            "step": "needs_sent"
+          },
+          "description": "Mark that we've asked about their needs/intros",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768794286590_o6pj2m",
+      "phone": "+50764842600",
+      "founder_name": "Felipe Echandi",
+      "company": "Cuanto",
+      "message": "haha no worries! yeah totally get it - accountability can be just as valuable. lmk if anything changes or if there's other ways i can help 🙌",
+      "status": "sent",
+      "created_at": "2026-01-19T03:44:46.590Z",
+      "updated_at": "2026-01-19T04:24:53.672Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "Payment infra to process and pay out merchants in new countries",
+        "two_week_goal": "Year kickoff customer feedback quick wins — kill this list",
+        "progress": "",
+        "last_wa_message": "Thanks for all the work you put into this man!",
+        "last_wa_from": "them",
+        "reasoning": "Felipe is being appreciative and clarifying they're using this more for accountability than fundraising. He's also apologizing for delay on investor list. The right move is to acknowledge that's totally fine, not push on the investor stuff, and keep the door open. Since he mentioned being in SF in feb-mar, referencing meeting up in person is a nice personal touch. No need to ask questions - just affirm and be supportive.",
+        "messages": [
+          {
+            "id": "3BC4B5F66BCD801A294D",
+            "timestamp": "2026-01-18T23:40:05Z",
+            "from": "them",
+            "text": "Thanks for all the work you put into this man!"
+          },
+          {
+            "id": "3B2014000E0EEE96D222",
+            "timestamp": "2026-01-18T23:39:38Z",
+            "from": "them",
+            "text": "We’re thinking of doing this more of an accountability track, instead of with the goal to fundraise! But will let you know!!"
+          },
+          {
+            "id": "3B0CFA70261960D56F0D",
+            "timestamp": "2026-01-18T23:39:08Z",
+            "from": "them",
+            "text": "Hey Michael! I’ll add several investors to the list! Got delayed with this so sorry!!"
+          },
+          {
+            "id": "3EB09A462D9C600710E560",
+            "timestamp": "2026-01-17T22:33:00Z",
+            "from": "us",
+            "text": "hey felipe, any intros i can help with or investors on your wishlist?"
+          },
+          {
+            "id": "3AF045F5B88CEDEDD7D8",
+            "timestamp": "2026-01-03T00:10:27Z",
+            "from": "them",
+            "text": "Ah got it. Will do!"
+          },
+          {
+            "id": "3B14A783C8BE038009E7",
+            "timestamp": "2026-01-02T23:37:55Z",
+            "from": "us",
+            "text": "awesome. yeah either individually or even just like put both names or something"
+          },
+          {
+            "id": "3B7978DE3BA416A634AD",
+            "timestamp": "2026-01-02T21:27:21Z",
+            "from": "them",
+            "text": "btw should he individuall sign the participation agreement?"
+          },
+          {
+            "id": "3AE6368348F0DC2007CF",
+            "timestamp": "2026-01-02T21:23:42Z",
+            "from": "them",
+            "text": "We’re in LatAm but I’ll be in SF feb-mar (dates TBD) so excited to also meet you and the rest of the crowd in person!"
+          },
+          {
+            "id": "3A361DB4B302DEEF4CE2",
+            "timestamp": "2026-01-02T21:23:14Z",
+            "from": "them",
+            "text": ""
+          },
+          {
+            "id": "3A1F3EB515D5A96C4DF0",
+            "timestamp": "2026-01-02T21:23:04Z",
+            "from": "them",
+            "text": "Hey man! Thanks for putting this up! Would you add my cofounder Jorge to the community?"
+          },
+          {
+            "id": "3B220C2BB07849498BAC",
+            "timestamp": "2025-12-17T01:20:13Z",
+            "from": "us",
+            "text": "Hey! Welcome to the Unofficial W26 Alumni Batch!\n\nThe next step is to join the WhatsApp here: https://chat.whatsapp.com/JTXWRuEwfzdL4jzBpWRFsD\n\nAll future announcements will go through there.\n\nCheers!"
+          },
+          {
+            "id": "3ACF05F3388E7B04D66D",
+            "timestamp": "2025-12-15T22:27:37Z",
+            "from": "us",
+            "text": "Np thanks"
+          },
+          {
+            "id": "3AEDD3FE90C73AB5527E",
+            "timestamp": "2025-12-15T20:33:52Z",
+            "from": "them",
+            "text": "Sorry man holiday rush here. Just filled this up. Love the whole concept!"
+          },
+          {
+            "id": "3B2533F8B542CE67411F",
+            "timestamp": "2025-12-10T22:02:45Z",
+            "from": "us",
+            "text": "Hey Felipe, just following up — moving forward with the Unofficial YC Alumni Demo Day and already have about 20+ founders on board. \n\nIf you’re still interested, please fill out this quick ~5 min survey - https://tally.so/r/gDae6D"
+          }
+        ]
+      },
+      "alternatives": [
+        "all good! accountability angle makes total sense. let me know when you're in sf - would be great to meet up",
+        "no stress at all! accountability track is great too. excited to meet in person when you're up in sf feb/mar!"
+      ],
+      "drafts": [
+        {
+          "message": "haha no worries! yeah totally get it - accountability can be just as valuable. lmk if anything changes or if there's other ways i can help 🙌",
+          "tone": "warm, supportive, no pressure"
+        },
+        {
+          "message": "all good! accountability angle makes total sense. let me know when you're in sf - would be great to meet up",
+          "tone": "casual, looking forward to connecting"
+        },
+        {
+          "message": "no stress at all! accountability track is great too. excited to meet in person when you're up in sf feb/mar!",
+          "tone": "encouraging, personal connection"
+        }
+      ],
+      "reasoning": "Felipe is being appreciative and clarifying they're using this more for accountability than fundraising. He's also apologizing for delay on investor list. The right move is to acknowledge that's totally fine, not push on the investor stuff, and keep the door open. Since he mentioned being in SF in feb-mar, referencing meeting up in person is a nice personal touch. No need to ask questions - just affirm and be supportive.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Felipe clarified they're using batch for accountability rather than fundraising. Appreciative of the program. Will be in SF feb-mar.",
+            "topics": "goals, accountability, sf-visit"
+          },
+          "description": "Log that Felipe is doing accountability track, not fundraising focused",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "check_in",
+            "description": "Felipe in SF - meet up in person",
+            "due_date": "2025-02-15"
+          },
+          "description": "Reminder to connect when Felipe is in SF",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768794274031_p7xd6w",
+      "phone": "+972522899252",
+      "founder_name": "Dudu Lasry",
+      "company": "Vespper",
+      "message": "nice, just saw it! what's going on with your group - not active at all? happy to look into switching you if that'd help",
+      "status": "sent",
+      "created_at": "2026-01-19T03:44:34.031Z",
+      "updated_at": "2026-01-19T04:29:34.630Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": null,
+        "last_wa_message": "We’re planning to participate, although I’m not sure if our group is active",
+        "last_wa_from": "them",
+        "reasoning": "Dudu confirmed they filled in their goal and are participating, but raised a concern about their group (group 9) not being active. This is a real issue worth addressing - if their group isn't engaging, they won't get value from the batch. Should acknowledge their goal submission briefly and focus on the group issue since that's what they're uncertain about. Offering to help switch groups shows responsiveness.",
+        "messages": [
+          {
+            "id": "3B8E0307696AB6BA4930",
+            "timestamp": "2026-01-18T23:54:59Z",
+            "from": "them",
+            "text": "We’re planning to participate, although I’m not sure if our group is active"
+          },
+          {
+            "id": "3B5A0C8BF1CEEBF8757C",
+            "timestamp": "2026-01-18T23:54:44Z",
+            "from": "them",
+            "text": "Hi Michael, we filled our demo day goal earlier today. Thanks for the reminder"
+          },
+          {
+            "id": "3EB054F027C3FE08996CF3",
+            "timestamp": "2026-01-17T22:34:36Z",
+            "from": "us",
+            "text": "hey dudu, noticed vespper doesn't have a demo day goal yet - still planning to participate? https://docs.google.com/spreadsheets/d/1WrCH7jrhUmpBaIKLPlv39Yoeb_FnqukaAsPOC2wiBPo"
+          },
+          {
+            "id": "3B5B2319F41330A635DB",
+            "timestamp": "2026-01-03T00:10:44Z",
+            "from": "them",
+            "text": "About the kick off link - I got it via email but when I click on it it says “Could not find the requested event\""
+          },
+          {
+            "id": "3B59E4E2A3D5E3583E66",
+            "timestamp": "2026-01-03T00:09:11Z",
+            "from": "them",
+            "text": "I’m in the Unofficial YC Alumni Batch W26 group"
+          },
+          {
+            "id": "3BDE29D73E8FC70BA20E",
+            "timestamp": "2026-01-02T23:37:21Z",
+            "from": "us",
+            "text": "Hey are you on the whatsapp yet? I think we are going to likely keep comms on whatsapp. \n\nGroup assignments have not happened they will be announced shortly before the kickoff. \n\nDo you have the kickoff link?"
+          },
+          {
+            "id": "3BC980B78834241B78A9",
+            "timestamp": "2025-12-31T08:48:42Z",
+            "from": "them",
+            "text": ""
+          },
+          {
+            "id": "3AA0F3806B62E38B3F81",
+            "timestamp": "2025-12-30T21:38:34Z",
+            "from": "us",
+            "text": "Both"
+          },
+          {
+            "id": "3B0D337BF93572C4C4DC",
+            "timestamp": "2025-12-30T09:59:22Z",
+            "from": "them",
+            "text": "Hi Michael, quick question - will the batch take place in SF? or will it be remote?"
+          },
+          {
+            "id": "3BD6DC14BCF2F33EABD6",
+            "timestamp": "2025-12-17T01:23:46Z",
+            "from": "us",
+            "text": "Hey! Welcome to the Unofficial W26 Alumni Batch!\n\nThe next step is to join the WhatsApp here: https://chat.whatsapp.com/JTXWRuEwfzdL4jzBpWRFsD\n\nAll future announcements will go through there.\n\nCheers!"
+          }
+        ]
+      },
+      "alternatives": [
+        "great, saw it come through! re the group - want me to check if there's a more active one you could join?",
+        "awesome thanks! yeah if your group isn't working out lmk - can look into moving you to a more active one"
+      ],
+      "drafts": [
+        {
+          "message": "nice, just saw it! what's going on with your group - not active at all? happy to look into switching you if that'd help",
+          "tone": "helpful, addressing their concern directly"
+        },
+        {
+          "message": "great, saw it come through! re the group - want me to check if there's a more active one you could join?",
+          "tone": "proactive, offering solution"
+        },
+        {
+          "message": "awesome thanks! yeah if your group isn't working out lmk - can look into moving you to a more active one",
+          "tone": "casual, supportive"
+        }
+      ],
+      "reasoning": "Dudu confirmed they filled in their goal and are participating, but raised a concern about their group (group 9) not being active. This is a real issue worth addressing - if their group isn't engaging, they won't get value from the batch. Should acknowledge their goal submission briefly and focus on the group issue since that's what they're uncertain about. Offering to help switch groups shows responsiveness.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Confirmed filled demo day goal, mentioned group 9 may not be active",
+            "topics": "goal-confirmation, group-issue"
+          },
+          "description": "Log that they submitted their goal and flagged group activity concern",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "group_check",
+            "description": "Check if group 9 is actually inactive and consider moving Dudu to more active group",
+            "due_date": "2025-01-21"
+          },
+          "description": "Follow up on group 9 activity level",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768794283672_i0almh",
+      "phone": "+918121016516",
+      "founder_name": "Vamsee Koneru",
+      "company": "10xR",
+      "message": "no worries, welcome back! let me know once you've added it 👍",
+      "status": "sent",
+      "created_at": "2026-01-19T03:44:43.672Z",
+      "updated_at": "2026-01-19T04:25:01.658Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "10K MRR + >80% usage",
+        "last_wa_message": "Hey thanks man for the push .. was travelling back to US from India . Will do it today",
+        "last_wa_from": "them",
+        "reasoning": "Vamsee just got back from international travel and acknowledged he'll add his 2-week goal today. This is a simple acknowledgment situation - he's already committed to the action, so I just need to confirm I heard him and keep the door open. No need to pile on more asks right now. Can follow up in a few days if the goal doesn't appear.",
+        "messages": [
+          {
+            "id": "3A9E2EF1BFCB413876D7",
+            "timestamp": "2026-01-18T14:47:28Z",
+            "from": "them",
+            "text": "Hey thanks man for the push .. was travelling back to US from India . Will do it today"
+          },
+          {
+            "id": "3EB077C970B97DCCBEE07A",
+            "timestamp": "2026-01-17T22:33:38Z",
+            "from": "us",
+            "text": "hey vamsee, any intros i can help with or investors on your wishlist? also mind adding a 2-week goal? https://docs.google.com/spreadsheets/d/1WrCH7jrhUmpBaIKLPlv39Yoeb_FnqukaAsPOC2wiBPo"
+          },
+          {
+            "id": "3A7B329311E387B39312",
+            "timestamp": "2025-12-17T02:36:26Z",
+            "from": "them",
+            "text": "Thanks I have shared this with my co founders too"
+          },
+          {
+            "id": "3BB891DFC40091503BA2",
+            "timestamp": "2025-12-17T01:27:43Z",
+            "from": "us",
+            "text": "Hey! Welcome to the Unofficial W26 Alumni Batch!\n\nThe next step is to join the WhatsApp here: https://chat.whatsapp.com/JTXWRuEwfzdL4jzBpWRFsD\n\nAll future announcements will go through there.\n\nCheers!"
+          },
+          {
+            "id": "3AA2FBCA55190463DCCA",
+            "timestamp": "2025-12-11T01:36:19Z",
+            "from": "them",
+            "text": "Let me know if you need any help"
+          },
+          {
+            "id": "3AB8C74E85D6130083AD",
+            "timestamp": "2025-12-11T01:36:07Z",
+            "from": "them",
+            "text": "Thanks"
+          },
+          {
+            "id": "3BC81372FD862DDB7EA5",
+            "timestamp": "2025-12-10T21:51:32Z",
+            "from": "us",
+            "text": "Hey Vamsee, thanks for your submission for the Alumni Demo Day. Will keep you posted."
+          }
+        ]
+      },
+      "alternatives": [
+        "all good, travel is brutal. just ping me when you've added it",
+        "sounds good, no rush - just lmk when it's up"
+      ],
+      "drafts": [
+        {
+          "message": "no worries, welcome back! let me know once you've added it 👍",
+          "tone": "casual acknowledgment"
+        },
+        {
+          "message": "all good, travel is brutal. just ping me when you've added it",
+          "tone": "empathetic and brief"
+        },
+        {
+          "message": "sounds good, no rush - just lmk when it's up",
+          "tone": "relaxed, low pressure"
+        }
+      ],
+      "reasoning": "Vamsee just got back from international travel and acknowledged he'll add his 2-week goal today. This is a simple acknowledgment situation - he's already committed to the action, so I just need to confirm I heard him and keep the door open. No need to pile on more asks right now. Can follow up in a few days if the goal doesn't appear.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Vamsee acknowledged he'll add 2-week goal today after returning from India trip",
+            "topics": "goals, travel"
+          },
+          "description": "Log that he's back from travel and will add goal",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "check_goal_added",
+            "description": "Check if Vamsee added his 2-week goal to the sheet",
+            "due_date": "2025-01-21"
+          },
+          "description": "Follow up in 2 days if goal not added",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768786588383_ux0s5o",
+      "phone": "+380505901928",
+      "founder_name": "Olena Vozna",
+      "company": "Alphie",
+      "message": "amazing 🙌 any intros or investors i can help with? also how's the push to 3 paying customers going?",
+      "status": "sent",
+      "created_at": "2026-01-19T01:36:28.383Z",
+      "updated_at": "2026-01-19T02:41:55.571Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "20 paying customers",
+        "two_week_goal": "3 paying customers",
+        "progress": "",
+        "last_wa_message": "It’s definitely 10!",
+        "last_wa_from": "them",
+        "reasoning": "Olena gave a 10 NPS which is great - should acknowledge warmly but briefly, then pivot to being useful. She hasn't mentioned any specific needs yet, so good to ask about intros/investors and also check in on her 2-week goal (3 paying customers). Don't want to overload but should try to uncover what would actually help her.",
+        "messages": [
+          {
+            "id": "3A4559DC080D24759E15",
+            "timestamp": "2026-01-18T13:35:47Z",
+            "from": "them",
+            "text": "It’s definitely 10!"
+          },
+          {
+            "id": "3EB0CFBC938C853B84AA54",
+            "timestamp": "2026-01-17T22:11:54Z",
+            "from": "us",
+            "text": "love it! btw 1-10 how likely would you recommend the batch to other founders?"
+          },
+          {
+            "id": "3A4B52CBE682522A8E32",
+            "timestamp": "2026-01-17T11:56:19Z",
+            "from": "them",
+            "text": "Hi Michael! It’s going great, so inspiring to feel this founders’ energy!"
+          },
+          {
+            "id": "3A130A3478C02853B240",
+            "timestamp": "2026-01-17T11:56:18Z",
+            "from": "them",
+            "text": ""
+          },
+          {
+            "id": "3EB08EF572135AAAE91E65",
+            "timestamp": "2026-01-17T07:19:06Z",
+            "from": "us",
+            "text": "hey olena, how's the batch going? any intros i can help with or investors on your wishlist? also happy to match you with other founders for coffee chats or potential customers if that'd be useful"
+          }
+        ]
+      },
+      "alternatives": [
+        "love to hear it! how's progress on the 3 paying customers goal? anything i can help with?",
+        "awesome! anything i can help with - intros, investors, customer connections?"
+      ],
+      "drafts": [
+        {
+          "message": "amazing 🙌 any intros or investors i can help with? also how's the push to 3 paying customers going?",
+          "tone": "grateful, pivots to help + goal check"
+        },
+        {
+          "message": "love to hear it! how's progress on the 3 paying customers goal? anything i can help with?",
+          "tone": "enthusiastic, goal-focused"
+        },
+        {
+          "message": "awesome! anything i can help with - intros, investors, customer connections?",
+          "tone": "brief, offer-focused"
+        }
+      ],
+      "reasoning": "Olena gave a 10 NPS which is great - should acknowledge warmly but briefly, then pivot to being useful. She hasn't mentioned any specific needs yet, so good to ask about intros/investors and also check in on her 2-week goal (3 paying customers). Don't want to overload but should try to uncover what would actually help her.",
+      "suggested_actions": [
+        {
+          "type": "record_nps",
+          "params": {
+            "score": 10,
+            "comment": "definitely 10!"
+          },
+          "description": "Record NPS score of 10",
+          "enabled": true
+        },
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Olena responded with NPS 10, very positive about the batch energy",
+            "topics": "nps,positive_feedback"
+          },
+          "description": "Log this NPS response",
+          "enabled": true
+        },
+        {
+          "type": "update_outreach",
+          "params": {
+            "step": "nps_sent"
+          },
+          "description": "Mark NPS as collected",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768786591752_nch11b",
+      "phone": "+15145780275",
+      "founder_name": "Anton Otaner",
+      "company": "Clarum",
+      "message": "dinner was great! good crowd. and appreciate that - honestly i'm good right now, just focused on making sure everyone in the batch is set up for demo day. good luck wednesday, lmk how it goes",
+      "status": "sent",
+      "created_at": "2026-01-19T01:36:31.752Z",
+      "updated_at": "2026-01-19T02:41:49.185Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "Ship V2 to existing customers and 500k ARR",
+        "two_week_goal": "Finish development of the V2 and have one customer using it.",
+        "progress": "Demo by Monday",
+        "last_wa_message": "And how was the dinner last night?",
+        "last_wa_from": "them",
+        "reasoning": "Anton asked two thoughtful questions - how he can help me and how the dinner went. He's being genuinely considerate which is nice. I should answer both naturally: the dinner was good, and I don't need anything from him right now (keeps it simple and doesn't create weird dynamics). Then circle back to his wednesday demo since that's what matters for him. No need to push on NPS or investors right now - he said he'd look at the batch and get back to me, so let him do that. Keep it light and supportive.",
+        "messages": [
+          {
+            "id": "3EB0CF18CC9C04DA36C27C",
+            "timestamp": "2026-01-18T16:06:48Z",
+            "from": "them",
+            "text": "And how was the dinner last night?"
+          },
+          {
+            "id": "3EB042667EB9A90678BE66",
+            "timestamp": "2026-01-18T16:06:43Z",
+            "from": "them",
+            "text": "How about for yourself? How can I be helpful?"
+          },
+          {
+            "id": "3EB063104172DE8CD7A695",
+            "timestamp": "2026-01-18T16:06:39Z",
+            "from": "them",
+            "text": "Hey Michael, I have a demo on Wednesday which I'm excited for, but still lots of work to do for the V2. I'll take a look at the batch and let you know if there is anyone I want to connect with or anyone on my investor wishlist."
+          },
+          {
+            "id": "3EB0AA5725D0D4696BA8E6",
+            "timestamp": "2026-01-17T20:14:29Z",
+            "from": "us",
+            "text": "hey anton, how'd the monday demo go? hows the v2 coming? want me to connect you with anyone in the batch? anyone on your investor wishlist?"
+          },
+          {
+            "id": "3EB03C703C574BEFDAB8F8",
+            "timestamp": "2026-01-15T16:26:19Z",
+            "from": "them",
+            "text": "That would be super appreciated. Thank you."
+          },
+          {
+            "id": "3EB0A1DF71E25B451E44A2",
+            "timestamp": "2026-01-15T16:26:13Z",
+            "from": "them",
+            "text": "anton@clarum.ai"
+          },
+          {
+            "id": "3ADDF4E18F226B321A30",
+            "timestamp": "2026-01-14T20:39:59Z",
+            "from": "us",
+            "text": "Hey Anton yes we will we do it fairly regularly can you shoot me an email and we can get you added to a list?"
+          },
+          {
+            "id": "3EB0917BF07C67EE29C4F6",
+            "timestamp": "2026-01-14T19:09:58Z",
+            "from": "them",
+            "text": "Would truly love to attend."
+          },
+          {
+            "id": "3EB0582993ABEEB26FBB54",
+            "timestamp": "2026-01-14T19:09:52Z",
+            "from": "them",
+            "text": "Michael, the event you're hosting seems truly wonderful. I would love to attend, but unfortunately have a conflict that day. Are you planning on hosting another dinner at another time with a similar theme?"
+          },
+          {
+            "id": "3A8CD20E5F77BC1BCC0D",
+            "timestamp": "2026-01-06T17:12:13Z",
+            "from": "us",
+            "text": "For sure"
+          },
+          {
+            "id": "3EB0EBC988D952D369161F",
+            "timestamp": "2026-01-06T12:21:49Z",
+            "from": "them",
+            "text": "Will more information on the schedule of things be announced on our call on Wednesday?"
+          }
+        ]
+      },
+      "alternatives": [
+        "dinner was fun, good group. thanks for asking - i'm all good, just heads down on batch stuff. excited for your wednesday demo, keep me posted how it lands",
+        "it was really good actually, great conversations. appreciate you asking! nothing i need rn but let me know how wednesday goes and if you want any intros after"
+      ],
+      "drafts": [
+        {
+          "message": "dinner was great! good crowd. and appreciate that - honestly i'm good right now, just focused on making sure everyone in the batch is set up for demo day. good luck wednesday, lmk how it goes",
+          "tone": "warm, reciprocal, encouraging"
+        },
+        {
+          "message": "dinner was fun, good group. thanks for asking - i'm all good, just heads down on batch stuff. excited for your wednesday demo, keep me posted how it lands",
+          "tone": "casual, brief, supportive"
+        },
+        {
+          "message": "it was really good actually, great conversations. appreciate you asking! nothing i need rn but let me know how wednesday goes and if you want any intros after",
+          "tone": "friendly, forward-looking"
+        }
+      ],
+      "reasoning": "Anton asked two thoughtful questions - how he can help me and how the dinner went. He's being genuinely considerate which is nice. I should answer both naturally: the dinner was good, and I don't need anything from him right now (keeps it simple and doesn't create weird dynamics). Then circle back to his wednesday demo since that's what matters for him. No need to push on NPS or investors right now - he said he'd look at the batch and get back to me, so let him do that. Keep it light and supportive.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Anton asked how he could help and about the dinner. Has demo Wednesday, still working on V2. Will review batch for potential connections.",
+            "topics": "demo, v2, dinner, helpfulness"
+          },
+          "description": "Log this friendly check-in exchange",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "check_in",
+            "description": "Follow up on Wednesday demo results",
+            "due_date": "2025-01-16"
+          },
+          "description": "Reminder to check how the Wednesday demo went",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768794296716_9gxim8",
+      "phone": "+16463735251",
+      "founder_name": "Peter Pezaris",
+      "company": "Vortex Software",
+      "message": "great, how's tuesday or wednesday next week look for you? happy to do morning coffee or afternoon call, whatever works",
+      "status": "sent",
+      "created_at": "2026-01-19T03:44:56.716Z",
+      "updated_at": "2026-01-19T04:24:19.695Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "3 case studies",
+        "two_week_goal": "Launch AI-driven demo",
+        "progress": "",
+        "last_wa_message": "Excellent let's set up some time to discuss.",
+        "last_wa_from": "them",
+        "reasoning": "Peter is eager to help out more and wants to set up time to discuss. He's a serial founder who's been proactive (leaving comments on docs, asking how to get involved). This is a simple scheduling reply - no need to overcomplicate it. Just need to find a time that works for both of us to discuss the items I outlined (investor outreach, credits, events, PR). Keep it casual and make it easy for him to pick a time.",
+        "messages": [
+          {
+            "id": "3AEAA610BC1F53865463",
+            "timestamp": "2026-01-18T01:06:15Z",
+            "from": "them",
+            "text": "Excellent let's set up some time to discuss."
+          },
+          {
+            "id": "3EB0E8F47A6B2D262A27CA",
+            "timestamp": "2026-01-17T22:26:22Z",
+            "from": "us",
+            "text": "hey peter. i'm still interested in you helping out more. here are the things that i am thinking right now:\n\n1. getting credits / deals for batch -- aws etc\n2. event ideas (what do you think we should do before demo day) -- i have some sponsors lined up now more or less\n3. lining up investors << this one is probably highest priority right now -- I have started to ask founders for wishlists of investors and such.\n4. lining up PR etc. for event. << this would be nice as well\n5. anything else we should do...\n\nwhat do you think? happy to meet next week to discuss."
+          },
+          {
+            "id": "3BE9EA99B1FFF7370EED",
+            "timestamp": "2025-12-18T21:53:40Z",
+            "from": "them",
+            "text": "hey Michael just left some comments here: https://docs.google.com/document/d/1sDluojJz8uGp9JIrJnTOcHT7UM2TEtzptdloWXpWTBE/edit?tab=t.0\n\nthe more i think about this, the more i’d like to get involved. what do you need help with the most? do you have a “second in command” identified?"
+          },
+          {
+            "id": "3A7B95DA05748D0B64E8",
+            "timestamp": "2025-12-17T22:34:46Z",
+            "from": "them",
+            "text": "Didn't see the. At first but I do now. Thanks!"
+          },
+          {
+            "id": "3A2277E450CD432E9678",
+            "timestamp": "2025-12-17T22:21:47Z",
+            "from": "us",
+            "text": "In announcements yes. Do you see the other groups though?"
+          },
+          {
+            "id": "3BD72B780C1447CF1E43",
+            "timestamp": "2025-12-17T01:31:11Z",
+            "from": "them",
+            "text": "awesome i’m in. it says “only admins can post” i assume that’s intentional for now?"
+          },
+          {
+            "id": "3B886869575D886240B6",
+            "timestamp": "2025-12-17T01:30:08Z",
+            "from": "us",
+            "text": "Hey! Welcome to the Unofficial W26 Alumni Batch!\n\nThe next step is to join the WhatsApp here: https://chat.whatsapp.com/JTXWRuEwfzdL4jzBpWRFsD\n\nAll future announcements will go through there.\n\nCheers!"
+          },
+          {
+            "id": "3B04E98011F0BE9387F3",
+            "timestamp": "2025-12-09T22:28:15Z",
+            "from": "us",
+            "text": "Hey Peter, thanks for your submission for the Alumni Demo Day. Will keep you posted."
+          }
+        ]
+      },
+      "alternatives": [
+        "perfect. tuesday or wednesday work? can do coffee in sf or a quick call, whatever's easier",
+        "sounds good. i'm pretty open next week - what day/time works best for you?"
+      ],
+      "drafts": [
+        {
+          "message": "great, how's tuesday or wednesday next week look for you? happy to do morning coffee or afternoon call, whatever works",
+          "tone": "casual, flexible scheduling"
+        },
+        {
+          "message": "perfect. tuesday or wednesday work? can do coffee in sf or a quick call, whatever's easier",
+          "tone": "direct, offers options"
+        },
+        {
+          "message": "sounds good. i'm pretty open next week - what day/time works best for you?",
+          "tone": "simple, puts ball in their court"
+        }
+      ],
+      "reasoning": "Peter is eager to help out more and wants to set up time to discuss. He's a serial founder who's been proactive (leaving comments on docs, asking how to get involved). This is a simple scheduling reply - no need to overcomplicate it. Just need to find a time that works for both of us to discuss the items I outlined (investor outreach, credits, events, PR). Keep it casual and make it easy for him to pick a time.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Peter wants to help more with batch operations, setting up meeting to discuss investor outreach, credits, events, PR",
+            "topics": "scheduling, batch-help, investors"
+          },
+          "description": "Log that we're scheduling a meeting to discuss Peter helping with batch operations",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "meeting",
+            "description": "Meet with Peter to discuss him helping with batch - investors, credits, events, PR",
+            "due_date": "2025-01-24"
+          },
+          "description": "Create reminder to follow up on meeting with Peter about batch help",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768786602455_rtj9bk",
+      "phone": "+19498361199",
+      "founder_name": "Kiet Ho",
+      "company": "Superset",
+      "message": "nice, appreciate that! glad it's been useful even with a busy schedule. lmk if you ever want intros to anyone specific",
+      "status": "sent",
+      "created_at": "2026-01-19T01:36:42.455Z",
+      "updated_at": "2026-01-19T02:41:23.228Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "10k MRR",
+        "two_week_goal": "50 DAU + Stripe integration completed",
+        "progress": "",
+        "last_wa_message": "It’s good so far even though it’s my fault for missing a lot of it. Just recommended to a founder today. 8",
+        "last_wa_from": "them",
+        "reasoning": "Kiet gave an NPS of 8 and mentioned he recommended to a founder already, which is great. He also acknowledged missing a lot of the batch (he's a repeat YC founder running Superset, so makes sense he's heads down). The right move here is to acknowledge the feedback warmly, not make him feel bad about being busy, and keep the door open for future asks. No need to push harder right now - he's engaged and positive.",
+        "messages": [
+          {
+            "id": "3AE1371E134961C146B4",
+            "timestamp": "2026-01-17T23:52:14Z",
+            "from": "them",
+            "text": "It’s good so far even though it’s my fault for missing a lot of it. Just recommended to a founder today. 8"
+          },
+          {
+            "id": "3EB02881EA2FCA93E24537",
+            "timestamp": "2026-01-17T23:10:06Z",
+            "from": "us",
+            "text": "all good here! glad it's moving. btw curious - 1-10 how likely would you recommend the batch to other founders?"
+          },
+          {
+            "id": "3A1980C003DBCF911070",
+            "timestamp": "2026-01-17T18:28:29Z",
+            "from": "them",
+            "text": "Anything you need help with?"
+          },
+          {
+            "id": "3A03E618CB1806D8FE2D",
+            "timestamp": "2026-01-17T18:28:15Z",
+            "from": "them",
+            "text": ""
+          },
+          {
+            "id": "3A5258623DC4E6EA5985",
+            "timestamp": "2026-01-17T18:28:09Z",
+            "from": "them",
+            "text": "Hey Michael, it’s going well. Satya is taking care of it"
+          },
+          {
+            "id": "3EB022033B012B1DA8D28B",
+            "timestamp": "2026-01-17T07:25:18Z",
+            "from": "us",
+            "text": "hey kiet, hows the stripe integration coming along? any intros i can help with or investors on your wishlist?"
+          },
+          {
+            "id": "3A72F02AE1EFDA87BD3B",
+            "timestamp": "2026-01-03T19:43:44Z",
+            "from": "us",
+            "text": "OK got it. Thanks! See you in the batch!!"
+          },
+          {
+            "id": "3B76B76CF0A97005500A",
+            "timestamp": "2026-01-03T19:43:09Z",
+            "from": "them",
+            "text": "Hey Michael,\nWe’re all in person, South Beach, Mission and Lower Haight. But we have an office in downtown near the 2nd street blue bottle"
+          },
+          {
+            "id": "3BC4C969D59B333171EC",
+            "timestamp": "2026-01-03T02:20:11Z",
+            "from": "us",
+            "text": "Hey Kiet. I am doing some final checks before doing the matching process. Are you / your cofounders available in SF for in person meetings? Is there an area you are coming from?"
+          },
+          {
+            "id": "3A0FC7D03FCB68727C8B",
+            "timestamp": "2025-12-28T20:25:16Z",
+            "from": "us",
+            "text": "Np I’ll get them added"
+          },
+          {
+            "id": "3A0AA52D64E4D8BF44CD",
+            "timestamp": "2025-12-28T18:00:59Z",
+            "from": "them",
+            "text": "Hey Michael just got off a brutal sickness sorry for the delays in signing the agreement. Could I add my cofounders to the group as well?\n\n+1 (510) 847-6106\n+1 (407) 417-5015"
+          },
+          {
+            "id": "3ACB2FA609EB7204B8A3",
+            "timestamp": "2025-12-22T23:35:04Z",
+            "from": "them",
+            "text": "Awesome thanks for setting this up Michael"
+          }
+        ]
+      },
+      "alternatives": [
+        "appreciate the rec! totally get it being busy with superset. holler if you need anything",
+        "thanks kiet! no worries on missing stuff - you're building. let me know if any investors come to mind you'd want to meet"
+      ],
+      "drafts": [
+        {
+          "message": "nice, appreciate that! glad it's been useful even with a busy schedule. lmk if you ever want intros to anyone specific",
+          "tone": "warm, acknowledging, leaves door open"
+        },
+        {
+          "message": "appreciate the rec! totally get it being busy with superset. holler if you need anything",
+          "tone": "casual, understanding, brief"
+        },
+        {
+          "message": "thanks kiet! no worries on missing stuff - you're building. let me know if any investors come to mind you'd want to meet",
+          "tone": "supportive, forward-looking"
+        }
+      ],
+      "reasoning": "Kiet gave an NPS of 8 and mentioned he recommended to a founder already, which is great. He also acknowledged missing a lot of the batch (he's a repeat YC founder running Superset, so makes sense he's heads down). The right move here is to acknowledge the feedback warmly, not make him feel bad about being busy, and keep the door open for future asks. No need to push harder right now - he's engaged and positive.",
+      "suggested_actions": [
+        {
+          "type": "record_nps",
+          "params": {
+            "score": 8,
+            "comment": "recommended to a founder today, acknowledged missing a lot of batch"
+          },
+          "description": "Record NPS score of 8 with context",
+          "enabled": true
+        },
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Kiet gave NPS 8, mentioned recommending batch to another founder. Acknowledged being busy but positive overall.",
+            "topics": "nps,feedback"
+          },
+          "description": "Log the NPS response and context",
+          "enabled": true
+        },
+        {
+          "type": "update_outreach",
+          "params": {
+            "step": "nps_sent"
+          },
+          "description": "Mark NPS as collected",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768786602847_1pog7a",
+      "phone": "+13057242804",
+      "founder_name": "Santiago Aparicio",
+      "company": "Vortex Software",
+      "message": "nice! what does your ideal customer look like? b2b saas at a certain stage, specific industry, or pretty broad?",
+      "status": "sent",
+      "created_at": "2026-01-19T01:36:42.847Z",
+      "updated_at": "2026-01-19T02:40:43.627Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "3 case studies",
+        "two_week_goal": "Launch AI-driven demo",
+        "progress": "",
+        "last_wa_message": "thank you",
+        "last_wa_from": "them",
+        "reasoning": "Santiago said potential customers are their main priority - that's a clear ask. Before I can help match them, I need to understand their ICP better. Vortex does 'invitations as a service' for B2B SaaS, so I should ask what type of B2B SaaS companies they're targeting (stage, size, industry). This lets me actually make useful intros from the batch or my network.",
+        "messages": [
+          {
+            "id": "3BAA1725119BCCBAF884",
+            "timestamp": "2026-01-18T00:54:53Z",
+            "from": "them",
+            "text": "thank you"
+          },
+          {
+            "id": "3B72E8A4E44AF8A22E2E",
+            "timestamp": "2026-01-18T00:54:51Z",
+            "from": "them",
+            "text": "potential customers would be great!! thats our main priority right now"
+          },
+          {
+            "id": "3EB09C31168BE40E1F13D7",
+            "timestamp": "2026-01-17T07:18:57Z",
+            "from": "us",
+            "text": "hey santiago, how's the batch going? any intros i can help with or investors on your wishlist? also happy to match you with other founders for coffee chats or potential customers if that'd be useful"
+          }
+        ]
+      },
+      "alternatives": [
+        "great - what's the ideal profile? thinking company stage, size, industry etc so i can connect you with the right folks",
+        "love it - tell me more about who you're looking for. any specific type of b2b saas or stage that's the best fit?"
+      ],
+      "drafts": [
+        {
+          "message": "nice! what does your ideal customer look like? b2b saas at a certain stage, specific industry, or pretty broad?",
+          "tone": "helpful, gathering info to make good matches"
+        },
+        {
+          "message": "great - what's the ideal profile? thinking company stage, size, industry etc so i can connect you with the right folks",
+          "tone": "direct, action-oriented"
+        },
+        {
+          "message": "love it - tell me more about who you're looking for. any specific type of b2b saas or stage that's the best fit?",
+          "tone": "warm, curious"
+        }
+      ],
+      "reasoning": "Santiago said potential customers are their main priority - that's a clear ask. Before I can help match them, I need to understand their ICP better. Vortex does 'invitations as a service' for B2B SaaS, so I should ask what type of B2B SaaS companies they're targeting (stage, size, industry). This lets me actually make useful intros from the batch or my network.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Santiago wants customer intros - main priority. Asked about ICP to make good matches.",
+            "topics": "customers,intros"
+          },
+          "description": "Log that Santiago is looking for customer intros",
+          "enabled": true
+        },
+        {
+          "type": "record_needs",
+          "params": {
+            "needs": "Customer intros - potential customers for Vortex (invitations as a service for B2B SaaS)"
+          },
+          "description": "Record that customer acquisition is their main need",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "customer_match",
+            "description": "Once Santiago shares ICP, find batch founders or contacts who could be potential customers for Vortex",
+            "due_date": "2025-01-20"
+          },
+          "description": "Reminder to make customer intros after getting ICP details",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768786611417_13pfbc",
+      "phone": "+16502729464",
+      "founder_name": "Alexander Harmsen",
+      "company": "Portfolio Pilot",
+      "message": "awesome, thanks for adding it! saw the goal - looks great. anything i can help with right now? intros, investors you're hoping to meet?",
+      "status": "sent",
+      "created_at": "2026-01-19T01:36:51.417Z",
+      "updated_at": "2026-01-19T03:36:31.886Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": null,
+        "last_wa_message": "Let me know if I need to do anything else to get even more actively involved",
+        "last_wa_from": "them",
+        "reasoning": "Alexander is engaged and proactive - he added his goal and is asking how to get more involved. This is a good moment to acknowledge his effort and offer concrete help (intros, investors). He seems motivated so I should capitalize on that energy. No need for NPS yet since we're just getting the conversation going - will save that for a natural moment later.",
+        "messages": [
+          {
+            "id": "3EB0625F3F886824DD99DA",
+            "timestamp": "2026-01-17T23:35:12Z",
+            "from": "them",
+            "text": "Let me know if I need to do anything else to get even more actively involved"
+          },
+          {
+            "id": "3EB038088BE826B0D24853",
+            "timestamp": "2026-01-17T23:34:45Z",
+            "from": "them",
+            "text": "I'm definitely still interested and engaged! I mentioned the goal in an email last week and thought someone else would update it. Just added the goal in the spreadsheet"
+          },
+          {
+            "id": "3EB01B14BC0CBBE9096762",
+            "timestamp": "2026-01-17T22:50:35Z",
+            "from": "us",
+            "text": "hey alexander, noticed portfolio pilot doesn't have a demo day goal yet - still planning to participate? just trying to group active folks together. can you add your goal here when you get a chance? https://docs.google.com/spreadsheets/d/1WrCH7jrhUmpBaIKLPlv39Yoeb_FnqukaAsPOC2wiBPo"
+          }
+        ]
+      },
+      "alternatives": [
+        "perfect, just saw it - thanks for adding! any intros or investors on your wishlist i can help with?",
+        "great, thanks for getting that in! let me know if there are any intros or investors you'd like help connecting with"
+      ],
+      "drafts": [
+        {
+          "message": "awesome, thanks for adding it! saw the goal - looks great. anything i can help with right now? intros, investors you're hoping to meet?",
+          "tone": "appreciative and helpful"
+        },
+        {
+          "message": "perfect, just saw it - thanks for adding! any intros or investors on your wishlist i can help with?",
+          "tone": "brief and action-oriented"
+        },
+        {
+          "message": "great, thanks for getting that in! let me know if there are any intros or investors you'd like help connecting with",
+          "tone": "warm and open-ended"
+        }
+      ],
+      "reasoning": "Alexander is engaged and proactive - he added his goal and is asking how to get more involved. This is a good moment to acknowledge his effort and offer concrete help (intros, investors). He seems motivated so I should capitalize on that energy. No need for NPS yet since we're just getting the conversation going - will save that for a natural moment later.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Alexander confirmed active participation, added demo goal to spreadsheet, wants to be more involved",
+            "topics": "goal-setting, engagement"
+          },
+          "description": "Log that Alexander added his goal and expressed interest in being more active",
+          "enabled": true
+        },
+        {
+          "type": "update_outreach",
+          "params": {
+            "step": "nps_sent"
+          },
+          "description": "Update pipeline - moving past initial outreach since he's now engaged",
+          "enabled": false
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768786612519_tkpk9r",
+      "phone": "+19073069955",
+      "founder_name": "Max von Hippel",
+      "company": "Benchify",
+      "message": "awesome, thanks for filling it out! glad you're in. any intros i can help with or investors you want to meet?",
+      "status": "sent",
+      "created_at": "2026-01-19T01:36:52.519Z",
+      "updated_at": "2026-01-19T02:12:20.748Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": null,
+        "last_wa_message": "Yes, still planning on demo day. Either myself or my cofounder will present.",
+        "last_wa_from": "them",
+        "reasoning": "Max just confirmed participation and filled out his goal - this is a positive moment. He's engaged and responsive. Good time to acknowledge his response and pivot to offering concrete help (intros/investors) since he's active. Keep it brief since he just took action. NPS can come later after more engagement.",
+        "messages": [
+          {
+            "id": "3BC4A2E44C304476989B",
+            "timestamp": "2026-01-17T23:50:32Z",
+            "from": "them",
+            "text": "Yes, still planning on demo day. Either myself or my cofounder will present."
+          },
+          {
+            "id": "3BB861BA395379370A36",
+            "timestamp": "2026-01-17T23:50:22Z",
+            "from": "them",
+            "text": "Just filled it out!"
+          },
+          {
+            "id": "3EB06C09630BB5D646F32B",
+            "timestamp": "2026-01-17T22:50:38Z",
+            "from": "us",
+            "text": "hey max, noticed benchify doesn't have a demo day goal yet - still planning to participate? just trying to group active folks together. can you add your goal here when you get a chance? https://docs.google.com/spreadsheets/d/1WrCH7jrhUmpBaIKLPlv39Yoeb_FnqukaAsPOC2wiBPo"
+          }
+        ]
+      },
+      "alternatives": [
+        "great, thanks max! excited to have you presenting. anything i can help with - intros, investors on your wishlist?",
+        "perfect, glad you're in! lmk if there are any investors you'd want intros to or anything else i can help with"
+      ],
+      "drafts": [
+        {
+          "message": "awesome, thanks for filling it out! glad you're in. any intros i can help with or investors you want to meet?",
+          "tone": "appreciative and helpful"
+        },
+        {
+          "message": "great, thanks max! excited to have you presenting. anything i can help with - intros, investors on your wishlist?",
+          "tone": "warm and offering support"
+        },
+        {
+          "message": "perfect, glad you're in! lmk if there are any investors you'd want intros to or anything else i can help with",
+          "tone": "casual and open-ended"
+        }
+      ],
+      "reasoning": "Max just confirmed participation and filled out his goal - this is a positive moment. He's engaged and responsive. Good time to acknowledge his response and pivot to offering concrete help (intros/investors) since he's active. Keep it brief since he just took action. NPS can come later after more engagement.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Max confirmed demo day participation, filled out goal sheet. Either he or cofounder will present.",
+            "topics": "demo_day, goals, confirmation"
+          },
+          "description": "Log that Max confirmed participation and submitted goals",
+          "enabled": true
+        },
+        {
+          "type": "update_outreach",
+          "params": {
+            "step": "needs_sent"
+          },
+          "description": "Mark that we've asked about their needs/intros",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768786618950_wvqmb2",
+      "phone": "+19492950524",
+      "founder_name": "Colton Dillion",
+      "company": "Postquant Labs",
+      "message": "got it, adding those to the list. i'll see what connections we have to any of them and keep you posted",
+      "status": "sent",
+      "created_at": "2026-01-19T01:36:58.950Z",
+      "updated_at": "2026-01-19T02:11:31.582Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "two more quantum suppliers signed\nthree quantum consumers purchasing services\npublic testnet launched with 1000+ H100 equivalents mining",
+        "two_week_goal": "5 employees fully onboarded\n$5M wired from committed investors\n30 meetings on the calendar with suppliers and consumers",
+        "progress": "4 employees onboarded\n$0 wired\n0 meetings on the calendar",
+        "last_wa_message": "Frontier fund, QAI, Qbeat, Quantum Delta, Maki, Deeptech Cottonwood",
+        "last_wa_from": "them",
+        "reasoning": "Colton gave a specific investor wishlist which is exactly what we asked for. The right move is to acknowledge receipt, commit to looking into it, and not over-promise. He's making progress on funding (4m from 3 checks is solid) so encouragement is warranted but he doesn't need hand-holding. Could optionally check on group experience since we haven't collected NPS yet, but don't want to pile on questions when he's clearly heads down.",
+        "messages": [
+          {
+            "id": "ACC8380B73927E4A992748864AD25F93",
+            "timestamp": "2026-01-17T23:26:04Z",
+            "from": "them",
+            "text": "Frontier fund, QAI, Qbeat, Quantum Delta, Maki, Deeptech Cottonwood"
+          },
+          {
+            "id": "3EB0894A5F4C6F27388694",
+            "timestamp": "2026-01-17T23:10:05Z",
+            "from": "us",
+            "text": "nice progress! noted on quantum investors - any specific funds or people on your wishlist?"
+          },
+          {
+            "id": "AC632743220F38ED2A99C55608690ACF",
+            "timestamp": "2026-01-17T22:28:08Z",
+            "from": "them",
+            "text": "Hey Michael, thanks for checking in, we're putting a dent in it, we're over 10% of the way there, the crazy thing is that $4m is 3 checks 😅. If you know any deep tech investors with a quantum thesis, we'd love to talk"
+          },
+          {
+            "id": "3EB0859B50FFA9F2E5E69F",
+            "timestamp": "2026-01-17T20:14:34Z",
+            "from": "us",
+            "text": "hey colton, hows postquant going? any progress on the investor wire or supplier meetings? want me to connect you with anyone in the batch? anyone on your investor wishlist?"
+          }
+        ]
+      },
+      "alternatives": [
+        "noted! will dig into those and see if we have any paths in. good luck with the remaining wires 🤞",
+        "great list - will check if we have connections to any of these and circle back. btw how are you finding group 2?"
+      ],
+      "drafts": [
+        {
+          "message": "got it, adding those to the list. i'll see what connections we have to any of them and keep you posted",
+          "tone": "helpful, action-oriented"
+        },
+        {
+          "message": "noted! will dig into those and see if we have any paths in. good luck with the remaining wires 🤞",
+          "tone": "supportive with encouragement"
+        },
+        {
+          "message": "great list - will check if we have connections to any of these and circle back. btw how are you finding group 2?",
+          "tone": "helpful with light check-in on batch experience"
+        }
+      ],
+      "reasoning": "Colton gave a specific investor wishlist which is exactly what we asked for. The right move is to acknowledge receipt, commit to looking into it, and not over-promise. He's making progress on funding (4m from 3 checks is solid) so encouragement is warranted but he doesn't need hand-holding. Could optionally check on group experience since we haven't collected NPS yet, but don't want to pile on questions when he's clearly heads down.",
+      "suggested_actions": [
+        {
+          "type": "record_investor",
+          "params": {
+            "investor": "Frontier Fund",
+            "notes": "quantum thesis - Colton wishlist"
+          },
+          "description": "Record Frontier Fund to investor wishlist",
+          "enabled": true
+        },
+        {
+          "type": "record_investor",
+          "params": {
+            "investor": "QAI",
+            "notes": "quantum thesis - Colton wishlist"
+          },
+          "description": "Record QAI to investor wishlist",
+          "enabled": true
+        },
+        {
+          "type": "record_investor",
+          "params": {
+            "investor": "Qbeat",
+            "notes": "quantum thesis - Colton wishlist"
+          },
+          "description": "Record Qbeat to investor wishlist",
+          "enabled": true
+        },
+        {
+          "type": "record_investor",
+          "params": {
+            "investor": "Quantum Delta",
+            "notes": "quantum thesis - Colton wishlist"
+          },
+          "description": "Record Quantum Delta to investor wishlist",
+          "enabled": true
+        },
+        {
+          "type": "record_investor",
+          "params": {
+            "investor": "Maki",
+            "notes": "quantum thesis - Colton wishlist"
+          },
+          "description": "Record Maki to investor wishlist",
+          "enabled": true
+        },
+        {
+          "type": "record_investor",
+          "params": {
+            "investor": "Deeptech Cottonwood",
+            "notes": "quantum thesis - Colton wishlist"
+          },
+          "description": "Record Deeptech Cottonwood to investor wishlist",
+          "enabled": true
+        },
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Colton shared quantum investor wishlist: Frontier Fund, QAI, Qbeat, Quantum Delta, Maki, Deeptech Cottonwood. Progress: $4M from 3 checks committed.",
+            "topics": "investors, fundraising"
+          },
+          "description": "Log investor wishlist and funding progress",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "investor_intro",
+            "description": "Check for connections to Colton's quantum investor wishlist and follow up",
+            "due_date": "2025-01-24"
+          },
+          "description": "Reminder to research and follow up on investor connections",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768794298557_oy193l",
+      "phone": "+19199092562",
+      "founder_name": "Hannah Merrigan",
+      "company": "One Lab",
+      "message": "yeah the workshop or office hours idea could be great - let me think about how to position it to the batch. maybe a session on founder branding/positioning? would you want to do a 30-min workshop style thing or more 1:1 office hours?",
+      "status": "pending",
+      "created_at": "2026-01-19T03:44:58.557Z",
+      "updated_at": "2026-01-19T03:56:43.194Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": null,
+        "last_wa_message": "https://substack.com/home/post/p-178143011",
+        "last_wa_from": "them",
+        "reasoning": "Hannah is offering value to the batch - she does brand/positioning work with founders and is proposing either a workshop or office hours. The a16z link shows the type of work she does. Since she's not a traditional founder participant but rather someone who can help, I should engage with her offer and figure out the best format. She's been patient about the group situation, so moving forward on this is a good way to actually get her involved.",
+        "messages": [
+          {
+            "id": "3B4230ED221BA8DCBDD7",
+            "timestamp": "2026-01-17T21:45:01Z",
+            "from": "them",
+            "text": "https://substack.com/home/post/p-178143011"
+          },
+          {
+            "id": "3BEB4E3ACB475E7C02F5",
+            "timestamp": "2026-01-17T21:44:49Z",
+            "from": "them",
+            "text": "This is from a16z’s new media offering to portcos — the brand side, including decks, is the work that I do with founders. The reason founders need this is because they are often not very good at it, as evidenced by even a16z founders being offered this in-house."
+          },
+          {
+            "id": "3BDD82E8659799B01D38",
+            "timestamp": "2026-01-17T21:00:31Z",
+            "from": "them",
+            "text": "what do you think about the workshop idea or offering people office hours with me"
+          },
+          {
+            "id": "3B6D0C3DA59BF384B157",
+            "timestamp": "2026-01-17T21:00:00Z",
+            "from": "them",
+            "text": "to me this seems pretty easy, otherwise if there is a recording of the call I can just watch that"
+          },
+          {
+            "id": "3B38D010BDC65CFA0E38",
+            "timestamp": "2026-01-17T20:59:06Z",
+            "from": "them",
+            "text": "gotcha"
+          },
+          {
+            "id": "3B2042A05363F4CD9D89",
+            "timestamp": "2026-01-17T20:32:53Z",
+            "from": "us",
+            "text": "I see. I think basically that may have been because group 2 mentioned they felt like they had a lot of people already."
+          },
+          {
+            "id": "3BC2DBA66D84667BE305",
+            "timestamp": "2026-01-17T20:05:54Z",
+            "from": "them",
+            "text": "yeah, you’re seeing all the comms there — I have no other context"
+          },
+          {
+            "id": "3B97CA046A6DDF1D3BE4",
+            "timestamp": "2026-01-17T20:04:00Z",
+            "from": "us",
+            "text": "there was probably some miscommunication. so right now you aren’t in a group to observe?"
+          },
+          {
+            "id": "3A21D103C3300A6F1668",
+            "timestamp": "2026-01-17T19:20:27Z",
+            "from": "them",
+            "text": ""
+          },
+          {
+            "id": "3A2B93A394CC891D7209",
+            "timestamp": "2026-01-17T19:20:27Z",
+            "from": "them",
+            "text": ""
+          }
+        ]
+      },
+      "alternatives": [
+        "oh interesting - yeah this makes sense. i could see a workshop on brand/positioning being valuable. want to try office hours first and see if there's interest? could set up a few slots",
+        "this is cool. yeah founders definitely need this. let's try it - want to do a workshop or would you prefer 1:1 office hours format? i can put the word out to the batch"
+      ],
+      "drafts": [
+        {
+          "message": "yeah the workshop or office hours idea could be great - let me think about how to position it to the batch. maybe a session on founder branding/positioning? would you want to do a 30-min workshop style thing or more 1:1 office hours?",
+          "tone": "engaged, moving forward"
+        },
+        {
+          "message": "oh interesting - yeah this makes sense. i could see a workshop on brand/positioning being valuable. want to try office hours first and see if there's interest? could set up a few slots",
+          "tone": "practical, testing the waters"
+        },
+        {
+          "message": "this is cool. yeah founders definitely need this. let's try it - want to do a workshop or would you prefer 1:1 office hours format? i can put the word out to the batch",
+          "tone": "enthusiastic, action-oriented"
+        }
+      ],
+      "reasoning": "Hannah is offering value to the batch - she does brand/positioning work with founders and is proposing either a workshop or office hours. The a16z link shows the type of work she does. Since she's not a traditional founder participant but rather someone who can help, I should engage with her offer and figure out the best format. She's been patient about the group situation, so moving forward on this is a good way to actually get her involved.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Hannah proposed doing a workshop or office hours on founder branding/positioning for the batch. Shared a16z example of similar work. Discussing format options.",
+            "topics": "workshop, office hours, branding, positioning, a16z"
+          },
+          "description": "Log discussion about Hannah offering workshop/office hours on founder branding",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "action_needed",
+            "description": "Follow up with Hannah on workshop/office hours format once she replies - need to schedule and announce to batch",
+            "due_date": "2025-01-17"
+          },
+          "description": "Create follow-up to schedule Hannah's workshop/office hours",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0,
+      "deferred_until": "2026-01-19T04:56:43.193Z"
+    },
+    {
+      "id": "draft_1768786630622_41306d",
+      "phone": "+14088397211",
+      "founder_name": "Kaushik Mahorker",
+      "company": "Wildcard",
+      "message": "got it - ecomm founders and CMOs/heads of growth. let me dig through the batch and see who might be a fit. send over that forwardable and i'll see what i can do 👍",
+      "status": "sent",
+      "created_at": "2026-01-19T01:37:10.622Z",
+      "updated_at": "2026-01-19T01:42:38.322Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "10K MRR, 2 killer casestudies",
+        "two_week_goal": "10 booked calls",
+        "progress": "01/12 - 0 new calls",
+        "last_wa_message": "Hey! Honestly, still having a tough time getting those conversations. Yes! I’m particularly interested in getting in touch with founders in the ecomm space, CMOs/heads of growth at e-commerce/retail brands. Lmk if you have any in network you can intro to - happy to send over a forwardable!\n\nFor context - I’m building an AI SEO platform for e-commerce brands to rank in AI shopping",
+        "last_wa_from": "them",
+        "reasoning": "Kaushik is stuck on getting calls booked (0 progress since 01/12) and has clearly asked for help - ecomm founders and CMOs/heads of growth. He's offering to send a forwardable which is great - makes intros easier. I should acknowledge his ask, confirm I'll look into it, and ask for the forwardable. No need to pile on questions right now - he's given me a clear action item. NPS can wait until after I've actually helped him.",
+        "messages": [
+          {
+            "id": "3AFA70D72187B5C1019E",
+            "timestamp": "2026-01-17T23:23:12Z",
+            "from": "them",
+            "text": "Hey! Honestly, still having a tough time getting those conversations. Yes! I’m particularly interested in getting in touch with founders in the ecomm space, CMOs/heads of growth at e-commerce/retail brands. Lmk if you have any in network you can intro to - happy to send over a forwardable!\n\nFor context - I’m building an AI SEO platform for e-commerce brands to rank in AI shopping"
+          },
+          {
+            "id": "3EB005E7D68A4D8685FC73",
+            "timestamp": "2026-01-17T22:50:21Z",
+            "from": "us",
+            "text": "hey kaushik, how's the push for 10 booked calls going? any movement since 01/12? any intros i can help with or investors on your wishlist? also happy to match you with other founders for coffee chats or potential customers if that'd be useful"
+          }
+        ]
+      },
+      "alternatives": [
+        "on it - will look through the batch for ecomm folks. yeah send the forwardable over, makes intros easier",
+        "makes sense - ecomm CMOs and founders. send me that forwardable and i'll see who in the batch or my network could be a good fit"
+      ],
+      "drafts": [
+        {
+          "message": "got it - ecomm founders and CMOs/heads of growth. let me dig through the batch and see who might be a fit. send over that forwardable and i'll see what i can do 👍",
+          "tone": "helpful, action-oriented"
+        },
+        {
+          "message": "on it - will look through the batch for ecomm folks. yeah send the forwardable over, makes intros easier",
+          "tone": "casual, efficient"
+        },
+        {
+          "message": "makes sense - ecomm CMOs and founders. send me that forwardable and i'll see who in the batch or my network could be a good fit",
+          "tone": "warm, practical"
+        }
+      ],
+      "reasoning": "Kaushik is stuck on getting calls booked (0 progress since 01/12) and has clearly asked for help - ecomm founders and CMOs/heads of growth. He's offering to send a forwardable which is great - makes intros easier. I should acknowledge his ask, confirm I'll look into it, and ask for the forwardable. No need to pile on questions right now - he's given me a clear action item. NPS can wait until after I've actually helped him.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Kaushik struggling to book calls, requested intros to ecomm founders and CMOs/heads of growth. Offered to send forwardable.",
+            "topics": "intros,ecomm,outreach-help"
+          },
+          "description": "Log that Kaushik needs ecomm intros",
+          "enabled": true
+        },
+        {
+          "type": "record_needs",
+          "params": {
+            "needs": "Intros to ecomm founders, CMOs/heads of growth at ecommerce/retail brands"
+          },
+          "description": "Record his intro requests",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "intro_search",
+            "description": "Search batch for ecomm founders/CMOs to intro to Kaushik (Wildcard - AI SEO for ecomm)",
+            "due_date": "2025-01-21"
+          },
+          "description": "Reminder to actually find people to intro him to",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768794274215_skcmgd",
+      "phone": "+14155704565",
+      "founder_name": "Noah Debrincat",
+      "company": "MISTASHO",
+      "message": "nice, just filled it out! the prototype looks cool - love the pinterest-style discovery angle. excited to see what you ship 🙌",
+      "status": "sent",
+      "created_at": "2026-01-19T03:44:34.215Z",
+      "updated_at": "2026-01-19T04:28:40.474Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "15 DAU",
+        "two_week_goal": "Launch V1, complete 2 user interviews (watch them use it)",
+        "progress": "",
+        "last_wa_message": "first little batch deliverable from me:\nhttps://linkly.link/2X4AC\n\nit’s a quick Google Form with:\n\na short video showing a rough prototype\n\na handful of questions to help me understand the opportunity space\n\nshould only take a few minutes. really appreciate any thoughts you have — gut reactions totally welcome 🙏\n\nthanks!! 💛",
+        "last_wa_from": "them",
+        "reasoning": "Noah shared their prototype and asked for feedback via a Google Form. This is a great sign of progress toward their V1 launch goal. The right move here is to actually engage with what they sent (fill out the form) and be supportive. They mentioned they won't be raising this batch, so no need to push on investor stuff. Keep it simple and encouraging - they're clearly motivated and moving forward. Don't need to ask questions or push on anything, just be a supportive presence.",
+        "messages": [
+          {
+            "id": "3B61F85B365D6E2473F9",
+            "timestamp": "2026-01-19T02:18:41Z",
+            "from": "them",
+            "text": "first little batch deliverable from me:\nhttps://linkly.link/2X4AC\n\nit’s a quick Google Form with:\n\na short video showing a rough prototype\n\na handful of questions to help me understand the opportunity space\n\nshould only take a few minutes. really appreciate any thoughts you have — gut reactions totally welcome 🙏\n\nthanks!! 💛"
+          },
+          {
+            "id": "3B88348C40776BA7D99A",
+            "timestamp": "2026-01-19T02:18:16Z",
+            "from": "them",
+            "text": "hey Michael! won’t be raising during this batch. but appreciate you checking in. still in process on my goals…. keen to ship something in a few days here"
+          },
+          {
+            "id": "3EB06CEFFAE4325B060C44",
+            "timestamp": "2026-01-17T07:25:46Z",
+            "from": "us",
+            "text": "hey noah, hows the v1 coming? any intros i can help with or investors on your wishlist?"
+          }
+        ]
+      },
+      "alternatives": [
+        "filled it out! interesting concept - curious to see how the user interviews go once you launch. keep me posted 👍",
+        "done! like the direction you're going with this. lmk when you ship - happy to share with others who might find it useful"
+      ],
+      "drafts": [
+        {
+          "message": "nice, just filled it out! the prototype looks cool - love the pinterest-style discovery angle. excited to see what you ship 🙌",
+          "tone": "supportive, engaged with their work"
+        },
+        {
+          "message": "filled it out! interesting concept - curious to see how the user interviews go once you launch. keep me posted 👍",
+          "tone": "encouraging, forward-looking"
+        },
+        {
+          "message": "done! like the direction you're going with this. lmk when you ship - happy to share with others who might find it useful",
+          "tone": "helpful, offers to amplify"
+        }
+      ],
+      "reasoning": "Noah shared their prototype and asked for feedback via a Google Form. This is a great sign of progress toward their V1 launch goal. The right move here is to actually engage with what they sent (fill out the form) and be supportive. They mentioned they won't be raising this batch, so no need to push on investor stuff. Keep it simple and encouraging - they're clearly motivated and moving forward. Don't need to ask questions or push on anything, just be a supportive presence.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Noah shared prototype video + feedback form, not raising this batch but making progress on V1 launch",
+            "topics": "progress,product,feedback"
+          },
+          "description": "Log that Noah shared their prototype and feedback form",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "checkin",
+            "description": "Check if Noah shipped V1 and how user interviews went",
+            "due_date": "2025-01-24"
+          },
+          "description": "Follow up in a week to see if they shipped",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    },
+    {
+      "id": "draft_1768794275282_ujs9fh",
+      "phone": "+15033198708",
+      "founder_name": "Ryan Hildebrand",
+      "company": "35Financial",
+      "message": "that's awesome progress! the \"is this a venture business\" question is a good one to be asking early. what's making you wonder - is it the market size or something else? happy to think through it with you",
+      "status": "sent",
+      "created_at": "2026-01-19T03:44:35.282Z",
+      "updated_at": "2026-01-19T04:26:21.547Z",
+      "context": {
+        "stage": "in_conversation",
+        "demo_goal": "Autonomous loan/bank account opening",
+        "two_week_goal": "Account opening works end-to-end",
+        "progress": "Built account opening and loans. [Done] Unblocked 1.14.26 being able to call bank core to post in sandbox.  [In-progress]",
+        "last_wa_message": "Hey thanks man! Yeah things are cranking along. Unbelievably fast. Integrated into core. Building out lending. We are doing demos this week in our group. Excited to see it all. I’m trying to figure out if I’m actually building a venture business. Really appreciate the motivation! Let me know how I can help you too!",
+        "last_wa_from": "them",
+        "reasoning": "Ryan's message is positive and high-energy - things are going well technically (integrated into core, building lending, demos this week). But he raised something interesting: questioning if he's building a venture business. That's a meaningful question worth engaging with rather than glossing over. He also offered to help me, which is nice but I should focus on him. No need to ask NPS right now - he's in a good headspace and brought up something substantive to discuss. Keep the momentum going on the real question he raised.",
+        "messages": [
+          {
+            "id": "3A4051D34BCE4DAA48DF",
+            "timestamp": "2026-01-19T02:45:30Z",
+            "from": "them",
+            "text": "Hey thanks man! Yeah things are cranking along. Unbelievably fast. Integrated into core. Building out lending. We are doing demos this week in our group. Excited to see it all. I’m trying to figure out if I’m actually building a venture business. Really appreciate the motivation! Let me know how I can help you too!"
+          },
+          {
+            "id": "3EB08BBF871E0A529B9436",
+            "timestamp": "2026-01-17T07:25:27Z",
+            "from": "us",
+            "text": "hey ryan, saw you got account opening working - nice! how's the bank core stuff going? any intros or investors i can help with?"
+          },
+          {
+            "id": "3BE093F9E133FAAA728F",
+            "timestamp": "2025-12-17T01:31:10Z",
+            "from": "us",
+            "text": "Hey! Welcome to the Unofficial W26 Alumni Batch!\n\nThe next step is to join the WhatsApp here: https://chat.whatsapp.com/JTXWRuEwfzdL4jzBpWRFsD\n\nAll future announcements will go through there.\n\nCheers!"
+          },
+          {
+            "id": "3A3F450CBAABBA61E76A",
+            "timestamp": "2025-12-10T00:01:42Z",
+            "from": "them",
+            "text": "Amazing idea!"
+          },
+          {
+            "id": "3B8F1293B6D74AECDEC1",
+            "timestamp": "2025-12-09T22:27:11Z",
+            "from": "us",
+            "text": "Hey Ryan, thanks for your submission for the Alumni Demo Day. Will keep you posted."
+          }
+        ]
+      },
+      "alternatives": [
+        "love the energy! re: venture business question - that's worth exploring. what's your gut telling you? and demos this week sounds fun, let me know how they go",
+        "things moving fast is a great sign. the venture question is real though - happy to jam on that if useful. what's making you think about it?"
+      ],
+      "drafts": [
+        {
+          "message": "that's awesome progress! the \"is this a venture business\" question is a good one to be asking early. what's making you wonder - is it the market size or something else? happy to think through it with you",
+          "tone": "curious, supportive, opens door for deeper convo"
+        },
+        {
+          "message": "love the energy! re: venture business question - that's worth exploring. what's your gut telling you? and demos this week sounds fun, let me know how they go",
+          "tone": "encouraging, lighter touch"
+        },
+        {
+          "message": "things moving fast is a great sign. the venture question is real though - happy to jam on that if useful. what's making you think about it?",
+          "tone": "direct, offers help"
+        }
+      ],
+      "reasoning": "Ryan's message is positive and high-energy - things are going well technically (integrated into core, building lending, demos this week). But he raised something interesting: questioning if he's building a venture business. That's a meaningful question worth engaging with rather than glossing over. He also offered to help me, which is nice but I should focus on him. No need to ask NPS right now - he's in a good headspace and brought up something substantive to discuss. Keep the momentum going on the real question he raised.",
+      "suggested_actions": [
+        {
+          "type": "log_interaction",
+          "params": {
+            "summary": "Ryan shared great progress - integrated into core, building lending, demos this week. Raised question about whether 35Financial is a venture-scale business.",
+            "topics": "checkin,progress,venture-fit"
+          },
+          "description": "Log this interaction with notes about his venture business question",
+          "enabled": true
+        },
+        {
+          "type": "create_followup",
+          "params": {
+            "type": "checkin",
+            "description": "Follow up on Ryan's venture business question and how demos went",
+            "due_date": "2026-01-21"
+          },
+          "description": "Create follow-up to check in after his demos this week",
+          "enabled": true
+        }
+      ],
+      "selected_draft_index": 0
+    }
+  ],
+  "last_updated": "2026-01-19T04:29:34.630Z"
+}

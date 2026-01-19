@@ -84,7 +84,8 @@ export type SuggestedActionType =
   | "create_followup"
   | "record_investor"
   | "record_nps"
-  | "record_needs";
+  | "record_needs"
+  | "create_note";
 
 export interface SuggestedAction {
   type: SuggestedActionType;

@@ -1,15 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { toast } from "sonner";
 import type { Draft } from "../../scripts/shared/types";
 import type { PipelineStatusResponse } from "../../scripts/shared/types";
 import { Sidebar } from "./Sidebar";
 import { ConversationDetail } from "./ConversationDetail";
 import { KeyboardShortcutsModal } from "./KeyboardShortcutsModal";
 import { SnoozeMenu } from "./SnoozeMenu";
-import { SendTimer } from "./SendTimer";
 import { snoozeDraft, sendDraftAndExecuteActions, type SnoozeOption } from "@/app/actions";
-import { Toast } from "./Toast";
 
 type ViewMode = "split" | "list";
 
@@ -25,10 +24,13 @@ interface PendingSend {
   selectedDraftIndex: number;
   enabledActions: string[];
   expiresAt: number;
+  toastId: string | number;
+  timeoutId: NodeJS.Timeout;
 }
 
-export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props) {
-  // View mode: "split" (sidebar+detail) or "list" (full list, click to expand)
+const SEND_DELAY_MS = 15000; // 15 seconds
+
+export function DashboardClient({ drafts: initialDrafts, pipelineStatus: initialPipelineStatus }: Props) {
   const [viewMode, setViewMode] = useState<ViewMode>("split");
 
   // Filter out snoozed drafts
@@ -42,19 +44,20 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
 
   const [drafts, setDrafts] = useState(activeDrafts);
   const [snoozed, setSnoozed] = useState(snoozedDrafts);
+  const [pipelineStatus, setPipelineStatus] = useState(initialPipelineStatus);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedDraftOptionIndex, setSelectedDraftOptionIndex] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [showSnoozeMenu, setShowSnoozeMenu] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  const [pendingSend, setPendingSend] = useState<PendingSend | null>(null);
   const [enabledActions, setEnabledActions] = useState<Set<string>>(new Set());
-
-  // In list mode, null means viewing the list, a value means viewing detail
   const [expandedDraftId, setExpandedDraftId] = useState<string | null>(null);
+  // Track edited messages per draft
+  const [editedMessages, setEditedMessages] = useState<Map<string, { message: string; tone: string }>>(new Map());
 
-  const sendTimerRef = useRef<NodeJS.Timeout | null>(null);
+  // Queue of pending sends (supports multiple)
+  const pendingSendsRef = useRef<Map<string, PendingSend>>(new Map());
 
   const selectedDraft = drafts[selectedIndex] || null;
 
@@ -73,6 +76,7 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
     }
     setSelectedDraftOptionIndex(0);
     setIsEditing(false);
+    setShowAIChat(false);
   }, [selectedDraft?.id]);
 
   const selectNext = useCallback(() => {
@@ -100,29 +104,28 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
 
     const result = await snoozeDraft(selectedDraft.id, option);
     if (result.success) {
-      // Move draft from active to snoozed
       setDrafts((d) => d.filter((x) => x.id !== selectedDraft.id));
       setSnoozed((s) => [...s, { ...selectedDraft, deferred_until: (result.data as { until: string }).until }]);
-      setToast({ message: `Snoozed ${selectedDraft.founder_name}`, type: "success" });
-      // Adjust selection
+      toast.success(`Snoozed ${selectedDraft.founder_name}`);
       if (selectedIndex >= drafts.length - 1) {
         setSelectedIndex(Math.max(0, drafts.length - 2));
       }
     } else {
-      setToast({ message: result.error || "Failed to snooze", type: "error" });
+      toast.error(result.error || "Failed to snooze");
     }
     setShowSnoozeMenu(false);
   }, [selectedDraft, selectedIndex, drafts.length]);
 
   const handleSend = useCallback(() => {
     if (!selectedDraft) return;
-    if (pendingSend) return; // Already have a pending send
+    if (pendingSendsRef.current.has(selectedDraft.id)) return;
 
     const draftOptions = selectedDraft.drafts || [{ message: selectedDraft.message, tone: "default" }];
     const message = draftOptions[selectedDraftOptionIndex]?.message || selectedDraft.message;
     const draftId = selectedDraft.id;
     const founderName = selectedDraft.founder_name;
     const actionsToExecute = Array.from(enabledActions);
+    const draftIdx = selectedDraftOptionIndex;
 
     // Immediately remove from list and move to next
     setDrafts((d) => d.filter((x) => x.id !== draftId));
@@ -130,84 +133,136 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
       setSelectedIndex(Math.max(0, drafts.length - 2));
     }
 
-    // Start 30s timer
-    const expiresAt = Date.now() + 30000;
-    setPendingSend({
+    // Update pipeline counts (needs_attention -> awaiting_reply)
+    setPipelineStatus((prev) => ({
+      ...prev,
+      summary: {
+        ...prev.summary,
+        needs_attention: Math.max(0, prev.summary.needs_attention - 1),
+        awaiting_reply: prev.summary.awaiting_reply + 1,
+      },
+    }));
+
+    const expiresAt = Date.now() + SEND_DELAY_MS;
+
+    // Show toast with progress and undo action
+    const toastId = toast(`Sending to ${founderName}...`, {
+      duration: SEND_DELAY_MS,
+      action: {
+        label: "Undo (z)",
+        onClick: () => undoSend(draftId),
+      },
+    });
+
+    const timeoutId = setTimeout(async () => {
+      pendingSendsRef.current.delete(draftId);
+      const result = await sendDraftAndExecuteActions(draftId, draftIdx, actionsToExecute);
+      toast.dismiss(toastId);
+      if (result.success) {
+        toast.success(`Sent to ${founderName}`);
+      } else {
+        toast.error(result.error || "Failed to send");
+      }
+    }, SEND_DELAY_MS);
+
+    pendingSendsRef.current.set(draftId, {
       draftId,
       founderName,
       message,
-      selectedDraftIndex: selectedDraftOptionIndex,
+      selectedDraftIndex: draftIdx,
       enabledActions: actionsToExecute,
       expiresAt,
+      toastId,
+      timeoutId,
     });
+  }, [selectedDraft, selectedDraftOptionIndex, enabledActions, selectedIndex, drafts.length]);
 
-    sendTimerRef.current = setTimeout(async () => {
-      // Actually send after timer
-      const result = await sendDraftAndExecuteActions(
-        draftId,
-        selectedDraftOptionIndex,
-        actionsToExecute
-      );
-      if (result.success) {
-        setToast({ message: `Sent to ${founderName}`, type: "success" });
-      } else {
-        setToast({ message: result.error || "Failed to send", type: "error" });
-      }
-      setPendingSend(null);
-    }, 30000);
-  }, [selectedDraft, selectedDraftOptionIndex, enabledActions, pendingSend, selectedIndex, drafts.length]);
+  const undoSend = useCallback((draftId: string) => {
+    const pending = pendingSendsRef.current.get(draftId);
+    if (!pending) return;
 
-  const handleUndo = useCallback(() => {
-    if (!pendingSend) return;
-
-    if (sendTimerRef.current) {
-      clearTimeout(sendTimerRef.current);
-      sendTimerRef.current = null;
-    }
+    clearTimeout(pending.timeoutId);
+    toast.dismiss(pending.toastId);
+    pendingSendsRef.current.delete(draftId);
 
     // Restore the draft back to the list
-    const restoredDraft = initialDrafts.find((d) => d.id === pendingSend.draftId);
+    const restoredDraft = initialDrafts.find((d) => d.id === draftId);
     if (restoredDraft) {
       setDrafts((d) => [restoredDraft, ...d]);
     }
 
-    setPendingSend(null);
-    setToast({ message: "Send cancelled", type: "success" });
-  }, [pendingSend, initialDrafts]);
+    // Restore pipeline counts
+    setPipelineStatus((prev) => ({
+      ...prev,
+      summary: {
+        ...prev.summary,
+        needs_attention: prev.summary.needs_attention + 1,
+        awaiting_reply: Math.max(0, prev.summary.awaiting_reply - 1),
+      },
+    }));
 
-  const handleSendNow = useCallback(async () => {
-    if (!pendingSend) return;
+    toast.success("Send cancelled");
+  }, [initialDrafts]);
 
-    const { draftId, founderName, selectedDraftIndex: draftIdx, enabledActions: actions } = pendingSend;
+  const handleUndoLast = useCallback(() => {
+    // Undo the most recent pending send
+    const entries = Array.from(pendingSendsRef.current.entries());
+    if (entries.length === 0) return;
 
-    // Clear the timer and pending state immediately
-    if (sendTimerRef.current) {
-      clearTimeout(sendTimerRef.current);
-      sendTimerRef.current = null;
-    }
-    setPendingSend(null);
-    setToast({ message: `Sending to ${founderName}...`, type: "success" });
+    // Get the one with the latest expiresAt (most recently added)
+    const [draftId] = entries.reduce((latest, current) =>
+      current[1].expiresAt > latest[1].expiresAt ? current : latest
+    );
+    undoSend(draftId);
+  }, [undoSend]);
 
-    // Send immediately
-    const result = await sendDraftAndExecuteActions(draftId, draftIdx, actions);
-    if (result.success) {
-      setToast({ message: `Sent to ${founderName}`, type: "success" });
+  const handleSendNow = useCallback(async (draftId?: string) => {
+    // Send the specified one or the most recent
+    let pending: PendingSend | undefined;
+
+    if (draftId) {
+      pending = pendingSendsRef.current.get(draftId);
     } else {
-      setToast({ message: result.error || "Failed to send", type: "error" });
+      const entries = Array.from(pendingSendsRef.current.entries());
+      if (entries.length === 0) return;
+      const [, p] = entries.reduce((latest, current) =>
+        current[1].expiresAt > latest[1].expiresAt ? current : latest
+      );
+      pending = p;
     }
-  }, [pendingSend]);
+
+    if (!pending) return;
+
+    const { draftId: id, founderName, selectedDraftIndex: draftIdx, enabledActions: actions, toastId, timeoutId } = pending;
+
+    clearTimeout(timeoutId);
+    toast.dismiss(toastId);
+    pendingSendsRef.current.delete(id);
+
+    toast.loading(`Sending to ${founderName}...`);
+    const result = await sendDraftAndExecuteActions(id, draftIdx, actions);
+    toast.dismiss();
+
+    if (result.success) {
+      toast.success(`Sent to ${founderName}`);
+    } else {
+      toast.error(result.error || "Failed to send");
+    }
+  }, []);
 
   const handleCancel = useCallback(() => {
     if (showSnoozeMenu) {
       setShowSnoozeMenu(false);
     } else if (showShortcuts) {
       setShowShortcuts(false);
+    } else if (showAIChat) {
+      setShowAIChat(false);
     } else if (isEditing) {
       setIsEditing(false);
     } else if (viewMode === "list" && expandedDraftId) {
       setExpandedDraftId(null);
     }
-  }, [showSnoozeMenu, showShortcuts, isEditing, viewMode, expandedDraftId]);
+  }, [showSnoozeMenu, showShortcuts, showAIChat, isEditing, viewMode, expandedDraftId]);
 
   const handleOpenDetail = useCallback(() => {
     if (viewMode === "list" && selectedDraft) {
@@ -222,20 +277,16 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement;
 
-      // Allow Escape even when in input/textarea
       if (e.key === "Escape") {
         e.preventDefault();
         handleCancel();
         return;
       }
 
-      // Ignore other keys if typing in input/textarea
-      if (inInput) {
-        return;
-      }
+      if (inInput) return;
 
       // Cmd+Shift+Z = send now
-      if (e.key === "z" && e.shiftKey && e.metaKey && pendingSend) {
+      if (e.key === "z" && e.shiftKey && e.metaKey && pendingSendsRef.current.size > 0) {
         e.preventDefault();
         handleSendNow();
         return;
@@ -260,7 +311,13 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
           break;
         case "e":
           e.preventDefault();
+          setShowAIChat(false); // Close chat if open
           toggleEdit();
+          break;
+        case "c":
+          e.preventDefault();
+          setIsEditing(false); // Close edit if open
+          setShowAIChat((s) => !s);
           break;
         case "Enter":
           e.preventDefault();
@@ -275,9 +332,9 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
           setShowSnoozeMenu((s) => !s);
           break;
         case "z":
-          if (pendingSend) {
+          if (pendingSendsRef.current.size > 0) {
             e.preventDefault();
-            handleUndo();
+            handleUndoLast();
           }
           break;
         case "?":
@@ -299,21 +356,18 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
     selectDraftOption,
     toggleEdit,
     handleSend,
-    handleUndo,
+    handleUndoLast,
     handleSendNow,
     handleCancel,
     handleOpenDetail,
-    pendingSend,
     viewMode,
     expandedDraftId,
   ]);
 
-  // Cleanup timer on unmount
+  // Cleanup timers on unmount
   useEffect(() => {
     return () => {
-      if (sendTimerRef.current) {
-        clearTimeout(sendTimerRef.current);
-      }
+      pendingSendsRef.current.forEach((p) => clearTimeout(p.timeoutId));
     };
   }, []);
 
@@ -329,14 +383,53 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
     });
   };
 
-  const handleDraftSent = (draftId: string) => {
-    setDrafts((d) => d.filter((x) => x.id !== draftId));
-    if (selectedIndex >= drafts.length - 1) {
-      setSelectedIndex(Math.max(0, drafts.length - 2));
-    }
-  };
+  // Handler for AI chat message updates
+  const handleAIChatMessageUpdate = useCallback((message: string, tone?: string) => {
+    if (!selectedDraft) return;
+    setEditedMessages((prev) => {
+      const next = new Map(prev);
+      next.set(selectedDraft.id, { message, tone: tone || "ai-refined" });
+      return next;
+    });
+  }, [selectedDraft]);
 
-  // If in list mode and a draft is expanded, find it
+  // Handler for AI chat action updates
+  const handleAIChatActionsUpdate = useCallback((actions: Array<{ type: string; params: Record<string, unknown>; description: string; enabled: boolean }>) => {
+    // Update enabled actions based on the new actions
+    const newEnabled = new Set(
+      actions.filter((a) => a.enabled).map((a) => a.description)
+    );
+    setEnabledActions(newEnabled);
+
+    // Also update the draft's suggested_actions in state
+    if (selectedDraft) {
+      setDrafts((prev) =>
+        prev.map((d) =>
+          d.id === selectedDraft.id
+            ? { ...d, suggested_actions: actions as typeof d.suggested_actions }
+            : d
+        )
+      );
+    }
+  }, [selectedDraft]);
+
+  // Get the current message for a draft (edited or original)
+  const getCurrentMessage = useCallback((draft: typeof selectedDraft) => {
+    if (!draft) return "";
+    const edited = editedMessages.get(draft.id);
+    if (edited) return edited.message;
+    const draftOptions = draft.drafts || [{ message: draft.message, tone: "default" }];
+    return draftOptions[selectedDraftOptionIndex]?.message || draft.message;
+  }, [editedMessages, selectedDraftOptionIndex]);
+
+  const getCurrentTone = useCallback((draft: typeof selectedDraft) => {
+    if (!draft) return "default";
+    const edited = editedMessages.get(draft.id);
+    if (edited) return edited.tone;
+    const draftOptions = draft.drafts || [{ message: draft.message, tone: "default" }];
+    return draftOptions[selectedDraftOptionIndex]?.tone || "default";
+  }, [editedMessages, selectedDraftOptionIndex]);
+
   const expandedDraft = expandedDraftId
     ? drafts.find((d) => d.id === expandedDraftId) || null
     : null;
@@ -388,7 +481,7 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
               pipelineStatus={pipelineStatus}
             />
           </div>
-          <div className="col-span-3 overflow-y-auto">
+          <div className="col-span-3 min-h-0">
             {selectedDraft ? (
               <ConversationDetail
                 draft={selectedDraft}
@@ -396,11 +489,17 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
                 onSelectDraft={setSelectedDraftOptionIndex}
                 isEditing={isEditing}
                 onToggleEdit={toggleEdit}
+                showAIChat={showAIChat}
+                onToggleChat={() => setShowAIChat((s) => !s)}
+                currentMessage={getCurrentMessage(selectedDraft)}
+                currentTone={getCurrentTone(selectedDraft)}
+                onMessageUpdate={handleAIChatMessageUpdate}
+                onActionsUpdate={handleAIChatActionsUpdate}
                 enabledActions={enabledActions}
                 onToggleAction={handleToggleAction}
                 onSend={handleSend}
                 onSnooze={() => setShowSnoozeMenu(true)}
-                isPendingSend={pendingSend?.draftId === selectedDraft.id}
+                isPendingSend={pendingSendsRef.current.has(selectedDraft.id)}
               />
             ) : (
               <div className="flex items-center justify-center h-full text-gray-500">
@@ -410,7 +509,6 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
           </div>
         </div>
       ) : (
-        // List view mode
         <div className="flex-1 overflow-y-auto">
           {expandedDraft ? (
             <div>
@@ -426,11 +524,17 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
                 onSelectDraft={setSelectedDraftOptionIndex}
                 isEditing={isEditing}
                 onToggleEdit={toggleEdit}
+                showAIChat={showAIChat}
+                onToggleChat={() => setShowAIChat((s) => !s)}
+                currentMessage={getCurrentMessage(expandedDraft)}
+                currentTone={getCurrentTone(expandedDraft)}
+                onMessageUpdate={handleAIChatMessageUpdate}
+                onActionsUpdate={handleAIChatActionsUpdate}
                 enabledActions={enabledActions}
                 onToggleAction={handleToggleAction}
                 onSend={handleSend}
                 onSnooze={() => setShowSnoozeMenu(true)}
-                isPendingSend={pendingSend?.draftId === expandedDraft.id}
+                isPendingSend={pendingSendsRef.current.has(expandedDraft.id)}
               />
             </div>
           ) : (
@@ -469,7 +573,7 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
         </div>
       )}
 
-      {/* Modals and overlays */}
+      {/* Modals */}
       {showShortcuts && (
         <KeyboardShortcutsModal onClose={() => setShowShortcuts(false)} />
       )}
@@ -478,23 +582,6 @@ export function DashboardClient({ drafts: initialDrafts, pipelineStatus }: Props
         <SnoozeMenu
           onSelect={handleSnooze}
           onClose={() => setShowSnoozeMenu(false)}
-        />
-      )}
-
-      {pendingSend && (
-        <SendTimer
-          founderName={pendingSend.founderName}
-          expiresAt={pendingSend.expiresAt}
-          onUndo={handleUndo}
-          onSendNow={handleSendNow}
-        />
-      )}
-
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
         />
       )}
     </div>

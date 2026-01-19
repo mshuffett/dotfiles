@@ -4,8 +4,14 @@ import { revalidatePath } from "next/cache";
 import * as draftsLib from "@/lib/drafts";
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
+import { readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import type { SuggestedAction } from "../../scripts/shared/types";
 
 const execAsync = promisify(exec);
+
+const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL = "claude-opus-4-5-20251101";
 
 interface ActionResult {
   success: boolean;
@@ -277,6 +283,15 @@ async function executeAction(
         );
         break;
       }
+      case "create_note": {
+        const category = String(params.category || "context");
+        const content = String(params.content || "");
+        await execAsync(
+          `sqlite3 /Users/michael/clawd-founders/data/founders.db "INSERT INTO notes (founder_id, category, content) SELECT id, '${category}', '${content.replace(/'/g, "''")}' FROM founders WHERE phone LIKE '%${phone.replace(/\D/g, "")}%'"`,
+          { timeout: 5000 }
+        );
+        break;
+      }
     }
   } catch (e) {
     console.error(`Failed to execute action ${actionType}:`, e);
@@ -341,5 +356,197 @@ export async function unsnoozeDraft(id: string): Promise<ActionResult> {
   } catch (e) {
     console.error("Failed to unsnooze draft:", e);
     return { success: false, error: String(e) };
+  }
+}
+
+// ============================================================================
+// AI Chat Assistant
+// ============================================================================
+
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+interface ChatWithAIInput {
+  draftId: string;
+  userMessage: string;
+  chatHistory: ChatMessage[];
+  currentDraft: {
+    message: string;
+    tone: string;
+    actions: SuggestedAction[];
+  };
+  founderContext: {
+    name: string;
+    company: string;
+    phone: string;
+    demo_goal?: string | null;
+    two_week_goal?: string | null;
+    progress?: string | null;
+    stage: string;
+    messages?: Array<{ from: "us" | "them"; text: string; timestamp: string }>;
+  };
+}
+
+interface ChatWithAIResult {
+  response: string;
+  updatedMessage?: string;
+  updatedTone?: string;
+  updatedActions?: SuggestedAction[];
+}
+
+async function loadSoulPrompt(): Promise<string> {
+  const soulPath = "/Users/michael/clawd-founders/SOUL.md";
+  if (existsSync(soulPath)) {
+    return await readFile(soulPath, "utf-8");
+  }
+  return "";
+}
+
+export async function chatWithAI(input: ChatWithAIInput): Promise<ChatWithAIResult> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    throw new Error("ANTHROPIC_API_KEY not set");
+  }
+
+  const soul = await loadSoulPrompt();
+
+  // Build system prompt for chat assistant
+  const systemPrompt = `You are helping Michael refine a WhatsApp message to a founder.
+
+${soul ? `# Personality\n${soul.slice(0, 2000)}\n` : ""}
+
+# Your Role
+You're a helpful assistant that can:
+1. Rewrite/shorten/change the tone of the current draft message
+2. Add, remove, or modify suggested actions
+3. Have a conversation to understand what Michael wants
+
+# Scheduling
+Michael's Cal.com links for booking meetings:
+- 15 min: https://cal.com/everythingai/15min
+- 30 min: https://cal.com/everythingai/30min
+
+When scheduling meetings, use these links instead of proposing generic times.
+
+# Current Context
+
+## Founder
+- Name: ${input.founderContext.name}
+- Company: ${input.founderContext.company}
+- Stage: ${input.founderContext.stage}
+${input.founderContext.demo_goal ? `- Demo Goal: ${input.founderContext.demo_goal}` : ""}
+${input.founderContext.two_week_goal ? `- 2-Week Goal: ${input.founderContext.two_week_goal}` : ""}
+${input.founderContext.progress ? `- Progress: ${input.founderContext.progress}` : ""}
+
+## Current Draft Message
+${input.currentDraft.message}
+
+## Current Tone
+${input.currentDraft.tone || "default"}
+
+## Current Suggested Actions
+${JSON.stringify(input.currentDraft.actions, null, 2)}
+
+# Action Types Available
+- log_interaction: Log this interaction to the database (params: summary, topics)
+- update_outreach: Update outreach stage (params: step = "nps_sent" | "needs_sent" | "complete")
+- create_followup: Create a follow-up reminder (params: type, description, due_date)
+- record_investor: Record investor interest (params: investor, notes)
+- record_nps: Record NPS score (params: score, comment)
+- record_needs: Record their needs/asks (params: needs)
+- create_note: Save a learning/insight to the notes database (params: category, content)
+  Categories: context, research, personal, goal
+
+# Instructions
+Respond conversationally to Michael's request. If you make changes to the message or actions, include them in XML tags at the end of your response:
+
+<message>new message text here</message>
+<tone>brief tone description</tone>
+<actions>
+[
+  { "type": "log_interaction", "params": { "summary": "...", "topics": "..." }, "description": "...", "enabled": true }
+]
+</actions>
+
+Only include these tags if you're actually making changes. The message should be casual, WhatsApp-style, lowercase.`;
+
+  // Build conversation messages
+  const messages: Array<{ role: "user" | "assistant"; content: string }> = [];
+
+  // Add chat history
+  for (const msg of input.chatHistory) {
+    messages.push({ role: msg.role, content: msg.content });
+  }
+
+  // Add current user message
+  messages.push({ role: "user", content: input.userMessage });
+
+  try {
+    const response = await fetch(ANTHROPIC_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 1024,
+        system: systemPrompt,
+        messages,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Claude API error: ${response.status} - ${errorText}`);
+    }
+
+    const data = await response.json();
+    const content = data.content?.[0]?.text;
+
+    if (!content) {
+      throw new Error("No content in response");
+    }
+
+    // Parse the response
+    const result: ChatWithAIResult = { response: content };
+
+    // Extract updated message if present
+    const messageMatch = content.match(/<message>([\s\S]*?)<\/message>/);
+    if (messageMatch) {
+      result.updatedMessage = messageMatch[1].trim();
+      // Remove the tag from the visible response
+      result.response = result.response.replace(/<message>[\s\S]*?<\/message>/g, "").trim();
+    }
+
+    // Extract updated tone if present
+    const toneMatch = content.match(/<tone>([\s\S]*?)<\/tone>/);
+    if (toneMatch) {
+      result.updatedTone = toneMatch[1].trim();
+      result.response = result.response.replace(/<tone>[\s\S]*?<\/tone>/g, "").trim();
+    }
+
+    // Extract updated actions if present
+    const actionsMatch = content.match(/<actions>([\s\S]*?)<\/actions>/);
+    if (actionsMatch) {
+      try {
+        const actionsJson = actionsMatch[1].trim();
+        result.updatedActions = JSON.parse(actionsJson);
+        result.response = result.response.replace(/<actions>[\s\S]*?<\/actions>/g, "").trim();
+      } catch (e) {
+        console.error("Failed to parse actions:", e);
+      }
+    }
+
+    // Clean up response (remove empty lines at end)
+    result.response = result.response.replace(/\n+$/, "");
+
+    return result;
+  } catch (e) {
+    console.error("Chat with AI error:", e);
+    throw e;
   }
 }
