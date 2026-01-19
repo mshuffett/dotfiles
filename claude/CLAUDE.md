@@ -43,6 +43,18 @@ For non-trivial tasks with 3+ steps:
 
 This provides visibility into progress and creates documentation of the work done.
 
+**Handling Interleaved/Queued Messages**
+
+When you receive a user message via `<system-reminder>` while working, or when the user asks for something unrelated to your current task, pause and explicitly decide how to handle it:
+
+1. **Do immediately** — If it's quick (<30 seconds), doesn't break your current flow, or is clearly urgent
+2. **Acknowledge and continue** — If you're mid-task at a critical point: "Got it, I'll handle [X] right after I finish [current thing]"
+3. **Add to todo list** — If it's a distinct task that shouldn't interrupt current work, add it to TodoWrite and mention you've queued it
+4. **Clarify first** — If you need more info before you can even triage it properly
+5. **Context-switch fully** — If the new request seems more important or the user signals urgency
+
+Always acknowledge receipt of queued messages so the user knows you saw them. Never silently ignore or forget them.
+
 **End of Task**
 
 After operational work, ask if anything learned should become a skill.
