@@ -12,6 +12,8 @@
  *   bun pipeline.ts nps +1415... 8 "comment"     # Record NPS score
  *   bun pipeline.ts needs +1415... "description" # Record needs/asks
  *   bun pipeline.ts investor +1415... "Name" "notes"  # Record investor mention
+ *   bun pipeline.ts draft +1415... "msg" "reason"  # Create draft for dashboard
+ *   bun pipeline.ts drafts              # List pending drafts
  *   bun pipeline.ts check-all           # Read history for all founders
  */
 import { readFile, writeFile, mkdir } from "node:fs/promises";
@@ -19,6 +21,7 @@ import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { $ } from "bun";
 import { Database } from "bun:sqlite";
+import { createDraft, getPendingDrafts, type CreateDraftInput } from "./shared/drafts";
 
 // ============================================================================
 // Types
@@ -937,6 +940,74 @@ async function cmdInvestor(args: string[]): Promise<void> {
   console.log(`\n✓ Added ${investor} to wishlist for ${name}`);
 }
 
+async function cmdDraft(args: string[]): Promise<void> {
+  const phone = args[0];
+  const message = args[1];
+  const reasoning = args[2];
+
+  if (!phone || !message) {
+    console.error("Usage: pipeline.ts draft +14155551234 'message' 'optional reasoning'");
+    process.exit(1);
+  }
+
+  const founder = getFounderByPhone(phone);
+  if (!founder) {
+    console.error(`No founder found with phone: ${phone}`);
+    process.exit(1);
+  }
+
+  const state = await loadState();
+  const normalizedPhone = normalizePhoneForKey(phone);
+  const entry = state[normalizedPhone] || getDefaultEntry();
+
+  // Get goals if available
+  const db = getDb();
+  const goal = db.query(`
+    SELECT goal, progress FROM goals
+    WHERE company = ? AND period = '01/07/26'
+  `).get(founder.company) as { goal: string | null; progress: string | null } | null;
+  db.close();
+
+  const input: CreateDraftInput = {
+    phone,
+    founder_name: founder.name,
+    company: founder.company || "Unknown",
+    message,
+    context: {
+      stage: entry.stage,
+      demo_goal: founder.demo_goal,
+      two_week_goal: goal?.goal,
+      progress: goal?.progress,
+      last_wa_message: entry.last_wa_message,
+      last_wa_from: entry.last_wa_from,
+      reasoning,
+    },
+  };
+
+  const draft = await createDraft(input);
+  console.log(`\n✓ Created draft for ${founder.name}`);
+  console.log(`  ID: ${draft.id}`);
+  console.log(`  Message: ${message.substring(0, 60)}...`);
+}
+
+async function cmdDrafts(): Promise<void> {
+  const drafts = await getPendingDrafts();
+
+  if (drafts.length === 0) {
+    console.log("\nNo pending drafts.");
+    return;
+  }
+
+  console.log(`\n${drafts.length} pending draft(s):\n`);
+
+  for (const draft of drafts) {
+    console.log(`• ${draft.founder_name} (${draft.company})`);
+    console.log(`  ${draft.message.substring(0, 80)}${draft.message.length > 80 ? "..." : ""}`);
+    console.log(`  ID: ${draft.id}`);
+    console.log();
+  }
+}
+
 async function cmdCheckAll(args: string[]): Promise<void> {
   const db = getDb();
   let query = "SELECT phone FROM founders WHERE phone IS NOT NULL";
@@ -1023,6 +1094,12 @@ switch (command) {
   case "investor":
     await cmdInvestor(args);
     break;
+  case "draft":
+    await cmdDraft(args);
+    break;
+  case "drafts":
+    await cmdDrafts();
+    break;
   case "check-all":
     await cmdCheckAll(args);
     break;
@@ -1038,6 +1115,8 @@ Usage:
   bun pipeline.ts nps +1415... 8 "comment"     # Record NPS score
   bun pipeline.ts needs +1415... "description" # Record needs/asks
   bun pipeline.ts investor +1415... "Name" "notes"  # Record investor mention
+  bun pipeline.ts draft +1415... "msg" "reason"  # Create draft for dashboard
+  bun pipeline.ts drafts              # List pending drafts
   bun pipeline.ts check-all           # Read history for all founders
   bun pipeline.ts check-all --subgroup 1  # Check specific subgroup
     `);
