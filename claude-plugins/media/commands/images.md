@@ -92,7 +92,7 @@ Example detailed prompt:
 "A vintage boxing poster style illustration. Bold distressed typography at top: 'ACCOUNTABILITY CLUB' in chunky serif font, cream color. Center: two silhouetted figures at laptops facing each other. Background: deep navy blue with halftone texture. Accent: bright orange. Worn paper texture, torn edges. Style: screenprint aesthetic."
 ```
 
-The command is available at `~/bin/generate-image` (symlinked from `~/.dotfiles/bin/generate-image`).
+The command is available at `~/.dotfiles/bin/generate-image`.
 
 ## Batch Image Generation Workflow
 

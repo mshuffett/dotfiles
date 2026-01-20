@@ -58,6 +58,12 @@ SCOPES = [
 CREDENTIALS_PATH = Path(os.environ.get('GOOGLE_CREDENTIALS_PATH', '~/.config/google/credentials.json')).expanduser()
 TOKEN_PATH = Path(os.environ.get('GOOGLE_TOKEN_PATH', '~/.config/google/token.json')).expanduser()
 
+# Calendars to check by default
+DEFAULT_CALENDARS = [
+    'primary',  # michael@geteverything.ai
+    'michael@compose.ai',
+]
+
 
 def get_credentials():
     """Get valid credentials, prompting for auth if needed."""
@@ -164,14 +170,27 @@ def cmd_today(args):
     end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=0).isoformat() + 'Z'
 
     try:
-        events_result = service.events().list(
-            calendarId='primary',
-            timeMin=start_of_day,
-            timeMax=end_of_day,
-            singleEvents=True,
-            orderBy='startTime'
-        ).execute()
-        events = events_result.get('items', [])
+        all_events = []
+        for cal_id in DEFAULT_CALENDARS:
+            try:
+                events_result = service.events().list(
+                    calendarId=cal_id,
+                    timeMin=start_of_day,
+                    timeMax=end_of_day,
+                    singleEvents=True,
+                    orderBy='startTime'
+                ).execute()
+                all_events.extend(events_result.get('items', []))
+            except HttpError:
+                pass  # Skip calendars that fail
+
+        # Sort by start time and dedupe by event ID
+        seen = set()
+        events = []
+        for e in sorted(all_events, key=lambda x: x['start'].get('dateTime', x['start'].get('date', ''))):
+            if e['id'] not in seen:
+                seen.add(e['id'])
+                events.append(e)
 
         if not events:
             print("No events today.")
@@ -201,14 +220,27 @@ def cmd_week(args):
     end_of_week = start_of_week + timedelta(days=7)
 
     try:
-        events_result = service.events().list(
-            calendarId='primary',
-            timeMin=start_of_week.isoformat() + 'Z',
-            timeMax=end_of_week.isoformat() + 'Z',
-            singleEvents=True,
-            orderBy='startTime'
-        ).execute()
-        events = events_result.get('items', [])
+        all_events = []
+        for cal_id in DEFAULT_CALENDARS:
+            try:
+                events_result = service.events().list(
+                    calendarId=cal_id,
+                    timeMin=start_of_week.isoformat() + 'Z',
+                    timeMax=end_of_week.isoformat() + 'Z',
+                    singleEvents=True,
+                    orderBy='startTime'
+                ).execute()
+                all_events.extend(events_result.get('items', []))
+            except HttpError:
+                pass
+
+        # Sort by start time and dedupe
+        seen = set()
+        events = []
+        for e in sorted(all_events, key=lambda x: x['start'].get('dateTime', x['start'].get('date', ''))):
+            if e['id'] not in seen:
+                seen.add(e['id'])
+                events.append(e)
 
         if not events:
             print("No events this week.")
@@ -242,14 +274,27 @@ def cmd_list(args):
         start_dt = parse_datetime(args.start)
         end_dt = parse_datetime(args.end) if args.end else start_dt + timedelta(days=1)
 
-        events_result = service.events().list(
-            calendarId='primary',
-            timeMin=start_dt.isoformat() + 'Z',
-            timeMax=end_dt.isoformat() + 'Z',
-            singleEvents=True,
-            orderBy='startTime'
-        ).execute()
-        events = events_result.get('items', [])
+        all_events = []
+        for cal_id in DEFAULT_CALENDARS:
+            try:
+                events_result = service.events().list(
+                    calendarId=cal_id,
+                    timeMin=start_dt.isoformat() + 'Z',
+                    timeMax=end_dt.isoformat() + 'Z',
+                    singleEvents=True,
+                    orderBy='startTime'
+                ).execute()
+                all_events.extend(events_result.get('items', []))
+            except HttpError:
+                pass
+
+        # Sort by start time and dedupe
+        seen = set()
+        events = []
+        for e in sorted(all_events, key=lambda x: x['start'].get('dateTime', x['start'].get('date', ''))):
+            if e['id'] not in seen:
+                seen.add(e['id'])
+                events.append(e)
 
         if not events:
             print("No events in range.")
@@ -368,20 +413,34 @@ def cmd_freebusy(args):
         body = {
             "timeMin": start.isoformat() + 'Z',
             "timeMax": end.isoformat() + 'Z',
-            "items": [{"id": "primary"}]
+            "items": [{"id": cal_id} for cal_id in DEFAULT_CALENDARS]
         }
 
         result = service.freebusy().query(body=body).execute()
-        busy_times = result['calendars']['primary']['busy']
+
+        # Merge busy times from all calendars
+        all_busy = []
+        for cal_id in DEFAULT_CALENDARS:
+            cal_key = cal_id if cal_id in result['calendars'] else 'primary'
+            all_busy.extend(result['calendars'].get(cal_key, {}).get('busy', []))
+
+        # Sort and merge overlapping intervals
+        all_busy.sort(key=lambda x: x['start'])
+        merged = []
+        for slot in all_busy:
+            if merged and slot['start'] <= merged[-1]['end']:
+                merged[-1]['end'] = max(merged[-1]['end'], slot['end'])
+            else:
+                merged.append(slot.copy())
 
         if args.json:
-            print(json.dumps(busy_times, indent=2))
+            print(json.dumps(merged, indent=2))
         else:
             print(f"=== Busy times on {date.strftime('%Y-%m-%d')} ===\n")
-            if not busy_times:
+            if not merged:
                 print("All day free!")
             else:
-                for slot in busy_times:
+                for slot in merged:
                     start_time = datetime.fromisoformat(slot['start'].replace('Z', '+00:00'))
                     end_time = datetime.fromisoformat(slot['end'].replace('Z', '+00:00'))
                     print(f"  {start_time.strftime('%H:%M')} - {end_time.strftime('%H:%M')}: Busy")
