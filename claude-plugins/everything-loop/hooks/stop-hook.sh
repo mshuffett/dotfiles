@@ -3,6 +3,11 @@
 # Everything Loop Stop Hook
 # Core loop mechanism: prevents exit when loop is active, re-injects prompts
 # Supports two-level loop: outer (project planning) and inner (feature dev)
+#
+# Safety features:
+# - stop_hook_active check: prevents infinite loops per official Claude Code docs
+# - Error detection: stops blocking on consecutive API errors
+# - Velocity check: detects runaway iterations (too fast = something wrong)
 
 set -euo pipefail
 
@@ -21,6 +26,17 @@ if [[ -n "${CLAUDE_PLUGIN_ROOT:-}" ]]; then
   STATE_DIR="$CLAUDE_PLUGIN_ROOT/state"
 else
   STATE_DIR="$(dirname "$(dirname "$0")")/state"
+fi
+
+# =============================================================================
+# SAFETY CHECK 1: stop_hook_active (official Claude Code infinite loop prevention)
+# When true, Claude is already continuing from a previous stop hook block.
+# We must allow exit to break potential loops.
+# =============================================================================
+STOP_HOOK_ACTIVE=$(echo "$HOOK_INPUT" | jq -r '.stop_hook_active // false')
+if [[ "$STOP_HOOK_ACTIVE" = "true" ]]; then
+  log "stop_hook_active=true - allowing exit to prevent infinite loop"
+  exit 0
 fi
 
 # Extract session_id from hook input
@@ -81,7 +97,11 @@ fi
 # Check max iterations
 if [[ $MAX_ITERATIONS -gt 0 ]] && [[ $ITERATION -ge $MAX_ITERATIONS ]]; then
   echo "Max iterations ($MAX_ITERATIONS) reached. Everything loop complete."
-  rm "$PROJECT_STATE_FILE"
+  # Cleanup state and tracking files
+  rm -f "$PROJECT_STATE_FILE"
+  rm -f "$STATE_DIR/${SESSION_ID}-error-count" 2>/dev/null || true
+  rm -f "$STATE_DIR/${SESSION_ID}-fast-count" 2>/dev/null || true
+  rm -f "$STATE_DIR/${SESSION_ID}-last-iteration-ts" 2>/dev/null || true
   exit 0
 fi
 
@@ -115,13 +135,92 @@ if [[ -z "$LAST_OUTPUT" ]]; then
   exit 0
 fi
 
+# =============================================================================
+# SAFETY CHECK 2: Error detection
+# If the transcript contains recent API errors (like token limit), stop blocking
+# to prevent runaway error loops.
+# =============================================================================
+ERROR_COUNT_FILE="$STATE_DIR/${SESSION_ID}-error-count"
+
+# Check for common error patterns in recent transcript lines
+RECENT_ERRORS=$(tail -20 "$TRANSCRIPT_PATH" 2>/dev/null | grep -c '"type":"error"\|prompt is too long\|context.*limit\|token.*exceed' || echo "0")
+
+if [[ "$RECENT_ERRORS" -gt 0 ]]; then
+  # Track consecutive errors
+  PREV_ERROR_COUNT=0
+  if [[ -f "$ERROR_COUNT_FILE" ]]; then
+    PREV_ERROR_COUNT=$(cat "$ERROR_COUNT_FILE" 2>/dev/null || echo "0")
+  fi
+  NEW_ERROR_COUNT=$((PREV_ERROR_COUNT + 1))
+  echo "$NEW_ERROR_COUNT" > "$ERROR_COUNT_FILE"
+
+  log "Detected errors in transcript: recent=$RECENT_ERRORS consecutive=$NEW_ERROR_COUNT"
+
+  # If we've seen 3+ consecutive error iterations, stop blocking
+  if [[ "$NEW_ERROR_COUNT" -ge 3 ]]; then
+    log "ERROR: $NEW_ERROR_COUNT consecutive error iterations - stopping loop to prevent runaway"
+    echo "Too many consecutive errors detected. Stopping loop." >&2
+    rm -f "$ERROR_COUNT_FILE"
+    rm "$PROJECT_STATE_FILE"
+    exit 0
+  fi
+else
+  # Reset error count on successful iteration
+  rm -f "$ERROR_COUNT_FILE" 2>/dev/null || true
+fi
+
+# =============================================================================
+# SAFETY CHECK 3: Iteration velocity (runaway detection)
+# If iterations are happening faster than 10 seconds apart, something is wrong.
+# Normal iterations with tool use take 30+ seconds minimum.
+# =============================================================================
+TIMESTAMP_FILE="$STATE_DIR/${SESSION_ID}-last-iteration-ts"
+CURRENT_TS=$(date +%s)
+
+if [[ -f "$TIMESTAMP_FILE" ]]; then
+  LAST_TS=$(cat "$TIMESTAMP_FILE" 2>/dev/null || echo "0")
+  ELAPSED=$((CURRENT_TS - LAST_TS))
+
+  if [[ "$ELAPSED" -lt 10 ]] && [[ "$ELAPSED" -ge 0 ]]; then
+    # Track fast iterations
+    FAST_COUNT_FILE="$STATE_DIR/${SESSION_ID}-fast-count"
+    FAST_COUNT=0
+    if [[ -f "$FAST_COUNT_FILE" ]]; then
+      FAST_COUNT=$(cat "$FAST_COUNT_FILE" 2>/dev/null || echo "0")
+    fi
+    FAST_COUNT=$((FAST_COUNT + 1))
+    echo "$FAST_COUNT" > "$FAST_COUNT_FILE"
+
+    log "WARNING: Fast iteration detected: ${ELAPSED}s (count: $FAST_COUNT)"
+
+    # 5 consecutive fast iterations = runaway
+    if [[ "$FAST_COUNT" -ge 5 ]]; then
+      log "ERROR: Runaway detected - $FAST_COUNT iterations in <10s each. Stopping loop."
+      echo "Runaway iteration detected (too fast). Stopping loop." >&2
+      rm -f "$FAST_COUNT_FILE" "$TIMESTAMP_FILE"
+      rm "$PROJECT_STATE_FILE"
+      exit 0
+    fi
+  else
+    # Normal speed, reset fast count
+    rm -f "$STATE_DIR/${SESSION_ID}-fast-count" 2>/dev/null || true
+  fi
+fi
+
+# Update timestamp for next iteration
+echo "$CURRENT_TS" > "$TIMESTAMP_FILE"
+
 # Check for completion promise
 if [[ "$COMPLETION_PROMISE" != "null" ]] && [[ -n "$COMPLETION_PROMISE" ]]; then
   PROMISE_TEXT=$(echo "$LAST_OUTPUT" | perl -0777 -pe 's/.*?<promise>(.*?)<\/promise>.*/$1/s; s/^\s+|\s+$//g; s/\s+/ /g' 2>/dev/null || echo "")
 
   if [[ -n "$PROMISE_TEXT" ]] && [[ "$PROMISE_TEXT" = "$COMPLETION_PROMISE" ]]; then
     echo "Detected <promise>$COMPLETION_PROMISE</promise> - Everything loop complete!"
-    rm "$PROJECT_STATE_FILE"
+    # Cleanup state and tracking files
+    rm -f "$PROJECT_STATE_FILE"
+    rm -f "$STATE_DIR/${SESSION_ID}-error-count" 2>/dev/null || true
+    rm -f "$STATE_DIR/${SESSION_ID}-fast-count" 2>/dev/null || true
+    rm -f "$STATE_DIR/${SESSION_ID}-last-iteration-ts" 2>/dev/null || true
     exit 0
   fi
 fi
@@ -130,7 +229,11 @@ fi
 if [[ "$PROJECT_TYPE" = "fixed" ]]; then
   if echo "$LAST_OUTPUT" | grep -q "<promise>ALL_FEATURES_DONE</promise>"; then
     echo "All features complete - Everything loop finished!"
-    rm "$PROJECT_STATE_FILE"
+    # Cleanup state and tracking files
+    rm -f "$PROJECT_STATE_FILE"
+    rm -f "$STATE_DIR/${SESSION_ID}-error-count" 2>/dev/null || true
+    rm -f "$STATE_DIR/${SESSION_ID}-fast-count" 2>/dev/null || true
+    rm -f "$STATE_DIR/${SESSION_ID}-last-iteration-ts" 2>/dev/null || true
     exit 0
   fi
 fi
@@ -341,7 +444,7 @@ else
   SYSTEM_MSG="Everything Loop iteration $NEXT_ITERATION | Loop: $CURRENT_LOOP | Phase: $CURRENT_PHASE | $BACKLOG_STATUS"
 fi
 
-log "Continuing: iteration=$NEXT_ITERATION prompt_length=${#NEXT_PROMPT}"
+log "Continuing: iteration=$NEXT_ITERATION prompt_length=${#NEXT_PROMPT} (safety checks passed)"
 
 # Output JSON to block stop and re-inject prompt
 jq -n \
