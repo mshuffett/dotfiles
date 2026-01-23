@@ -6,6 +6,10 @@
 
 export EDITOR=vim
 
+# OS Detection
+export IS_MACOS=$([[ "$OSTYPE" == "darwin"* ]] && echo 1 || echo 0)
+export IS_LINUX=$([[ "$OSTYPE" == "linux-gnu"* ]] && echo 1 || echo 0)
+
 # Periodic auto-update on Zsh startup: 'ask' or 'no'.
 # You can manually run `z4h update` to update everything.
 zstyle ':z4h:' auto-update      'no'
@@ -117,32 +121,36 @@ export REPORTTIME=10
 stty -ixon 2>/dev/null
 
 # Programming languages and tools
-export PNPM_HOME="/Users/michael/Library/pnpm"
-export DENO_INSTALL="/Users/michael/.deno"
 export GOPATH=$HOME/go
-export SPARK_HOME='/Users/michael/pixiedust/bin/spark/spark-2.4.3-bin-hadoop2.7'
+export DENO_INSTALL="$HOME/.deno"
 
-# Java - only set if available (avoids errors during shell startup)
-if /usr/libexec/java_home -v 1.8 &>/dev/null; then
-  export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+if [[ $IS_MACOS -eq 1 ]]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+  export SPARK_HOME="$HOME/pixiedust/bin/spark/spark-2.4.3-bin-hadoop2.7"
+
+  # Java - only set if available (avoids errors during shell startup)
+  if /usr/libexec/java_home -v 1.8 &>/dev/null; then
+    export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+  fi
+
+  # Hadoop configuration
+  export HADOOP_VERSION=2.7.3
+  export HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.3
+  export HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
+else
+  export PNPM_HOME="$HOME/.local/share/pnpm"
 fi
-
-# Hadoop configuration
-export HADOOP_VERSION=2.7.3
-export HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.3
-export HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
 
 # Homebrew settings
 export HOMEBREW_NO_AUTO_UPDATE="1"
 
 # Path configuration
 typeset -U path # force path array to have unique values
+
+# Common paths (both macOS and Linux)
 path=(
   $HOME/.bun/bin
-  /opt/homebrew/bin
   $HOME/.serverless/bin
-  /Users/michael/miniconda3/bin
-  ~/opt/anaconda3/bin
   $HOME/.jenv/bin
   /usr/local/go/bin
   $HOME/go/bin
@@ -150,20 +158,37 @@ path=(
   $DENO_INSTALL/bin
   $HOME/bin
   /usr/bin
-  /usr/local/opt/coreutils/libexec/gnubin
   /usr/local/bin
   /usr/local/sbin
-  /usr/local/Cellar/ruby/2.5.0/bin
-  /usr/local/Cellar/emacs/25.3/bin
   ./bin
   $HOME/.rbenv/shims
   $HOME/.sfs
   $ZSH/bin
-  /Applications/MiniZincIDE.app/Contents/Resources
-  /Users/michael/Library/Python/3.7/bin
-  /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin
   $path
 )
+
+# macOS-specific paths
+if [[ $IS_MACOS -eq 1 ]]; then
+  path=(
+    /opt/homebrew/bin
+    $HOME/miniconda3/bin
+    ~/opt/anaconda3/bin
+    /usr/local/opt/coreutils/libexec/gnubin
+    /usr/local/Cellar/ruby/2.5.0/bin
+    /usr/local/Cellar/emacs/25.3/bin
+    /Applications/MiniZincIDE.app/Contents/Resources
+    $HOME/Library/Python/3.7/bin
+    /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin
+    $path
+  )
+fi
+
+# Linux-specific paths (Linuxbrew)
+if [[ $IS_LINUX -eq 1 ]]; then
+  if [[ -d /home/linuxbrew/.linuxbrew ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  fi
+fi
 
 # Man path configuration
 typeset -U manpath
@@ -305,11 +330,11 @@ setopt HIST_VERIFY                # Show command before running from history
 setopt EXTENDED_HISTORY           # Save timestamp and duration
 
 # Google Cloud SDK
-if [ -f '/Users/michael/google-cloud-sdk/path.zsh.inc' ]; then 
-  source '/Users/michael/google-cloud-sdk/path.zsh.inc'
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then
+  source "$HOME/google-cloud-sdk/path.zsh.inc"
 fi
-if [ -f '/Users/michael/google-cloud-sdk/completion.zsh.inc' ]; then 
-  source '/Users/michael/google-cloud-sdk/completion.zsh.inc'
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then
+  source "$HOME/google-cloud-sdk/completion.zsh.inc"
 fi
 
 source ~/.dotfiles/zsh/aliases.zsh
@@ -317,11 +342,8 @@ source ~/.dotfiles/zsh/aliases.zsh
 # Bun installation directory (path added in path array above)
 export BUN_INSTALL="$HOME/.bun"
 
-# Added by Windsurf
-export PATH="/Users/michael/.codeium/windsurf/bin:$PATH"
-
 # bun completions
-[ -s "/Users/michael/.bun/_bun" ] && source "/Users/michael/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Rust (cargo) environment
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
@@ -339,12 +361,12 @@ if command -v navi >/dev/null 2>&1; then
 fi
 
 export TZ="America/Los_Angeles"
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/michael/.lmstudio/bin"
-# End of LM Studio CLI section
+# Added by LM Studio CLI (lms) - macOS only
+if [[ $IS_MACOS -eq 1 ]]; then
+  export PATH="$PATH:$HOME/.lmstudio/bin"
+fi
 
-# pnpm
-export PNPM_HOME="/Users/michael/Library/pnpm"
+# pnpm - PNPM_HOME already set above based on OS
 export PATH="$PNPM_HOME:$PATH"
 
 # Palenight ls colors
@@ -405,10 +427,14 @@ if command -v chafa >/dev/null 2>&1; then
   }
 fi
 
-# Added by Antigravity
-export PATH="/Users/michael/.antigravity/antigravity/bin:$PATH"
+# Added by Antigravity - macOS only
+if [[ $IS_MACOS -eq 1 ]]; then
+  export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+fi
 
 # Claude Daily EA session
 alias ea='~/.dotfiles/bin/claude-daily'
 # Grouped session (independent view of same session)
 alias eag='tmux new-session -t claude-daily -s claude-quick 2>/dev/null || tmux attach -t claude-quick'
+
+[ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env
