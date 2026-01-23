@@ -83,13 +83,9 @@ const STAGE_ORDER: PipelineStage[] = [
   "complete",
 ];
 
-const DEFAULT_PIPELINE_PATH = join(
-  dirname(import.meta.dir),
-  "data",
-  "pipeline.json"
-);
+import { DB_PATH, PIPELINE_PATH as CONFIG_PIPELINE_PATH } from "./shared/paths";
 
-const DB_PATH = "/Users/michael/clawd-founders/data/founders.db";
+const DEFAULT_PIPELINE_PATH = CONFIG_PIPELINE_PATH;
 
 // Safety check: require history check within this many minutes before sending
 const HISTORY_CHECK_FRESHNESS_MINUTES = 10;

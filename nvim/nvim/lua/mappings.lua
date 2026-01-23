@@ -51,4 +51,6 @@ map("n", "<leader>at", "<cmd>CodeCompanionToggle<cr>", { desc = "AI: toggle chat
 map("v", "<leader>a", "<cmd>CodeCompanionActions<cr>", { desc = "AI: actions on selection" })
 map("v", "<leader>ac", "<cmd>CodeCompanionChat<cr>", { desc = "AI: chat with selection" })
 
--- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
+-- Save
+map("n", "<leader>w", "<cmd>w<cr>", { desc = "Save file" })
+map({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr>", { desc = "Save file" })

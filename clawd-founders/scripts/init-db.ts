@@ -8,9 +8,7 @@
 import { Database } from "bun:sqlite";
 import { readFileSync } from "fs";
 import { parse } from "csv-parse/sync";
-
-const DB_PATH = "/Users/michael/clawd-founders/data/founders.db";
-const CSV_PATH = "/Users/michael/clawd-founders/data/founders.csv";
+import { DB_PATH, CSV_PATH } from "./shared/paths";
 
 // Create or open database
 const db = new Database(DB_PATH);

@@ -3,12 +3,11 @@
 # Run this after deploying to clone repos and set up dotfiles
 #
 # Usage (from local machine):
-#   ANTHROPIC_API_KEY=$(source ~/.env.zsh && echo $ANTHROPIC_API_KEY) \
-#     fly ssh console -a dev-server -u michael -C "ANTHROPIC_API_KEY='$ANTHROPIC_API_KEY' bash /data/dotfiles/dev-server/setup.sh"
+#   fly ssh console -a dev-server -u michael -C "bash /data/dotfiles/dev-server/setup.sh"
 #
-# Or for fresh deploy (SSH key not yet on GitHub):
-#   fly ssh console -a dev-server -u michael -C "bash ~/.dotfiles/dev-server/setup.sh"
-#   Then manually set ANTHROPIC_API_KEY
+# After running this script, copy OAuth credentials from local machine:
+#   CREDS=$(security find-generic-password -s "Claude Code-credentials" -w)
+#   fly ssh console -a dev-server -u michael -C "bash -c 'echo '\''$CREDS'\'' > ~/.claude/.credentials.json && chmod 600 ~/.claude/.credentials.json'"
 
 set -e
 
@@ -53,22 +52,10 @@ cd /data/ws/compose-monorepo && pnpm install
 echo "Installing everything-monorepo dependencies..."
 cd /data/ws/everything-monorepo && pnpm install
 
-# Set ANTHROPIC_API_KEY if provided
-if [ -n "$ANTHROPIC_API_KEY" ]; then
-  echo "Setting ANTHROPIC_API_KEY..."
-  # Remove any existing ANTHROPIC_API_KEY lines (avoid duplicates)
-  sed -i '/^export ANTHROPIC_API_KEY=/d' ~/.zshrc 2>/dev/null || true
-  echo "export ANTHROPIC_API_KEY=\"$ANTHROPIC_API_KEY\"" >> ~/.zshrc
-  echo "✓ ANTHROPIC_API_KEY configured"
-else
-  echo "⚠ ANTHROPIC_API_KEY not provided - set it manually:"
-  echo "  echo 'export ANTHROPIC_API_KEY=\"your-key\"' >> ~/.zshrc"
-fi
-
 echo ""
 echo "=== Setup Complete! ==="
 echo ""
 echo "Next steps:"
-echo "  1. Start a tmux session: tmux new -s main"
-echo "  2. Run: cd ~/ws/compose-monorepo && pnpm dev"
+echo "  1. Copy OAuth credentials from local machine (see header comment)"
+echo "  2. Start a tmux session: tmux new -s main"
 echo "  3. Run: claude --version  # to verify Claude Code works"

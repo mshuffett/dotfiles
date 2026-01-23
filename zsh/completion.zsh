@@ -8,4 +8,4 @@ zstyle ':completion:*' insert-tab pending
 ZSH_DISABLE_COMPFIX="true"
 
 # docker completion path
-fpath=(~/.zsh/completion /usr/local/share/zsh/site-functions $fpath)
+fpath=(~/.dotfiles/completions ~/.zsh/completion /usr/local/share/zsh/site-functions $fpath)

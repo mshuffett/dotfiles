@@ -11,8 +11,8 @@
  *   bun query-db.ts followups pending
  */
 import { Database } from "bun:sqlite";
+import { DB_PATH } from "./shared/paths";
 
-const DB_PATH = "/Users/michael/clawd-founders/data/founders.db";
 const db = new Database(DB_PATH, { readonly: true });
 
 const [command, ...args] = process.argv.slice(2);

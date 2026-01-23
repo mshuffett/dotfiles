@@ -8,13 +8,15 @@
 import { readFileSync, existsSync } from "fs";
 import { parse } from "csv-parse/sync";
 import { execSync } from "child_process";
+import { join } from "node:path";
+import { GOOGLE_SHEET_CSV_PATH, SCRIPTS_DIR } from "./shared/paths";
 
-const CSV_PATH = "/Users/michael/clawd-founders/data/google-sheet.csv";
+const CSV_PATH = GOOGLE_SHEET_CSV_PATH;
 const GOAL_COL = "[01/07/26]  - Two Week Goals";
 
 // Always fetch fresh data first
 console.log("Fetching fresh data from Google Sheets...\n");
-execSync("bun /Users/michael/clawd-founders/scripts/sync-goals.ts --fetch", { stdio: "inherit" });
+execSync(`bun ${join(SCRIPTS_DIR, "sync-goals.ts")} --fetch`, { stdio: "inherit" });
 
 // Now parse the fresh CSV
 const csv = readFileSync(CSV_PATH, "utf-8");

@@ -24,12 +24,13 @@ import { createDraft as saveDraftToFile } from "./drafts";
 // Constants
 // ============================================================================
 
-const ROOT_DIR = dirname(dirname(import.meta.dir));
-const SOUL_PATH = join(ROOT_DIR, "SOUL.md");
-const USER_PATH = join(ROOT_DIR, "USER.md");
-const CLAUDE_PATH = join(ROOT_DIR, "CLAUDE.md"); // Symlink to AGENTS.md
-const DB_PATH = "/Users/michael/clawd-founders/data/founders.db";
-const PIPELINE_PATH = "/Users/michael/clawd-founders/data/pipeline.json";
+import {
+  DB_PATH,
+  PIPELINE_PATH,
+  SOUL_PATH,
+  USER_PATH,
+  CLAUDE_PATH,
+} from "./paths";
 
 const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages";
 const MODEL = "claude-opus-4-5-20251101";

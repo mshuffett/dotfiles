@@ -373,4 +373,40 @@ return {
       },
     },
   },
+
+  -- Neorg - Powerful outlining and note-taking
+  {
+    "nvim-neorg/neorg",
+    lazy = false,  -- Must not be lazy loaded per neorg docs
+    version = "*", -- Pin to stable version
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("neorg").setup({
+        load = {
+          ["core.defaults"] = {},  -- Loads default behavior
+          ["core.concealer"] = {}, -- Pretty icons
+          ["core.itero"] = {},     -- Smart Enter continues lists/todos
+          ["core.journal"] = {},   -- Daily journaling
+          ["core.export"] = {},    -- Export to other formats
+          ["core.export.markdown"] = {}, -- Export to markdown
+          ["core.completion"] = {
+            config = {
+              engine = "nvim-cmp",
+            },
+          },
+          ["core.dirman"] = {      -- Manages workspaces
+            config = {
+              workspaces = {
+                notes = "~/ws/notes/neorg",
+              },
+              default_workspace = "notes",
+            },
+          },
+        },
+      })
+
+      -- Setup zoom module for Workflowy-style zooming
+      require("neorg-zoom").setup()
+    end,
+  },
 }

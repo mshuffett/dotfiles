@@ -7,6 +7,8 @@ import { promisify } from "node:util";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import type { SuggestedAction } from "../../scripts/shared/types";
+import { SCRIPTS_DIR, DB_PATH, SOUL_PATH } from "@/lib/paths";
+import { join } from "node:path";
 
 const execAsync = promisify(exec);
 
@@ -99,7 +101,7 @@ export async function refreshPipeline(): Promise<RefreshResult> {
   try {
     // Run pipeline check-all to refresh all founder states
     const { stderr } = await execAsync(
-      "bun /Users/michael/clawd-founders/scripts/pipeline.ts check-all",
+      `bun ${join(SCRIPTS_DIR, "pipeline.ts")} check-all`,
       { timeout: 120000 }
     );
 
@@ -120,7 +122,7 @@ export async function generateDrafts(): Promise<RefreshResult> {
     // Run generate-drafts script with --all flag
     // Source env file to get ANTHROPIC_API_KEY
     const { stdout, stderr } = await execAsync(
-      "source ~/.env.zsh && bun /Users/michael/clawd-founders/scripts/shared/generate-drafts.ts --all",
+      `source ~/.env.zsh && bun ${join(SCRIPTS_DIR, "shared/generate-drafts.ts")} --all`,
       {
         timeout: 300000, // 5 minutes for API calls
         shell: "/bin/zsh",
@@ -232,7 +234,7 @@ async function executeAction(
         const summary = String(params.summary || "");
         const topics = String(params.topics || "");
         await execAsync(
-          `sqlite3 /Users/michael/clawd-founders/data/founders.db "INSERT INTO interactions (founder_id, summary, topics) SELECT id, '${summary.replace(/'/g, "''")}', '${topics.replace(/'/g, "''")}' FROM founders WHERE phone LIKE '%${phone.replace(/\D/g, "")}%'"`,
+          `sqlite3 ${DB_PATH} "INSERT INTO interactions (founder_id, summary, topics) SELECT id, '${summary.replace(/'/g, "''")}', '${topics.replace(/'/g, "''")}' FROM founders WHERE phone LIKE '%${phone.replace(/\D/g, "")}%'"`,
           { timeout: 5000 }
         );
         break;
@@ -241,7 +243,7 @@ async function executeAction(
         const score = Number(params.score);
         const comment = String(params.comment || "");
         await execAsync(
-          `bun /Users/michael/clawd-founders/scripts/pipeline.ts nps ${phone} ${score} "${comment}"`,
+          `bun ${join(SCRIPTS_DIR, "pipeline.ts")} nps ${phone} ${score} "${comment}"`,
           { timeout: 5000 }
         );
         break;
@@ -249,7 +251,7 @@ async function executeAction(
       case "record_needs": {
         const needs = String(params.needs || "");
         await execAsync(
-          `bun /Users/michael/clawd-founders/scripts/pipeline.ts needs ${phone} "${needs}"`,
+          `bun ${join(SCRIPTS_DIR, "pipeline.ts")} needs ${phone} "${needs}"`,
           { timeout: 5000 }
         );
         break;
@@ -258,7 +260,7 @@ async function executeAction(
         const investor = String(params.investor || "");
         const notes = String(params.notes || "");
         await execAsync(
-          `bun /Users/michael/clawd-founders/scripts/pipeline.ts investor ${phone} "${investor}" "${notes}"`,
+          `bun ${join(SCRIPTS_DIR, "pipeline.ts")} investor ${phone} "${investor}" "${notes}"`,
           { timeout: 5000 }
         );
         break;
@@ -267,7 +269,7 @@ async function executeAction(
         const step = String(params.step || "");
         if (step) {
           await execAsync(
-            `sqlite3 /Users/michael/clawd-founders/data/founders.db "UPDATE outreach SET step = '${step}', updated_at = datetime('now') WHERE founder_id = (SELECT id FROM founders WHERE phone LIKE '%${phone.replace(/\D/g, "")}%')"`,
+            `sqlite3 ${DB_PATH} "UPDATE outreach SET step = '${step}', updated_at = datetime('now') WHERE founder_id = (SELECT id FROM founders WHERE phone LIKE '%${phone.replace(/\D/g, "")}%')"`,
             { timeout: 5000 }
           );
         }
@@ -278,7 +280,7 @@ async function executeAction(
         const description = String(params.description || "");
         const dueDate = String(params.due_date || "");
         await execAsync(
-          `sqlite3 /Users/michael/clawd-founders/data/founders.db "INSERT INTO followups (founder_id, type, description, due_date) SELECT id, '${type}', '${description.replace(/'/g, "''")}', '${dueDate}' FROM founders WHERE phone LIKE '%${phone.replace(/\D/g, "")}%'"`,
+          `sqlite3 ${DB_PATH} "INSERT INTO followups (founder_id, type, description, due_date) SELECT id, '${type}', '${description.replace(/'/g, "''")}', '${dueDate}' FROM founders WHERE phone LIKE '%${phone.replace(/\D/g, "")}%'"`,
           { timeout: 5000 }
         );
         break;
@@ -287,7 +289,7 @@ async function executeAction(
         const category = String(params.category || "context");
         const content = String(params.content || "");
         await execAsync(
-          `sqlite3 /Users/michael/clawd-founders/data/founders.db "INSERT INTO notes (founder_id, category, content) SELECT id, '${category}', '${content.replace(/'/g, "''")}' FROM founders WHERE phone LIKE '%${phone.replace(/\D/g, "")}%'"`,
+          `sqlite3 ${DB_PATH} "INSERT INTO notes (founder_id, category, content) SELECT id, '${category}', '${content.replace(/'/g, "''")}' FROM founders WHERE phone LIKE '%${phone.replace(/\D/g, "")}%'"`,
           { timeout: 5000 }
         );
         break;
@@ -397,9 +399,8 @@ interface ChatWithAIResult {
 }
 
 async function loadSoulPrompt(): Promise<string> {
-  const soulPath = "/Users/michael/clawd-founders/SOUL.md";
-  if (existsSync(soulPath)) {
-    return await readFile(soulPath, "utf-8");
+  if (existsSync(SOUL_PATH)) {
+    return await readFile(SOUL_PATH, "utf-8");
   }
   return "";
 }

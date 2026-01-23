@@ -12,12 +12,12 @@
 import { Database } from "bun:sqlite";
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { parse } from "csv-parse/sync";
+import { DB_PATH, GOOGLE_SHEET_CSV_PATH } from "./shared/paths";
 
 // Config
 const SHEET_ID = "1WrCH7jrhUmpBaIKLPlv39Yoeb_FnqukaAsPOC2wiBPo";
 const SHEET_GID = "0"; // First sheet
-const CSV_PATH = "/Users/michael/clawd-founders/data/google-sheet.csv";
-const DB_PATH = "/Users/michael/clawd-founders/data/founders.db";
+const CSV_PATH = GOOGLE_SHEET_CSV_PATH;
 
 // Open database
 const db = new Database(DB_PATH);
