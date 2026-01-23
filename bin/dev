@@ -70,7 +70,7 @@ case "${1:-}" in
   "")
     # Default: SSH and attach to tmux (or create if doesn't exist)
     sync_creds
-    fly ssh console -a "$APP" -u michael --pty -C "tmux new -A -s main"
+    fly ssh console -a "$APP" -u michael --pty -C "bash -c 'LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 exec tmux -u new -A -s main'"
     ;;
   *)
     # Run arbitrary command
