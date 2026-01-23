@@ -1,4 +1,8 @@
 {
+  "permissions": {
+    "defaultMode": "dontAsk"
+  },
+  "model": "opus",
   "enabledMcpjsonServers": [
     "tavus"
   ],
