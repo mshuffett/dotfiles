@@ -1,0 +1,26 @@
+# Git
+.git
+.gitignore
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Caches
+.cache
+__pycache__
+
+# Build artifacts
+*.pyc
+*.pyo
+
+# IDE
+.idea
+.vscode
+*.code-workspace
+
+# Local overrides
+.env
+.env.local
+*.local

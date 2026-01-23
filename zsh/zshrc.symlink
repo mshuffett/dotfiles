@@ -16,38 +16,17 @@ if [[ $IS_LINUX -eq 1 && -z "$LANG" ]]; then
   export LC_ALL=en_US.UTF-8
 fi
 
-# Check if z4h is available and source it
+# Check if z4h was loaded by zshenv
 export HAS_Z4H=0
-Z4H_FILE="${Z4H:-$HOME/.cache/zsh4humans/v5}/z4h.zsh"
-if [[ -r "$Z4H_FILE" ]]; then
+if [[ -v Z4H && -r "${Z4H}/z4h.zsh" ]] && typeset -f z4h > /dev/null 2>&1; then
   export HAS_Z4H=1
 
-  # z4h configuration must come BEFORE sourcing z4h.zsh
-  zstyle ':z4h:' auto-update      'no'
-  zstyle ':z4h:' auto-update-days '28'
-  zstyle ':z4h:bindkey' keyboard  'mac'
-
-  # Start tmux if not already in tmux and not in cursor
-  if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
-    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t main
-  else
-    zstyle ':z4h:' start-tmux       no
-  fi
-
-  zstyle ':z4h:' prompt-at-bottom 'no'
-  zstyle ':z4h:' term-shell-integration 'yes'
-  zstyle ':z4h:autosuggestions' forward-char 'accept'
-  zstyle ':z4h:fzf-complete' recurse-dirs 'no'
-  zstyle ':z4h:direnv'         enable 'yes'
-  zstyle ':z4h:direnv:success' notify 'yes'
-  zstyle ':z4h:ssh:*'          enable 'no'
-  zstyle ':z4h:ssh:*' send-extra-files '~/.nanorc' '~/.env.zsh'
-
-  # Source z4h
-  source "$Z4H_FILE"
-
+  # z4h install/init (zshenv already sourced z4h.zsh, so just configure and init)
   z4h install ohmyzsh/ohmyzsh || return
   z4h init || return
+
+  # Source Powerlevel10k prompt configuration
+  z4h source ~/.p10k.zsh
 else
   # Fallback for systems without z4h (e.g., Linux dev servers)
   # Basic prompt
@@ -285,7 +264,17 @@ thelp() {
 # Utility for logging into EKS more easily
 eks-tok() {
   if command -v aws &> /dev/null && command -v jq &> /dev/null; then
-    aws eks get-token --cluster "$1" | jq -r ".status.token" | pbcopy
+    local token=$(aws eks get-token --cluster "$1" | jq -r ".status.token")
+    if [[ $IS_MACOS -eq 1 ]]; then
+      echo -n "$token" | pbcopy
+    elif command -v xclip &> /dev/null; then
+      echo -n "$token" | xclip -selection clipboard
+    elif command -v wl-copy &> /dev/null; then
+      echo -n "$token" | wl-copy
+    else
+      echo "Token: $token"
+      echo "(Install xclip or wl-copy for clipboard support)"
+    fi
   else
     echo "Required tools (aws cli or jq) not found."
   fi
@@ -435,3 +424,5 @@ alias ea='~/.dotfiles/bin/claude-daily'
 alias eag='tmux new-session -t claude-daily -s claude-quick 2>/dev/null || tmux attach -t claude-quick'
 
 [ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env
+# Fix ralph stderr output in tmux
+alias ralph='ralph 2>&1'

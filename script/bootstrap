@@ -2,9 +2,9 @@
 set -e
 
 # ============================================================================
-# Fresh Mac Bootstrap Wizard
+# Dotfiles Bootstrap Wizard
 # ============================================================================
-# Interactive setup script for configuring a new Mac with dotfiles
+# Interactive setup script for configuring a new Mac or Linux system with dotfiles
 # Uses gum for a pleasant CLI experience
 
 DOTFILES_DIR="$HOME/.dotfiles"
@@ -55,6 +55,10 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
+
+# OS Detection (set early for conditional logic)
+IS_MACOS=0
+IS_LINUX=0
 
 # ============================================================================
 # Utility Functions
@@ -110,12 +114,12 @@ show_header() {
       "╚═══════════════════════════════════════════╝"
 
     echo ""
-    gum style --foreground 212 --bold "Fresh Mac Bootstrap Wizard"
+    gum style --foreground 212 --bold "Dotfiles Bootstrap Wizard"
     echo ""
 
     gum style \
       --foreground 246 \
-      "This interactive wizard will help you set up your Mac with:" \
+      "This interactive wizard will help you set up your system with:" \
       "" \
       "  🔧  Git configuration (name, email)" \
       "  🔗  Dotfile symlinks (zsh, tmux, git, etc.)" \
@@ -137,9 +141,9 @@ show_header() {
 ║  ░▀▀░░▀▀▀░░▀░░▀░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀       ║
 ╚═══════════════════════════════════════════╝
 
-Fresh Mac Bootstrap Wizard
+Dotfiles Bootstrap Wizard
 
-This interactive wizard will help you set up your Mac with:
+This interactive wizard will help you set up your system with:
   🔧  Git configuration (name, email)
   🔗  Dotfile symlinks (zsh, tmux, git, etc.)
   📦  Homebrew packages (44 curated tools)
@@ -159,40 +163,72 @@ EOF
 # ============================================================================
 
 check_os() {
-  if [[ "$OSTYPE" != "darwin"* ]]; then
-    log_error "This script is designed for macOS"
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    IS_MACOS=1
+    IS_LINUX=0
+    log_info "Running on macOS"
+  elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    IS_MACOS=0
+    IS_LINUX=1
+    log_info "Running on Linux"
+  else
+    log_error "This script is designed for macOS or Linux"
     exit 1
   fi
-  log_info "Running on macOS"
 }
 
-check_xcode() {
-  if ! xcode-select -p &> /dev/null; then
-    log_warning "Xcode Command Line Tools not found"
-    if command -v gum &> /dev/null; then
-      choice=$(gum choose "Yes" "No" --header "Install Xcode Command Line Tools?")
-      if [[ "$choice" == "Yes" ]]; then
-        xcode-select --install
-        log_info "Please complete the Xcode CLT installation, then re-run this script"
-        exit 0
+check_build_tools() {
+  if [[ $IS_MACOS -eq 1 ]]; then
+    # macOS: Check for Xcode Command Line Tools
+    if ! xcode-select -p &> /dev/null; then
+      log_warning "Xcode Command Line Tools not found"
+      if command -v gum &> /dev/null; then
+        choice=$(gum choose "Yes" "No" --header "Install Xcode Command Line Tools?")
+        if [[ "$choice" == "Yes" ]]; then
+          xcode-select --install
+          log_info "Please complete the Xcode CLT installation, then re-run this script"
+          exit 0
+        else
+          log_error "Xcode Command Line Tools required"
+          exit 1
+        fi
       else
-        log_error "Xcode Command Line Tools required"
-        exit 1
+        echo "Install Xcode Command Line Tools? (y/n)"
+        read -r response
+        if [[ "$response" =~ ^[Yy]$ ]]; then
+          xcode-select --install
+          log_info "Please complete the Xcode CLT installation, then re-run this script"
+          exit 0
+        else
+          log_error "Xcode Command Line Tools required"
+          exit 1
+        fi
       fi
     else
-      echo "Install Xcode Command Line Tools? (y/n)"
-      read -r response
-      if [[ "$response" =~ ^[Yy]$ ]]; then
-        xcode-select --install
-        log_info "Please complete the Xcode CLT installation, then re-run this script"
-        exit 0
-      else
-        log_error "Xcode Command Line Tools required"
-        exit 1
-      fi
+      log_info "Xcode Command Line Tools installed"
     fi
   else
-    log_info "Xcode Command Line Tools installed"
+    # Linux: Check for build-essential (gcc, make, etc.)
+    if ! command -v gcc &> /dev/null; then
+      log_warning "Build tools (gcc) not found"
+      log_info "Install with: sudo apt-get install build-essential"
+      if command -v apt-get &> /dev/null; then
+        if command -v gum &> /dev/null; then
+          choice=$(gum choose "Yes" "No" --header "Install build-essential?")
+          if [[ "$choice" == "Yes" ]]; then
+            sudo apt-get update && sudo apt-get install -y build-essential
+          fi
+        else
+          echo "Install build-essential? (y/n)"
+          read -r response
+          if [[ "$response" =~ ^[Yy]$ ]]; then
+            sudo apt-get update && sudo apt-get install -y build-essential
+          fi
+        fi
+      fi
+    else
+      log_info "Build tools installed"
+    fi
   fi
 }
 
@@ -202,14 +238,8 @@ install_homebrew() {
     if command -v gum &> /dev/null; then
       choice=$(gum choose "Yes" "No" --header "Install Homebrew?")
       if [[ "$choice" == "Yes" ]]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-        # Add Homebrew to PATH for Apple Silicon Macs
-        if [[ $(uname -m) == "arm64" ]]; then
-          echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-          eval "$(/opt/homebrew/bin/brew shellenv)"
-        fi
-
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        setup_brew_path
         log_info "Homebrew installed"
       else
         log_error "Homebrew is required"
@@ -219,14 +249,8 @@ install_homebrew() {
       echo "Install Homebrew? (y/n)"
       read -r response
       if [[ "$response" =~ ^[Yy]$ ]]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-        # Add Homebrew to PATH for Apple Silicon Macs
-        if [[ $(uname -m) == "arm64" ]]; then
-          echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-          eval "$(/opt/homebrew/bin/brew shellenv)"
-        fi
-
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        setup_brew_path
         log_info "Homebrew installed"
       else
         log_error "Homebrew is required"
@@ -238,14 +262,32 @@ install_homebrew() {
   fi
 }
 
+# Set up Homebrew PATH based on OS
+setup_brew_path() {
+  if [[ $IS_MACOS -eq 1 ]]; then
+    # macOS: Apple Silicon or Intel
+    if [[ $(uname -m) == "arm64" ]]; then
+      echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    else
+      eval "$(/usr/local/bin/brew shellenv)"
+    fi
+  else
+    # Linux: Linuxbrew
+    if [[ -d /home/linuxbrew/.linuxbrew ]]; then
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    elif [[ -d ~/.linuxbrew ]]; then
+      eval "$(~/.linuxbrew/bin/brew shellenv)"
+    fi
+  fi
+}
+
 install_gum() {
   if ! command -v gum &> /dev/null; then
     log_info "Installing gum for better UI..."
     if brew install gum; then
       # Reload shell environment to pick up new binary
-      if [[ $(uname -m) == "arm64" ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-      fi
+      setup_brew_path
 
       # Verify gum is now available
       if command -v gum &> /dev/null; then
@@ -851,7 +893,7 @@ main() {
 
   # Pre-flight checks
   check_os
-  check_xcode
+  check_build_tools
   install_homebrew
   install_gum
 
