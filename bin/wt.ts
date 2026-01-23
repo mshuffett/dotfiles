@@ -67,7 +67,9 @@ const main = defineCommand({
       process.exit(1);
     }
 
-    const worktreesDir = join(gitRoot, ".worktrees");
+    // Use sibling directory to avoid stale CLAUDE.md copies
+    const repoName = basename(gitRoot);
+    const worktreesDir = join(dirname(gitRoot), `${repoName}.worktrees`);
 
     // List worktrees
     if (args.l) {
