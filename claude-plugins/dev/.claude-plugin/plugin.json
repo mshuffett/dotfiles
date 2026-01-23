@@ -1,11 +1,11 @@
 {
   "name": "dev",
   "version": "1.0.0",
-  "description": "Development workflows: git operations, PR workflow, testing, port management, Linear integration, and Context7 library docs",
+  "description": "Development workflows: git operations, PR workflow, testing, port management, Linear integration, Context7 library docs, Fly.io dev server, shadcn/ui projects, and AWS",
   "author": {
     "name": "Michael Shuffett",
     "email": "michael@compose.ai"
   },
-  "keywords": ["git", "pr", "worktrees", "testing", "ports", "linear", "context7", "development"],
+  "keywords": ["git", "pr", "worktrees", "testing", "ports", "linear", "context7", "development", "dev-server", "fly.io", "shadcn", "aws"],
   "license": "MIT"
 }

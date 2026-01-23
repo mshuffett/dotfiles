@@ -1,10 +1,18 @@
 ---
-description: Reference when creating or managing Linear issues, documenting implementation work, or attaching session context to tasks
+name: Linear Workflow
+description: Use when creating or managing Linear issues, documenting implementation work, attaching session context to tasks, or working with the Linear API. Auto-loads when user mentions "Linear issue", "create an issue", "document this for later", or when you need to track work across sessions.
 ---
 
 # Linear Workflow & Session Context Attachment
 
 Guide for working with Linear issues and preserving session context.
+
+## When This Skill Activates
+- Creating or updating Linear issues
+- Documenting work for future sessions
+- User says "create a Linear issue" or "document this for later"
+- Attaching session transcripts to issues
+- Working with the Linear MCP tools
 
 ## Active Projects
 

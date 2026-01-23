@@ -1,18 +1,17 @@
 ---
-description: Use when generating images; choose provider (OpenAI/Gemini Pro/Gemini/Imagen), ensure API keys, and select size/output options.
+name: Image Generation
+description: Use when generating images, creating visual assets, or working with AI image generation. Auto-loads when user asks to "generate an image", "create a picture", "make an illustration", or mentions image generation providers (OpenAI, Gemini, Imagen).
 ---
 
 # Image Generation
 
-Use the `generate-image` command to create images with OpenAI GPT Image 1.5, Google Gemini, or Imagen:
+Use the `generate-image` command to create images with OpenAI GPT Image 1.5, Google Gemini, or Imagen.
 
-## When to Use (Triggers)
-- You are asked to generate images or visual assets
-
-## Acceptance Checks
-- [ ] Provider chosen based on need (see Provider Selection below)
-- [ ] Required API key is present in env
-- [ ] Size/output options selected appropriately
+## When This Skill Activates
+- User asks to generate images or visual assets
+- Creating illustrations, mockups, or visual content
+- User mentions "generate image", "create picture", "make illustration"
+- Working with image editing or style transfer
 
 ## Provider Selection
 - **openai** (default) — GPT Image 1.5, best quality, supports image editing, excellent text rendering

@@ -469,6 +469,81 @@ For bulk operations, see scripts in:
 
 **Remember**: Build confidence through iteration. Start collaborative, become more autonomous as patterns are confirmed.
 
+## GTD Workflow (Ship to Beach Alignment)
+
+When processing tasks, apply these principles aligned with Michael's Ship to Beach vision.
+
+### Core Principles
+
+**1. Default No Philosophy**
+> "Default no to requests for my time — only yes to the highest-leverage move toward the goal."
+
+- Does this task move THE ONE THING forward? -> Keep and prioritize
+- Is this exploration/idea/nice-to-have? -> Backlog or remove date
+- Is this someone else's priority? -> Delegate or delete
+
+**2. Finishing Over Starting (The 80/20 Problem)**
+> "A product at 80% is worth $0. At 100% it's worth $X."
+
+- **Prioritize:** Tasks that complete/ship something (the final 20%)
+- **Deprioritize:** New ideas, explorations, 0->1 work (unless THE ONE THING)
+- **Watch for:** Pattern of avoiding "polish" or "launch" tasks
+
+**3. 5-7 Tasks Per Day Maximum**
+- Today has 2 tasks -> Can add 3-5 more max
+- Tomorrow has 23 tasks -> NEEDS TRIAGE (overloaded)
+- When overloaded -> Move to future dates or remove dates entirely
+
+**4. Explorer vs Operator Awareness**
+- Michael energizes on: 0->1 building, new creation, solving hard problems
+- Michael drains on: Scaling, admin, drudgery, ongoing operations
+- Admin/drudgery -> Delegate, delete, or batch
+- New ideas -> Backlog (he has 95th percentile Openness = universe of ideas)
+- Final 20% work -> Prioritize (this is the meta-pattern to break)
+
+### GTD Task Categories
+
+| Category | Characteristics | Action |
+|----------|-----------------|--------|
+| **Sprint Work** | Advances current sprint, has clear "done" state | Keep due date, prioritize |
+| **Wisdom/Philosophy** | Reading, learning, no urgency | Remove date, keep in backlog |
+| **Ideas & Experiments** | New project ideas, "what if..." | Move to Ideas project, remove date |
+| **Everything AI Backlog** | Platform features, tech debt | Move to backlog, remove date |
+| **Delegated** | Assigned to someone else | Verify assignment, remove from view |
+| **Vague/Unclear** | No clear next action | Clarify or delete |
+| **Admin/Drudgery** | Low-value operational tasks | Batch, delegate, or question necessity |
+
+### Project IDs for GTD Processing
+
+- **Ideas Backlog**: 2263875911 (A/Ideas)
+- **Everything AI Backlog**: 2352252927
+- **Admin**: 2331010777 (A/Admin)
+
+### Processing Output Format
+
+When processing tasks, present as:
+
+```
+| # | Task | Due | Action | Project | Reasoning | Conf |
+|---|------|-----|--------|---------|-----------|------|
+| 1 | Ship snapshot | Oct 3 | Keep -> Today | Current | Sprint work, final 20% | 95% |
+| 2 | Read philosophy | Oct 3 | Remove date | Inbox | Timeless, no urgency | 90% |
+| 3 | App idea X | Oct 3 | Move to Ideas | Ideas | Exploration, not sprint | 85% |
+```
+
+**Confidence Legend:**
+- 90%+ = High confidence, execute without asking
+- 70-90% = Medium confidence, show for quick review
+- <70% = Low confidence, ask for guidance
+
+### Task Processor Agent
+
+For bulk task processing, use the **todoist-processor** agent which will:
+1. Fetch all tasks (today, tomorrow, inbox, overdue)
+2. Apply GTD categorization rules
+3. Present action plan with confidence scores
+4. Execute approved changes via API
+
 ## Reference Documentation
 Full workflow guides and learnings:
 - `~/ws/everything-monorepo/notes/5-Tools/Todoist/TODOIST_LEARNINGS.md`

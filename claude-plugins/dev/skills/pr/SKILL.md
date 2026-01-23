@@ -1,13 +1,16 @@
 ---
-description: When asked to create a PR, read this immediately so you know what steps to take along the way.
+name: Pull Requests
+description: Use when creating a pull request, pushing to a feature branch for PR, or preparing code for review. Auto-loads when user asks to "create a PR", "open a pull request", "push for review", or when you're about to run gh pr create.
 ---
 
 # Pull Requests
 
 When asked to create a pull request, use the `gh` command.
 
-## When to Use (Triggers)
+## When This Skill Activates
 - You are ready to open a PR for a branch and want it reviewed/merged
+- User asks to "create a PR" or "open a pull request"
+- You're about to run `gh pr create`
 - The branch is up to date locally and tests pass
 
 ## Acceptance Checks
@@ -17,7 +20,7 @@ When asked to create a pull request, use the `gh` command.
 - [ ] Commit messages clear and relevant
 - [ ] PR title/body prepared (or `--fill` used appropriately)
 
-Commands:
+## Commands
 ```bash
 # Create PR with interactive prompts
 gh pr create
@@ -32,21 +35,22 @@ gh pr create --fill
 gh pr create --base develop --head feature-branch
 ```
 
-Best practices:
+## Best Practices
 - Use `gh pr create --fill` to auto-populate from commits.
 - Include test results in PR description.
 - Reference related issues with `Fixes #123` or `Closes #456`.
 - For complex PRs, use `--web` to open browser for detailed formatting.
 - NEVER use `--squash` — maintain original commits with `gh pr merge 11 --merge --delete-branch`.
 
-IMPORTANT: Always check for merge conflicts before creating PR:
+## IMPORTANT: Always Check for Merge Conflicts
+
 1. After creating a PR branch and pushing, fetch and merge latest from base branch.
 2. Resolve any conflicts before the PR is created.
 3. Check for conflicts caused by formatters (Biome/Prettier) — these are common.
 4. Run tests after resolving conflicts to ensure everything still works.
 5. Push the conflict resolution before notifying the user.
 
-Example workflow:
+## Example Workflow
 ```bash
 # After pushing your branch
 git fetch origin develop
