@@ -21,7 +21,7 @@ Michael — 338 Main Street, Apt 15G, San Francisco, CA
 - Vercel AI SDK over provider SDKs; fetch docs via Context7 (never rely on memory)
 - pnpm, Ultracite linter
 - Anthropic API: claude-sonnet-4-5-20250929 (default); claude-opus-4-5-20251101 for hard tasks; never Claude 3
-- CLI: rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec, atuin
+- CLI: rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec, atuin, gcal (Google Calendar)
 
 **Editing This File**
 
@@ -37,11 +37,16 @@ Invoke `memory-placement` skill first. Commit before and after changes.
 
 For non-trivial tasks with 3+ steps:
 1. **Plan first** - Use EnterPlanMode for complex implementation tasks
-2. **Create scratch file** - Write plan and track progress in a scratch-*.md file in the working directory
-3. **Use todo list** - Track tasks via TodoWrite tool, update status as you work
-4. **Log progress** - Append findings and decisions to scratch file as you go
+2. **Create plan file** - Write plan in `./plans/<task-name>.md` for persistence across sessions
+3. **Create a task** - Use TaskCreate to track the plan file, so it survives context compaction
+4. **Use task tools** - Track in-session progress via TaskCreate/TaskUpdate (status: pending → in_progress → completed)
+5. **Log progress** - Append findings and decisions to the plan file as you go
 
-This provides visibility into progress and creates documentation of the work done.
+**Task tools vs plan files:**
+- **Task tools** (TaskCreate, TaskUpdate, TaskList) - Session-scoped only; use for in-session tracking and visibility
+- **Plan files** (`./plans/*.md`) - Persist across sessions; use for complex work that may span multiple sessions
+
+Always create a task pointing to the plan file so you remember it exists after compaction.
 
 **Handling Interleaved/Queued Messages**
 
@@ -49,7 +54,7 @@ When you receive a user message via `<system-reminder>` while working, or when t
 
 1. **Do immediately** — If it's quick (<30 seconds), doesn't break your current flow, or is clearly urgent
 2. **Acknowledge and continue** — If you're mid-task at a critical point: "Got it, I'll handle [X] right after I finish [current thing]"
-3. **Add to todo list** — If it's a distinct task that shouldn't interrupt current work, add it to TodoWrite and mention you've queued it
+3. **Add to task list** — If it's a distinct task that shouldn't interrupt current work, add it via TaskCreate and mention you've queued it
 4. **Clarify first** — If you need more info before you can even triage it properly
 5. **Context-switch fully** — If the new request seems more important or the user signals urgency
 
