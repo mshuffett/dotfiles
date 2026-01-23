@@ -10,6 +10,12 @@ export EDITOR=vim
 export IS_MACOS=$([[ "$OSTYPE" == "darwin"* ]] && echo 1 || echo 0)
 export IS_LINUX=$([[ "$OSTYPE" == "linux-gnu"* ]] && echo 1 || echo 0)
 
+# Ensure UTF-8 locale (fixes Unicode rendering on Linux)
+if [[ $IS_LINUX -eq 1 && -z "$LANG" ]]; then
+  export LANG=en_US.UTF-8
+  export LC_ALL=en_US.UTF-8
+fi
+
 # Check if z4h is available and source it
 export HAS_Z4H=0
 Z4H_FILE="${Z4H:-$HOME/.cache/zsh4humans/v5}/z4h.zsh"
@@ -137,6 +143,7 @@ typeset -U path # force path array to have unique values
 
 # Common paths (both macOS and Linux)
 path=(
+  $HOME/.local/bin
   $HOME/.bun/bin
   $HOME/.serverless/bin
   $HOME/.jenv/bin
