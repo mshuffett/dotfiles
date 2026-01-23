@@ -25,7 +25,7 @@ Michael — 338 Main Street, Apt 15G, San Francisco, CA
 
 **Editing This File**
 
-Invoke `memory-placement` skill first. Commit before and after changes.
+Invoke `memory-placement` skill first. This file is symlinked to `~/.dotfiles/claude/CLAUDE.md` — commit changes there.
 
 **Safety**
 
