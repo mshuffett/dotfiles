@@ -1,5 +1,15 @@
-test -d ~/.linuxbrew && PATH="$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH"
-test -d /home/linuxbrew/.linuxbrew && export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
-test -r ~/.bash_profile && export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
-export PATH="$(brew --prefix)/bin:$(brew --prefix)/sbin:$PATH"
-test -d /opt/homebrew && eval "$(/opt/homebrew/bin/brew shellenv)"
+# Homebrew setup - works on both macOS and Linux
+
+# Linux (Linuxbrew)
+if [[ -d /home/linuxbrew/.linuxbrew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [[ -d ~/.linuxbrew ]]; then
+  eval "$(~/.linuxbrew/bin/brew shellenv)"
+fi
+
+# macOS (Apple Silicon or Intel)
+if [[ -d /opt/homebrew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -d /usr/local/Homebrew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
