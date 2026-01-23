@@ -10,63 +10,52 @@ export EDITOR=vim
 export IS_MACOS=$([[ "$OSTYPE" == "darwin"* ]] && echo 1 || echo 0)
 export IS_LINUX=$([[ "$OSTYPE" == "linux-gnu"* ]] && echo 1 || echo 0)
 
-# Periodic auto-update on Zsh startup: 'ask' or 'no'.
-# You can manually run `z4h update` to update everything.
-zstyle ':z4h:' auto-update      'no'
-# Ask whether to auto-update this often; has no effect if auto-update is 'no'.
-zstyle ':z4h:' auto-update-days '28'
-
-# Keyboard type: 'mac' or 'pc'.
-zstyle ':z4h:bindkey' keyboard  'mac'
-
-# Start tmux if not already in tmux and not in cursor
-if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
-  zstyle ':z4h:' start-tmux command tmux -u new -A -D -t main
-else
-  zstyle ':z4h:' start-tmux       no
+# Check if z4h is available
+export HAS_Z4H=0
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]] || \
+   type z4h &>/dev/null || \
+   [[ -f ~/.z4h.zsh ]]; then
+  export HAS_Z4H=1
 fi
 
-# Whether to move prompt to the bottom when zsh starts and on Ctrl+L.
-zstyle ':z4h:' prompt-at-bottom 'no'
+# z4h configuration (only if z4h is available)
+if [[ $HAS_Z4H -eq 1 ]]; then
+  # Periodic auto-update on Zsh startup: 'ask' or 'no'.
+  zstyle ':z4h:' auto-update      'no'
+  zstyle ':z4h:' auto-update-days '28'
+  zstyle ':z4h:bindkey' keyboard  'mac'
 
-# Mark up shell's output with semantic information.
-zstyle ':z4h:' term-shell-integration 'yes'
+  # Start tmux if not already in tmux and not in cursor
+  if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
+    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t main
+  else
+    zstyle ':z4h:' start-tmux       no
+  fi
 
-# Right-arrow key accepts one character ('partial-accept') from
-# command autosuggestions or the whole thing ('accept')?
-zstyle ':z4h:autosuggestions' forward-char 'accept'
+  zstyle ':z4h:' prompt-at-bottom 'no'
+  zstyle ':z4h:' term-shell-integration 'yes'
+  zstyle ':z4h:autosuggestions' forward-char 'accept'
+  zstyle ':z4h:fzf-complete' recurse-dirs 'no'
+  zstyle ':z4h:direnv'         enable 'yes'
+  zstyle ':z4h:direnv:success' notify 'yes'
+  zstyle ':z4h:ssh:*'          enable 'no'
+  zstyle ':z4h:ssh:*' send-extra-files '~/.nanorc' '~/.env.zsh'
 
-# Recursively traverse directories when TAB-completing files.
-zstyle ':z4h:fzf-complete' recurse-dirs 'no'
+  z4h install ohmyzsh/ohmyzsh || return
+  z4h init || return
+else
+  # Fallback for systems without z4h (e.g., Linux dev servers)
+  # Basic prompt
+  autoload -Uz compinit && compinit
+  PS1='%n@%m:%~%# '
 
-# Enable direnv to automatically source .envrc files.
-zstyle ':z4h:direnv'         enable 'yes'
-# Show "loading" and "unloading" notifications from direnv.
-zstyle ':z4h:direnv:success' notify 'yes'
-
-# Enable ('yes') or disable ('no') automatic teleportation of z4h over
-# SSH when connecting to these hosts.
-zstyle ':z4h:ssh:example-hostname1'   enable 'yes'
-zstyle ':z4h:ssh:*.example-hostname2' enable 'no'
-# The default value if none of the overrides above match the hostname.
-zstyle ':z4h:ssh:*'                   enable 'no'
-
-# Send these files over to the remote host when connecting over SSH to the
-# enabled hosts.
-zstyle ':z4h:ssh:*' send-extra-files '~/.nanorc' '~/.env.zsh'
-
-# Clone additional Git repositories from GitHub.
-#
-# This doesn't do anything apart from cloning the repository and keeping it
-# up-to-date. Cloned files can be used after `z4h init`. This is just an
-# example. If you don't plan to use Oh My Zsh, delete this line.
-z4h install ohmyzsh/ohmyzsh || return
-
-# Install or update core components (fzf, zsh-autosuggestions, etc.) and
-# initialize Zsh. After this point console I/O is unavailable until Zsh
-# is fully initialized. Everything that requires user interaction or can
-# perform network I/O must be done above. Everything else is best done below.
-z4h init || return
+  # Start tmux automatically if not already in tmux
+  if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" && -z "$NO_AUTO_TMUX" ]]; then
+    if command -v tmux &>/dev/null; then
+      exec tmux new -A -s main
+    fi
+  fi
+fi
 
 # TODO: Migrated 1Password vault - need to update vault references below
 # Secrets Management - load this early to ensure environment variables are available
@@ -201,23 +190,21 @@ manpath=(
 )
 
 # Source additional local files if they exist.
-z4h source ~/.env.zsh
+if [[ $HAS_Z4H -eq 1 ]]; then
+  z4h source ~/.env.zsh
+  z4h load ohmyzsh/ohmyzsh/plugins/git
 
-# Use additional Git repositories pulled in with `z4h install`.
-# z4h source ohmyzsh/ohmyzsh/lib/diagnostics.zsh  # source an individual file
-# z4h load   ohmyzsh/ohmyzsh/plugins/emoji-clock  # load a plugin
-
-# Load git plugin from Oh My Zsh (includes all git aliases)
-z4h load ohmyzsh/ohmyzsh/plugins/git
-
-# Define key bindings.
-z4h bindkey undo Ctrl+/   Shift+Tab  # undo the last command line change
-z4h bindkey redo Option+/            # redo the last undone command line change
-
-z4h bindkey z4h-cd-back    Shift+Left   # cd into the previous directory
-z4h bindkey z4h-cd-forward Shift+Right  # cd into the next directory
-z4h bindkey z4h-cd-up      Shift+Up     # cd into the parent directory
-z4h bindkey z4h-cd-down    Shift+Down   # cd into a child directory
+  # Define key bindings.
+  z4h bindkey undo Ctrl+/   Shift+Tab
+  z4h bindkey redo Option+/
+  z4h bindkey z4h-cd-back    Shift+Left
+  z4h bindkey z4h-cd-forward Shift+Right
+  z4h bindkey z4h-cd-up      Shift+Up
+  z4h bindkey z4h-cd-down    Shift+Down
+else
+  # Fallback: source files directly
+  [[ -f ~/.env.zsh ]] && source ~/.env.zsh
+fi
 
 # Alt+K deletes to end of line (Ctrl+K is used by tmux for pane navigation)
 bindkey '^[k' kill-line
@@ -348,7 +335,9 @@ export BUN_INSTALL="$HOME/.bun"
 # Rust (cargo) environment
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 
-eval "$(zoxide init zsh)"
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
 
 # Atuin - magical shell history
 if command -v atuin >/dev/null 2>&1; then
@@ -375,7 +364,9 @@ export LS_COLORS="di=1;38;5;111:ln=38;5;117:so=38;5;221:pi=38;5;221:ex=1;38;5;11
 export CLICOLOR=1
 
 # direnv hook
-eval "$(direnv hook zsh)"
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
 
 # fnm (Fast Node Manager)
 # Uses Node from .nvmrc/.node-version on cd; sets default otherwise
