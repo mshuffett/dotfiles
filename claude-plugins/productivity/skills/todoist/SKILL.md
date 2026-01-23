@@ -1,18 +1,20 @@
 ---
-description: Todoist task management via REST API v2. Use when user asks to create tasks, work with Todoist, or process task lists. Includes API patterns, priority mapping, project IDs, and task creation examples.
+name: Todoist
+description: Use when user asks to create tasks, work with Todoist, process task lists, clean up inbox, triage tasks, or mentions "my tasks", "my todoist", "task management". Provides API patterns, priority mapping, project IDs, and task processing workflows.
 ---
 
 # Todoist Task Management
 
-## When to Use This Command
+## When This Skill Activates
 - User explicitly asks to create a Todoist task
 - User requests help with Todoist task processing or organization
 - User mentions working with their task list or inbox
+- User says "process my tasks", "clean up my todoist", "triage tasks"
 - **DO NOT** create tasks proactively without user request
 
 ## CRITICAL RULE: Process ALL Tasks at Once
 
-**⚠️ NEVER stop partway through task processing**
+**NEVER stop partway through task processing**
 
 When the user asks to "process my tasks" or "help with my todoist":
 1. **Fetch ALL tasks** (overdue, today, inbox, etc.)
@@ -31,11 +33,11 @@ When the user asks to "process my tasks" or "help with my todoist":
 - Process T1-T7, stop, ask "what about the rest?"
 
 **Example of CORRECT behavior:**
-- Fetch all tasks → Get instructions for all → Process all → Report completion
+- Fetch all tasks -> Get instructions for all -> Process all -> Report completion
 
 ## CRITICAL RULE: Always Read Comments
 
-**⚠️ ALWAYS READ TASK COMMENTS BEFORE PROCESSING**
+**ALWAYS READ TASK COMMENTS BEFORE PROCESSING**
 
 When processing tasks (inbox cleanup, moving tasks, categorizing, etc.):
 1. **ALWAYS fetch and read comments** for each task before making decisions
@@ -69,7 +71,7 @@ complete_task(task_id)
 
 ## Task Assignment & Filtering
 
-**⚠️ ASSIGNED TASKS ARE AUTOMATICALLY FILTERED FROM ASSIGNER'S VIEW**
+**ASSIGNED TASKS ARE AUTOMATICALLY FILTERED FROM ASSIGNER'S VIEW**
 
 When you assign a task to someone else in Todoist:
 - The task **automatically disappears from your default views** (Today, Overdue, etc.)
@@ -97,11 +99,11 @@ task = {
 ```
 
 **When processing tasks:**
-- ✅ **DON'T** suggest "hiding" or "reassigning" tasks that are already assigned to others
-- ✅ **DO** recognize these as properly delegated (no action needed)
-- ✅ **DO** understand the API returns ALL tasks, but the user's view is already filtered
+- **DON'T** suggest "hiding" or "reassigning" tasks that are already assigned to others
+- **DO** recognize these as properly delegated (no action needed)
+- **DO** understand the API returns ALL tasks, but the user's view is already filtered
 
-## Maintaining This Command
+## Maintaining This Skill
 
 **When you learn something new about Todoist workflow:**
 - **ADD** new patterns, examples, or best practices to this file
@@ -140,7 +142,7 @@ curl -X POST "https://api.todoist.com/rest/v2/tasks" \
 - `labels` - Array of label IDs
 
 ### Environment Variable
-The `TODOIST_API_TOKEN` environment variable is already configured in ~/.zshrc.
+The `TODOIST_API_TOKEN` environment variable is configured in `~/.env.zsh`.
 No additional setup needed - just use `$TODOIST_API_TOKEN` in commands.
 
 ## Project IDs (Quick Reference)
@@ -151,8 +153,8 @@ No additional setup needed - just use `$TODOIST_API_TOKEN` in commands.
 - **3-Resources**: 2359995015
 
 ### Active Projects (under 1-Projects)
-- **🚢🏖️ Ship to Beach Dashboard**: 2360927142 (repo maintenance & improvements)
-- **🚢🏖️ Sprint Execution**: 2360927149 (actual sprint shipping work)
+- **Ship to Beach Dashboard**: 2360927142 (repo maintenance & improvements)
+- **Sprint Execution**: 2360927149 (actual sprint shipping work)
 
 ### Default Projects
 - **Inbox**: 377445380
@@ -165,7 +167,7 @@ No additional setup needed - just use `$TODOIST_API_TOKEN` in commands.
 
 ## Comment Prefix Convention
 
-**⚠️ ALWAYS PREFIX AUTOMATED COMMENTS WITH "cc:"**
+**ALWAYS PREFIX AUTOMATED COMMENTS WITH "cc:"**
 
 When adding comments to tasks from Claude Code, always prefix with `cc:` to make it obvious the comment is automated:
 
@@ -381,10 +383,10 @@ For bulk operations, see scripts in:
 - Tomorrow often gets overloaded (40-60 tasks) - need to triage
 
 ### Task Categories
-1. **Wisdom/Philosophy** → Remove dates (timeless content)
-2. **Ideas** → Move to Ideas Backlog or Fun List
-3. **Delegated tasks** → Check assignee before processing
-4. **Vague reflections** → Often can be deleted
+1. **Wisdom/Philosophy** -> Remove dates (timeless content)
+2. **Ideas** -> Move to Ideas Backlog or Fun List
+3. **Delegated tasks** -> Check assignee before processing
+4. **Vague reflections** -> Often can be deleted
 
 ### Task Categorization Workflow (Collaborative Process)
 
@@ -393,33 +395,33 @@ For bulk operations, see scripts in:
 #### Category Framework
 
 **Articles & References:**
-- Links to read → Clip to `3-Resources/Articles/` in Obsidian
-- Books to read → Add to `3-Resources/Reading List.md`
-- Videos to watch → Note reference or clip transcript if valuable
+- Links to read -> Clip to `3-Resources/Articles/` in Obsidian
+- Books to read -> Add to `3-Resources/Reading List.md`
+- Videos to watch -> Note reference or clip transcript if valuable
 
 **Ideas (Future Work):**
-- Product ideas → `3-Resources/💡 Raw Ideas/` with full context
-- Business opportunities → Raw Ideas
-- Feature requests → Raw Ideas
-- "What if..." → Raw Ideas
-- "It would be cool..." → Raw Ideas
+- Product ideas -> `3-Resources/Raw Ideas/` with full context
+- Business opportunities -> Raw Ideas
+- Feature requests -> Raw Ideas
+- "What if..." -> Raw Ideas
+- "It would be cool..." -> Raw Ideas
 
 **Journal (Self/Feelings):**
-- Personal reflections → `2-Areas/Journal/`
-- How I'm feeling/working → Journal
-- Processing emotions → Journal
-- Life philosophy → Journal
+- Personal reflections -> `2-Areas/Journal/`
+- How I'm feeling/working -> Journal
+- Processing emotions -> Journal
+- Life philosophy -> Journal
 
 **Projects:**
-- Grouped related tasks → Create Obsidian project folder + Todoist project
-- Financial planning → Combine into single planning note
-- Event planning → Dedicated project space
+- Grouped related tasks -> Create Obsidian project folder + Todoist project
+- Financial planning -> Combine into single planning note
+- Event planning -> Dedicated project space
 
 **Completable Tasks:**
-- Recurring habits → Just complete them
-- Link-only tasks (e.g., "NOW sprint") → Complete
-- Already done items → Complete
-- Review completed → Complete
+- Recurring habits -> Just complete them
+- Link-only tasks (e.g., "NOW sprint") -> Complete
+- Already done items -> Complete
+- Review completed -> Complete
 
 #### Collaboration Protocol
 
@@ -431,7 +433,7 @@ For bulk operations, see scripts in:
 6. **Add Todoist URLs to Obsidian notes** - Include `todoist:` field in frontmatter with task URL
 7. **Comment on tasks** with links to where content was moved (before completing)
 8. **Track progress** with TodoWrite
-9. **Document learnings** in this command file
+9. **Document learnings** in this skill file
 
 **Todoist URL Format**: `https://app.todoist.com/app/task/{task_id}`
 
@@ -455,15 +457,15 @@ For bulk operations, see scripts in:
 **Assign to Assistant:**
 - Admin tasks (e.g., researching deals, comparing options)
 - Add context in comments
-- Move to A/Admin 💼 project (2331010777)
+- Move to A/Admin project (2331010777)
 
 #### Common Patterns
 
-**Financial tasks** → Group into project with combined note
-**Event ideas** → Project folder with planning note
-**Links without context** → Clip to Articles or complete
-**Reflections** → Journal or delete if processed
-**Questions** → Usually Ideas or complete if answered
+**Financial tasks** -> Group into project with combined note
+**Event ideas** -> Project folder with planning note
+**Links without context** -> Clip to Articles or complete
+**Reflections** -> Journal or delete if processed
+**Questions** -> Usually Ideas or complete if answered
 
 **Remember**: Build confidence through iteration. Start collaborative, become more autonomous as patterns are confirmed.
 
@@ -471,4 +473,4 @@ For bulk operations, see scripts in:
 Full workflow guides and learnings:
 - `~/ws/everything-monorepo/notes/5-Tools/Todoist/TODOIST_LEARNINGS.md`
 - `~/ws/everything-monorepo/notes/5-Tools/Todoist/workflow_guide.md`
-- `~/ws/everything-monorepo/notes/2-Areas/System/📋 Comprehensive Todoist Management Guidelines.md`
+- `~/ws/everything-monorepo/notes/2-Areas/System/Comprehensive Todoist Management Guidelines.md`

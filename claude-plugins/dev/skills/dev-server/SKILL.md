@@ -59,7 +59,7 @@ dev start        # Start the server
 - Node.js 22.x, pnpm 10.x
 - Claude Code (`claude` command)
 - zsh, tmux, mosh
-- git, ripgrep, fd, bat, neovim, fzf, direnv
+- git, ripgrep, fd (`fdfind`), bat (`batcat`), neovim, fzf, direnv
 
 ### Directory Structure
 
@@ -91,14 +91,28 @@ The dev server can be rebuilt from scratch using the Dockerfile at `~/.dotfiles/
 - `~/.dotfiles/dev-server/fly.toml` - Fly.io deployment config
 - `~/.dotfiles/dev-server/setup.sh` - First-time setup script
 
-### Rebuild Server
+### Updating the Server
 
+**IMPORTANT**: When updating the dev server setup, clarify with the user:
+1. **Update running server only** - Install packages, change configs on the live machine (doesn't persist across redeploys)
+2. **Update Dockerfile** - Modify `~/.dotfiles/dev-server/Dockerfile` so changes persist in future deploys
+
+For Dockerfile changes, after editing:
 ```bash
 cd ~/.dotfiles/dev-server
 
-# Deploy new image (preserves volume data)
-fly deploy
+# Update existing machine with new image (preserves volume + machine ID)
+fly deploy --build-only  # Build and push image
+fly machine update e827400b0e42e8 -a dev-server --image <new-image-tag> -y
 
+# OR if fly deploy creates a new machine, clean up manually:
+# 1. Destroy the new machine and its volume
+# 2. Update the old machine: fly machine update e827400b0e42e8 ...
+```
+
+### First-Time Setup (Fresh Volume)
+
+```bash
 # Run setup script (only needed on fresh volume)
 fly ssh console -a dev-server -u michael -C "bash ~/.dotfiles/dev-server/setup.sh"
 ```
@@ -120,12 +134,15 @@ fly ssh console -a dev-server -C 'su - michael -c "ssh-keygen -t ed25519 -f ~/.s
 fly ssh console -a dev-server -C 'cat /home/michael/.ssh/id_ed25519.pub'
 # → Copy output and add to GitHub: gh ssh-key add - --title "dev-server"
 
-# 4. Run setup with API key (one command!)
-KEY=$(source ~/.env.zsh && echo $ANTHROPIC_API_KEY)
-fly ssh console -a dev-server -u michael -C "ANTHROPIC_API_KEY='$KEY' bash /data/dotfiles/dev-server/setup.sh"
+# 4. Run setup script
+fly ssh console -a dev-server -u michael -C "bash /data/dotfiles/dev-server/setup.sh"
+
+# 5. Copy Claude Code OAuth credentials from local machine (note the leading dot!)
+CREDS=$(security find-generic-password -s "Claude Code-credentials" -w)
+fly ssh console -a dev-server -u michael -C "bash -c 'echo '\''$CREDS'\'' > ~/.claude/.credentials.json && chmod 600 ~/.claude/.credentials.json'"
 ```
 
-This clones repos, sets up dotfiles symlinks, installs pnpm dependencies, and configures the API key.
+This clones repos, sets up dotfiles symlinks, installs pnpm dependencies, and copies OAuth credentials.
 
 ## Persistence Model
 
@@ -151,7 +168,27 @@ The server is fully set up with:
 - compose-monorepo and everything-monorepo cloned
 - pnpm dependencies installed
 - SSH key added to GitHub
-- ANTHROPIC_API_KEY configured for Claude Code
+- Claude Code OAuth credentials at `~/.claude/.credentials.json`
+- Environment secrets at `~/.env.zsh` (symlinked from /data/dotfiles/.env.zsh)
+
+## Syncing Secrets
+
+The `~/.env.zsh` file contains API tokens and secrets (TODOIST_API_TOKEN, etc.) that need to be synced to the dev server.
+
+### Sync .env.zsh to Dev Server
+
+```bash
+# Copy the file
+fly ssh sftp shell -a dev-server << 'EOF'
+put ~/.env.zsh /data/dotfiles/.env.zsh
+EOF
+
+# Fix ownership (as root) and create symlink
+fly ssh console -a dev-server -C "bash -c 'chown michael:michael /data/dotfiles/.env.zsh && chmod 600 /data/dotfiles/.env.zsh'"
+fly ssh console -a dev-server -u michael -C "bash -c 'ln -sf /data/dotfiles/.env.zsh ~/.env.zsh'"
+```
+
+The `.zshrc` already sources `~/.env.zsh` if it exists, so tokens will be available in new shells.
 
 ## Working with tmux
 
@@ -202,6 +239,9 @@ fly logs -a dev-server
 ```bash
 # Check machine is running
 fly machines list -a dev-server
+
+# If "publickey" auth fails, refresh SSH certificate
+fly ssh issue --agent -o compose-ai -u michael,root
 
 # Force restart if needed
 fly machine restart e827400b0e42e8 -a dev-server
