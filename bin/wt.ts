@@ -55,7 +55,7 @@ const main = defineCommand({
   meta: { name: "wt", version: "1.0.0", description: "Git worktree helper" },
   args: {
     name: { type: "positional", description: "Worktree name", required: false },
-    c: { type: "boolean", description: "Auto-cd into worktree (spawns subshell)" },
+    n: { type: "boolean", description: "No auto-cd (just print path)" },
     b: { type: "string", description: "Base branch (defaults to current branch)" },
     l: { type: "boolean", description: "List worktrees" },
     r: { type: "boolean", description: "Remove worktree" },
@@ -80,7 +80,7 @@ const main = defineCommand({
     // Need name for create/remove
     if (!args.name) {
       console.error("Error: Worktree name required");
-      console.error("Usage: wt <name> [-c] [-b <branch>]");
+      console.error("Usage: wt <name> [-n] [-b <branch>]");
       console.error("       wt -l");
       console.error("       wt -r <name>");
       process.exit(1);
@@ -132,7 +132,9 @@ const main = defineCommand({
 
     console.log("\nWorktree created successfully!");
 
-    if (args.c) {
+    if (args.n) {
+      console.log(`\nTo enter: cd ${worktreePath}`);
+    } else {
       console.log(`\nEntering worktree (exit shell to return)...`);
       // Spawn interactive shell in worktree
       const shell = process.env.SHELL || "/bin/bash";
@@ -143,8 +145,6 @@ const main = defineCommand({
         stderr: "inherit",
       });
       await proc.exited;
-    } else {
-      console.log(`\nTo enter: cd ${worktreePath}`);
     }
   },
 });
