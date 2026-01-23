@@ -10,17 +10,13 @@ export EDITOR=vim
 export IS_MACOS=$([[ "$OSTYPE" == "darwin"* ]] && echo 1 || echo 0)
 export IS_LINUX=$([[ "$OSTYPE" == "linux-gnu"* ]] && echo 1 || echo 0)
 
-# Check if z4h is available
+# Check if z4h is available and source it
 export HAS_Z4H=0
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]] || \
-   type z4h &>/dev/null || \
-   [[ -f ~/.z4h.zsh ]]; then
+Z4H_FILE="${Z4H:-$HOME/.cache/zsh4humans/v5}/z4h.zsh"
+if [[ -r "$Z4H_FILE" ]]; then
   export HAS_Z4H=1
-fi
 
-# z4h configuration (only if z4h is available)
-if [[ $HAS_Z4H -eq 1 ]]; then
-  # Periodic auto-update on Zsh startup: 'ask' or 'no'.
+  # z4h configuration must come BEFORE sourcing z4h.zsh
   zstyle ':z4h:' auto-update      'no'
   zstyle ':z4h:' auto-update-days '28'
   zstyle ':z4h:bindkey' keyboard  'mac'
@@ -40,6 +36,9 @@ if [[ $HAS_Z4H -eq 1 ]]; then
   zstyle ':z4h:direnv:success' notify 'yes'
   zstyle ':z4h:ssh:*'          enable 'no'
   zstyle ':z4h:ssh:*' send-extra-files '~/.nanorc' '~/.env.zsh'
+
+  # Source z4h
+  source "$Z4H_FILE"
 
   z4h install ohmyzsh/ohmyzsh || return
   z4h init || return
