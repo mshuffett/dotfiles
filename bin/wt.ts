@@ -4,6 +4,14 @@ import { $ } from "bun";
 import { existsSync, cpSync, readdirSync, statSync } from "fs";
 import { join, dirname, basename } from "path";
 
+// Colors
+const dim = (s: string) => `\x1b[2m${s}\x1b[0m`;
+const green = (s: string) => `\x1b[32m${s}\x1b[0m`;
+const cyan = (s: string) => `\x1b[36m${s}\x1b[0m`;
+const yellow = (s: string) => `\x1b[33m${s}\x1b[0m`;
+const red = (s: string) => `\x1b[31m${s}\x1b[0m`;
+const bold = (s: string) => `\x1b[1m${s}\x1b[0m`;
+
 async function findGitRoot(): Promise<string | null> {
   const { stdout, exitCode } = await $`git rev-parse --show-toplevel`.quiet().nothrow();
   if (exitCode !== 0) return null;
@@ -15,7 +23,9 @@ async function getCurrentBranch(): Promise<string> {
   return stdout.toString().trim();
 }
 
-function copyEnvFiles(source: string, dest: string) {
+function copyEnvFiles(source: string, dest: string): number {
+  let count = 0;
+
   // Copy root .env files
   for (const file of readdirSync(source)) {
     if (file.startsWith(".env")) {
@@ -23,7 +33,7 @@ function copyEnvFiles(source: string, dest: string) {
       const destPath = join(dest, file);
       if (statSync(srcPath).isFile()) {
         cpSync(srcPath, destPath);
-        console.log(`  Copied ${file}`);
+        count++;
       }
     }
   }
@@ -43,12 +53,14 @@ function copyEnvFiles(source: string, dest: string) {
           const destPath = join(dest, dir, subdir, file);
           if (statSync(srcPath).isFile()) {
             cpSync(srcPath, destPath);
-            console.log(`  Copied ${dir}/${subdir}/${file}`);
+            count++;
           }
         }
       }
     }
   }
+
+  return count;
 }
 
 const main = defineCommand({
@@ -63,7 +75,7 @@ const main = defineCommand({
   run: async ({ args }) => {
     const gitRoot = await findGitRoot();
     if (!gitRoot) {
-      console.error("Error: Not in a git repository");
+      console.error(red("✗ Not in a git repository"));
       process.exit(1);
     }
 
@@ -79,10 +91,13 @@ const main = defineCommand({
 
     // Need name for create/remove
     if (!args.name) {
-      console.error("Error: Worktree name required");
-      console.error("Usage: wt <name> [-n] [-b <branch>]");
-      console.error("       wt -l");
-      console.error("       wt -r <name>");
+      console.error(red("✗ Worktree name required\n"));
+      console.error(dim("Usage:"));
+      console.error(`  wt ${cyan("<name>")}            Create and enter worktree`);
+      console.error(`  wt ${cyan("<name>")} -n         Create without entering`);
+      console.error(`  wt ${cyan("<name>")} -b ${cyan("<branch>")}  Create from specific branch`);
+      console.error(`  wt -l                List worktrees`);
+      console.error(`  wt -r ${cyan("<name>")}         Remove worktree`);
       process.exit(1);
     }
 
@@ -93,50 +108,55 @@ const main = defineCommand({
     // Remove worktree
     if (args.r) {
       if (!existsSync(worktreePath)) {
-        console.error(`Error: Worktree '${dirName}' not found at ${worktreePath}`);
+        console.error(red(`✗ Worktree '${dirName}' not found at ${worktreePath}`));
         process.exit(1);
       }
-      console.log(`Removing worktree: ${worktreePath}`);
-      await $`git worktree remove ${worktreePath}`;
-      console.log("Done!");
+      process.stdout.write(dim("Removing worktree..."));
+      await $`git worktree remove ${worktreePath}`.quiet();
+      console.log(green(" done"));
       return;
     }
 
     // Create worktree
     if (existsSync(worktreePath)) {
-      console.error(`Error: Worktree already exists at ${worktreePath}`);
+      console.error(red(`✗ Worktree already exists at ${worktreePath}`));
       process.exit(1);
     }
 
     const baseBranch = args.b || await getCurrentBranch();
     const branchName = args.name; // Keep original name with slashes for branch
 
-    console.log(`Creating worktree:`);
-    console.log(`  Path: ${worktreePath}`);
-    console.log(`  Branch: ${branchName}`);
-    console.log(`  Base: ${baseBranch}`);
+    console.log(bold("Creating worktree\n"));
+    console.log(`  ${dim("path")}    ${cyan(worktreePath)}`);
+    console.log(`  ${dim("branch")}  ${green(branchName)}`);
+    console.log(`  ${dim("base")}    ${baseBranch}`);
+    console.log();
 
     // Create the worktree with new branch from base
-    await $`git worktree add ${worktreePath} -b ${branchName} ${baseBranch}`;
+    process.stdout.write(dim("Creating worktree..."));
+    await $`git worktree add ${worktreePath} -b ${branchName} ${baseBranch}`.quiet();
+    console.log(green(" done"));
 
     // Copy .env files
-    console.log("\nCopying environment files...");
-    copyEnvFiles(gitRoot, worktreePath);
+    process.stdout.write(dim("Copying .env files..."));
+    const envCount = copyEnvFiles(gitRoot, worktreePath);
+    console.log(green(` ${envCount} copied`));
 
     // Install dependencies
-    console.log("\nInstalling dependencies...");
-    const installResult = await $`cd ${worktreePath} && pnpm install`.nothrow();
+    process.stdout.write(dim("Installing dependencies..."));
+    const installResult = await $`cd ${worktreePath} && pnpm install`.quiet().nothrow();
     if (installResult.exitCode !== 0) {
-      console.error("Warning: pnpm install failed");
+      console.log(yellow(" failed (run manually)"));
+    } else {
+      console.log(green(" done"));
     }
 
-    console.log("\nWorktree created successfully!");
+    console.log(bold(green("\n✓ Ready")));
 
     if (args.n) {
-      console.log(`\nTo enter: cd ${worktreePath}`);
+      console.log(dim(`\ncd ${worktreePath}`));
     } else {
-      console.log(`\nEntering worktree (exit shell to return)...`);
-      // Spawn interactive shell in worktree
+      console.log(dim("\nEntering worktree (exit to return)...\n"));
       const shell = process.env.SHELL || "/bin/bash";
       const proc = Bun.spawn([shell], {
         cwd: worktreePath,
