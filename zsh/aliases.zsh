@@ -68,9 +68,15 @@ alias db='docker build .'
 alias qn7='ssh qn7cimaterm01.cloud.corp.dig.com'
 alias pipenv='PIPENV_VENV_IN_PROJECT=1 pipenv'
 
-alias ls='eza --icons --group-directories-first'
-alias ll='eza -lh --icons --git --group-directories-first'
-alias lc='eza --tree --icons'
+# Use eza if available, otherwise fall back to ls
+if command -v eza &>/dev/null; then
+  alias ls='eza --icons --group-directories-first'
+  alias ll='eza -lh --icons --git --group-directories-first'
+  alias lc='eza --tree --icons'
+else
+  alias ll='ls -lah'
+  alias lc='ls -la'
+fi
 alias sl='serverless'
 alias k='kubectl'
 alias dash='cd /Users/michael/ws/fleet-ops-dashboard'
@@ -121,7 +127,10 @@ mfa() {
 }
 
 alias t='todoist --color'
-alias cat='bat'
+# Use bat if available
+if command -v bat &>/dev/null; then
+  alias cat='bat'
+fi
 alias k='kubectl'
 alias kc='kubectl'
 alias which='which -a'
