@@ -1,0 +1,137 @@
+# PRD-Driven Development Preset
+# Pattern: Detailed PRD → Tasks → Implementation with PRD consultation each iteration
+#
+# Workflow:
+#   1. Create specs/prd.md with detailed requirements
+#   2. Create PROMPT.md referencing the PRD
+#   3. Run: ralph run
+#
+# The PRD is re-read at EVERY iteration to maintain context.
+
+cli:
+  backend: "claude"
+
+core:
+  scratchpad: ".agent/scratchpad.md"
+  specs_dir: "./specs/"
+  guardrails:
+    - "Fresh context each iteration - you MUST re-read specs/prd.md at the start of EVERY iteration"
+    - "The PRD is the source of truth - implement EXACTLY what it says, no creative interpretation"
+    - "Backpressure is law - tests/typecheck/lint must pass before marking any task complete"
+    - "One task at a time - complete fully before moving to the next"
+
+# Enable task system for multi-story tracking
+memories:
+  enabled: true
+tasks:
+  enabled: true
+
+event_loop:
+  starting_event: "prd.start"
+  completion_promise: "LOOP_COMPLETE"
+  max_iterations: 100
+
+hats:
+  planner:
+    name: "📋 PRD Planner"
+    description: "Reads PRD and creates tasks in .agent/tasks.jsonl"
+    triggers: ["prd.start", "prd.resume", "tasks.empty"]
+    publishes: ["tasks.ready"]
+    instructions: |
+      ## FIRST: Read the PRD
+      You MUST read specs/prd.md completely before doing anything else.
+
+      ## Create Tasks from PRD
+      Based on the PRD's user stories and requirements:
+      1. Create tasks using `ralph task add "title" -p <priority> -d "description"`
+      2. Set up dependencies with --blocked-by for tasks that depend on others
+      3. Priority 1 = highest (do first), Priority 5 = lowest
+
+      ## Task Ordering (dependencies matter!)
+      1. Schema/database changes (priority 1)
+      2. Backend/API endpoints (priority 2)
+      3. Core logic/services (priority 3)
+      4. UI components (priority 4)
+      5. Integration/polish (priority 5)
+
+      ## When Done
+      Run `ralph task list` to verify tasks are created.
+      Publish tasks.ready when all PRD stories have corresponding tasks.
+
+  builder:
+    name: "⚙️ Builder"
+    description: "Implements one task at a time, consulting PRD for context"
+    triggers: ["tasks.ready", "build.continue"]
+    publishes: ["build.done", "build.blocked"]
+    default_publishes: "build.done"
+    instructions: |
+      ## FIRST: Re-read the PRD
+      You MUST read specs/prd.md to understand the full context.
+
+      ## Pick ONE Task
+      Run `ralph task ready` to see unblocked tasks.
+      Pick the highest priority task that's ready.
+
+      ## Implement
+      1. Read the task description carefully
+      2. Cross-reference with PRD for acceptance criteria
+      3. Follow existing codebase patterns
+      4. Write tests that verify PRD acceptance criteria
+
+      ## Backpressure
+      Run your project's quality checks (test, lint, typecheck).
+      Do NOT proceed if checks fail - fix them first.
+
+      ## Complete Task
+      When implementation passes all checks:
+      ```bash
+      ralph task close <task-id>
+      git add -A && git commit -m "feat: <task-title>"
+      ```
+
+      Publish build.done with evidence (test output, check results).
+
+      ## If Stuck
+      Publish build.blocked with what you tried and why it failed.
+
+  reviewer:
+    name: "🔎 Reviewer"
+    description: "Reviews completed work against PRD requirements"
+    triggers: ["build.done"]
+    publishes: ["build.continue", "prd.complete"]
+    default_publishes: "build.continue"
+    instructions: |
+      ## Re-read PRD
+      You MUST read specs/prd.md to verify against requirements.
+
+      ## Check Completed Work
+      1. Does the implementation match PRD acceptance criteria?
+      2. Are tests comprehensive?
+      3. Do quality checks pass?
+
+      ## Check Remaining Tasks
+      Run `ralph task list --status open` to see remaining tasks.
+
+      ## Decision
+      - If open tasks remain: publish build.continue
+      - If ALL tasks closed AND all PRD requirements met: publish prd.complete
+
+  verifier:
+    name: "✅ Final Verifier"
+    description: "Final verification that all PRD requirements are satisfied"
+    triggers: ["prd.complete"]
+    publishes: ["task.complete"]
+    default_publishes: "task.complete"
+    instructions: |
+      ## Final PRD Verification
+
+      1. Read specs/prd.md one final time
+      2. Go through EACH acceptance criterion
+      3. Verify implementation satisfies it
+      4. Run full test suite
+
+      ## If All Pass
+      Output LOOP_COMPLETE
+
+      ## If Issues Found
+      Create new tasks for fixes and publish build.continue
