@@ -177,7 +177,7 @@
   },
   "agent:main:main": {
     "sessionId": "5bd82f70-9e14-4db6-b6ba-f3ebc0eb432c",
-    "updatedAt": 1769198194707,
+    "updatedAt": 1769232394760,
     "systemSent": true,
     "abortedLastRun": false,
     "chatType": "direct",
@@ -396,5 +396,12 @@
     "lastTo": "120363405702485762@g.us",
     "lastAccountId": "default",
     "sessionId": "235dee87-7fa6-4208-91d6-30d1d85edae4"
+  },
+  "agent:art:whatsapp:group:120363196541910405@g.us": {
+    "updatedAt": 1769223395125,
+    "lastChannel": "whatsapp",
+    "lastTo": "120363196541910405@g.us",
+    "lastAccountId": "default",
+    "sessionId": "c861a0ad-3362-43f3-b55b-fa1434e424ae"
   }
 }

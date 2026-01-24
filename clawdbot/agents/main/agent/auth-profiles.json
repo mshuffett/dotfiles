@@ -28,14 +28,18 @@
   },
   "usageStats": {
     "anthropic:default": {
-      "lastUsed": 1769196394684,
-      "errorCount": 0,
-      "lastFailureAt": 1769196394680
+      "lastUsed": 1769228794692,
+      "errorCount": 1,
+      "lastFailureAt": 1769232394560,
+      "failureCounts": {
+        "auth": 1
+      },
+      "cooldownUntil": 1769232454560
     },
     "anthropic:claude-cli": {
-      "lastUsed": 1769198194703,
+      "lastUsed": 1769232394756,
       "errorCount": 0,
-      "lastFailureAt": 1769198194371
+      "lastFailureAt": 1769232394751
     }
   }
 }

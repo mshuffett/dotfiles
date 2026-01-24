@@ -1,20 +1,29 @@
 ---
 name: Dev Server
-description: This skill should be used when the user asks to "connect to dev server", "start dev server", "stop dev server", "check dev server status", "sync to server", "work on server", or mentions "fly.io dev", "remote development", "cloud dev environment", "dev-server app".
+description: This skill should be used when the user asks to "connect to dev server", "start dev server", "stop dev server", "check dev server status", "sync to server", "work on server", or mentions "aws dev", "ec2 dev", "remote development", "cloud dev environment", "dev-server".
 ---
 
-# Fly.io Dev Server
+# AWS Dev Server
 
-Remote development server on Fly.io for working when disconnected from internet or needing more compute power.
+Remote development server on AWS EC2 for running Claude Code agents autonomously or when needing cloud compute.
 
 ## Server Details
 
-- **App**: dev-server (compose-ai org)
-- **Machine ID**: e827400b0e42e8
-- **Instance**: performance-8x (8 dedicated CPUs, 32GB RAM)
-- **Region**: iad (Ashburn, VA)
-- **Volume**: 100GB persistent at /data
-- **Monthly cost**: ~$341 (from $15k credits)
+- **Instance ID**: i-01718f43eb12bd418
+- **Instance Type**: m7i.xlarge (4 vCPUs, 16GB RAM)
+- **Region**: us-west-2 (Oregon)
+- **Storage**: 100GB gp3 (16K IOPS, 1000 MB/s throughput)
+- **IP**: 44.244.19.35 (changes on stop/start)
+- **Monthly cost**: ~$240 (instance + high-perf storage)
+
+### Why This Config?
+
+See `benchmark-results.md` for full comparison. Key points:
+- **Disk**: 1.5 GB/s write (vs 8 MB/s on Fly.io, 208 MB/s on GCP)
+- **CPU**: 24% faster than GCP equivalent
+- **Real-world**: Next.js builds in 4.4s (vs 5.5s GCP)
+
+The high-IOPS gp3 storage config is critical - without it you get ~200 MB/s instead of 1.5 GB/s.
 
 ## Quick Commands
 
@@ -23,32 +32,26 @@ Remote development server on Fly.io for working when disconnected from internet 
 ```bash
 dev              # SSH and attach to tmux session 'main'
 dev -n           # SSH without tmux (new shell)
-dev <cmd>        # Run a command on the server
-dev stop         # Stop the server (save credits)
-dev start        # Start the server
+dev run <cmd>    # Run a command on the server
+dev stop         # Stop the instance (save money)
+dev start        # Start the instance
 dev status       # Check server status
+dev sync-creds   # Sync Claude OAuth credentials
 ```
 
-Or manually:
+### Manual SSH
+
 ```bash
-fly ssh console -a dev-server -u michael
+ssh dev
 ```
 
-### Check Status
+## Environment Variables
 
+Set in `~/.env.zsh`:
 ```bash
-# App status
-fly status -a dev-server
-
-# Machine status
-fly machines list -a dev-server
-```
-
-### Start/Stop Server
-
-```bash
-dev stop         # Stop (saves credits when not in use)
-dev start        # Start the server
+export DEV_INSTANCE_ID="i-01718f43eb12bd418"
+export DEV_VOLUME_ID="vol-09a50f33b812310a1"
+export AWS_DEFAULT_REGION="us-west-2"
 ```
 
 ## Server Setup
@@ -57,200 +60,121 @@ dev start        # Start the server
 
 - Ubuntu 24.04 LTS
 - Node.js 22.x, pnpm 10.x
-- Claude Code (`claude` command)
-- zsh, tmux, mosh
-- git, ripgrep, fd (`fdfind`), bat (`batcat`), neovim, fzf, direnv
+- Claude Code 2.x
+- zsh, tmux
+- git, ripgrep, fd, bat, neovim, fzf, direnv
 
 ### Directory Structure
 
 ```
-/data/                  # Persistent volume (100GB)
-├── ws/                 # Workspace (symlinked to ~/ws)
-│   ├── compose-monorepo/
-│   └── everything-monorepo/
-└── dotfiles/           # Dotfiles (symlinked to ~/.dotfiles)
-
-/home/michael/          # User home
-├── ws -> /data/ws
-└── .dotfiles -> /data/dotfiles
+/home/michael/
+├── ws/                 # Workspace for repos
+└── .claude/            # Claude Code config
 ```
 
-### User Account
+### SSH Config
 
-- Username: michael
-- Shell: zsh
-- Sudo: passwordless
-
-## Reproducible Setup (Dockerfile)
-
-The dev server can be rebuilt from scratch using the Dockerfile at `~/.dotfiles/dev-server/`.
-
-### Files
-
-- `~/.dotfiles/dev-server/Dockerfile` - Container image definition
-- `~/.dotfiles/dev-server/fly.toml` - Fly.io deployment config
-- `~/.dotfiles/dev-server/setup.sh` - First-time setup script
-
-### Updating the Server
-
-**IMPORTANT**: When updating the dev server setup, clarify with the user:
-1. **Update running server only** - Install packages, change configs on the live machine (doesn't persist across redeploys)
-2. **Update Dockerfile** - Modify `~/.dotfiles/dev-server/Dockerfile` so changes persist in future deploys
-
-For Dockerfile changes, after editing:
-```bash
-cd ~/.dotfiles/dev-server
-
-# Update existing machine with new image (preserves volume + machine ID)
-fly deploy --build-only  # Build and push image
-fly machine update e827400b0e42e8 -a dev-server --image <new-image-tag> -y
-
-# OR if fly deploy creates a new machine, clean up manually:
-# 1. Destroy the new machine and its volume
-# 2. Update the old machine: fly machine update e827400b0e42e8 ...
+In `~/.ssh/config`:
+```
+Host dev
+    HostName 44.244.19.35
+    User michael
+    IdentityFile ~/.ssh/dev-server-aws.pem
 ```
 
-### First-Time Setup (Fresh Volume)
-
+**Note**: IP changes when instance stops/starts. Update with:
 ```bash
-# Run setup script (only needed on fresh volume)
-fly ssh console -a dev-server -u michael -C "bash ~/.dotfiles/dev-server/setup.sh"
-```
-
-### Fresh Deploy (New Server) - One-Step Setup
-
-```bash
-cd ~/.dotfiles/dev-server
-
-# 1. Create app and volume
-fly apps create dev-server -o compose-ai
-fly volumes create dev_data --size 100 --region iad
-
-# 2. Deploy the container
-fly deploy
-
-# 3. Generate SSH key and add to GitHub
-fly ssh console -a dev-server -C 'su - michael -c "ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N \"\""'
-fly ssh console -a dev-server -C 'cat /home/michael/.ssh/id_ed25519.pub'
-# → Copy output and add to GitHub: gh ssh-key add - --title "dev-server"
-
-# 4. Run setup script
-fly ssh console -a dev-server -u michael -C "bash /data/dotfiles/dev-server/setup.sh"
-
-# 5. Copy Claude Code OAuth credentials from local machine (note the leading dot!)
-CREDS=$(security find-generic-password -s "Claude Code-credentials" -w)
-fly ssh console -a dev-server -u michael -C "bash -c 'echo '\''$CREDS'\'' > ~/.claude/.credentials.json && chmod 600 ~/.claude/.credentials.json'"
-```
-
-This clones repos, sets up dotfiles symlinks, installs pnpm dependencies, and copies OAuth credentials.
-
-## Persistence Model
-
-Fly.io persistence works through **volumes** and **persistent machines**:
-
-1. **Volume (`/data`)**: 100GB persistent storage survives container restarts and redeployments
-   - Repos live here (`/data/ws/`)
-   - Dotfiles live here (`/data/dotfiles/`)
-   - Changes are preserved even when container image is updated
-
-2. **Machine**: Unlike serverless, this is a persistent VM that stays running
-   - Container entrypoint (`tail -f /dev/null`) keeps it alive
-   - Machine persists until explicitly stopped or deleted
-
-3. **Redeploy behavior**: `fly deploy` replaces the container but preserves:
-   - All data in `/data` (repos, dotfiles, pnpm cache)
-   - Machine identity and volume attachment
-
-## Current Setup (Already Configured)
-
-The server is fully set up with:
-- Dotfiles cloned and symlinked
-- compose-monorepo and everything-monorepo cloned
-- pnpm dependencies installed
-- SSH key added to GitHub
-- Claude Code OAuth credentials at `~/.claude/.credentials.json`
-- Environment secrets at `~/.env.zsh` (symlinked from /data/dotfiles/.env.zsh)
-
-## Syncing Secrets
-
-The `~/.env.zsh` file contains API tokens and secrets (TODOIST_API_TOKEN, etc.) that need to be synced to the dev server.
-
-### Sync .env.zsh to Dev Server
-
-```bash
-# Copy the file
-fly ssh sftp shell -a dev-server << 'EOF'
-put ~/.env.zsh /data/dotfiles/.env.zsh
-EOF
-
-# Fix ownership (as root) and create symlink
-fly ssh console -a dev-server -C "bash -c 'chown michael:michael /data/dotfiles/.env.zsh && chmod 600 /data/dotfiles/.env.zsh'"
-fly ssh console -a dev-server -u michael -C "bash -c 'ln -sf /data/dotfiles/.env.zsh ~/.env.zsh'"
-```
-
-The `.zshrc` already sources `~/.env.zsh` if it exists, so tokens will be available in new shells.
-
-## Working with tmux
-
-Start a persistent session that survives disconnects:
-
-```bash
-fly ssh console -a dev-server -u michael
-tmux new -s main
-
-# Detach: Ctrl+b, d
-# Reattach after reconnect:
-tmux attach -t main
-```
-
-## Syncing Local Changes
-
-To sync uncommitted local changes to the server:
-
-```bash
-# From local machine
-rsync -avz --exclude node_modules --exclude .git \
-  ~/ws/compose-monorepo/ \
-  "$(fly ssh console -a dev-server -C 'echo $SSH_CONNECTION' 2>/dev/null | head -1):/data/ws/compose-monorepo/"
+NEW_IP=$(aws ec2 describe-instances --instance-ids i-01718f43eb12bd418 --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
+sed -i '' "s/HostName .*/HostName $NEW_IP/" ~/.ssh/config
 ```
 
 ## Cost Management
 
-- **Always-on**: ~$341/month
-- **Stop when idle**: Stop machine when not using to save credits
-- **Credits remaining**: ~$15k (~44 months of always-on)
+| State | Compute | Storage | Total |
+|-------|---------|---------|-------|
+| Running | ~$140/mo | ~$100/mo (16K IOPS) | **~$240/mo** |
+| Stopped | $0 | ~$8/mo (baseline IOPS) | **~$8/mo** |
 
-To check current usage:
+The `dev stop` command automatically scales down IOPS to baseline (saves ~$92/mo).
+The `dev start` command scales IOPS back up for performance.
+
+Always stop when not in use:
 ```bash
-fly billing view -o compose-ai
+dev stop    # Scales down IOPS, stops instance
+dev start   # Starts instance, scales up IOPS, updates SSH config
+```
+
+**Note**: Volume modifications take a few minutes to complete. If you stop and immediately start, the IOPS scale-up may queue behind the scale-down.
+
+## Syncing Claude Credentials
+
+The `dev` command auto-syncs credentials every 30 minutes. To force sync:
+```bash
+dev sync-creds
+```
+
+This copies `~/.claude/.credentials.json` from local machine to server.
+
+## Working with tmux
+
+The `dev` command auto-attaches to a tmux session named "main":
+
+```bash
+dev              # Connect and attach to 'main' session
+
+# Inside tmux:
+Ctrl+b d         # Detach (session keeps running)
+Ctrl+b c         # New window
+Ctrl+b n/p       # Next/prev window
 ```
 
 ## Troubleshooting
 
-### Machine Won't Start
+### Instance Won't Start
 
 ```bash
-fly machines list -a dev-server
-fly logs -a dev-server
+aws ec2 describe-instances --instance-ids i-01718f43eb12bd418 \
+  --query 'Reservations[0].Instances[0].State.Name'
 ```
 
-### SSH Connection Issues
+### SSH Connection Refused
 
+Instance IP changes on stop/start. Update SSH config:
 ```bash
-# Check machine is running
-fly machines list -a dev-server
-
-# If "publickey" auth fails, refresh SSH certificate
-fly ssh issue --agent -o compose-ai -u michael,root
-
-# Force restart if needed
-fly machine restart e827400b0e42e8 -a dev-server
+dev status  # Shows current IP if reachable
+# Or manually:
+aws ec2 describe-instances --instance-ids i-01718f43eb12bd418 \
+  --query 'Reservations[0].Instances[0].PublicIpAddress' --output text
 ```
 
-### Volume Not Mounted
+### Credentials Not Working
 
-The volume should auto-mount at /data. If not:
 ```bash
-fly volumes list -a dev-server
-# Recreate machine if volume is detached
+dev sync-creds  # Force re-sync credentials
+```
+
+## Recreating the Instance
+
+If you need to recreate from scratch:
+
+```bash
+# Create instance with high-perf storage
+aws ec2 run-instances \
+  --image-id ami-0cf2b4e024cdb6960 \
+  --instance-type m7i.xlarge \
+  --key-name dev-server-key \
+  --security-group-ids sg-0f155dd58de85c2ae \
+  --block-device-mappings '[{
+    "DeviceName": "/dev/sda1",
+    "Ebs": {
+      "VolumeType": "gp3",
+      "VolumeSize": 100,
+      "Iops": 16000,
+      "Throughput": 1000
+    }
+  }]' \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=dev-server}]' \
+  --region us-west-2
+
+# Then set up user and software (see setup script)
 ```

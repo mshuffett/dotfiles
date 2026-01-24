@@ -18,6 +18,24 @@ async function findGitRoot(): Promise<string | null> {
   return stdout.toString().trim();
 }
 
+async function findMainWorktree(): Promise<string | null> {
+  // Get the common git dir which points to the main repo's .git
+  const { stdout, exitCode } = await $`git rev-parse --git-common-dir`.quiet().nothrow();
+  if (exitCode !== 0) return null;
+
+  const commonDir = stdout.toString().trim();
+
+  // If it's just ".git", we're in the main repo
+  if (commonDir === ".git") {
+    return findGitRoot();
+  }
+
+  // Otherwise it's a path like /path/to/main-repo/.git or /path/to/main-repo/.git/worktrees/name
+  // The main repo is the parent of .git
+  const gitDir = commonDir.replace(/\/worktrees\/[^/]+$/, "");
+  return dirname(gitDir);
+}
+
 async function getCurrentBranch(): Promise<string> {
   const { stdout } = await $`git rev-parse --abbrev-ref HEAD`.quiet();
   return stdout.toString().trim();
@@ -73,15 +91,16 @@ const main = defineCommand({
     r: { type: "boolean", description: "Remove worktree" },
   },
   run: async ({ args }) => {
-    const gitRoot = await findGitRoot();
-    if (!gitRoot) {
+    // Always resolve to main repo, even when run from within a worktree
+    const mainRepo = await findMainWorktree();
+    if (!mainRepo) {
       console.error(red("✗ Not in a git repository"));
       process.exit(1);
     }
 
     // Use sibling directory to avoid stale CLAUDE.md copies
-    const repoName = basename(gitRoot);
-    const worktreesDir = join(dirname(gitRoot), `${repoName}.worktrees`);
+    const repoName = basename(mainRepo);
+    const worktreesDir = join(dirname(mainRepo), `${repoName}.worktrees`);
 
     // List worktrees
     if (args.l) {
@@ -137,9 +156,9 @@ const main = defineCommand({
     await $`git worktree add ${worktreePath} -b ${branchName} ${baseBranch}`.quiet();
     console.log(green(" done"));
 
-    // Copy .env files
+    // Copy .env files from main repo
     process.stdout.write(dim("Copying .env files..."));
-    const envCount = copyEnvFiles(gitRoot, worktreePath);
+    const envCount = copyEnvFiles(mainRepo, worktreePath);
     console.log(green(` ${envCount} copied`));
 
     // Install dependencies

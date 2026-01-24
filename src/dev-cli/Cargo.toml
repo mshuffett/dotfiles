@@ -1,0 +1,17 @@
+[package]
+name = "dev"
+version = "1.0.0"
+edition = "2021"
+description = "Connect to Fly.io dev server"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+clap_complete = "4"
+dirs = "5"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
+codegen-units = 1
+panic = "abort"

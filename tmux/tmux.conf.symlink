@@ -63,6 +63,9 @@ bind -r L resize-pane -R 5
 # Interactive join-pane (pull pane from another session/window) - uses tmux-fzf with preview
 bind M run-shell -b "~/.tmux/plugins/tmux-fzf/scripts/pane.sh join"
 
+# tmux-fzf main menu (pane/window/session operations: move, swap, join, break, etc.)
+bind F run-shell -b ~/.tmux/plugins/tmux-fzf/main.sh
+
 # Use native tmux tree views in popups (revert from tmux-fzf)
 bind s display-popup -E -w 80% -h 80% "tmux choose-tree -Zs"
 bind w display-popup -E -w 80% -h 80% "tmux choose-tree -Zw"

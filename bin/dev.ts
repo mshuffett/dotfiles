@@ -194,8 +194,31 @@ const main = defineCommand({
         await $`ssh ${SSH_HOST} ${args.cmd}`;
       },
     }),
+    connect: defineCommand({
+      meta: { description: "SSH into the dev server (default action)" },
+      args: {
+        n: {
+          type: "boolean",
+          alias: ["no-tmux"],
+          description: "SSH without tmux attach",
+        },
+      },
+      run: async ({ args }) => {
+        await syncCreds(false);
+        if (args.n) {
+          await $`ssh -t ${SSH_HOST}`;
+        } else {
+          await $`ssh -t ${SSH_HOST} "LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 tmux -u new -A -s main"`;
+        }
+      },
+    }),
   },
-  run: async ({ args }) => {
+  run: async ({ args, cmd }) => {
+    // Default action when no subcommand - connect to server
+    // This avoids citty running this after subcommands complete
+    const subcommandUsed = process.argv[2] && ['start', 'stop', 'status', 'sync-creds', 'run', 'connect'].includes(process.argv[2]);
+    if (subcommandUsed) return;
+
     await syncCreds(false);
     if (args.n) {
       await $`ssh -t ${SSH_HOST}`;

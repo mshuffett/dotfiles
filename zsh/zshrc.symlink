@@ -432,3 +432,6 @@ alias ea='~/.dotfiles/bin/claude-daily'
 alias eag='tmux new-session -t claude-daily -s claude-quick 2>/dev/null || tmux attach -t claude-quick'
 
 [ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env
+export PATH="$HOME/.local/bin:$PATH"
+
+source /Users/michael/.daytona.completion_script.zsh
