@@ -10,7 +10,7 @@ When corrected or shown a better approach:
 
 Skills are how I learn. When my task matches a skill description, invoke it via Skill tool before proceeding.
 
-When creating skills, first invoke `plugin-dev:skill-development`. If no relevant skill exists but the work involves reusable knowledge, create one.
+When creating skills, invoke `skill-creation` skill. Skills live in `~/.dotfiles/claude/skills/` and must be committed.
 
 **Primary User**
 
