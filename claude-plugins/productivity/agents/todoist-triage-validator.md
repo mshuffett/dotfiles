@@ -46,10 +46,10 @@ You are a validation agent specialized in testing the Todoist triage process. Yo
 **Validation Process:**
 
 1. **Load Reference Files:**
-   - Read `~/.dotfiles/claude-plugins/productivity/skills/todoist-triage/SKILL.md` for formatting rules
-   - Read `~/.dotfiles/claude-plugins/productivity/skills/todoist-triage/fixtures/sample-export.json` for input tasks
-   - Read `~/.dotfiles/claude-plugins/productivity/skills/todoist-triage/fixtures/collaborators.json` for user mapping
-   - Read `~/.dotfiles/claude-plugins/productivity/skills/todoist-triage/fixtures/expected-output.md` for expected result
+   - Read `~/.dotfiles/claude/skills/todoist-triage/SKILL.md` for formatting rules
+   - Read `~/.dotfiles/claude/skills/todoist-triage/fixtures/sample-export.json` for input tasks
+   - Read `~/.dotfiles/claude/skills/todoist-triage/fixtures/collaborators.json` for user mapping
+   - Read `~/.dotfiles/claude/skills/todoist-triage/fixtures/expected-output.md` for expected result
 
 2. **Apply Filtering Rules:**
    - Identify current user ID from collaborators (Michael = 486423)

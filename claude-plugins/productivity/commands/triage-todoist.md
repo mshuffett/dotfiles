@@ -30,7 +30,7 @@ If no target page URL provided, creates a new page under the PPV Action Items.
 ### Step 1: Load the Triage Skill
 
 First, read the triage skill for formatting rules:
-- `~/.dotfiles/claude-plugins/productivity/skills/todoist-triage/SKILL.md`
+- `~/.dotfiles/claude/skills/todoist-triage/SKILL.md`
 
 ### Step 2: Export Tasks from Todoist
 

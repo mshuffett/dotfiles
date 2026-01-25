@@ -76,9 +76,9 @@ The `criteria` field is critical - it tells the judge WHY this classification is
 
 ## Dataset Location
 
-Golden dataset with criteria lives at:
+Golden dataset with criteria is managed by the TypeScript module:
 ```
-~/.dotfiles/claude-plugins/productivity/skills/todoist-triage/fixtures/eval-dataset.json
+~/.dotfiles/claude-plugins/productivity/scripts/todoist-eval/src/data/dataset.ts
 ```
 
 ## Workflow Loop
@@ -97,6 +97,6 @@ Each iteration improves:
 ## Integration with /triage-todoist
 
 Once the classifier is calibrated, the learnings can be applied to:
-- `skills/todoist-triage/SKILL.md` - Update classification rules
+- `~/.dotfiles/claude/skills/todoist-triage/SKILL.md` - Update classification rules
 - `agents/todoist-triage-classifier.md` - Update agent prompt
 - `commands/triage-todoist.md` - Update workflow

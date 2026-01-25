@@ -398,7 +398,7 @@ function calculateFinalScore(
 // ============================================================================
 
 async function evaluateWhatsApp(holdoutCount: number = 10): Promise<EvaluationResult[]> {
-  const dataPath = `${process.env.HOME}/.dotfiles/claude-plugins/productivity/skills/whatsapp-reply-style/training-data.json`;
+  const dataPath = `${process.env.HOME}/.dotfiles/claude/skills/whatsapp-reply-style/training-data.json`;
 
   if (!existsSync(dataPath)) {
     console.error("WhatsApp training data not found at:", dataPath);
@@ -443,7 +443,7 @@ Reply to: ${ex.input_message}`;
 }
 
 async function evaluateEmail(holdoutCount: number = 10): Promise<EvaluationResult[]> {
-  const dataPath = `${process.env.HOME}/.dotfiles/claude-plugins/productivity/skills/email-reply-style/training-data.json`;
+  const dataPath = `${process.env.HOME}/.dotfiles/claude/skills/email-reply-style/training-data.json`;
 
   if (!existsSync(dataPath)) {
     console.error("Email training data not found at:", dataPath);

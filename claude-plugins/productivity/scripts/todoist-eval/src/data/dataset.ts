@@ -39,7 +39,7 @@ export type Dataset = z.infer<typeof DatasetSchema>;
 // Default dataset path
 export const DEFAULT_DATASET_PATH =
   process.env.HOME +
-  "/.dotfiles/claude-plugins/productivity/skills/todoist-triage/fixtures/eval-dataset.json";
+  "/.dotfiles/claude/skills/todoist-triage/fixtures/eval-dataset.json";
 
 /**
  * Load dataset from file
