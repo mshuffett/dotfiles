@@ -29,12 +29,28 @@ Examples:
    cp -r /tmp/my-project ~/ws/experiments/$(date +%Y-%m)-my-project/
    ```
 
-2. Commit and push:
+2. **Document the experiment** - Create a matching `.md` file:
+   ```markdown
+   # Experiment Name
+
+   Brief description of what it does.
+
+   ## Context
+   Why it was built, what problem it solves.
+
+   ## Future ideas
+   What could be added or improved.
+
+   ## Session
+   Created in Claude session: `$CLAUDE_SESSION_ID`
+   ```
+
+3. Commit and push:
    ```bash
    cd ~/ws/experiments && git add . && git commit -m "add [description]" && git push
    ```
 
-3. Open in browser if HTML:
+4. Open in browser if HTML:
    ```bash
    open ~/ws/experiments/2026-01-24-my-experiment.html
    ```
