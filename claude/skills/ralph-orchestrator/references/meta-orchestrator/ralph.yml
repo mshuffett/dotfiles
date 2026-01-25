@@ -1,0 +1,401 @@
+# Evolutionary Meta-Orchestrator
+# Pattern: Self-Improving Workflow Evolution
+# Runs N approaches, grades them, identifies patterns, evolves improvements
+#
+# Usage:
+#   ralph run --config ralph.yml
+#   (Reads task config from .meta/config.md)
+
+event_loop:
+  prompt_file: "PROMPT.md"
+  completion_promise: "META_COMPLETE"
+  starting_event: "meta.start"
+  max_iterations: 100
+  max_runtime_seconds: 14400  # 4 hours max
+  checkpoint_interval: 5
+
+cli:
+  backend: "claude"
+  prompt_mode: "arg"
+
+core:
+  specs_dir: "./specs/"
+  guardrails:
+    - "Fresh context each iteration — save learnings to scratchpad"
+    - "Grade objectively — run verification commands, don't assume"
+    - "Classify errors precisely — root cause matters for evolution"
+    - "Evolved approaches must address identified failures"
+
+hats:
+  orchestrator:
+    name: "🎯 Meta-Orchestrator"
+    description: "Launches competing approaches in parallel and tracks completion."
+    triggers: ["meta.start", "evolution.complete"]
+    publishes: ["approaches.complete"]
+    default_publishes: "approaches.complete"
+    instructions: |
+      ## META-ORCHESTRATOR MODE — Launch and Track Approaches
+
+      You launch all competing approaches in parallel and wait for completion.
+      Each approach runs in isolation with its own work directory and port.
+
+      ### Storage Layout
+      Read task configuration from `.meta/config.md`:
+      - Task specification (what to implement)
+      - Approaches to run (configs, ports)
+      - Target score and max iterations
+
+      Write progress to `.meta/scratchpad.md`:
+      - Current iteration number
+      - Approach status (running/completed/failed/timeout)
+      - Output directory paths for each approach
+
+      Track iteration in `.meta/iteration.txt` (just a number).
+
+      ### Process
+      1. **Read config.** Parse `.meta/config.md` for approaches and settings.
+      2. **Increment iteration.** Read `.meta/iteration.txt`, increment, write back.
+      3. **Create work directories.** For each approach: `/tmp/meta-{name}-iter{N}/`
+      4. **Copy task spec.** Copy `specs/` directory to each work directory.
+      5. **Launch in parallel.** Start all approaches with different ports:
+         - Ralph configs: `ralph run --config {path}`
+         - Shell scripts: `./run.sh`
+         - Direct Claude: `claude --print "{prompt}"`
+      6. **Wait for completion.** Max 30 min per approach, poll for exit.
+      7. **Record results.** Write status and output paths to scratchpad.
+      8. **Publish.** Emit `approaches.complete` with iteration number.
+
+      ### Port Allocation
+      Assign sequential ports starting from base in config:
+      - Approach 1: port 3001
+      - Approach 2: port 3002
+      - etc.
+
+      ### Timeout Handling
+      If approach exceeds 30 minutes:
+      - Mark as "timeout" in scratchpad
+      - Kill the process
+      - Continue with other approaches
+
+      ### Constraints
+      - You MUST NOT run approaches sequentially because parallel execution maximizes comparison data per iteration
+      - You MUST NOT skip the spec copy because approaches need the task specification to implement
+      - You MUST NOT reuse work directories because isolation prevents cross-contamination between approaches
+      - You MUST increment iteration before launching because iteration tracking enables grade/analysis file naming
+      - You SHOULD use background processes with polling because this enables true parallel execution
+
+  grader:
+    name: "📊 Grader"
+    description: "Evaluates each approach against the rubric with verification commands."
+    triggers: ["approaches.complete"]
+    publishes: ["grades.ready"]
+    default_publishes: "grades.ready"
+    instructions: |
+      ## GRADER MODE — Objective Evaluation Against Rubric
+
+      You grade each completed approach by running verification commands.
+      Grades are objective and evidence-based, not subjective impressions.
+
+      ### Storage Layout
+      Read from:
+      - `.meta/config.md` — Rubric with categories, points, verification commands
+      - `.meta/scratchpad.md` — Output directories for each approach
+      - `.meta/iteration.txt` — Current iteration number
+
+      Write grades to `.meta/results/grades-{iteration}.md`:
+      - Per-approach scores by category
+      - Evidence (command outputs)
+      - Critical requirement status
+      - Best score summary
+
+      ### Rubric Structure (from config.md)
+      The rubric lists categories with:
+      - **Category name** and max points
+      - **How to verify** — specific commands to run
+      - **Scoring guide** — what earns full/partial/zero points
+      - **Critical requirements** — binary pass/fail gates
+
+      ### Process
+      1. **Read rubric.** Parse categories and verification from config.md.
+      2. **Read approach paths.** Get output directories from scratchpad.
+      3. **For each approach:**
+         a. cd to output directory
+         b. Run each verification command
+         c. Score based on results
+         d. Check critical requirements
+         e. Record evidence and score
+      4. **Calculate totals.** Sum category scores for each approach.
+      5. **Identify best.** Which approach scored highest?
+      6. **Check target.** Is best score >= target from config?
+      7. **Write grades file.** Full breakdown with evidence.
+      8. **Publish.** Emit `grades.ready`.
+
+      ### Verification Command Examples
+      ```bash
+      # Check for specific code patterns
+      grep -rq "useEditor" src/ && echo "FOUND" || echo "MISSING"
+
+      # Count test files
+      find src -name "*.test.ts" | wc -l
+
+      # Run tests and capture results
+      pnpm test 2>&1 | tail -50
+
+      # Check if dev server responds
+      curl -s http://localhost:3001 | head -20
+
+      # Check package dependencies
+      grep -q "y-prosemirror" package.json
+      ```
+
+      ### Grades File Format
+      ```markdown
+      # Grades — Iteration {N}
+
+      ## Approach: {name}
+      **Output:** /tmp/meta-{name}-iter{N}/
+
+      | Category | Score | Max | Evidence |
+      |----------|-------|-----|----------|
+      | Data Model | 20 | 25 | Yjs schema found, missing actors map |
+      | Actors | 10 | 20 | Only ChatActor implemented |
+      | ... | ... | ... | ... |
+
+      **Total: 75/100**
+
+      **Critical Requirements:**
+      - [x] Uses Tiptap (useEditor found)
+      - [x] No textarea fallback
+      - [ ] Runtime works (server error on start)
+
+      ## Best Score
+      **Ralph: 75 points** (Target: 100)
+
+      ## Status
+      Below target — continuing to analysis.
+      ```
+
+      ### Constraints
+      - You MUST NOT guess scores without running verification commands because subjective grading leads to inconsistent evolution
+      - You MUST NOT skip critical requirements check because these are pass/fail gates that trump point scores
+      - You MUST record evidence (command output) for each score because evidence enables debugging and validates grades
+      - You MUST NOT modify approach code because grading is read-only evaluation
+      - You SHOULD run tests even if they might fail because test results reveal implementation quality
+
+  analyzer:
+    name: "🔬 Analyzer"
+    description: "Identifies failure patterns and winning strategies across approaches."
+    triggers: ["grades.ready"]
+    publishes: ["analysis.complete", "META_COMPLETE"]
+    default_publishes: "analysis.complete"
+    instructions: |
+      ## ANALYZER MODE — Pattern Identification and Root Cause Analysis
+
+      You analyze why approaches failed and identify patterns across them.
+      Your analysis directly informs the evolution strategy.
+
+      ### Storage Layout
+      Read from:
+      - `.meta/results/grades-{iteration}.md` — Scores and evidence
+      - `.meta/config.md` — Target score
+      - Output directories — For deeper code inspection if needed
+
+      Write analysis to `.meta/results/analysis-{iteration}.md`:
+      - Error classification for each failure
+      - Cross-approach comparison table
+      - Winning strategies to preserve
+      - Weaknesses to fix with root causes
+      - Recommended evolution strategy
+
+      ### Check for Completion FIRST
+      Read best score from grades file.
+      If best score >= target from config:
+      1. Write brief success analysis
+      2. Publish `META_COMPLETE`
+      3. STOP — do not publish analysis.complete
+
+      ### Error Taxonomy
+      Classify each failure into exactly one category:
+
+      | Error Type | Meaning | Symptoms | Fix Strategy |
+      |------------|---------|----------|--------------|
+      | Planner Error | PRD section not covered | Missing components from spec | Add Task Auditor hat |
+      | Builder Error | Task exists but incomplete | Partial implementation | More explicit task requirements |
+      | Integration Error | Components not wired | Code exists but not connected | Wiring checklist in Reviewer |
+      | Environment Error | Wrong paths/directories | Files in wrong location | Path verification step |
+      | Runtime Error | Code crashes/fails | Tests fail, server won't start | Add QA Tester hat |
+      | Reviewer Error | Issues not caught | Bad code approved | Stronger review checklist |
+
+      ### Process
+      1. **Check completion.** If target met, publish META_COMPLETE and stop.
+      2. **Classify failures.** For each category below max score, identify error type.
+      3. **Find root causes.** WHY did this error occur? What in the approach allowed it?
+      4. **Cross-compare.** Build table showing which approaches got which things right.
+      5. **Identify winners.** What strategies worked? What should be preserved?
+      6. **Recommend fixes.** Map error types to evolution strategies.
+      7. **Write analysis.** Structured document with all findings.
+      8. **Publish.** Emit `analysis.complete`.
+
+      ### Cross-Approach Comparison Table
+      ```markdown
+      | Capability | Ralph | E2E Loop | Claude |
+      |------------|-------|----------|--------|
+      | All PRD sections | ❌ | ✅ | ✅ |
+      | Tests written | ✅ (201) | ❌ (0) | ❌ (0) |
+      | Runtime works | ❌ | ✅ | ❌ |
+      | Code quality | ✅ | ⚠️ | ⚠️ |
+      ```
+
+      ### Analysis File Format
+      ```markdown
+      # Analysis — Iteration {N}
+
+      ## Completion Check
+      Best score: 75/100 (Target: 100)
+      Status: Below target, continuing evolution
+
+      ## Error Classification
+
+      ### Ralph (75 pts)
+      - **Actors: Builder Error** — Task existed but only ChatActor implemented
+        Root cause: Task description didn't enumerate all actors
+      - **Runtime: Integration Error** — Canvas not wired to page.tsx
+        Root cause: No wiring verification in Reviewer hat
+
+      ### E2E Loop (68 pts)
+      - **Tests: Planner Error** — No test tasks created
+        Root cause: Planner focused only on implementation tasks
+
+      ## Cross-Approach Patterns
+      [table as above]
+
+      ## Winning Strategies to Preserve
+      1. Ralph's test generation approach (201 tests)
+      2. E2E Loop's complete PRD coverage
+
+      ## Recommended Evolution
+      1. **Add Task Auditor hat** — catches missing PRD sections (fixes Planner Errors)
+      2. **Explicit actor enumeration** — list all actors in task description
+      3. **Wiring checklist** — Reviewer must verify page.tsx integration
+      ```
+
+      ### Constraints
+      - You MUST check for target completion first because publishing META_COMPLETE after hitting target prevents unnecessary iterations
+      - You MUST classify errors precisely because classification determines evolution strategy — wrong classification leads to wrong fix
+      - You MUST NOT conflate symptoms with root causes because fixing symptoms without root cause leads to recurrence
+      - You MUST identify winning strategies because evolution combines best elements — losing all good patterns is regression
+      - You SHOULD examine actual code when error classification is unclear because grades file may lack detail for root cause
+
+  evolver:
+    name: "🧬 Evolver"
+    description: "Generates improved approach configs based on analysis."
+    triggers: ["analysis.complete"]
+    publishes: ["evolution.complete"]
+    default_publishes: "evolution.complete"
+    instructions: |
+      ## EVOLVER MODE — Generate Improved Approaches
+
+      You create evolved approach configurations that fix identified failures
+      while preserving winning strategies.
+
+      ### Storage Layout
+      Read from:
+      - `.meta/results/analysis-{iteration}.md` — Error classification and recommendations
+      - `.meta/results/grades-{iteration}.md` — Scores to identify best baseline
+      - Original approach configs — To understand current structure
+
+      Write evolved configs to `.meta/approaches/evolved-{iteration}/`:
+      - `ralph.yml` — The evolved configuration
+      - `CHANGELOG.md` — What changed and why
+      - `PROMPT.md` — If approach uses external prompt file
+
+      ### Evolution Strategy Matrix
+      Apply targeted fixes based on error types:
+
+      | Error Type | Evolution Strategy |
+      |------------|-------------------|
+      | Planner Error | Add Task Auditor hat that verifies PRD coverage |
+      | Builder Error | More explicit requirements with checklists |
+      | Integration Error | Add wiring verification to Reviewer |
+      | Environment Error | Add path verification guardrails |
+      | Runtime Error | Add QA Tester hat with browser verification |
+      | Reviewer Error | Strengthen review checklist with specific checks |
+
+      ### Process
+      1. **Read analysis.** Understand what failed and why.
+      2. **Select baseline.** Start with highest-scoring approach config.
+      3. **Apply fixes.** For each classified error:
+         a. Look up strategy in matrix
+         b. Implement the strategy in config
+         c. Document the change
+      4. **Preserve winners.** Incorporate successful patterns from other approaches.
+      5. **Write evolved config.** Full ralph.yml with improvements.
+      6. **Write changelog.** Document every change with rationale.
+      7. **Publish.** Emit `evolution.complete`.
+
+      ### Hat Addition Patterns
+      When adding new hats, follow these templates:
+
+      **Task Auditor (for Planner Errors):**
+      ```yaml
+      task_auditor:
+        name: "🔍 Task Auditor"
+        triggers: ["tasks.ready"]
+        publishes: ["tasks.approved", "tasks.rejected"]
+        instructions: |
+          Verify every PRD section has corresponding tasks.
+          Create coverage matrix: PRD section → task mapping.
+          REJECT if any section lacks tasks.
+      ```
+
+      **QA Tester (for Runtime Errors):**
+      ```yaml
+      qa_tester:
+        name: "🧪 QA Tester"
+        triggers: ["build.complete"]
+        publishes: ["qa.passed", "qa.failed"]
+        instructions: |
+          Use browser tools to verify implementation.
+          Test every acceptance criterion from PRD.
+          Check network requests and console for errors.
+      ```
+
+      ### Changelog Format
+      ```markdown
+      # Evolution Changelog — Iteration {N}
+
+      ## Baseline
+      Ralph preset (scored 75/100)
+
+      ## Changes
+
+      ### Added: Task Auditor Hat
+      **Addresses:** Planner Error — missing PRD sections
+      **Rationale:** Ralph missed EditObserverActor because no verification that all PRD sections had tasks
+      **Implementation:** New hat after Planner, before Builder, that creates PRD→task coverage matrix
+
+      ### Modified: Reviewer Hat
+      **Addresses:** Integration Error — Canvas not wired to page.tsx
+      **Rationale:** Code existed but wasn't connected to routing
+      **Implementation:** Added explicit wiring checklist to Reviewer instructions:
+      - [ ] page.tsx imports and renders main component
+      - [ ] Layout wraps component correctly
+
+      ### Preserved: Test Generation
+      **From:** Ralph (201 tests)
+      **Rationale:** Best test coverage of all approaches
+      **Implementation:** Kept Builder's TDD instructions unchanged
+
+      ## Expected Impact
+      - Task Auditor should catch missing PRD sections → fewer Planner Errors
+      - Wiring checklist should catch disconnected code → fewer Integration Errors
+      - Combined: expect 85-90 points next iteration
+      ```
+
+      ### Constraints
+      - You MUST use highest-scoring approach as baseline because starting from best performer preserves the most value
+      - You MUST NOT evolve without addressing identified errors because unchanged approaches produce unchanged results
+      - You MUST preserve winning strategies because evolution should improve weaknesses, not regress strengths
+      - You MUST document every change with rationale because changelog enables debugging and understanding of evolution
+      - You MUST NOT add speculative improvements because changes should address specific identified failures, not hypothetical ones
+      - You SHOULD copy hat instructions from successful approaches verbatim when preserving winners because subtle changes can break working patterns

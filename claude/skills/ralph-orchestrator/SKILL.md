@@ -203,6 +203,76 @@ ralph run -c presets/pdd-to-code-assist.yml --prompt "Build a rate limiter"
 
 This adds Inquisitor → Architect → Design Critic before the implementation phase.
 
+## Evolutionary Meta-Orchestrator
+
+The meta-orchestrator runs multiple approaches in parallel, grades them, identifies failure patterns, and evolves improved approaches until a target score is achieved.
+
+### Quick Start
+
+```bash
+# From any project with specs/ directory
+~/.dotfiles/claude/skills/ralph-orchestrator/references/meta-orchestrator/run-meta.sh
+
+# Or with custom config
+~/.dotfiles/claude/skills/ralph-orchestrator/references/meta-orchestrator/run-meta.sh path/to/config.md
+
+# Or run ralph directly
+ralph run -c ~/.dotfiles/claude/skills/ralph-orchestrator/references/meta-orchestrator/ralph.yml
+```
+
+### The 4 Hats
+
+| Hat | Purpose |
+|-----|---------|
+| 🎯 Orchestrator | Launches competing approaches in parallel |
+| 📊 Grader | Scores each approach against rubric with verification commands |
+| 🔬 Analyzer | Classifies errors, identifies patterns, finds winning strategies |
+| 🧬 Evolver | Generates improved approach configs based on analysis |
+
+### Configuration
+
+Create `.meta/config.md` with:
+- **Task specification** — What to implement
+- **Approaches** — Configs/scripts to run with ports
+- **Grading rubric** — Categories, verification commands, scoring
+- **Critical requirements** — Pass/fail gates
+- **Target score** — When to stop iterating
+
+### Error Taxonomy
+
+The analyzer classifies failures to enable targeted evolution:
+
+| Error Type | Meaning | Fix Strategy |
+|------------|---------|--------------|
+| Planner Error | PRD section not covered | Add Task Auditor hat |
+| Builder Error | Task incomplete | More explicit requirements |
+| Integration Error | Components not wired | Wiring checklist in Reviewer |
+| Environment Error | Wrong paths | Path verification step |
+| Runtime Error | Code crashes | Add QA Tester hat |
+| Reviewer Error | Issues not caught | Stronger review checklist |
+
+### Output Structure
+
+```
+.meta/
+├── config.md                 # Task config (input)
+├── scratchpad.md             # Running state
+├── iteration.txt             # Current iteration number
+├── results/
+│   ├── grades-1.md           # Scores with evidence
+│   ├── analysis-1.md         # Error classification + patterns
+│   └── ...
+└── approaches/
+    ├── evolved-1/
+    │   ├── ralph.yml         # Improved config
+    │   └── CHANGELOG.md      # What changed and why
+    └── ...
+```
+
+### Example: PRD Implementation
+
+See `~/.dotfiles/claude/skills/ralph-orchestrator/references/meta-orchestrator/examples/prd-implementation.md` for a complete example config.
+
 ## Creating Custom Presets
 
 Edit `ralph.yml`:
@@ -371,6 +441,10 @@ ralph run
 
 - **`references/prd-preset.yml`** - Complete PRD-driven workflow preset
 - **`references/workflow-diagram.md`** - Visual workflow documentation
+- **`references/meta-orchestrator/`** - Evolutionary meta-orchestrator preset
+  - `ralph.yml` - Main config with 4 hats (Orchestrator, Grader, Analyzer, Evolver)
+  - `run-meta.sh` - Entry point script
+  - `examples/prd-implementation.md` - Example task config
 
 ### Example Files
 
