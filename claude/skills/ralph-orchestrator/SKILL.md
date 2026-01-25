@@ -148,19 +148,60 @@ Key presets:
 - `tdd-red-green` - Test-driven development
 - `debug` - Bug investigation workflow
 
+### Dotfiles Presets
+
+Custom presets live in `~/.dotfiles/claude/skills/ralph-orchestrator/references/`:
+- `prd-to-code-assist.yml` - Start from existing PRD, skip design debate
+
 ## PRD-Driven Workflow
 
-For detailed PRD workflows where the PRD should be consulted each iteration:
+When you already have a detailed PRD and want to skip the design debate phase:
 
-1. Create `specs/prd.md` with detailed requirements
-2. Use the PRD-driven preset (see `references/prd-preset.yml`)
-3. Run `ralph run`
+### Quick Start (Existing PRD)
 
-The workflow:
-1. **Planner** reads PRD, creates tasks from user stories
-2. **Builder** re-reads PRD each iteration, implements one task
-3. **Reviewer** verifies against PRD requirements
-4. **Verifier** final check, outputs LOOP_COMPLETE
+```bash
+# Use the prd-to-code-assist preset from dotfiles
+ralph run -c ~/.dotfiles/claude/skills/ralph-orchestrator/references/prd-to-code-assist.yml \
+  --prompt "Implement specs/canvas/prd.md"
+
+# Or copy to your project and customize
+cp ~/.dotfiles/claude/skills/ralph-orchestrator/references/prd-to-code-assist.yml ./ralph.yml
+```
+
+### prd-to-code-assist Workflow (5 hats)
+
+| Hat | Triggers | What It Does |
+|-----|----------|--------------|
+| Explorer | `prd.ready` | Researches codebase, builds context from PRD |
+| Planner | `context.ready` | Creates TDD test strategy and implementation plan |
+| Task Writer | `plan.ready` | Converts plan into `.code-task.md` files |
+| Builder | `tasks.ready`, `task.complete` | Implements ONE task per iteration via TDD |
+| Validator | `implementation.ready` | Quality gate, E2E testing, outputs LOOP_COMPLETE |
+
+### File Organization
+
+```
+your-project/
+├── specs/
+│   └── {feature-name}/
+│       ├── design.md      # Your PRD (copy or symlink)
+│       ├── context.md     # Generated: codebase patterns
+│       ├── plan.md        # Generated: implementation plan
+│       └── tasks/
+│           ├── task-01-*.code-task.md
+│           └── task-02-*.code-task.md
+└── ralph.yml
+```
+
+### Full PDD Workflow (9 hats)
+
+For rough ideas that need design refinement first, use `pdd-to-code-assist`:
+
+```bash
+ralph run -c presets/pdd-to-code-assist.yml --prompt "Build a rate limiter"
+```
+
+This adds Inquisitor → Architect → Design Critic before the implementation phase.
 
 ## Creating Custom Presets
 

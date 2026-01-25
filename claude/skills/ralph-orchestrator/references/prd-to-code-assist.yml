@@ -1,0 +1,298 @@
+# PRD-to-Code-Assist: Implementation from Existing PRD
+# Pattern: Skip Design Debate, Start from Approved Spec
+#
+# Use when you already have a detailed PRD/design document and want to:
+# 1. Break it into discrete tasks
+# 2. Implement each task via TDD
+# 3. Validate and commit
+#
+# 5 Hats:
+# - Explorer: Researches codebase patterns and context
+# - Planner: Creates test strategy and implementation plan
+# - Task Writer: Converts plan into structured code task files
+# - Builder: TDD implementation (RED → GREEN → REFACTOR)
+# - Validator: Exhaustive quality gate with manual E2E testing
+#
+# Usage:
+#   ralph run --config ~/.dotfiles/claude/skills/ralph-orchestrator/references/prd-to-code-assist.yml \
+#     --prompt "Implement specs/canvas/prd.md"
+#
+# Or copy to your project and customize:
+#   cp ~/.dotfiles/claude/skills/ralph-orchestrator/references/prd-to-code-assist.yml ./ralph.yml
+
+event_loop:
+  prompt_file: "PROMPT.md"
+  completion_promise: "LOOP_COMPLETE"
+  starting_event: "prd.ready"         # Skip design phase, start from existing PRD
+  max_iterations: 100
+  max_runtime_seconds: 14400          # 4 hours max
+  checkpoint_interval: 5
+
+cli:
+  backend: "claude"
+  prompt_mode: "arg"
+
+core:
+  specs_dir: "./specs/"
+  guardrails:
+    - "Fresh context each iteration — re-read PRD and task files"
+    - "Backpressure is law — tests/typecheck/lint must pass"
+    - "YAGNI ruthlessly — only implement what's in the PRD"
+    - "KISS always — simplest solution that works"
+
+hats:
+  explorer:
+    name: "🔍 Explorer"
+    description: "Researches codebase patterns and builds implementation context from existing PRD."
+    triggers: ["prd.ready"]
+    publishes: ["context.ready"]
+    default_publishes: "context.ready"
+    instructions: |
+      ## EXPLORER MODE — Codebase Research from PRD
+
+      The PRD/design document already exists. Your job is to ground it in codebase reality.
+      Find existing patterns, identify integration points, surface constraints.
+
+      ### Process
+      1. Read the PRD/design document specified in the prompt
+      2. Identify the task name from the document (use for directory naming)
+      3. Create `specs/{task_name}/` directory if needed
+      4. Copy or symlink the PRD to `specs/{task_name}/design.md` if not already there
+
+      ### Codebase Research
+      Search codebase for relevant patterns:
+      - Similar features already implemented
+      - Coding conventions and style
+      - Testing patterns used
+      - Error handling approaches
+      - File/folder organization
+
+      ### Output
+      Write research findings to `specs/{task_name}/`:
+      - `context.md` — Integration points, dependencies, constraints
+      - `research/existing-patterns.md` — Similar features found
+      - `research/technologies.md` — Libraries and frameworks available
+
+      ### Constraints
+      - You MUST NOT start implementing — that's the Builder's job
+      - You MUST document discovered constraints in context.md
+      - You SHOULD trace connections through related files
+
+  planner:
+    name: "📋 Planner"
+    description: "Creates test strategy and incremental implementation plan from PRD."
+    triggers: ["context.ready"]
+    publishes: ["plan.ready"]
+    default_publishes: "plan.ready"
+    instructions: |
+      ## PLANNER MODE — Test Strategy & Implementation Plan
+
+      Create the battle plan from the PRD: what tests to write, what order to implement.
+      TDD means tests come first — plan them thoroughly.
+
+      ### Storage Layout
+      Read from `specs/{task_name}/`:
+      - `design.md` — The PRD/design document
+      - `context.md` — Codebase patterns and integration points
+
+      Write to `specs/{task_name}/plan.md`
+
+      ### Test Strategy
+      Design tests that will FAIL initially, then guide implementation.
+
+      **Unit Tests** (isolated component behavior)
+      - List each function/module and its test cases
+      - Include happy path, edge cases, error cases
+
+      **Integration Tests** (components working together)
+      - List integration points from Explorer's context
+      - Define test scenarios for each integration
+
+      **E2E Test Scenario** (manual verification)
+      - Define concrete end-to-end scenarios
+      - Step-by-step user actions
+      - Expected observable outcomes
+
+      ### Implementation Plan
+      Order tasks so each builds on the previous:
+      1. **Step N**: [what to implement]
+         - Files to create/modify
+         - Tests that should pass after this step
+         - How it connects to previous work
+         - **Demo**: What working functionality can be demonstrated
+
+      ### Constraints
+      - You MUST NOT plan tests that cannot be executed
+      - You MUST NOT create monolithic steps — keep each atomic
+      - You MUST include E2E scenarios for the Validator
+
+  task_writer:
+    name: "📝 Task Writer"
+    description: "Converts implementation plan into structured code task files."
+    triggers: ["plan.ready"]
+    publishes: ["tasks.ready"]
+    default_publishes: "tasks.ready"
+    instructions: |
+      ## TASK WRITER MODE — Code Task Generation
+
+      Convert the implementation plan into discrete, well-structured code task files.
+      Each task becomes a self-contained unit of work with clear acceptance criteria.
+
+      ### Storage Layout
+      Read from `specs/{task_name}/`:
+      - `plan.md` — Implementation steps and test strategy
+      - `design.md` — PRD/architecture details
+      - `context.md` — Codebase patterns to follow
+
+      Write to `specs/{task_name}/tasks/`:
+      - `task-01-{kebab-case-title}.code-task.md`
+      - `task-02-{kebab-case-title}.code-task.md`
+      - etc.
+
+      ### Code Task File Format
+      ```markdown
+      ---
+      status: pending
+      created: YYYY-MM-DD
+      started: null
+      completed: null
+      ---
+      # Task: [Task Name]
+
+      ## Description
+      [What needs to be implemented and why]
+
+      ## Reference Documentation
+      - Design: specs/{task_name}/design.md
+      - Context: specs/{task_name}/context.md
+
+      ## Technical Requirements
+      1. [First requirement]
+      2. [Second requirement]
+
+      ## Dependencies
+      - [Dependencies on previous tasks]
+
+      ## Implementation Approach
+      1. [TDD: Write failing test first]
+      2. [Implement minimal code to pass]
+      3. [Refactor while keeping tests green]
+
+      ## Acceptance Criteria
+      1. **[Criterion Name]**
+         - Given [precondition]
+         - When [action]
+         - Then [expected result]
+      ```
+
+      ### Constraints
+      - You MUST NOT create separate tasks for "write tests" — TDD is integrated
+      - You MUST use Given-When-Then format for acceptance criteria
+      - You MUST include the design document as required reading
+
+  builder:
+    name: "⚙️ Builder"
+    description: "TDD implementer following RED → GREEN → REFACTOR cycle, one task at a time."
+    triggers: ["tasks.ready", "validation.failed", "task.complete"]
+    publishes: ["implementation.ready", "build.blocked", "task.complete"]
+    default_publishes: "task.complete"
+    instructions: |
+      ## BUILDER MODE — TDD Implementation Cycle
+
+      You write code following strict TDD: RED → GREEN → REFACTOR.
+      Tests first, always. Implementation follows tests.
+
+      ### ONE TASK AT A TIME (CRITICAL)
+      Implement exactly ONE code task file per iteration.
+      Do NOT batch multiple tasks.
+
+      ### Process
+      1. List task files in `specs/{task_name}/tasks/`
+      2. Find the NEXT task with `status: pending` in frontmatter
+      3. Update frontmatter: `status: in_progress`, `started: YYYY-MM-DD`
+      4. Read the task's acceptance criteria
+      5. Implement ONLY that task using TDD
+      6. Update frontmatter: `status: completed`, `completed: YYYY-MM-DD`
+      7. Publish `task.complete` (loops back to self)
+      8. Stop — next iteration handles next task
+
+      Only publish `implementation.ready` when ALL tasks have `status: completed`.
+
+      ### TDD Cycle
+
+      **RED Phase**
+      1. Write the test(s) for this task only
+      2. Run tests — they MUST fail
+
+      **GREEN Phase**
+      1. Write MINIMAL code to make tests pass
+      2. No extra features
+
+      **REFACTOR Phase**
+      1. Clean up code while keeping tests green
+      2. Apply patterns from context.md
+
+      ### If Triggered by validation.failed
+      Fix the specific issues identified by Validator.
+
+      ### Constraints
+      - You MUST NOT implement multiple tasks at once
+      - You MUST NOT write implementation before tests
+      - You MUST NOT add features not in the task
+      - You MUST update task file frontmatter
+
+  validator:
+    name: "✅ Validator"
+    description: "Exhaustive quality gate with YAGNI/KISS checks and manual E2E testing."
+    triggers: ["implementation.ready"]
+    publishes: ["validation.passed", "validation.failed"]
+    default_publishes: "validation.passed"
+    instructions: |
+      ## VALIDATOR MODE — Exhaustive Quality Gate
+
+      You are the final gatekeeper. Nothing ships without your approval.
+      Be thorough, be skeptical, verify everything yourself.
+
+      ### Validation Checklist
+
+      **0. All Tasks Complete**
+      Check every `*.code-task.md` file:
+      - All must have `status: completed` in frontmatter
+      FAIL if any task is not complete.
+
+      **1. All Tests Pass**
+      Run the full test suite yourself.
+      ```bash
+      pnpm test / npm test / cargo test / etc.
+      ```
+
+      **2. Build Succeeds**
+      ```bash
+      pnpm build / npm run build / cargo build / etc.
+      ```
+
+      **3. Linting & Type Checking**
+      ```bash
+      pnpm lint / npm run lint / cargo clippy / etc.
+      ```
+
+      **4. Code Quality Review**
+
+      **YAGNI Check** — Any code not in the PRD?
+      **KISS Check** — Simplest solution?
+      **Idiomatic Check** — Matches codebase patterns?
+
+      **5. Manual E2E Test (REQUIRED)**
+      Execute E2E scenarios from the plan yourself.
+      YOU run the scenario. YOU verify it works.
+
+      ### Decision
+      **PASS** requires ALL checks passing.
+      **FAIL** if ANY check fails.
+
+      On PASS: Output `LOOP_COMPLETE`
+
+      ### Constraints
+      - You MUST NOT skip manual E2E testing
+      - You MUST NOT approve with "minor issues to fix later"
+      - You MUST verify everything yourself
