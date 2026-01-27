@@ -1,15 +1,14 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "defaultMode": "dontAsk"
   },
   "model": "opus",
   "enabledMcpjsonServers": [
     "tavus"
-  ],
-  "disabledMcpServers": [
-    "notion",
-    "linear-server",
-    "plugin:Notion:notion"
   ],
   "hooks": {
     "UserPromptSubmit": [
@@ -27,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay ~/.dotfiles/sounds/elevenlabs-notification-7.mp3"
+            "command": "command -v afplay >/dev/null 2>&1 && afplay ~/.dotfiles/sounds/elevenlabs-notification-7.mp3"
           }
         ]
       },
@@ -45,7 +44,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Portal-EncoreInfinitum.caf"
+            "command": "command -v afplay >/dev/null 2>&1 && afplay /System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Portal-EncoreInfinitum.caf"
           }
         ]
       }
@@ -63,7 +62,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Welcome-EncoreInfinitum.caf"
+            "command": "command -v afplay >/dev/null 2>&1 && afplay /System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Welcome-EncoreInfinitum.caf"
           }
         ]
       }
@@ -74,22 +73,25 @@
     "command": "input=$(cat); model=$(echo \"$input\" | jq -r '.model.display_name'); current_dir=$(echo \"$input\" | jq -r '.workspace.current_dir'); style=$(echo \"$input\" | jq -r '.output_style.name'); dir_display=$(echo \"$current_dir\" | sed 's|^/Users/michael|~|'); git_info=\"\"; if [ -d \"$current_dir/.git\" ] || git -C \"$current_dir\" rev-parse --git-dir > /dev/null 2>&1; then branch=$(git -C \"$current_dir\" branch --show-current 2>/dev/null || echo \"detached\"); if [ ! -z \"$branch\" ]; then if ! git -C \"$current_dir\" diff --quiet 2>/dev/null || ! git -C \"$current_dir\" diff --cached --quiet 2>/dev/null; then git_info=$' \\e[33m⚡'\"$branch\"$'\\e[0m'; else git_info=$' \\e[32m⎇ '\"$branch\"$'\\e[0m'; fi; fi; fi; timestamp=$(date +\"%H:%M\"); printf $'\\e[2m[%s]\\e[0m \\e[36m%s\\e[0m \\e[2m@\\e[0m \\e[34m%s\\e[0m%s \\e[2m[%s]\\e[0m' \"$timestamp\" \"$model\" \"$(basename \"$dir_display\")\" \"$git_info\" \"$style\""
   },
   "enabledPlugins": {
-    "beads@beads-marketplace": true,
-    "claude-opus-4-5-migration@claude-code-plugins": true,
     "feature-dev@claude-code-plugins": true,
     "frontend-design@claude-code-plugins": true,
-    "hookify@claude-code-plugins": false,
     "ralph-wiggum@claude-code-plugins": true,
     "plugin-dev@claude-code-plugins": true,
-    "ppv@local-plugins": true,
+    "everything-loop@local-plugins": true,
     "claude-meta@local-plugins": true,
     "dev@local-plugins": true,
     "media@local-plugins": true,
-    "memory@local-plugins": true,
-    "misc@local-plugins": true,
     "productivity@local-plugins": true,
     "terminal@local-plugins": true,
-    "Notion@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "security-guidance@claude-code-plugins": true,
+    "context7@claude-plugins-official": true,
+    "agent-sdk-dev@claude-code-plugins": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "hookify@claude-code-plugins": true
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "disabledMcpServers": [
+    "playwright"
+  ]
 }
