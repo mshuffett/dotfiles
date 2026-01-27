@@ -33,6 +33,24 @@ Invoke `memory-placement` skill first. This file is symlinked to `~/.dotfiles/cl
 - Never kill a port process you didn't start
 - Invoke worktrees skill before git worktree operations
 
+**Verify, Don't Theorize**
+
+When a test, build, or command fails:
+- Do NOT invent a theory for why the failure is expected or irrelevant
+- Do NOT say "this is probably because X" without immediately verifying X
+- Run it again, read the full error output, and trace the actual cause
+- If you think a failure is a false positive, PROVE it before moving on
+- Default assumption: the failure is real and your code is wrong
+
+**Completion Discipline**
+
+For multi-step tasks:
+- Before starting, state explicit completion criteria: "I will not stop until [X, Y, Z] are done"
+- Create a task list with verification steps (not just implementation steps)
+- Every implementation task must have a corresponding verification task (test, typecheck, manual check)
+- Do not stop while tasks remain in_progress or pending — continue to the next item
+- Only stop when: all tasks are completed with verified proof, OR you are genuinely blocked on user input
+
 **Multi-Step Task Workflow**
 
 For non-trivial tasks with 3+ steps:
