@@ -17,9 +17,9 @@ When a task involves UI changes, always create these tasks at the start:
 
 Do not mark the work as complete until all four tasks are done.
 
-## Step 1: Verify with agent-browser
+## Step 1: Verify with agent-browser (MANDATORY — DO NOT SKIP)
 
-After implementation, use `agent-browser` in headless mode to walk the full user flow affected by your change.
+After implementation, use `agent-browser` in headless mode to walk the full user flow affected by your change. **You MUST complete this step successfully before moving to Step 2.** If you cannot verify the behavior manually, you are not ready to write a test.
 
 ```bash
 agent-browser open http://localhost:3000/<page>
@@ -40,7 +40,16 @@ agent-browser get url
 - Edge cases: empty states, error states, rapid interaction
 - DOM state where relevant: focus, disabled, checked, values
 
+**If agent-browser is struggling** (async data loading, elements off-screen, click hangs):
+- Use `agent-browser eval` to run JS directly for scrolling, clicking, or checking state
+- Use `agent-browser wait --fn "..."` to wait for async data to load
+- Use `agent-browser screenshot` to visually inspect the page state
+- Navigate directly to URLs instead of clicking through UI when possible (e.g. append `?taskId=<id>` query params)
+- Use `gemini -p "..." -m gemini-2.5-flash` with a screenshot to get advice on how to interact with the page
+
 **If something is broken**, fix it before moving on. Do not write a test for broken behavior.
+
+**NEVER skip this step.** If you jump to writing a Playwright test without first manually verifying the behavior works, you are writing a test for something you haven't confirmed. This defeats the purpose.
 
 ## Step 2: Write a Playwright Test
 
