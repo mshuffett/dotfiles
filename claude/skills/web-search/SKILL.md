@@ -12,7 +12,7 @@ Run three search sources in parallel to get broader, more comprehensive results 
 |--------|-----|-----------|
 | **Claude WebSearch** | Built-in `WebSearch` tool | Fast, integrated, returns structured results with links |
 | **Codex CLI** | `codex exec` with web-grounded prompt | OpenAI reasoning + web access, good for technical/code topics |
-| **Gemini CLI** | `gemini -p` with grounded prompt | Google Search grounding, strong for recent/current events |
+| **Gemini CLI** | `gemini -p` with grounded prompt | Google Search grounding, strong for recent/current events. Highest performing model in benchmarks. |
 
 ## Execution
 
