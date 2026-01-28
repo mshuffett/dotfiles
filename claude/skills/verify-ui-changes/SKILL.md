@@ -22,6 +22,8 @@ Do not mark the work as complete until all four tasks are done.
 After implementation, use `agent-browser` in headless mode to walk the full user flow affected by your change. **You MUST complete this step successfully before moving to Step 2.** If you cannot verify the behavior manually, you are not ready to write a test.
 
 ```bash
+# Load saved auth state to skip login (see project CLAUDE.md for setup)
+agent-browser state load /tmp/agent-browser-auth.json
 agent-browser open http://localhost:3000/<page>
 agent-browser snapshot -i
 # Interact: fill forms, click buttons, trigger the behavior you changed
@@ -45,7 +47,7 @@ agent-browser get url
 - Use `agent-browser wait --fn "..."` to wait for async data to load
 - Use `agent-browser screenshot` to visually inspect the page state
 - Navigate directly to URLs instead of clicking through UI when possible (e.g. append `?taskId=<id>` query params)
-- Use `gemini -p "..." -m gemini-2.5-flash` with a screenshot to get advice on how to interact with the page
+- Use `gemini -p "..." -o text -m gemini-3-flash-preview` with a screenshot to get advice on how to interact with the page (screenshot must be copied into the project dir first)
 
 **If something is broken**, fix it before moving on. Do not write a test for broken behavior.
 
