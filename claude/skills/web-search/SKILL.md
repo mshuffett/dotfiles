@@ -16,24 +16,34 @@ Run three search sources in parallel to get broader, more comprehensive results 
 
 ## Execution
 
-Run all three in parallel. Use the Bash tool for Codex and Gemini, and the WebSearch tool for Claude's built-in search.
+Run all three in parallel using `run_in_background: true` for Codex and Gemini Bash calls. Use the WebSearch tool directly for Claude's built-in search.
 
 ### Claude WebSearch
 Use the `WebSearch` tool directly with the query.
 
-### Codex (non-interactive)
+### Codex (non-interactive, background)
 ```bash
-codex exec "Search the web and provide a comprehensive answer with sources for: <QUERY>" 2>/dev/null
+codex exec --skip-git-repo-check "Search the web and provide a comprehensive answer with sources for: <QUERY>" 2>&1
 ```
+- Always pass `--skip-git-repo-check` since we may not be in a git repo.
+- Run with `run_in_background: true` and `timeout: 120000`.
 
-### Gemini (non-interactive, text output)
+### Gemini (non-interactive, background)
 ```bash
-gemini -p "Search the web and provide a comprehensive answer with sources for: <QUERY>" -o text 2>/dev/null
+gemini -p "Search the web and provide a comprehensive answer with sources for: <QUERY>" -o text 2>&1
 ```
+- Run with `run_in_background: true` and `timeout: 120000`.
+- If `gemini-3-pro-preview` returns 429 (capacity exhausted), try with `-m gemini-2.5-flash` as fallback.
+
+## Error Handling
+
+- **Codex "not inside trusted directory"**: Always use `--skip-git-repo-check`.
+- **Gemini 429 / MODEL_CAPACITY_EXHAUSTED**: Retry once with `-m gemini-2.5-flash`. If still fails, proceed with Claude + Codex results only.
+- **Any source fails**: Synthesize from whatever sources returned results. Note which sources were unavailable.
 
 ## Synthesis
 
-After all three return:
+After all sources return (check background tasks with `TaskOutput`):
 1. **Deduplicate** - Merge overlapping findings
 2. **Cross-validate** - Flag information confirmed by multiple sources
 3. **Fill gaps** - Note unique findings from each source
@@ -54,7 +64,8 @@ After all three return:
 
 ## Acceptance Checks
 
-- [ ] All three sources queried in parallel
+- [ ] All three sources queried in parallel (background mode for CLI tools)
 - [ ] Results synthesized into a single coherent answer
 - [ ] Sources section includes URLs from all providers that returned results
+- [ ] Failed sources noted; fallback models attempted where applicable
 - [ ] Conflicting information noted where applicable
