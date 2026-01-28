@@ -33,12 +33,12 @@ codex exec --skip-git-repo-check "Search the web and provide a comprehensive ans
 gemini -p "Search the web and provide a comprehensive answer with sources for: <QUERY>" -o text 2>&1
 ```
 - Run with `run_in_background: true` and `timeout: 120000`.
-- If the default model errors, retry with `-m gemini-3-flash-preview`. If that also fails, skip Gemini.
+- If the default model errors, retry with `-m gemini-3-flash-preview`.
 
 ## Error Handling
 
 - **Codex "not inside trusted directory"**: Always use `--skip-git-repo-check`.
-- **Gemini errors**: Retry with `-m gemini-3-flash-preview`. If that also fails, skip Gemini.
+- **Gemini errors**: Retry with `-m gemini-3-flash-preview`.
 - **Any source fails**: Synthesize from whatever sources returned results. Note which sources were unavailable.
 
 ## Synthesis
