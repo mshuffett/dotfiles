@@ -30,16 +30,15 @@ codex exec --skip-git-repo-check "Search the web and provide a comprehensive ans
 
 ### Gemini (non-interactive, background)
 ```bash
-gemini -m gemini-3-flash-preview -p "Search the web and provide a comprehensive answer with sources for: <QUERY>" -o text 2>&1
+gemini -p "Search the web and provide a comprehensive answer with sources for: <QUERY>" -o text 2>&1
 ```
-- Use `-m gemini-3-flash-preview` (default pro model frequently hits capacity limits).
 - Run with `run_in_background: true` and `timeout: 120000`.
-- If flash also returns 429, skip Gemini and proceed with Claude + Codex results only.
+- If the default model errors, retry with `-m gemini-3-flash-preview`. If that also fails, skip Gemini.
 
 ## Error Handling
 
 - **Codex "not inside trusted directory"**: Always use `--skip-git-repo-check`.
-- **Gemini 429 / MODEL_CAPACITY_EXHAUSTED**: Default is `gemini-3-flash-preview`. If it 429s, skip Gemini and proceed with Claude + Codex results only.
+- **Gemini errors**: Retry with `-m gemini-3-flash-preview`. If that also fails, skip Gemini.
 - **Any source fails**: Synthesize from whatever sources returned results. Note which sources were unavailable.
 
 ## Synthesis
