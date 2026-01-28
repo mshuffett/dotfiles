@@ -41,6 +41,7 @@ When a test, build, or command fails:
 - Run it again, read the full error output, and trace the actual cause
 - If you think a failure is a false positive, PROVE it before moving on
 - Default assumption: the failure is real and your code is wrong
+- Always run E2E / integration tests when they exist, not just unit tests
 
 **Completion Discipline**
 
@@ -50,6 +51,12 @@ For multi-step tasks:
 - Every implementation task must have a corresponding verification task (test, typecheck, manual check)
 - Do not stop while tasks remain in_progress or pending — continue to the next item
 - Only stop when: all tasks are completed with verified proof, OR you are genuinely blocked on user input
+
+**Favor creating more tasks, not fewer.** When in doubt, create a task — it's better to track something you end up not needing than to forget something important. Specifically:
+- If you discover something that needs fixing along the way, create a task for it immediately rather than trying to remember it
+- If a step turns out to be more complex than expected, break it into sub-tasks on the spot
+- If you notice a related issue, tangential improvement, or loose end, create a task so it doesn't get lost
+- **Do not stop until every task is completed.** Check TaskList after finishing each task and keep going until nothing remains pending or in_progress
 
 **Multi-Step Task Workflow**
 
