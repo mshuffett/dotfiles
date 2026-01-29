@@ -10,6 +10,8 @@ When corrected or shown a better approach:
 
 Skills are how I learn. When my task matches a skill description, invoke it via Skill tool before proceeding.
 
+**Scan skills before "familiar" operations too.** The bias is to skip skill checks for things that feel routine (tmux, git, bash patterns). These are exactly where skills prevent subtle mistakes. If an operation has a matching skill, invoke it — even if the command seems obvious.
+
 When creating skills, invoke `skill-creation` skill. Skills live in `~/.dotfiles/claude/skills/` and must be committed.
 
 **Primary User**
