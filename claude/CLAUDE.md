@@ -33,6 +33,15 @@ Invoke `memory-placement` skill first. This file is symlinked to `~/.dotfiles/cl
 - Never kill a port process you didn't start
 - Invoke worktrees skill before git worktree operations
 
+**Fix, Don't Bypass**
+
+When encountering errors or blockers during a task:
+- Do NOT work around the problem with test URLs, flags, or shortcuts
+- Do NOT skip the broken step and continue with the rest
+- STOP and fix the root cause before proceeding
+- If fixing requires user input (credentials, config choices), ask immediately
+- The goal is a working end-to-end flow, not a demo that avoids broken parts
+
 **Verify, Don't Theorize**
 
 When a test, build, or command fails:
@@ -62,7 +71,7 @@ For multi-step tasks:
 
 For non-trivial tasks with 3+ steps:
 1. **Plan first** - Use EnterPlanMode for complex implementation tasks
-2. **Create plan file** - Write plan in `./plans/<task-name>.md` for persistence across sessions
+2. **Create plan file** - Write plan in `./plans/<slug>.md` (see convention below)
 3. **Create a task** - Use TaskCreate to track the plan file, so it survives context compaction
 4. **Use task tools** - Track in-session progress via TaskCreate/TaskUpdate (status: pending → in_progress → completed)
 5. **Log progress** - Append findings and decisions to the plan file as you go
@@ -72,6 +81,52 @@ For non-trivial tasks with 3+ steps:
 - **Plan files** (`./plans/*.md`) - Persist across sessions; use for complex work that may span multiple sessions
 
 Always create a task pointing to the plan file so you remember it exists after compaction.
+
+**Plan File Convention**
+
+Location: `./plans/` at the project root (create the directory if it doesn't exist).
+
+Naming: `<descriptive-slug>.md` in kebab-case (e.g., `sandbox-providers-completion.md`, `phase-3-sdk-migration.md`).
+
+Every plan file MUST have YAML frontmatter with a `status` field:
+
+```yaml
+---
+status: active
+created: YYYY-MM-DD
+---
+```
+
+Status values:
+- `active` — Currently being worked on. **At most one plan should be active at a time.**
+- `completed` — Work finished successfully.
+- `abandoned` — Plan was dropped (note the reason in the file body).
+- `paused` — Work intentionally stopped; will resume later.
+
+Finding the current plan: At session start, scan `./plans/` for the file with `status: active` frontmatter. If one exists, read it and resume from where it left off.
+
+When finishing a plan: Update the frontmatter to `status: completed` (or `abandoned`/`paused`). Never leave stale `active` plans behind.
+
+Required structure:
+```markdown
+---
+status: active
+created: YYYY-MM-DD
+---
+# Plan Title
+
+## Goal
+What we're trying to accomplish.
+
+## Steps
+1. First step
+2. Second step
+
+## Progress Log
+- YYYY-MM-DD: What happened, decisions made, blockers found
+```
+
+The Progress Log section is append-only — add entries as work proceeds so future sessions can pick up context.
 
 **Handling Interleaved/Queued Messages**
 
