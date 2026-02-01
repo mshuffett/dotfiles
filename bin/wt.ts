@@ -156,26 +156,54 @@ const main = defineCommand({
     await $`git worktree add ${worktreePath} -b ${branchName} ${baseBranch}`.quiet();
     console.log(green(" done"));
 
-    // Copy .env files from main repo
-    process.stdout.write(dim("Copying .env files..."));
-    const envCount = copyEnvFiles(mainRepo, worktreePath);
-    console.log(green(` ${envCount} copied`));
-
-    // Install dependencies
-    process.stdout.write(dim("Installing dependencies..."));
-    const installResult = await $`cd ${worktreePath} && pnpm install`.quiet().nothrow();
-    if (installResult.exitCode !== 0) {
-      console.log(yellow(" failed (run manually)"));
-    } else {
-      console.log(green(" done"));
-    }
-
-    console.log(bold(green("\n✓ Ready")));
+    console.log(bold(green("\n✓ Worktree created")));
 
     if (args.n) {
       console.log(dim(`\ncd ${worktreePath}`));
+      // Run setup in foreground when not entering
+      console.log(dim("\nRunning setup..."));
+      process.stdout.write(dim("Copying .env files..."));
+      const envCount = copyEnvFiles(mainRepo, worktreePath);
+      console.log(green(` ${envCount} copied`));
+      process.stdout.write(dim("Installing dependencies..."));
+      const installResult = await $`cd ${worktreePath} && pnpm install`.quiet().nothrow();
+      if (installResult.exitCode !== 0) {
+        console.log(yellow(" failed (run manually)"));
+      } else {
+        console.log(green(" done"));
+      }
     } else {
-      console.log(dim("\nEntering worktree (exit to return)...\n"));
+      // Start background setup process
+      const setupScript = `
+        cd "${worktreePath}"
+        # Copy .env files
+        for f in "${mainRepo}"/.env*; do
+          [ -f "$f" ] && cp "$f" "${worktreePath}/"
+        done
+        for dir in apps packages; do
+          [ -d "${mainRepo}/$dir" ] && find "${mainRepo}/$dir" -maxdepth 2 -name '.env*' -type f 2>/dev/null | while read f; do
+            rel="\${f#${mainRepo}/}"
+            dest="${worktreePath}/\$rel"
+            mkdir -p "$(dirname "\$dest")"
+            cp "$f" "\$dest"
+          done
+        done
+        # Install dependencies
+        pnpm install
+      `;
+
+      // Spawn detached background process
+      const logFile = `/tmp/wt-setup-${dirName}.log`;
+      Bun.spawn(["bash", "-c", `(${setupScript}) > "${logFile}" 2>&1`], {
+        cwd: worktreePath,
+        stdin: "ignore",
+        stdout: "ignore",
+        stderr: "ignore",
+      }).unref();
+
+      console.log(dim(`\nSetup running in background (log: ${yellow(logFile)})`));
+      console.log(dim("Entering worktree...\n"));
+
       const shell = process.env.SHELL || "/bin/bash";
       const proc = Bun.spawn([shell], {
         cwd: worktreePath,

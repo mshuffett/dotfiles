@@ -1,0 +1,8 @@
+{
+  "name": "plan-orchestrator",
+  "version": "1.0.0",
+  "description": "Collaborative planning workflow that produces linked markdown documents with progressive detail, status tracking, and gated progression. Helps align on goals and methods before diving into technical details.",
+  "author": {
+    "name": "Michael"
+  }
+}

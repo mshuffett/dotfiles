@@ -117,6 +117,17 @@
       },
       "source": "./plugins/communication",
       "category": "productivity"
+    },
+    {
+      "name": "plan-orchestrator",
+      "description": "Collaborative planning with linked documents, status tracking, and gated progression",
+      "version": "1.0.0",
+      "author": {
+        "name": "Michael Shuffett",
+        "email": "michael@compose.ai"
+      },
+      "source": "./plugins/plan-orchestrator",
+      "category": "development"
     }
   ]
 }

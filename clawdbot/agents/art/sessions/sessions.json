@@ -176,14 +176,14 @@
     "lastChannel": "telegram"
   },
   "agent:main:main": {
-    "sessionId": "5bd82f70-9e14-4db6-b6ba-f3ebc0eb432c",
-    "updatedAt": 1769232394760,
+    "sessionId": "c78fcb3e-5712-41c9-9c54-d7e3131d9d6f",
+    "updatedAt": 1769726807196,
     "systemSent": true,
     "abortedLastRun": false,
     "chatType": "direct",
-    "sessionFile": "/Users/michael/.clawdbot/agents/art/sessions/5bd82f70-9e14-4db6-b6ba-f3ebc0eb432c.jsonl",
+    "sessionFile": "/Users/michael/.clawdbot/agents/art/sessions/c78fcb3e-5712-41c9-9c54-d7e3131d9d6f.jsonl",
     "skillsSnapshot": {
-      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\n\n<available_skills>\n  <skill>\n    <name>1password</name>\n    <description>Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in (single or multi-account), or reading/injecting/running secrets via op.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/1password/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>clawdhub</name>\n    <description>Use the ClawdHub CLI to search, install, update, and publish agent skills from clawdhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawdhub CLI.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/clawdhub/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>coding-agent</name>\n    <description>Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/coding-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>discord</name>\n    <description>Use when you need to control Discord from Clawdbot via the discord tool: send messages, react, post or upload stickers, upload emojis, run polls, manage threads/pins/search, create/edit/delete channels and categories, fetch permissions or member/role/channel info, or handle moderation actions in Discord DMs or channels.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/discord/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>gemini</name>\n    <description>Gemini CLI for one-shot Q&amp;A, summaries, and generation.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/gemini/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>github</name>\n    <description>Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/github/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>gog</name>\n    <description>Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/gog/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>himalaya</name>\n    <description>CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple accounts and message composition with MML (MIME Meta Language).</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/himalaya/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>imsg</name>\n    <description>iMessage/SMS CLI for listing chats, history, watch, and sending.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/imsg/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>mcporter</name>\n    <description>Use the mcporter CLI to list, configure, auth, and call MCP servers/tools directly (HTTP or stdio), including ad-hoc servers, config edits, and CLI/type generation.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/mcporter/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>notion</name>\n    <description>Notion API for creating and managing pages, databases, and blocks.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/notion/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>session-logs</name>\n    <description>Search and analyze your own conversation history from session log files using jq.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/session-logs/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Create or update AgentSkills. Use when designing, structuring, or packaging skills with scripts, references, and assets.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>slack</name>\n    <description>Use when you need to control Slack from Clawdbot via the slack tool, including reacting to messages or pinning/unpinning items in Slack channels or DMs.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/slack/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tmux</name>\n    <description>Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/tmux/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>video-frames</name>\n    <description>Extract frames or short clips from videos using ffmpeg.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/video-frames/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>wacli</name>\n    <description>Send WhatsApp messages to other people or search/sync WhatsApp history via the wacli CLI (not for normal user chats).</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/wacli/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>weather</name>\n    <description>Get current weather and forecasts (no API key required).</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/weather/SKILL.md</location>\n  </skill>\n</available_skills>",
+      "prompt": "\n\nThe following skills provide specialized instructions for specific tasks.\nUse the read tool to load a skill's file when the task matches its description.\n\n<available_skills>\n  <skill>\n    <name>1password</name>\n    <description>Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in (single or multi-account), or reading/injecting/running secrets via op.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/1password/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>clawdhub</name>\n    <description>Use the ClawdHub CLI to search, install, update, and publish agent skills from clawdhub.com. Use when you need to fetch new skills on the fly, sync installed skills to latest or a specific version, or publish new/updated skill folders with the npm-installed clawdhub CLI.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/clawdhub/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>coding-agent</name>\n    <description>Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/coding-agent/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>discord</name>\n    <description>Use when you need to control Discord from Clawdbot via the discord tool: send messages, react, post or upload stickers, upload emojis, run polls, manage threads/pins/search, create/edit/delete channels and categories, fetch permissions or member/role/channel info, or handle moderation actions in Discord DMs or channels.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/discord/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>github</name>\n    <description>Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/github/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>gog</name>\n    <description>Google Workspace CLI for Gmail, Calendar, Drive, Contacts, Sheets, and Docs.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/gog/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>himalaya</name>\n    <description>CLI to manage emails via IMAP/SMTP. Use `himalaya` to list, read, write, reply, forward, search, and organize emails from the terminal. Supports multiple accounts and message composition with MML (MIME Meta Language).</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/himalaya/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>imsg</name>\n    <description>iMessage/SMS CLI for listing chats, history, watch, and sending.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/imsg/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>mcporter</name>\n    <description>Use the mcporter CLI to list, configure, auth, and call MCP servers/tools directly (HTTP or stdio), including ad-hoc servers, config edits, and CLI/type generation.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/mcporter/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>notion</name>\n    <description>Notion API for creating and managing pages, databases, and blocks.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/notion/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>peekaboo</name>\n    <description>Capture and automate macOS UI with the Peekaboo CLI.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/peekaboo/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>session-logs</name>\n    <description>Search and analyze your own conversation history from session log files using jq.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/session-logs/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>skill-creator</name>\n    <description>Create or update AgentSkills. Use when designing, structuring, or packaging skills with scripts, references, and assets.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/skill-creator/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>slack</name>\n    <description>Use when you need to control Slack from Clawdbot via the slack tool, including reacting to messages or pinning/unpinning items in Slack channels or DMs.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/slack/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>tmux</name>\n    <description>Remote-control tmux sessions for interactive CLIs by sending keystrokes and scraping pane output.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/tmux/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>video-frames</name>\n    <description>Extract frames or short clips from videos using ffmpeg.</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/video-frames/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>wacli</name>\n    <description>Send WhatsApp messages to other people or search/sync WhatsApp history via the wacli CLI (not for normal user chats).</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/wacli/SKILL.md</location>\n  </skill>\n  <skill>\n    <name>weather</name>\n    <description>Get current weather and forecasts (no API key required).</description>\n    <location>/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/weather/SKILL.md</location>\n  </skill>\n</available_skills>",
       "skills": [
         {
           "name": "1password"
@@ -196,9 +196,6 @@
         },
         {
           "name": "discord"
-        },
-        {
-          "name": "gemini"
         },
         {
           "name": "github"
@@ -217,6 +214,9 @@
         },
         {
           "name": "notion"
+        },
+        {
+          "name": "peekaboo"
         },
         {
           "name": "session-logs"
@@ -270,13 +270,6 @@
           "source": "clawdbot-bundled"
         },
         {
-          "name": "gemini",
-          "description": "Gemini CLI for one-shot Q&A, summaries, and generation.",
-          "filePath": "/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/gemini/SKILL.md",
-          "baseDir": "/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/gemini",
-          "source": "clawdbot-bundled"
-        },
-        {
           "name": "github",
           "description": "Interact with GitHub using the `gh` CLI. Use `gh issue`, `gh pr`, `gh run`, and `gh api` for issues, PRs, CI runs, and advanced queries.",
           "filePath": "/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/github/SKILL.md",
@@ -316,6 +309,13 @@
           "description": "Notion API for creating and managing pages, databases, and blocks.",
           "filePath": "/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/notion/SKILL.md",
           "baseDir": "/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/notion",
+          "source": "clawdbot-bundled"
+        },
+        {
+          "name": "peekaboo",
+          "description": "Capture and automate macOS UI with the Peekaboo CLI.",
+          "filePath": "/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/peekaboo/SKILL.md",
+          "baseDir": "/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/lib/node_modules/clawdbot/skills/peekaboo",
           "source": "clawdbot-bundled"
         },
         {
@@ -403,5 +403,19 @@
     "lastTo": "120363196541910405@g.us",
     "lastAccountId": "default",
     "sessionId": "c861a0ad-3362-43f3-b55b-fa1434e424ae"
+  },
+  "agent:art:whatsapp:group:120363421939229508@g.us": {
+    "updatedAt": 1769282294252,
+    "lastChannel": "whatsapp",
+    "lastTo": "120363421939229508@g.us",
+    "lastAccountId": "default",
+    "sessionId": "36cbfefc-3f0e-4080-87bb-fa26bd5dd36c"
+  },
+  "agent:art:whatsapp:group:120363416592936575@g.us": {
+    "updatedAt": 1769591183208,
+    "lastChannel": "whatsapp",
+    "lastTo": "120363416592936575@g.us",
+    "lastAccountId": "default",
+    "sessionId": "dc520e3d-aeca-4eb0-bf87-119d1d725df4"
   }
 }

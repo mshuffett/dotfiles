@@ -159,3 +159,4 @@ alias j='just'
 
 # Claude Code worktree launcher
 alias cw='claude-worktree'
+alias ...='cd ../..'

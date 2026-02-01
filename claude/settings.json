@@ -83,12 +83,14 @@
     "media@local-plugins": true,
     "productivity@local-plugins": true,
     "terminal@local-plugins": true,
+    "plan-orchestrator@local-plugins": true,
     "swift-lsp@claude-plugins-official": true,
     "security-guidance@claude-code-plugins": true,
     "context7@claude-plugins-official": true,
     "agent-sdk-dev@claude-code-plugins": true,
     "typescript-lsp@claude-plugins-official": true,
-    "hookify@claude-code-plugins": true
+    "hookify@claude-code-plugins": false,
+    "plannotator@plannotator": true
   },
   "alwaysThinkingEnabled": true,
   "disabledMcpServers": [

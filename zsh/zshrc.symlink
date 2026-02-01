@@ -435,3 +435,8 @@ alias eag='tmux new-session -t claude-daily -s claude-quick 2>/dev/null || tmux 
 export PATH="$HOME/.local/bin:$PATH"
 
 source /Users/michael/.daytona.completion_script.zsh
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/michael/.lmstudio/bin"
+# End of LM Studio CLI section
+

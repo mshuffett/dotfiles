@@ -1,0 +1,28 @@
+{
+  "name": "gtd-inbox",
+  "version": "2.0.0",
+  "description": "GTD Inbox Processor - AI-assisted pipeline for processing inbox items",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run index.tsx",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.19",
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@notionhq/client": "^2.3.0",
+    "citty": "^0.1.6",
+    "ink": "^5.1.0",
+    "ink-text-input": "^6.0.0",
+    "react": "^18.3.1",
+    "yaml": "^2.7.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.14",
+    "@types/react": "^18.3.18"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

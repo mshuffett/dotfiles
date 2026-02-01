@@ -1,0 +1,414 @@
+# Personal Zsh configuration file. It is strongly recommended to keep all
+# shell customization and configuration (including exported environment
+# variables such as PATH) in this file or in files sourced from it.
+#
+# Documentation: https://github.com/romkatv/zsh4humans/blob/v5/README.md.
+
+export EDITOR=vim
+
+# Periodic auto-update on Zsh startup: 'ask' or 'no'.
+# You can manually run `z4h update` to update everything.
+zstyle ':z4h:' auto-update      'no'
+# Ask whether to auto-update this often; has no effect if auto-update is 'no'.
+zstyle ':z4h:' auto-update-days '28'
+
+# Keyboard type: 'mac' or 'pc'.
+zstyle ':z4h:bindkey' keyboard  'mac'
+
+# Start tmux if not already in tmux and not in cursor
+if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
+  zstyle ':z4h:' start-tmux command tmux -u new -A -D -t main
+else
+  zstyle ':z4h:' start-tmux       no
+fi
+
+# Whether to move prompt to the bottom when zsh starts and on Ctrl+L.
+zstyle ':z4h:' prompt-at-bottom 'no'
+
+# Mark up shell's output with semantic information.
+zstyle ':z4h:' term-shell-integration 'yes'
+
+# Right-arrow key accepts one character ('partial-accept') from
+# command autosuggestions or the whole thing ('accept')?
+zstyle ':z4h:autosuggestions' forward-char 'accept'
+
+# Recursively traverse directories when TAB-completing files.
+zstyle ':z4h:fzf-complete' recurse-dirs 'no'
+
+# Enable direnv to automatically source .envrc files.
+zstyle ':z4h:direnv'         enable 'yes'
+# Show "loading" and "unloading" notifications from direnv.
+zstyle ':z4h:direnv:success' notify 'yes'
+
+# Enable ('yes') or disable ('no') automatic teleportation of z4h over
+# SSH when connecting to these hosts.
+zstyle ':z4h:ssh:example-hostname1'   enable 'yes'
+zstyle ':z4h:ssh:*.example-hostname2' enable 'no'
+# The default value if none of the overrides above match the hostname.
+zstyle ':z4h:ssh:*'                   enable 'no'
+
+# Send these files over to the remote host when connecting over SSH to the
+# enabled hosts.
+zstyle ':z4h:ssh:*' send-extra-files '~/.nanorc' '~/.env.zsh'
+
+# Clone additional Git repositories from GitHub.
+#
+# This doesn't do anything apart from cloning the repository and keeping it
+# up-to-date. Cloned files can be used after `z4h init`. This is just an
+# example. If you don't plan to use Oh My Zsh, delete this line.
+z4h install ohmyzsh/ohmyzsh || return
+
+# Install or update core components (fzf, zsh-autosuggestions, etc.) and
+# initialize Zsh. After this point console I/O is unavailable until Zsh
+# is fully initialized. Everything that requires user interaction or can
+# perform network I/O must be done above. Everything else is best done below.
+z4h init || return
+
+# TODO: Migrated 1Password vault - need to update vault references below
+# Secrets Management - load this early to ensure environment variables are available
+# export ZSH_SECRETS_CACHE="$HOME/.zsh_secrets_cache"
+#
+# # Function to fetch and cache secrets from 1Password
+# fetch_and_cache_secrets() {
+#   # Ensure we're logged into 1Password CLI
+#   if ! op account get > /dev/null 2>&1; then
+#     echo "Please sign in to 1Password CLI..."
+#     eval $(op signin)
+#   fi
+#
+#   # Create secrets cache
+#   cat > "$ZSH_SECRETS_CACHE" <<EOL
+# # export GITHUB_TOKEN="$(op read 'op://Private/GitHub/token')"  # Disabled - gh uses token from ~/.config/gh/hosts.yml with proper scopes
+# export OPENAI_API_KEY="$(op read 'op://Private/OpenAI API Key/api_key')"
+# export ANTHROPIC_API_KEY="$(op read 'op://Private/Anthropic API Key/api_key')"
+# export GEMINI_API_KEY="AIzaSyAt1TXqJHc9i4P8KWlrx586OF7g5Ir8tHw"
+# export MAPBOX_ACCESS_TOKEN="$(op read 'op://Private/Mapbox Access Token/access_token')"
+# EOL
+#
+#   chmod 600 "$ZSH_SECRETS_CACHE"
+# }
+#
+# # Load cached secrets or fetch if needed
+# if [ ! -f "$ZSH_SECRETS_CACHE" ]; then
+#   fetch_and_cache_secrets
+# fi
+#
+# source "$ZSH_SECRETS_CACHE"
+#
+# # Add a function to refresh secrets if needed
+# refresh_secrets() {
+#   fetch_and_cache_secrets
+#   source "$ZSH_SECRETS_CACHE"
+#   echo "Secrets refreshed from 1Password!"
+# }
+
+# Utility directories and environment
+export ZSH=$HOME/.dotfiles
+export ZSH_VAR_LIB_DIR=$HOME/.var/lib/zsh
+[[ ! -d $ZSH_VAR_LIB_DIR ]] && mkdir -p $ZSH_VAR_LIB_DIR
+
+# Terminal settings
+export LESS='-iR'
+export GPG_TTY=$TTY
+export REPORTTIME=10
+
+# Disable XON/XOFF flow control so Ctrl-S can be used as a keybinding
+# Without this, Ctrl-S freezes the terminal (Ctrl-Q unfreezes)
+stty -ixon 2>/dev/null
+
+# Programming languages and tools
+export PNPM_HOME="/Users/michael/Library/pnpm"
+export DENO_INSTALL="/Users/michael/.deno"
+export GOPATH=$HOME/go
+export SPARK_HOME='/Users/michael/pixiedust/bin/spark/spark-2.4.3-bin-hadoop2.7'
+
+# Java - only set if available (avoids errors during shell startup)
+if /usr/libexec/java_home -v 1.8 &>/dev/null; then
+  export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+fi
+
+# Hadoop configuration
+export HADOOP_VERSION=2.7.3
+export HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.3
+export HADOOP_CONF_DIR=/usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop
+
+# Homebrew settings
+export HOMEBREW_NO_AUTO_UPDATE="1"
+
+# Path configuration
+typeset -U path # force path array to have unique values
+path=(
+  $HOME/.bun/bin
+  /opt/homebrew/bin
+  $HOME/.serverless/bin
+  /Users/michael/miniconda3/bin
+  ~/opt/anaconda3/bin
+  $HOME/.jenv/bin
+  /usr/local/go/bin
+  $HOME/go/bin
+  $PNPM_HOME
+  $DENO_INSTALL/bin
+  $HOME/bin
+  /usr/bin
+  /usr/local/opt/coreutils/libexec/gnubin
+  /usr/local/bin
+  /usr/local/sbin
+  /usr/local/Cellar/ruby/2.5.0/bin
+  /usr/local/Cellar/emacs/25.3/bin
+  ./bin
+  $HOME/.rbenv/shims
+  $HOME/.sfs
+  $ZSH/bin
+  /Applications/MiniZincIDE.app/Contents/Resources
+  /Users/michael/Library/Python/3.7/bin
+  /usr/local/Cellar/node/12.12.0/lib/node_modules/@aws-amplify/cli/bin
+  $path
+)
+
+# Man path configuration
+typeset -U manpath
+manpath=(
+  /usr/local/opt/coreutils/libexec/gnuman
+  /usr/local/man
+  /usr/local/mysql/man
+  /usr/local/git/man
+  $manpath
+)
+
+# Source additional local files if they exist.
+z4h source ~/.env.zsh
+
+# Use additional Git repositories pulled in with `z4h install`.
+# z4h source ohmyzsh/ohmyzsh/lib/diagnostics.zsh  # source an individual file
+# z4h load   ohmyzsh/ohmyzsh/plugins/emoji-clock  # load a plugin
+
+# Load git plugin from Oh My Zsh (includes all git aliases)
+z4h load ohmyzsh/ohmyzsh/plugins/git
+
+# Define key bindings.
+z4h bindkey undo Ctrl+/   Shift+Tab  # undo the last command line change
+z4h bindkey redo Option+/            # redo the last undone command line change
+
+z4h bindkey z4h-cd-back    Shift+Left   # cd into the previous directory
+z4h bindkey z4h-cd-forward Shift+Right  # cd into the next directory
+z4h bindkey z4h-cd-up      Shift+Up     # cd into the parent directory
+z4h bindkey z4h-cd-down    Shift+Down   # cd into a child directory
+
+# Alt+K deletes to end of line (Ctrl+K is used by tmux for pane navigation)
+bindkey '^[k' kill-line
+
+# Autoload functions.
+autoload -Uz zmv
+
+# Define functions and completions.
+function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
+compdef _directories md
+
+# Go up multiple directories with u [number]
+u() {
+  set -A ud
+  ud[1+${1-1}]=
+  cd ${(j:../:)ud}
+}
+
+# Tmux session management helpers
+# Create or attach to a named session
+tn() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: tn <session-name>"
+    echo "Creates a new tmux session or attaches to existing one"
+    return 1
+  fi
+  tmux new -A -s "$1"
+}
+
+# Switch to a different session
+ts() {
+  if [[ $# -eq 0 ]]; then
+    # Interactive session selection with fzf
+    local session
+    session=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | fzf --height=40% --reverse)
+    [[ -n "$session" ]] && tmux switch-client -t "$session"
+  else
+    tmux switch-client -t "$1"
+  fi
+}
+
+# List all tmux sessions
+tl() {
+  tmux list-sessions
+}
+
+# Kill a tmux session
+tk() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: tk <session-name>"
+    return 1
+  fi
+  tmux kill-session -t "$1"
+}
+
+# Show tmux/nvim cheatsheet
+thelp() {
+  if [[ -n "$TMUX" ]]; then
+    # Inside tmux: show in a popup (if tmux 3.2+) or new window
+    tmux_version=$(tmux -V | cut -d' ' -f2)
+    if [[ $(echo "$tmux_version >= 3.2" | bc 2>/dev/null || echo 0) -eq 1 ]]; then
+      tmux display-popup -E -w 80% -h 80% "less ~/.dotfiles/tmux/cheatsheet.txt"
+    else
+      tmux new-window "less ~/.dotfiles/tmux/cheatsheet.txt"
+    fi
+  else
+    # Outside tmux: just display
+    less ~/.dotfiles/tmux/cheatsheet.txt
+  fi
+}
+
+# Utility for logging into EKS more easily
+eks-tok() {
+  if command -v aws &> /dev/null && command -v jq &> /dev/null; then
+    aws eks get-token --cluster "$1" | jq -r ".status.token" | pbcopy
+  else
+    echo "Required tools (aws cli or jq) not found."
+  fi
+}
+
+# Quick idea capture using Claude Code /idea command
+idea() {
+  if [[ $# -eq 0 ]]; then
+    echo "Usage: idea <your idea text>"
+    return 1
+  fi
+  command claude --dangerously-skip-permissions -p "/idea $*"
+}
+
+# Define named directories: ~w <=> Windows home directory on WSL.
+[[ -z $z4h_win_home ]] || hash -d w=$z4h_win_home
+
+source ~/.dotfiles/zsh/aliases.zsh
+
+# Set shell options
+setopt glob_dots     # no special treatment for file names with a leading dot
+setopt no_auto_menu  # require an extra TAB press to open the completion menu
+setopt autocd        # cd into directory by typing directory name
+setopt extended_glob # Extended globbing
+
+# History options (best practices)
+setopt SHARE_HISTORY              # Share history between all sessions immediately
+setopt HIST_EXPIRE_DUPS_FIRST     # Expire duplicates first when trimming
+setopt HIST_IGNORE_DUPS           # Don't record consecutive duplicates
+setopt HIST_IGNORE_ALL_DUPS       # Delete old duplicate entries from history
+setopt HIST_FIND_NO_DUPS          # Don't display duplicates when searching
+setopt HIST_IGNORE_SPACE          # Don't record commands starting with space
+setopt HIST_SAVE_NO_DUPS          # Don't write duplicates to history file
+setopt HIST_VERIFY                # Show command before running from history
+setopt EXTENDED_HISTORY           # Save timestamp and duration
+
+# Google Cloud SDK
+if [ -f '/Users/michael/google-cloud-sdk/path.zsh.inc' ]; then 
+  source '/Users/michael/google-cloud-sdk/path.zsh.inc'
+fi
+if [ -f '/Users/michael/google-cloud-sdk/completion.zsh.inc' ]; then 
+  source '/Users/michael/google-cloud-sdk/completion.zsh.inc'
+fi
+
+source ~/.dotfiles/zsh/aliases.zsh
+
+# Bun installation directory (path added in path array above)
+export BUN_INSTALL="$HOME/.bun"
+
+# Added by Windsurf
+export PATH="/Users/michael/.codeium/windsurf/bin:$PATH"
+
+# bun completions
+[ -s "/Users/michael/.bun/_bun" ] && source "/Users/michael/.bun/_bun"
+
+# Rust (cargo) environment
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+
+eval "$(zoxide init zsh)"
+
+# Atuin - magical shell history
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init zsh)"
+fi
+
+# Navi - interactive cheatsheets (Ctrl+G)
+if command -v navi >/dev/null 2>&1; then
+  eval "$(navi widget zsh)"
+fi
+
+export TZ="America/Los_Angeles"
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/michael/.lmstudio/bin"
+# End of LM Studio CLI section
+
+# pnpm
+export PNPM_HOME="/Users/michael/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+
+# Palenight ls colors
+export LSCOLORS="Gxfxcxdxcxegedabagacad"
+export LS_COLORS="di=1;38;5;111:ln=38;5;117:so=38;5;221:pi=38;5;221:ex=1;38;5;114:bd=38;5;111:cd=38;5;117:su=38;5;204:sg=38;5;204:tw=1;38;5;117:ow=1;38;5;117:fi=00"
+export CLICOLOR=1
+
+# direnv hook
+eval "$(direnv hook zsh)"
+
+# fnm (Fast Node Manager)
+# Uses Node from .nvmrc/.node-version on cd; sets default otherwise
+if command -v fnm >/dev/null 2>&1; then
+  eval "$(fnm env --use-on-cd --log-level=quiet --shell zsh)"
+  # Ensure old NVM bins don't shadow fnm-managed Node
+  path=(${path:#$HOME/.nvm/versions/*/bin})
+  # Re-prioritize Bun bin after fnm prepends its path
+  path=($HOME/.bun/bin ${path:#$HOME/.bun/bin})
+fi
+
+# >>> codex-cli defaults (added by assistant) >>>
+# Ensure Codex CLI uses web search and bypasses approvals + sandbox (DANGEROUS)
+if command -v codex >/dev/null 2>&1; then
+  alias codex='command codex --search --dangerously-bypass-approvals-and-sandbox'
+fi
+# <<< codex-cli defaults (added by assistant) <<<
+
+# Configure git pager: cat in Cursor (non-interactive), delta or bat in terminal
+if [[ -n "$CURSOR_AGENT" ]]; then
+  export GIT_PAGER=cat
+else
+  # Use delta if available, otherwise bat, otherwise less with better defaults
+  if command -v delta &> /dev/null; then
+    export GIT_PAGER="delta"
+  elif command -v bat &> /dev/null; then
+    export GIT_PAGER="bat --style=plain --paging=always"
+  else
+    export GIT_PAGER="less -FRX"
+  fi
+fi
+
+# Broot launcher - only source if installed
+[ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
+
+# Alias to get a shell without tmux auto-starting
+alias notmux='exec env CURSOR_TRACE_ID=bypass zsh'
+
+# Chafa with automatic tmux passthrough detection
+if command -v chafa >/dev/null 2>&1; then
+  chafa() {
+    if [[ -n "$TMUX" ]]; then
+      # Inside tmux: use kitty format with tmux passthrough
+      command chafa --format=kitty --passthrough=tmux "$@"
+    else
+      # Outside tmux: use default (kitty format for Ghostty)
+      command chafa --format=kitty "$@"
+    fi
+  }
+fi
+
+# Added by Antigravity
+export PATH="/Users/michael/.antigravity/antigravity/bin:$PATH"
+
+# Claude Daily EA session
+alias ea='~/.dotfiles/bin/claude-daily'
+# Grouped session (independent view of same session)
+alias eag='tmux new-session -t claude-daily -s claude-quick 2>/dev/null || tmux attach -t claude-quick'

@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec bun run ~/.dotfiles/bin/gtd-inbox-src/index.tsx "$@"

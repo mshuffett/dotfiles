@@ -10,5 +10,7 @@ cache/
 .env.*
 **/local.env
 .zsh_secrets
+**/node_modules/
+**/target/
 .worktrees/
 clawdbot/credentials/

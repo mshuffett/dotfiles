@@ -171,6 +171,7 @@ When starting with Michael or after a break, treat it as a **shadowing period**:
 
 **Hard deadlines:**
 - **Jan 28: Lease decision** (Lumina 15G) — reply to Vlad
+- **Jan 29 - Feb 7: Parents trip** (near Orange County) — decide if joining
 - **March 10: Demo Day**
 - Feb 1: Monthly Review
 - Feb 2: Write Investor Update
