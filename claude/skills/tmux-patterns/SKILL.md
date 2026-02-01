@@ -1,30 +1,12 @@
 ---
-description: "MANDATORY: Read this skill BEFORE any tmux split-window, send-keys, or pane operation. Failure to follow this skill causes panes to target wrong locations. Covers splitting panes, sending commands, viewing files in split panes, and background processes."
+description: "MANDATORY before tmux split-window or send-keys. Use $TMUX_PANE and -t flag."
 read_when:
-  - User asks to split a pane or open something in a new pane
-  - User asks to open a file in vim, neovim, nvim, or any editor in a split
   - About to run any tmux split-window command
   - About to run any tmux send-keys command
-  - Working with multiple terminal panes
-  - Running background processes in tmux
-  - Viewing images or files in terminal panes
+  - User asks to split a pane or open something in a new pane
 ---
 
 # tmux Pane Management
-
-## CRITICAL: Editor Preference
-
-**Michael uses neovim (nvim), NOT vim.** Always use `nvim` when opening files in editors.
-
-```bash
-# WRONG
-tmux split-window -h -t "$ORIGINAL_PANE" "vim file.md"
-
-# RIGHT
-tmux split-window -h -t "$ORIGINAL_PANE" "nvim file.md"
-```
-
-## CRITICAL: Current Pane Detection
 
 ## CRITICAL: Current Pane Detection
 
