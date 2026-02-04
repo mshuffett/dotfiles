@@ -105,13 +105,15 @@ Task 5: Feature D                      [blocked by 1]
 
 When you use `TaskCreate`, tasks go to:
 ```
-~/.claude/tasks/{your-session-uuid}/
+$CLAUDE_CONFIG_DIR/tasks/{your-session-uuid}/
 ```
 
 But team members look for tasks in:
 ```
-~/.claude/tasks/{team-name}/
+$CLAUDE_CONFIG_DIR/tasks/{team-name}/
 ```
+
+For claudesp variant, `CLAUDE_CONFIG_DIR=~/.claude-sneakpeek/claudesp/config`
 
 **Result**: Agents see empty task lists.
 
@@ -121,12 +123,13 @@ Write tasks directly to the team directory:
 
 ```bash
 TEAM="my-feature"
+TASK_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/tasks"
 
 # Get next available ID
-NEXT_ID=$(($(ls ~/.claude/tasks/$TEAM/*.json 2>/dev/null | wc -l) + 1))
+NEXT_ID=$(($(ls $TASK_DIR/$TEAM/*.json 2>/dev/null | wc -l) + 1))
 
 # Create task file
-cat > ~/.claude/tasks/$TEAM/$NEXT_ID.json << 'EOF'
+cat > $TASK_DIR/$TEAM/$NEXT_ID.json << 'EOF'
 {
   "id": "1",
   "subject": "Implement user authentication",
@@ -143,9 +146,11 @@ EOF
 
 ```bash
 TEAM="my-feature"
+TASK_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/tasks"
+mkdir -p "$TASK_DIR/$TEAM"
 
 # Task 1
-cat > ~/.claude/tasks/$TEAM/1.json << 'EOF'
+cat > $TASK_DIR/$TEAM/1.json << 'EOF'
 {
   "id": "1",
   "subject": "Set up project structure",
@@ -158,7 +163,7 @@ cat > ~/.claude/tasks/$TEAM/1.json << 'EOF'
 EOF
 
 # Task 2
-cat > ~/.claude/tasks/$TEAM/2.json << 'EOF'
+cat > $TASK_DIR/$TEAM/2.json << 'EOF'
 {
   "id": "2",
   "subject": "Implement data models",
@@ -176,13 +181,15 @@ EOF
 ### Reading Team Tasks
 
 ```bash
+TASK_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/tasks"
+
 # List all tasks
-for f in ~/.claude/tasks/$TEAM/*.json; do
+for f in $TASK_DIR/$TEAM/*.json; do
   jq -r '"\(.id): \(.subject) [\(.status)] owner=\(.owner)"' "$f"
 done
 
 # Find unclaimed, unblocked tasks
-for f in ~/.claude/tasks/$TEAM/*.json; do
+for f in $TASK_DIR/$TEAM/*.json; do
   status=$(jq -r '.status' "$f")
   owner=$(jq -r '.owner' "$f")
   blocked=$(jq -r '.blockedBy | length' "$f")
