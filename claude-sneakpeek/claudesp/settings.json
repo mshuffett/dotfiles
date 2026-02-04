@@ -1,0 +1,9 @@
+{
+  "env": {
+    "CC_MIRROR_SPLASH": 1,
+    "CC_MIRROR_PROVIDER_LABEL": "Mirror Claude",
+    "CC_MIRROR_SPLASH_STYLE": "mirror",
+    "TWEAKCC_CONFIG_DIR": "/Users/michael/.claude-sneakpeek/claudesp/tweakcc",
+    "CLAUDE_CODE_TEAM_MODE": "1"
+  }
+}
