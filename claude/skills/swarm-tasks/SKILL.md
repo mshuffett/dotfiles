@@ -144,9 +144,40 @@ tmux kill-pane -t %PANE_ID
 | Issue | Cause | Fix |
 |-------|-------|-----|
 | Agents see empty TaskList | Tasks in wrong directory | Write to team directory |
-| Agents report phantom work | Hallucination or timing | Verify with filesystem |
+| Agents report phantom work | Hallucination OR timing | Wait, then verify filesystem |
 | Agents ask permission | Prompt too passive | Add "Act autonomously" |
 | Blocked agents idle | Spawned too early | Spawn when work available |
+| Agents can't see files | Wrong cwd or stale view | Use absolute paths in prompts |
+| Cramped tmux on laptop | All agents in one window | Break into separate windows |
+
+## Tmux Tips
+
+### Separate Windows per Agent (better for laptops)
+```bash
+# Move agent panes to their own windows
+tmux break-pane -s %PANE_ID -n agent-name
+
+# Navigate between agents
+Ctrl+b 3  # Go to window 3
+Ctrl+b n  # Next window
+Ctrl+b p  # Previous window
+```
+
+### Find Agent Panes
+```bash
+tmux list-panes -a | grep -E "(architect|core|verifier)"
+```
+
+## Patience with Verification
+
+**Don't assume agents are hallucinating.** File operations take time.
+
+If agent reports work but files don't exist:
+1. Wait 30-60 seconds
+2. Check again
+3. If still missing, THEN follow up
+
+The agent may be mid-write when you check.
 
 ## Acceptance Checks
 
