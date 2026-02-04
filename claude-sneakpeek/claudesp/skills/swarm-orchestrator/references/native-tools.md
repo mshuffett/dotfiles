@@ -6,7 +6,7 @@ Detailed schemas and examples for Claude Code's native multi-agent tools.
 
 ### spawnTeam - Create a Team
 
-Creates a team file at `~/.claude/teams/{team-name}.json` and corresponding task directory.
+Creates a team file at `$CLAUDE_CONFIG_DIR/teams/{team-name}.json` and corresponding task directory.
 
 ```json
 {
@@ -18,7 +18,7 @@ Creates a team file at `~/.claude/teams/{team-name}.json` and corresponding task
 
 ### discoverTeams - Find Available Teams
 
-Lists teams from `~/.claude/teams/` that you're not already a member of.
+Lists teams from `$CLAUDE_CONFIG_DIR/teams/` that you're not already a member of.
 
 ```json
 {
@@ -219,7 +219,7 @@ Creates a task in your **session's** task list (NOT the team's list!).
 }
 ```
 
-**Important**: For team tasks, write directly to `~/.claude/tasks/{team-name}/`. See patterns.md.
+**Important**: For team tasks, write directly to `$CLAUDE_CONFIG_DIR/tasks/{team-name}/`. See patterns.md.
 
 ### TaskList
 
@@ -287,7 +287,7 @@ Valid statuses: `pending`, `in_progress`, `completed`, `deleted`
 
 ## Task JSON Schema (for direct file writes)
 
-When writing tasks directly to `~/.claude/tasks/{team-name}/`:
+When writing tasks directly to `$CLAUDE_CONFIG_DIR/tasks/{team-name}/`:
 
 ```json
 {
@@ -332,7 +332,7 @@ When writing tasks directly to `~/.claude/tasks/{team-name}/`:
 Discover other team members:
 
 ```bash
-cat ~/.claude/teams/{team-name}/config.json | jq '.members'
+cat $CLAUDE_CONFIG_DIR/teams/{team-name}/config.json | jq '.members'
 ```
 
 Returns:
