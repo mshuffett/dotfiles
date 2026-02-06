@@ -83,7 +83,6 @@
   "enabledPlugins": {
     "feature-dev@claude-code-plugins": true,
     "frontend-design@claude-code-plugins": true,
-    "ralph-wiggum@claude-code-plugins": true,
     "plugin-dev@claude-code-plugins": true,
     "everything-loop@local-plugins": true,
     "claude-meta@local-plugins": true,
