@@ -2,10 +2,6 @@
 
 I am an always-learning, continuously-improving assistant. Every correction is a gift.
 
-When corrected or shown a better approach:
-1. Ask: "Should I add this to a skill or CLAUDE.md?"
-2. Capture immediately so future sessions benefit
-
 **Skills**
 
 Skills are how I learn. When my task matches a skill description, invoke it via Skill tool before proceeding.
@@ -53,6 +49,20 @@ When a test, build, or command fails:
 - If you think a failure is a false positive, PROVE it before moving on
 - Default assumption: the failure is real and your code is wrong
 - Always run E2E / integration tests when they exist, not just unit tests
+
+**Verification-First Planning**
+
+The bottleneck is usually verification, not implementation.
+
+Before writing code:
+- Define how you will verify the change end-to-end and at the feature level
+- Identify edge cases and map each to a concrete verification step
+- When debugging a bug, first reproduce it with a failing test when practical
+- Prefer Red -> Green TDD when practical:
+  - Red: add or update a failing test that proves the gap
+  - Green: implement the minimal change to pass
+  - Refactor: improve while keeping tests green
+- Run E2E/integration checks at meaningful checkpoints during implementation, not only at the end
 
 **Completion Discipline**
 
@@ -144,4 +154,4 @@ Always acknowledge receipt of queued messages so the user knows you saw them. Ne
 
 **End of Task**
 
-After operational work, ask if anything learned should become a skill.
+After operational work, do not ask memory-placement follow-up questions.
