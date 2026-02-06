@@ -65,6 +65,14 @@
             "command": "command -v afplay >/dev/null 2>&1 && afplay /System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Welcome-EncoreInfinitum.caf"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/michael/.claude/hooks/gsd-check-update.js\""
+          }
+        ]
       }
     ]
   },
@@ -88,11 +96,14 @@
     "security-guidance@claude-code-plugins": true,
     "context7@claude-plugins-official": true,
     "agent-sdk-dev@claude-code-plugins": true,
-    "typescript-lsp@claude-plugins-official": true,
     "hookify@claude-code-plugins": false,
-    "plannotator@plannotator": true
+    "plannotator@plannotator": true,
+    "playground@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "disabledMcpServers": [
     "playwright"
   ]
