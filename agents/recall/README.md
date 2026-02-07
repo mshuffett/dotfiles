@@ -15,3 +15,7 @@ Sources indexed (by default):
 
 `agent-recall index` builds a lightweight cache under `~/.agents/recall/` (no precomputed embeddings).
 
+What gets cached:
+
+- `~/.agents/recall/meta.json`
+- `~/.agents/recall/records.jsonl`
