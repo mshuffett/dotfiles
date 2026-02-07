@@ -64,5 +64,9 @@ Ideas to improve the memory system over time (not implemented yet):
 - Out-of-band procedural memory updates: periodically run a background job that reviews logs/evals/mistakes and proposes/promotes/demotes memory items without blocking interactive work (there is an implementation pattern in a third-party repo; note for future integration).
 - Extend recall beyond conversations: allow `agent-recall` to semantically search skills/atoms (entrypoints + deep dives) so the system can quickly find relevant guidance without increasing L0/L1 context.
 - Add semantic search over repo code: build a local index for code files (and optionally PR diffs) so agents can quickly retrieve relevant implementations/patterns by meaning, not just keywords.
+- Robust multi-agent eval system: orchestrate evaluation across multiple agents/models, support dispatch to different providers/models, and track regressions over time; optionally incorporate model training/fine-tuning where appropriate.
+- Personal ops automation: stronger task/backlog/planning/notification system integration so work is less likely to drop on the floor (future, not part of the core memory refactor).
+- Daily synthesis + distribution: automatically summarize what happened/was learned, propose next steps, and generate outbound updates (notes, social posts) while keeping privacy/security constraints and review gates.
+- User-model improvements: maintain a lightweight model of the user’s preferences/intent patterns (including that “underspecified” often implies partial information and an intended direction), and use it to ask better clarifying questions and reduce misalignment.
 - Expand eval coverage: add more suites for high-risk workflows (git safety, secrets, delegation handoffs) and track timing trends for regressions.
 - Automated hop-cost promotion tooling: detect repeated misses and suggest moving key guardrails up a level (atom -> entrypoint -> L0) with minimal diff.
