@@ -62,7 +62,7 @@ Use this to reduce hop-cost: find the prior context quickly, then capture the du
 To visualize "hop cost" and ensure entrypoints link to the right deep notes, print the reachable link graph from entrypoint skills:
 
 ```bash
-./script/agents-skills-graph
+./script/agents-skills-graph --no-empty
 ```
 
 For a Graphviz DOT graph:
@@ -71,6 +71,18 @@ For a Graphviz DOT graph:
 ./script/agents-skills-graph --dot > /tmp/skills.dot
 dot -Tpng /tmp/skills.dot > /tmp/skills.png
 open /tmp/skills.png
+```
+
+To find archived atoms that are *not* referenced by any entrypoint (likely to be skipped):
+
+```bash
+./script/agents-skills-graph --unreferenced-atoms
+```
+
+To map the original (pre-refactor) `claude/skills/*` set to current entrypoints + atoms:
+
+```bash
+./script/agents-skills-map
 ```
 
 ## Future Improvements

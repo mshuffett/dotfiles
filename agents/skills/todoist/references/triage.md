@@ -1,10 +1,6 @@
----
-name: Todoist Triage
-description: Use when processing Todoist inbox items, daily briefing tasks, or items tagged for review. Classifies via Eisenhower matrix with action recommendations.
-version: 1.0.0
----
+# Todoist Triage (Reference)
 
-# Todoist Triage System
+This is a deep-dive reference linked from the Todoist entrypoint skill.
 
 Intelligent triage of Todoist tasks using Eisenhower matrix classification and clear action recommendations.
 

@@ -80,6 +80,7 @@ Invoke `memory-placement` skill first when available; otherwise, be explicit abo
 
 - Never git stash unfamiliar changes without asking
 - Never kill a port process you didn't start
+- If the user says they didn't start the port process, explicitly acknowledge that fact and ask for permission before killing anything
 - Invoke worktrees skill before git worktree operations
 
 **Privacy & Security**

@@ -383,10 +383,32 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--full-paths", action="store_true", help="Don't shorten labels in tree mode")
     ap.add_argument("--ascii", action="store_true", help="Use ASCII connectors in tree mode (default: unicode)")
     ap.add_argument("--no-empty", action="store_true", help="Hide roots with zero outgoing links")
+    ap.add_argument("--focus", action="append", default=[], help="Only show these entrypoint skills (repeatable, ex: --focus env-secrets)")
+    ap.add_argument("--expand-entrypoints", action="store_true", help="Expand referenced entrypoint skills instead of treating them as leaves")
+    ap.add_argument(
+        "--unreferenced-atoms",
+        action="store_true",
+        help="Print atoms under agents/knowledge/atoms/claude-skill-archive not reachable from any entrypoint",
+    )
     args = ap.parse_args(argv)
 
     roots = sorted((REPO_ROOT / "agents" / "skills").glob("*/SKILL.md"))
     g = build_graph(roots=roots, max_depth=(None if args.max_depth < 0 else args.max_depth))
+
+    if args.unreferenced_atoms:
+        # Atoms that exist but aren't referenced anywhere from entrypoints are hop-cost risks:
+        # knowledge exists but will likely be skipped.
+        archive = REPO_ROOT / "agents" / "knowledge" / "atoms" / "claude-skill-archive"
+        if not archive.exists():
+            print("no_archive_dir=true")
+        else:
+            all_atoms = set(archive.glob("*/SKILL.md"))
+            referenced = set(n for n in g.nodes if categorize(n, g.roots) == "atom")
+            unref = sorted(all_atoms - referenced, key=lambda p: to_rel(p))
+            print(f"unreferenced_atoms={len(unref)}")
+            for p in unref:
+                print(to_rel(p))
+        return 0
 
     if args.json:
         cats = {to_rel(n): categorize(n, g.roots) for n in g.nodes}
@@ -466,6 +488,12 @@ def main(argv: list[str] | None = None) -> int:
                 return
             print(prefix + connector + label)
             seen_local.add(n)
+
+            # Keep tree readable by default: don't recursively expand other entrypoint skills
+            # unless explicitly requested.
+            if (not args.expand_entrypoints) and (n in g.roots) and (root_skill_dir is not None) and (n != root_skill_dir / "SKILL.md"):
+                return
+
             ch = children(n)
             if not ch:
                 return
@@ -479,10 +507,13 @@ def main(argv: list[str] | None = None) -> int:
             stack.remove(n)
 
         print("---")
+        focus = set(args.focus or [])
         for r in sorted(g.roots, key=lambda p: to_rel(p)):
             if args.no_empty and not children(r):
                 continue
             skill_dir = r.parent
+            if focus and skill_dir.name not in focus:
+                continue
             print(skill_dir.name + "/")
             seen_local: set[Path] = set()
             ch = children(r)

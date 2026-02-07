@@ -21,6 +21,7 @@ mkdir -p "$CODEX_SKILLS_DIR"
 
 updated=0
 skipped=0
+pruned=0
 
 for src in "$SRC_DIR"/*; do
   name="$(basename "$src")"
@@ -48,5 +49,19 @@ for src in "$SRC_DIR"/*; do
   updated=$((updated+1))
 done
 
-echo "Done. updated=${updated} skipped=${skipped}"
+# Prune broken symlinks that used to point at repo entrypoint skills.
+for dst in "$CODEX_SKILLS_DIR"/*; do
+  [ -L "$dst" ] || continue
+  target="$(readlink "$dst" || true)"
+  case "$target" in
+    "$SRC_DIR"/*)
+      if [ ! -e "$dst" ]; then
+        rm -f "$dst"
+        echo "PRUNE: $dst (broken symlink to $target)"
+        pruned=$((pruned+1))
+      fi
+      ;;
+  esac
+done
 
+echo "Done. updated=${updated} skipped=${skipped} pruned=${pruned}"

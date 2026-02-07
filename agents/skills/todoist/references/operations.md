@@ -1,9 +1,6 @@
----
-name: Todoist Operations
-description: Use when creating tasks, processing inbox, triaging Todoist, or user mentions "my tasks", "todoist", or "task management". API patterns, project IDs, GTD workflow.
----
+# Todoist Operations (Reference)
 
-# Todoist Task Management
+This is a deep-dive reference linked from the Todoist entrypoint skill.
 
 **CRITICAL**: Do NOT create tasks proactively without user request.
 
@@ -233,5 +230,5 @@ add_comment(task_id, "Moved to Raw Ideas project")      # Wrong
 
 ## Related Notes (Deep Dives)
 
-- `agents/skills/todoist-triage/SKILL.md`
+- `agents/skills/todoist/references/triage.md`
 - `agents/knowledge/atoms/claude-skill-archive/calendar-operations/SKILL.md`
