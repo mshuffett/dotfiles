@@ -1,4 +1,5 @@
 ---
+name: web-search
 description: Use when researching topics via web search. Runs Claude WebSearch, Codex, and Gemini in parallel for comprehensive results.
 ---
 

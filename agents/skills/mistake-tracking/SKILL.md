@@ -1,4 +1,5 @@
 ---
+name: mistake-tracking
 description: Use when logging or reviewing mistakes; append JSONL events and promote/demote guardrails based on frequency.
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: doc-placement
 description: Use when adding or updating documentation; prefer updating existing content, put deep guides under docs/, use feature-specific names, link from parent docs.
 ---
 

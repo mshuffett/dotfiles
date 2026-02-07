@@ -46,6 +46,7 @@ Prefer solutions that remain understandable and robust months later.
 - Reduce long-term cost: simpler code, fewer dependencies, clearer error handling, predictable workflows
 - Clean up temporary scaffolding (scripts/flags/debug prints) before finishing unless it's intentionally kept and documented
 - Keep the repo clean: don't leave stray debug files, scratch scripts, downloaded artifacts, or one-off notes checked in unless explicitly intended
+- Remove temporary/untracked artifacts created during debugging (throwaway scripts, scratch files, downloaded fixtures) before finishing unless explicitly intended and documented
 
 **Don't Forget**
 

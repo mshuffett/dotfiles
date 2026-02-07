@@ -11,6 +11,7 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+import hashlib
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -25,6 +26,7 @@ class TestCase:
     timeout_sec: int
     expect_regex: list[str]
     forbid_regex: list[str]
+    expect_file_sha256: list[str]
 
 
 def die(msg: str) -> None:
@@ -54,9 +56,18 @@ def load_suite(path: Path) -> tuple[dict[str, Any], list[TestCase]]:
                 timeout_sec=int(t.get("timeout_sec", default_timeout)),
                 expect_regex=[str(x) for x in (t.get("expect_regex") or [])],
                 forbid_regex=[str(x) for x in (t.get("forbid_regex") or [])],
+                expect_file_sha256=[str(x) for x in (t.get("expect_file_sha256") or [])],
             )
         )
     return raw, tests
+
+
+def file_sha256_hex(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def mk_sandbox_home() -> tuple[tempfile.TemporaryDirectory[str], dict[str, str]]:
@@ -246,6 +257,23 @@ def main(argv: list[str] | None = None) -> int:
     try:
         for t in tests:
             t0 = time.time()
+            expected_sha256: dict[str, str] = {}
+            augmented_expect = list(t.expect_regex)
+            try:
+                for rel in t.expect_file_sha256:
+                    p = (REPO_ROOT / rel).resolve() if not Path(rel).is_absolute() else Path(rel).resolve()
+                    try:
+                        p.relative_to(REPO_ROOT)
+                    except ValueError:
+                        die(f"{t.id}: expect_file_sha256 path must be inside repo: {rel}")
+                    if not p.exists() or p.is_dir():
+                        die(f"{t.id}: expect_file_sha256 path missing or not a file: {rel}")
+                    digest = file_sha256_hex(p)
+                    expected_sha256[rel] = digest
+                    augmented_expect.append(re.escape(digest))
+            except Exception as e:
+                # Treat suite config problems as hard errors (not flaky test failures).
+                die(str(e))
             try:
                 if t.runtime == "claude":
                     code, out = run_claude(t.prompt, t.model, env, t.timeout_sec)
@@ -257,7 +285,7 @@ def main(argv: list[str] | None = None) -> int:
                 code, out = 124, ""
 
             elapsed_ms = int((time.time() - t0) * 1000)
-            ok, missing, forbidden = match_assertions(out, t.expect_regex, t.forbid_regex)
+            ok, missing, forbidden = match_assertions(out, augmented_expect, t.forbid_regex)
             ok = ok and code == 0
 
             results.append(
@@ -270,6 +298,7 @@ def main(argv: list[str] | None = None) -> int:
                     "elapsed_ms": elapsed_ms,
                     "missing": missing,
                     "forbidden": forbidden,
+                    "expected_sha256": expected_sha256,
                 }
             )
 

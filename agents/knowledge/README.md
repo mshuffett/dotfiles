@@ -57,6 +57,22 @@ This searches across:
 
 Use this to reduce hop-cost: find the prior context quickly, then capture the durable part as an atom or promote a guardrail.
 
+## Link Graph (Hop Visualization)
+
+To visualize "hop cost" and ensure entrypoints link to the right deep notes, print the reachable link graph from entrypoint skills:
+
+```bash
+./script/agents-skills-graph
+```
+
+For a Graphviz DOT graph:
+
+```bash
+./script/agents-skills-graph --dot > /tmp/skills.dot
+dot -Tpng /tmp/skills.dot > /tmp/skills.png
+open /tmp/skills.png
+```
+
 ## Future Improvements
 
 Ideas to improve the memory system over time (not implemented yet):

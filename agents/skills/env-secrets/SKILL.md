@@ -1,4 +1,5 @@
 ---
+name: env-secrets
 description: Use when adding or updating environment variables or secrets. Covers global secrets (~/.env.zsh), project-specific secrets (.env.local), and documentation patterns (.env.example).
 ---
 

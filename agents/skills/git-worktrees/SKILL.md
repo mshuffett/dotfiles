@@ -1,4 +1,5 @@
 ---
+name: git-worktrees
 description: Use when creating, modifying, or managing git worktrees, working on parallel feature branches, or isolating work from the main repository.
 ---
 

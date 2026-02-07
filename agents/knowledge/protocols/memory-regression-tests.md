@@ -52,3 +52,17 @@ Notes:
 - This runs **real** `claude`/`codex` CLI calls, which may cost money and take time.
 - Keep the smoke suite small; create additional suites for larger coverage.
 
+## Deep Link Tests (Prove The Hop)
+
+When you want to verify the agent actually traverses entrypoint skills into deeper notes (and doesn't just answer generically), use a suite that requires cryptographic evidence.
+
+This repo supports an additional assertion field:
+
+- `expect_file_sha256`: list of repo-relative file paths
+  - the runner computes each file's SHA256 and asserts the agent output includes the digest
+
+Run the deep suite:
+
+```bash
+./script/agent-regress --suite agents/evals/suites/memory-deep.json
+```

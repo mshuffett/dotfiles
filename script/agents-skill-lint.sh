@@ -25,7 +25,7 @@ fi
 
 fail=0
 while IFS= read -r file; do
-  # Must start with YAML frontmatter and include a description field.
+  # Must start with YAML frontmatter and include name + description fields.
   if [ "$(head -n 1 "$file" 2>/dev/null || true)" != "---" ]; then
     echo "ERROR: $file: missing YAML frontmatter (first line must be ---)" >&2
     fail=1
@@ -33,13 +33,14 @@ while IFS= read -r file; do
   fi
 
   if ! awk '
-    BEGIN { infm=0; ok=0 }
+    BEGIN { infm=0; okname=0; okdesc=0 }
     NR==1 { infm=1; next }
-    infm==1 && $0 ~ /^description:[[:space:]]+/ { ok=1 }
+    infm==1 && $0 ~ /^name:[[:space:]]+/ { okname=1 }
+    infm==1 && $0 ~ /^description:[[:space:]]+/ { okdesc=1 }
     infm==1 && $0 ~ /^---[[:space:]]*$/ { infm=0 }
-    END { exit(ok?0:1) }
+    END { exit((okname && okdesc) ? 0 : 1) }
   ' "$file"; then
-    echo "ERROR: $file: YAML frontmatter must include description:" >&2
+    echo "ERROR: $file: YAML frontmatter must include name: and description:" >&2
     fail=1
   fi
 done < <(find "$SKILLS_DIR" -mindepth 2 -maxdepth 2 -name SKILL.md -print)

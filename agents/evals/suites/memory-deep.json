@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "description": "Deeper regression suite: verifies agents can traverse entrypoint -> deep note hops (and not just answer generically) by requiring real file SHA256 evidence.",
+  "defaults": {
+    "timeout_sec": 180
+  },
+  "tests": [
+    {
+      "id": "codex.deep.env_secrets.follow_deep_link",
+      "runtime": "codex",
+      "model": "gpt-5",
+      "prompt": "In this repo, use the entrypoint skill `env-secrets` to find its referenced deep-dive note about AWS credentials (do not guess the path; look it up). In your response include: (1) the repo-relative path to that deep note, (2) the SHA256 hex of that file computed from disk, and (3) two key guardrails from that note. Also include the exact command you ran to compute the SHA256 (e.g. shasum/sha256sum).",
+      "expect_regex": [
+        "agents/knowledge/atoms/claude-skill-archive/aws-credentials/SKILL\\.md",
+        "shasum\\b|sha256sum\\b",
+        "aws|credentials|access key|secret"
+      ],
+      "expect_file_sha256": [
+        "agents/knowledge/atoms/claude-skill-archive/aws-credentials/SKILL.md"
+      ]
+    },
+    {
+      "id": "codex.deep.git_worktrees.follow_deep_link",
+      "runtime": "codex",
+      "model": "gpt-5",
+      "prompt": "In this repo, use the entrypoint skill `git-worktrees` to find its referenced deep-dive note about git stash safety (do not guess the path; look it up). In your response include: (1) the repo-relative path to that deep note, (2) the SHA256 hex of that file computed from disk, and (3) two key guardrails from that note. Also include the exact command you ran to compute the SHA256.",
+      "expect_regex": [
+        "agents/knowledge/atoms/claude-skill-archive/git-stash-safety/SKILL\\.md",
+        "shasum\\b|sha256sum\\b",
+        "stash|worktree|safety"
+      ],
+      "expect_file_sha256": [
+        "agents/knowledge/atoms/claude-skill-archive/git-stash-safety/SKILL.md"
+      ]
+    },
+    {
+      "id": "codex.deep.web_search.follow_deep_link",
+      "runtime": "codex",
+      "model": "gpt-5",
+      "prompt": "In this repo, use the entrypoint skill `web-search` to find its referenced deep-dive note about domain research (do not guess the path; look it up). In your response include: (1) the repo-relative path to that deep note, (2) the SHA256 hex of that file computed from disk, and (3) two key takeaways from that note. Also include the exact command you ran to compute the SHA256.",
+      "expect_regex": [
+        "agents/knowledge/atoms/claude-skill-archive/domain-research/SKILL\\.md",
+        "shasum\\b|sha256sum\\b",
+        "domain|research"
+      ],
+      "expect_file_sha256": [
+        "agents/knowledge/atoms/claude-skill-archive/domain-research/SKILL.md"
+      ]
+    },
+    {
+      "id": "claude.deep.env_secrets.follow_deep_link",
+      "runtime": "claude",
+      "model": "haiku",
+      "prompt": "In this repo, use the entrypoint skill `env-secrets` to find its referenced deep-dive note about AWS credentials (do not guess the path; look it up). In your response include: (1) the repo-relative path to that deep note, (2) the SHA256 hex of that file computed from disk, and (3) two key guardrails from that note. Also include the exact command you ran to compute the SHA256 (e.g. shasum/sha256sum).",
+      "expect_regex": [
+        "agents/knowledge/atoms/claude-skill-archive/aws-credentials/SKILL\\.md",
+        "shasum\\b|sha256sum\\b",
+        "aws|credentials|access key|secret"
+      ],
+      "expect_file_sha256": [
+        "agents/knowledge/atoms/claude-skill-archive/aws-credentials/SKILL.md"
+      ]
+    },
+    {
+      "id": "claude.deep.git_worktrees.follow_deep_link",
+      "runtime": "claude",
+      "model": "haiku",
+      "prompt": "In this repo, use the entrypoint skill `git-worktrees` to find its referenced deep-dive note about git stash safety (do not guess the path; look it up). In your response include: (1) the repo-relative path to that deep note, (2) the SHA256 hex of that file computed from disk, and (3) two key guardrails from that note. Also include the exact command you ran to compute the SHA256.",
+      "expect_regex": [
+        "agents/knowledge/atoms/claude-skill-archive/git-stash-safety/SKILL\\.md",
+        "shasum\\b|sha256sum\\b",
+        "stash|worktree|safety"
+      ],
+      "expect_file_sha256": [
+        "agents/knowledge/atoms/claude-skill-archive/git-stash-safety/SKILL.md"
+      ]
+    },
+    {
+      "id": "claude.deep.web_search.follow_deep_link",
+      "runtime": "claude",
+      "model": "haiku",
+      "prompt": "In this repo, use the entrypoint skill `web-search` to find its referenced deep-dive note about domain research (do not guess the path; look it up). In your response include: (1) the repo-relative path to that deep note, (2) the SHA256 hex of that file computed from disk, and (3) two key takeaways from that note. Also include the exact command you ran to compute the SHA256.",
+      "expect_regex": [
+        "agents/knowledge/atoms/claude-skill-archive/domain-research/SKILL\\.md",
+        "shasum\\b|sha256sum\\b",
+        "domain|research"
+      ],
+      "expect_file_sha256": [
+        "agents/knowledge/atoms/claude-skill-archive/domain-research/SKILL.md"
+      ]
+    }
+  ]
+}
+

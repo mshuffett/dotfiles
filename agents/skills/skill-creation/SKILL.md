@@ -1,4 +1,5 @@
 ---
+name: skill-creation
 description: Use when creating a new entrypoint skill, adding reusable knowledge, or user says "remember this". Prefer atoms; keep entrypoint skills <= 20. Commit changes to dotfiles repo.
 ---
 
@@ -16,6 +17,7 @@ Compatibility:
 
 - `~/.dotfiles/claude/skills/` is a symlink to `~/.dotfiles/agents/skills/`
 - Claude Code may also have its own `~/.claude/skills/` discovery path depending on setup
+- For Codex compatibility, the YAML frontmatter must include both `name:` and `description:`
 
 Deeper notes (atoms) live here:
 

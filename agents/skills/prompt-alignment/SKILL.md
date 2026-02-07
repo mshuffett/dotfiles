@@ -1,4 +1,5 @@
 ---
+name: prompt-alignment
 description: Use when aligning ANY prompt, read-trigger description, or output style. Run fit-to-generalize loop iteratively and test with CLI.
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: learn-first-parallelize
 description: This skill should be used when performing batch operations on many similar items (files, migrations, refactors). Do 2-3 items manually first to discover patterns, then write a comprehensive subagent prompt for parallel execution.
 ---
 

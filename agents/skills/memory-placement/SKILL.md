@@ -1,4 +1,5 @@
 ---
+name: memory-placement
 description: Use when user says "remember this", when deciding where to store learnings or documentation, when about to edit CLAUDE.md, or when creating new plugin content (skills, commands, agents). Routes info to CLAUDE.md, skills, commands, or logs.
 ---
 

@@ -1,4 +1,5 @@
 ---
+name: test-debugging
 description: Use when tests fail or flake; provides root-cause debugging workflow with universal steps and meta-learning integration.
 ---
 
