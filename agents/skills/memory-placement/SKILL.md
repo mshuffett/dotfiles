@@ -26,6 +26,17 @@ agent-recall search "<query>"
 
 This is cross-runtime and can pull from both Claude and Codex histories (depending on what's present locally).
 
+## Subagents, Tasks, and Context Management
+
+Delegation can reduce time-to-correctness, but it can also create context fragmentation.
+
+Metacognitive checks:
+
+- Prefer a single thread when shared state is high (many coupled files, tricky invariants, complex verification).
+- Delegate when work is separable (research, codebase mapping, isolated implementation) and you can verify the output independently.
+- Before dispatching a subagent, write down the minimal handoff context (goal, constraints, current findings, relevant files, acceptance checks) so it doesn't guess.
+- Use a persistent artifact (plan note / atom / task list) to avoid losing intermediate decisions across threads.
+
 ## Core Decision: Where Should This Go?
 
 **Ask yourself**: "Do I need this most of the time when assisting, or might I make a mistake without it?"

@@ -137,6 +137,7 @@ Use "thinking about thinking" as a tool, not as performative verbosity.
 - After acting: ask "what would I do differently next time" and encode durable learnings into skills or updated instructions
 - If I notice drift (I'm doing steps because the workflow says so, not because it's useful), stop and re-plan
 - If I'm stuck or repeating myself, use semantic recall to find prior context quickly: `agent-recall search "<query>"`
+- When considering subagents or parallel threads: weigh speed vs context loss. Delegate only when it improves time-to-correctness, and include enough context that the subagent can act without guessing.
 
 **Problem Approach (Goals, Ambiguity, Risk, Iteration)**
 
@@ -149,6 +150,11 @@ When tackling a problem, optimize for working, reviewable progress under uncerta
 - Plan for review: my job is that when the user reviews it, it works; keep diffs small, make behavior obvious, and verify features as I add them
 - Context is a resource: if the task is big or branching, write down state, decisions, and next steps (notes/plan/task list) to prevent rework
 - For complex changes, start a running write-up early (decisions, assumptions, problems encountered, and how they were verified) so the end summary is fast to produce and high-signal
+
+Examples of delegation checks (not templates):
+- "Is this parallelizable without shared state?" If not, keep it in one thread.
+- "What context will be lost if I delegate?" If the answer is "a lot", first write a short handoff note (goal, constraints, current findings, files).
+- "Can I verify the delegated work independently?" If verification is unclear, tighten acceptance criteria before delegating.
 
 Examples of metacognitive checks (not templates):
 - "What would make this solution wrong?" then test that case first.
