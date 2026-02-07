@@ -235,9 +235,59 @@ def emit_tree(g: Graph) -> None:
     def children(n: Path) -> list[Path]:
         return sorted(g.edges.get(n, set()), key=lambda p: to_rel(p))
 
-    def rec(n: Path, prefix: str, is_last: bool, seen_local: set[Path], stack: set[Path]) -> None:
-        connector = "`-- " if is_last else "|-- "
-        label = to_rel(n)
+    def pretty_label(n: Path, root_skill_dir: Path | None, full_paths: bool) -> str:
+        if full_paths:
+            return to_rel(n)
+
+        # Render as path relative to the root skill dir when possible.
+        if root_skill_dir is not None:
+            try:
+                return str(n.relative_to(root_skill_dir))
+            except ValueError:
+                pass
+
+        rel = to_rel(n)
+
+        # Shorten common prefixes to reduce noise.
+        if rel.startswith("agents/knowledge/atoms/"):
+            return "atoms/" + rel.removeprefix("agents/knowledge/atoms/")
+        if rel.startswith("agents/knowledge/protocols/"):
+            return "protocols/" + rel.removeprefix("agents/knowledge/protocols/")
+
+        # Skills: show as skill:<name> when referencing another entrypoint's SKILL.md.
+        if rel.startswith("agents/skills/") and rel.endswith("/SKILL.md"):
+            parts = Path(rel).parts
+            if len(parts) >= 3:
+                return f"skill:{parts[2]}"
+            return rel
+
+        if rel.startswith("agents/skills/"):
+            return rel.removeprefix("agents/skills/")
+
+        return rel
+
+    def connectors(unicode: bool) -> tuple[str, str, str]:
+        if unicode:
+            # Keep file ASCII by using escape sequences; output renders pretty in terminals.
+            tee = "\u251c\u2500\u2500 "  # "├── "
+            end = "\u2514\u2500\u2500 "  # "└── "
+            vert = "\u2502"  # "│"
+            return tee, end, vert
+        return "|-- ", "`-- ", "|"
+
+    def rec(
+        n: Path,
+        prefix: str,
+        is_last: bool,
+        seen_local: set[Path],
+        stack: set[Path],
+        root_skill_dir: Path | None,
+        full_paths: bool,
+        unicode: bool,
+    ) -> None:
+        tee, end, _vert = connectors(unicode)
+        connector = end if is_last else tee
+        label = pretty_label(n, root_skill_dir=root_skill_dir, full_paths=full_paths)
 
         if n in stack:
             print(prefix + connector + label + " [cycle]")
@@ -254,18 +304,43 @@ def emit_tree(g: Graph) -> None:
             return
 
         stack.add(n)
-        next_prefix = prefix + ("    " if is_last else "|   ")
+        if unicode:
+            next_prefix = prefix + ("    " if is_last else "\u2502   ")
+        else:
+            next_prefix = prefix + ("    " if is_last else "|   ")
         for i, c in enumerate(ch):
-            rec(c, next_prefix, i == (len(ch) - 1), seen_local, stack)
+            rec(
+                c,
+                next_prefix,
+                i == (len(ch) - 1),
+                seen_local,
+                stack,
+                root_skill_dir=root_skill_dir,
+                full_paths=full_paths,
+                unicode=unicode,
+            )
         stack.remove(n)
 
     print("---")
+    # Default: render entrypoint roots by skill name, not full file path.
     for r in sorted(g.roots, key=lambda p: to_rel(p)):
-        print(to_rel(r))
+        # r is agents/skills/<skill>/SKILL.md
+        skill_dir = r.parent
+        skill_name = skill_dir.name
+        print(skill_name + "/")
         seen_local: set[Path] = set()
         ch = children(r)
         for i, c in enumerate(ch):
-            rec(c, "", i == (len(ch) - 1), seen_local, set())
+            rec(
+                c,
+                "",
+                i == (len(ch) - 1),
+                seen_local,
+                set(),
+                root_skill_dir=skill_dir,
+                full_paths=False,
+                unicode=True,
+            )
         print()
 
 
@@ -305,6 +380,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--dot", action="store_true", help="Emit Graphviz DOT to stdout")
     ap.add_argument("--json", action="store_true", help="Emit machine-readable JSON (nodes, edges, categories)")
     ap.add_argument("--edges", action="store_true", help="Emit edge list (src -> dst) instead of tree output")
+    ap.add_argument("--full-paths", action="store_true", help="Don't shorten labels in tree mode")
+    ap.add_argument("--ascii", action="store_true", help="Use ASCII connectors in tree mode (default: unicode)")
+    ap.add_argument("--no-empty", action="store_true", help="Hide roots with zero outgoing links")
     args = ap.parse_args(argv)
 
     roots = sorted((REPO_ROOT / "agents" / "skills").glob("*/SKILL.md"))
@@ -332,7 +410,85 @@ def main(argv: list[str] | None = None) -> int:
     if args.edges:
         emit_text(g)
     else:
-        emit_tree(g)
+        # Re-render tree with caller options (pretty labels are default).
+        nodes = sorted(g.nodes, key=lambda p: to_rel(p))
+        edges = [(s, t) for s, ts in g.edges.items() for t in ts]
+        cats = Counter(categorize(n, g.roots) for n in g.nodes)
+        print(f"roots={len(g.roots)} nodes={len(nodes)} edges={len(edges)}")
+        print("node_categories=" + json.dumps(dict(sorted(cats.items())), sort_keys=True))
+        out_deg = Counter({to_rel(s): len(ts) for s, ts in g.edges.items()})
+        top = out_deg.most_common(10)
+        if top:
+            print("top_out_degree=" + json.dumps(top))
+
+        def children(n: Path) -> list[Path]:
+            return sorted(g.edges.get(n, set()), key=lambda p: to_rel(p))
+
+        def pretty_label(n: Path, root_skill_dir: Path | None) -> str:
+            if args.full_paths:
+                return to_rel(n)
+            if root_skill_dir is not None:
+                try:
+                    return str(n.relative_to(root_skill_dir))
+                except ValueError:
+                    pass
+            rel = to_rel(n)
+            if rel.startswith("agents/knowledge/atoms/"):
+                return "atoms/" + rel.removeprefix("agents/knowledge/atoms/")
+            if rel.startswith("agents/knowledge/protocols/"):
+                return "protocols/" + rel.removeprefix("agents/knowledge/protocols/")
+            if rel.startswith("agents/skills/") and rel.endswith("/SKILL.md"):
+                parts = Path(rel).parts
+                if len(parts) >= 3:
+                    return f"skill:{parts[2]}"
+                return rel
+            if rel.startswith("agents/skills/"):
+                return rel.removeprefix("agents/skills/")
+            return rel
+
+        def connectors() -> tuple[str, str, str]:
+            if args.ascii:
+                return "|-- ", "`-- ", "|"
+            tee = "\u251c\u2500\u2500 "  # "├── "
+            end = "\u2514\u2500\u2500 "  # "└── "
+            vert = "\u2502"  # "│"
+            return tee, end, vert
+
+        def rec(n: Path, prefix: str, is_last: bool, seen_local: set[Path], stack: set[Path], root_skill_dir: Path | None) -> None:
+            tee, end, _vert = connectors()
+            connector = end if is_last else tee
+            label = pretty_label(n, root_skill_dir=root_skill_dir)
+            if n in stack:
+                print(prefix + connector + label + " [cycle]")
+                return
+            if n in seen_local:
+                print(prefix + connector + label + " (ref)")
+                return
+            print(prefix + connector + label)
+            seen_local.add(n)
+            ch = children(n)
+            if not ch:
+                return
+            stack.add(n)
+            if args.ascii:
+                next_prefix = prefix + ("    " if is_last else "|   ")
+            else:
+                next_prefix = prefix + ("    " if is_last else "\u2502   ")
+            for i, c in enumerate(ch):
+                rec(c, next_prefix, i == (len(ch) - 1), seen_local, stack, root_skill_dir=root_skill_dir)
+            stack.remove(n)
+
+        print("---")
+        for r in sorted(g.roots, key=lambda p: to_rel(p)):
+            if args.no_empty and not children(r):
+                continue
+            skill_dir = r.parent
+            print(skill_dir.name + "/")
+            seen_local: set[Path] = set()
+            ch = children(r)
+            for i, c in enumerate(ch):
+                rec(c, "", i == (len(ch) - 1), seen_local, set(), root_skill_dir=skill_dir)
+            print()
     return 0
 
 
