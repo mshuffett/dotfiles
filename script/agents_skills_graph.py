@@ -219,6 +219,56 @@ def emit_text(g: Graph) -> None:
         print(f"{to_rel(s)} -> {to_rel(t)}")
 
 
+def emit_tree(g: Graph) -> None:
+    nodes = sorted(g.nodes, key=lambda p: to_rel(p))
+    edges = [(s, t) for s, ts in g.edges.items() for t in ts]
+
+    cats = Counter(categorize(n, g.roots) for n in g.nodes)
+    print(f"roots={len(g.roots)} nodes={len(nodes)} edges={len(edges)}")
+    print("node_categories=" + json.dumps(dict(sorted(cats.items())), sort_keys=True))
+
+    out_deg = Counter({to_rel(s): len(ts) for s, ts in g.edges.items()})
+    top = out_deg.most_common(10)
+    if top:
+        print("top_out_degree=" + json.dumps(top))
+
+    def children(n: Path) -> list[Path]:
+        return sorted(g.edges.get(n, set()), key=lambda p: to_rel(p))
+
+    def rec(n: Path, prefix: str, is_last: bool, seen_local: set[Path], stack: set[Path]) -> None:
+        connector = "`-- " if is_last else "|-- "
+        label = to_rel(n)
+
+        if n in stack:
+            print(prefix + connector + label + " [cycle]")
+            return
+        if n in seen_local:
+            print(prefix + connector + label + " (ref)")
+            return
+
+        print(prefix + connector + label)
+        seen_local.add(n)
+
+        ch = children(n)
+        if not ch:
+            return
+
+        stack.add(n)
+        next_prefix = prefix + ("    " if is_last else "|   ")
+        for i, c in enumerate(ch):
+            rec(c, next_prefix, i == (len(ch) - 1), seen_local, stack)
+        stack.remove(n)
+
+    print("---")
+    for r in sorted(g.roots, key=lambda p: to_rel(p)):
+        print(to_rel(r))
+        seen_local: set[Path] = set()
+        ch = children(r)
+        for i, c in enumerate(ch):
+            rec(c, "", i == (len(ch) - 1), seen_local, set())
+        print()
+
+
 def emit_dot(g: Graph) -> None:
     # Graphviz dot
     print("digraph skills {")
@@ -254,6 +304,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--max-depth", type=int, default=6, help="Max link depth from entrypoints (default: 6)")
     ap.add_argument("--dot", action="store_true", help="Emit Graphviz DOT to stdout")
     ap.add_argument("--json", action="store_true", help="Emit machine-readable JSON (nodes, edges, categories)")
+    ap.add_argument("--edges", action="store_true", help="Emit edge list (src -> dst) instead of tree output")
     args = ap.parse_args(argv)
 
     roots = sorted((REPO_ROOT / "agents" / "skills").glob("*/SKILL.md"))
@@ -278,7 +329,10 @@ def main(argv: list[str] | None = None) -> int:
         emit_dot(g)
         return 0
 
-    emit_text(g)
+    if args.edges:
+        emit_text(g)
+    else:
+        emit_tree(g)
     return 0
 
 
