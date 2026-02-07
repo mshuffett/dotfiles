@@ -14,6 +14,9 @@ if [ -n "${ZSH_VERSION-}" ]; then
   if [ -f "$HOME/.cargo/env" ]; then
     . "$HOME/.cargo/env"
   fi
+
+  # LINQ API Key
+  export LINQ_API_KEY=fa1c4701-1438-4305-8b1c-b6b3d56fea9b
   #
   # Do not change anything else in this file.
 

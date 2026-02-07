@@ -154,10 +154,8 @@ The system automatically notifies the team lead when you become idle.
 
 ### Task Directory Mismatch
 
-TaskCreate writes to: `$CLAUDE_CONFIG_DIR/tasks/{session-uuid}/`
-Team tasks live in: `$CLAUDE_CONFIG_DIR/tasks/{team-name}/`
-
-(For claudesp variant: `~/.claude-sneakpeek/claudesp/config/tasks/`)
+TaskCreate writes to: `~/.claude/tasks/{session-uuid}/`
+Team tasks live in: `~/.claude/tasks/{team-name}/`
 
 **Result**: Teammates won't see tasks you create with TaskCreate!
 
@@ -227,7 +225,7 @@ tmux capture-pane -t %AGENT_PANE -p | tail -50
 ### Start a Swarm
 
 1. `Teammate.spawnTeam` - Create team
-2. Write tasks to `$CLAUDE_CONFIG_DIR/tasks/{team}/` directly (not TaskCreate)
+2. Write tasks to `~/.claude/tasks/{team}/` directly (not TaskCreate)
 3. `Task tool` with `team_name` - Spawn teammates
 4. Monitor via delivered messages
 

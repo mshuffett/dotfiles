@@ -6,7 +6,7 @@ Detailed schemas and examples for Claude Code's native multi-agent tools.
 
 ### spawnTeam - Create a Team
 
-Creates a team file at `$CLAUDE_CONFIG_DIR/teams/{team-name}.json` and corresponding task directory.
+Creates a team file at `~/.claude/teams/{team-name}.json` and corresponding task directory.
 
 ```json
 {
@@ -18,7 +18,7 @@ Creates a team file at `$CLAUDE_CONFIG_DIR/teams/{team-name}.json` and correspon
 
 ### discoverTeams - Find Available Teams
 
-Lists teams from `$CLAUDE_CONFIG_DIR/teams/` that you're not already a member of.
+Lists teams from `~/.claude/teams/` that you're not already a member of.
 
 ```json
 {
@@ -219,7 +219,7 @@ Creates a task in your **session's** task list (NOT the team's list!).
 }
 ```
 
-**Important**: For team tasks, write directly to `$CLAUDE_CONFIG_DIR/tasks/{team-name}/`. See patterns.md.
+**Important**: For team tasks, write directly to `~/.claude/tasks/{team-name}/`. See patterns.md.
 
 ### TaskList
 
@@ -287,7 +287,7 @@ Valid statuses: `pending`, `in_progress`, `completed`, `deleted`
 
 ## Task JSON Schema (for direct file writes)
 
-When writing tasks directly to `$CLAUDE_CONFIG_DIR/tasks/{team-name}/`:
+When writing tasks directly to `~/.claude/tasks/{team-name}/`:
 
 ```json
 {
@@ -297,21 +297,20 @@ When writing tasks directly to `$CLAUDE_CONFIG_DIR/tasks/{team-name}/`:
   "status": "pending",
   "owner": "",
   "activeForm": "Implementing feature",
-  "blocks": [],
+  "blocks": ["2", "3"],
   "blockedBy": []
 }
 ```
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Sequential number as string ("1", "2", etc.) |
-| `subject` | string | Brief, imperative title |
-| `description` | string | Full requirements and context |
-| `status` | string | `pending`, `in_progress`, `completed` |
-| `owner` | string | Agent name or empty string |
-| `activeForm` | string | Present tense for spinner ("Implementing...") |
-| `blocks` | string[] | Task IDs this task blocks |
-| `blockedBy` | string[] | Task IDs blocking this task |
+Fields:
+- `id`: String, sequential number
+- `subject`: Brief title
+- `description`: Detailed requirements
+- `status`: `pending` | `in_progress` | `completed`
+- `owner`: Agent name or empty string
+- `activeForm`: Present tense for spinner (optional)
+- `blocks`: Task IDs this task blocks
+- `blockedBy`: Task IDs blocking this task
 
 ---
 
@@ -319,36 +318,30 @@ When writing tasks directly to `$CLAUDE_CONFIG_DIR/tasks/{team-name}/`:
 
 | Variable | Description |
 |----------|-------------|
-| `CLAUDE_CODE_TEAM_MODE` | Enables team mode |
-| `CLAUDE_CODE_TEAM_NAME` | Current team name |
-| `CLAUDE_CODE_AGENT_ID` | Your unique agent identifier |
-| `CLAUDE_CODE_AGENT_TYPE` | Your role: `team-lead` or `worker` |
-| `CLAUDE_CODE_PLAN_MODE_REQUIRED` | If "true", must enter plan mode before implementing |
+| `CLAUDE_CODE_TEAM_NAME` | Name of the current team |
+| `CLAUDE_CODE_AGENT_ID` | Your agent identifier |
+| `CLAUDE_CODE_AGENT_TYPE` | Your role (`team-lead`, `worker`, etc.) |
+| `CLAUDE_CODE_TEAM_MODE` | Whether team mode is enabled |
 
 ---
 
 ## Reading Team Config
 
-Discover other team members:
+Team configuration is stored at `~/.claude/teams/{team-name}/config.json`:
 
-```bash
-cat $CLAUDE_CONFIG_DIR/teams/{team-name}/config.json | jq '.members'
-```
-
-Returns:
 ```json
-[
-  {
-    "name": "team-lead",
-    "agentId": "uuid-1",
-    "agentType": "team-lead"
-  },
-  {
-    "name": "api-worker",
-    "agentId": "uuid-2",
-    "agentType": "worker"
-  }
-]
+{
+  "name": "feature-auth",
+  "description": "Authentication feature implementation",
+  "leadAgentId": "abc-123",
+  "members": [
+    {
+      "name": "api-worker",
+      "agentId": "def-456",
+      "agentType": "worker"
+    }
+  ]
+}
 ```
 
-**Always use `name` for messaging and task assignment**, not `agentId`.
+**Always refer to teammates by their `name`, not their `agentId`.**
