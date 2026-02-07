@@ -1,29 +1,47 @@
 ---
-description: Use when creating a new skill, adding reusable knowledge, or user says "remember this as a skill". Creates skills in ~/.dotfiles/claude/skills/ and commits to dotfiles repo.
+description: Use when creating a new entrypoint skill, adding reusable knowledge, or user says "remember this". Prefer atoms; keep entrypoint skills <= 20. Commit changes to dotfiles repo.
 ---
 
 # Skill Creation
 
 ## Location
 
-All skills live in the dotfiles repo:
+Canonical entrypoint skills live in the dotfiles repo:
 
 ```
-~/.dotfiles/claude/skills/<skill-name>/SKILL.md
+~/.dotfiles/agents/skills/<skill-name>/SKILL.md
 ```
 
-This directory is symlinked to `~/.claude/skills/` for Claude Code to discover.
+Compatibility:
+
+- `~/.dotfiles/claude/skills/` is a symlink to `~/.dotfiles/agents/skills/`
+- Claude Code may also have its own `~/.claude/skills/` discovery path depending on setup
+
+Deeper notes (atoms) live here:
+
+```
+~/.dotfiles/agents/knowledge/atoms/
+```
+
+## Decide: Entrypoint Skill vs Atom
+
+Hops are expensive. Default to atoms unless the guidance is truly likely to be needed without prompting.
+
+- Create an **entrypoint skill** when it should auto-load frequently and missing it would cause mistakes.
+- Create an **atom** when it's detailed, rare, or only relevant after the entrypoint is triggered.
+
+If adding a new entrypoint pushes `agents/skills` above ~20, prefer consolidating or moving detail into atoms.
 
 ## Quick Creation
 
 ```bash
 # 1. Create skill directory
-mkdir -p ~/.dotfiles/claude/skills/<skill-name>
+mkdir -p ~/.dotfiles/agents/skills/<skill-name>
 
 # 2. Write SKILL.md (see template below)
 
 # 3. Commit to dotfiles
-cd ~/.dotfiles && git add claude/skills/<skill-name> && git commit -m "feat(skills): add <skill-name> skill"
+cd ~/.dotfiles && git add agents/skills/<skill-name> && git commit -m "feat(agents-skills): add <skill-name> entrypoint"
 ```
 
 ## SKILL.md Template
@@ -93,14 +111,14 @@ Always commit new skills:
 
 ```bash
 cd ~/.dotfiles
-git add claude/skills/<skill-name>
-git commit -m "feat(skills): add <skill-name> skill"
+git add agents/skills/<skill-name>
+git commit -m "feat(agents-skills): add <skill-name> entrypoint"
 git push
 ```
 
 ## Acceptance Checks
 
-- [ ] Skill created in `~/.dotfiles/claude/skills/<name>/SKILL.md`
+- [ ] Entrypoint skill created in `~/.dotfiles/agents/skills/<name>/SKILL.md` (or atom created under `agents/knowledge/atoms/`)
 - [ ] Description starts with "Use when..."
 - [ ] Description under 200 characters
 - [ ] Content uses imperative form

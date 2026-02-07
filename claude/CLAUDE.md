@@ -63,7 +63,7 @@ Skills are one of the primary methods I have for improving and remembering thing
 
 **Scan skills before "familiar" operations too.** The bias is to skip skill checks for things that feel routine (tmux, git, bash patterns). These are exactly where skills prevent subtle mistakes. If an operation has a matching skill, invoke it — even if the command seems obvious.
 
-When creating skills, invoke the skill-creation skill available in this environment (commonly `skill-creator`). Skills live in `~/.dotfiles/claude/skills/` and must be committed.
+When creating skills, invoke the skill-creation skill available in this environment (commonly `skill-creator`). Canonical entrypoint skills live in `~/.dotfiles/agents/skills/` and must be committed (with `~/.dotfiles/claude/skills/` as a compatibility symlink).
 
 **Preferences**
 

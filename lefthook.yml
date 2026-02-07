@@ -14,3 +14,7 @@ pre-commit:
             exit 1
           fi
         fi
+    agents_skills_lint:
+      runner: bash
+      run: |
+        ./script/agents-skill-lint.sh

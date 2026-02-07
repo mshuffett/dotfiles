@@ -14,11 +14,11 @@
 # - Validator: Exhaustive quality gate with manual E2E testing
 #
 # Usage:
-#   ralph run --config ~/.dotfiles/claude/skills/ralph-orchestrator/references/prd-to-code-assist.yml \
+#   ralph run --config ~/.dotfiles/agents/skills/ralph-orchestrator/references/prd-to-code-assist.yml \
 #     --prompt "Implement specs/canvas/prd.md"
 #
 # Or copy to your project and customize:
-#   cp ~/.dotfiles/claude/skills/ralph-orchestrator/references/prd-to-code-assist.yml ./ralph.yml
+#   cp ~/.dotfiles/agents/skills/ralph-orchestrator/references/prd-to-code-assist.yml ./ralph.yml
 
 event_loop:
   prompt_file: "PROMPT.md"

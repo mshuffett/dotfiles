@@ -150,7 +150,7 @@ Key presets:
 
 ### Dotfiles Presets
 
-Custom presets live in `~/.dotfiles/claude/skills/ralph-orchestrator/references/`:
+Custom presets live in `~/.dotfiles/agents/skills/ralph-orchestrator/references/` (or via the `~/.dotfiles/claude/skills/` compatibility symlink):
 - `prd-to-code-assist.yml` - Start from existing PRD, skip design debate
 
 ## PRD-Driven Workflow
@@ -161,11 +161,11 @@ When you already have a detailed PRD and want to skip the design debate phase:
 
 ```bash
 # Use the prd-to-code-assist preset from dotfiles
-ralph run -c ~/.dotfiles/claude/skills/ralph-orchestrator/references/prd-to-code-assist.yml \
+ralph run -c ~/.dotfiles/agents/skills/ralph-orchestrator/references/prd-to-code-assist.yml \
   --prompt "Implement specs/canvas/prd.md"
 
 # Or copy to your project and customize
-cp ~/.dotfiles/claude/skills/ralph-orchestrator/references/prd-to-code-assist.yml ./ralph.yml
+cp ~/.dotfiles/agents/skills/ralph-orchestrator/references/prd-to-code-assist.yml ./ralph.yml
 ```
 
 ### prd-to-code-assist Workflow (5 hats)
@@ -211,13 +211,13 @@ The meta-orchestrator runs multiple approaches in parallel, grades them, identif
 
 ```bash
 # From any project with specs/ directory
-~/.dotfiles/claude/skills/ralph-orchestrator/references/meta-orchestrator/run-meta.sh
+~/.dotfiles/agents/skills/ralph-orchestrator/references/meta-orchestrator/run-meta.sh
 
 # Or with custom config
-~/.dotfiles/claude/skills/ralph-orchestrator/references/meta-orchestrator/run-meta.sh path/to/config.md
+~/.dotfiles/agents/skills/ralph-orchestrator/references/meta-orchestrator/run-meta.sh path/to/config.md
 
 # Or run ralph directly
-ralph run -c ~/.dotfiles/claude/skills/ralph-orchestrator/references/meta-orchestrator/ralph.yml
+ralph run -c ~/.dotfiles/agents/skills/ralph-orchestrator/references/meta-orchestrator/ralph.yml
 ```
 
 ### The 4 Hats
@@ -271,7 +271,7 @@ The analyzer classifies failures to enable targeted evolution:
 
 ### Example: PRD Implementation
 
-See `~/.dotfiles/claude/skills/ralph-orchestrator/references/meta-orchestrator/examples/prd-implementation.md` for a complete example config.
+See `~/.dotfiles/agents/skills/ralph-orchestrator/references/meta-orchestrator/examples/prd-implementation.md` for a complete example config.
 
 ## Creating Custom Presets
 

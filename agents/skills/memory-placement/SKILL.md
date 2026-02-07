@@ -6,6 +6,16 @@ description: Use when user says "remember this", when deciding where to store le
 
 Quick reference for deciding where information should be stored across Claude sessions.
 
+## Progressive Disclosure (Hop Cost)
+
+Each additional "hop" (need to notice a skill, then open it, then open a referenced doc) adds time and increases the risk the instruction is missed.
+
+Use hop cost intentionally:
+
+- Put only universal guardrails in `CLAUDE.md` (L0)
+- Keep `agents/skills/*/SKILL.md` as a small set of entrypoints (L1)
+- Put deeper specifics in referenced notes (L2+) and promote them upward only when they prove high-risk or frequently missed
+
 ## Core Decision: Where Should This Go?
 
 **Ask yourself**: "Do I need this most of the time when assisting, or might I make a mistake without it?"
@@ -15,7 +25,13 @@ Quick reference for deciding where information should be stored across Claude se
   - Project-level: `./CLAUDE.md` (this project)
 - **NO** → Create a **skill** or **command** in a plugin
 
-## Plugin Architecture
+## Where This Repo Stores Skills / Knowledge
+
+- **Entrypoint skills (cross-runtime)**: `~/.dotfiles/agents/skills/` (canonical)
+  - Compatibility: `~/.dotfiles/claude/skills/` is a symlink to `~/.dotfiles/agents/skills/`
+- **Deeper notes (atoms)**: `~/.dotfiles/agents/knowledge/atoms/`
+
+## Claude Plugin Architecture (Separate System)
 
 Persistent memory beyond CLAUDE.md lives in **plugins** at `~/.dotfiles/claude-plugins/`. Each plugin contains: `skills/`, `commands/`, `agents/`, `scripts/`
 
@@ -61,7 +77,9 @@ Is this info needed MOST OF THE TIME?
 **Skills** (auto-loaded):
 - Loaded when Claude matches the description
 - Good for: Safety protocols, best practices, domain knowledge
-- Location: `~/.dotfiles/claude-plugins/<plugin>/skills/<name>/SKILL.md`
+- Locations:
+  - Entrypoints: `~/.dotfiles/agents/skills/<name>/SKILL.md`
+  - Claude plugin skills: `~/.dotfiles/claude-plugins/<plugin>/skills/<name>/SKILL.md`
 
 **Commands** (user-invoked):
 - User types `/plugin:command` or `/command`
