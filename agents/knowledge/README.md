@@ -62,5 +62,7 @@ Use this to reduce hop-cost: find the prior context quickly, then capture the du
 Ideas to improve the memory system over time (not implemented yet):
 
 - Out-of-band procedural memory updates: periodically run a background job that reviews logs/evals/mistakes and proposes/promotes/demotes memory items without blocking interactive work (there is an implementation pattern in a third-party repo; note for future integration).
+- Extend recall beyond conversations: allow `agent-recall` to semantically search skills/atoms (entrypoints + deep dives) so the system can quickly find relevant guidance without increasing L0/L1 context.
+- Add semantic search over repo code: build a local index for code files (and optionally PR diffs) so agents can quickly retrieve relevant implementations/patterns by meaning, not just keywords.
 - Expand eval coverage: add more suites for high-risk workflows (git safety, secrets, delegation handoffs) and track timing trends for regressions.
 - Automated hop-cost promotion tooling: detect repeated misses and suggest moving key guardrails up a level (atom -> entrypoint -> L0) with minimal diff.
