@@ -16,6 +16,16 @@ agent-browser fill @e2 "text"   # Fill input by ref
 agent-browser close             # Close browser
 ```
 
+## Installation / Discovery
+
+We prefer `agent-browser` for browser testing and browser-based verification.
+
+If you do not have the skill installed in your current runtime, you can install Vercel's curated skills and the `find-skills` skill (then use it to locate `agent-browser`):
+
+```bash
+npx skills add https://github.com/vercel-labs/skills --skill find-skills
+```
+
 ## Core workflow
 
 1. Navigate: `agent-browser open <url>`

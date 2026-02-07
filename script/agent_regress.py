@@ -79,8 +79,11 @@ def mk_sandbox_home() -> tuple[tempfile.TemporaryDirectory[str], dict[str, str]]
     real_codex = Path.home() / ".codex"
     if (real_codex / "auth.json").exists():
         _symlink(real_codex / "auth.json", home / ".codex" / "auth.json")
-    if (real_codex / "skills").exists():
-        _symlink(real_codex / "skills", home / ".codex" / "skills")
+    _merge_skills_dir(
+        dst=home / ".codex" / "skills",
+        primary=REPO_ROOT / "agents" / "skills",
+        secondary=real_codex / "skills",
+    )
 
     env = dict(os.environ)
     env["HOME"] = str(home)
@@ -118,6 +121,39 @@ def _copy_tree(src: Path, dst: Path) -> None:
         else:
             dst.unlink()
     shutil.copytree(src, dst, symlinks=True)
+
+
+def _merge_skills_dir(dst: Path, primary: Path, secondary: Path) -> None:
+    """
+    Create a directory at dst that contains symlinks to skills from primary (repo)
+    and secondary (user-installed), preferring primary on name conflicts.
+    """
+    import shutil
+
+    if dst.exists() or dst.is_symlink():
+        if dst.is_dir() and not dst.is_symlink():
+            shutil.rmtree(dst)
+        else:
+            dst.unlink()
+    dst.mkdir(parents=True, exist_ok=True)
+
+    def link_children(src_dir: Path) -> None:
+        if not src_dir.exists() or not src_dir.is_dir():
+            return
+        for child in sorted(src_dir.iterdir()):
+            name = child.name
+            target = dst / name
+            if target.exists() or target.is_symlink():
+                continue
+            try:
+                target.symlink_to(child)
+            except Exception:
+                # Best effort: ignore invalid entries (permissions, etc.)
+                continue
+
+    # Prefer repo skills first.
+    link_children(primary)
+    link_children(secondary)
 
 
 def run_claude(prompt: str, model: str | None, env: dict[str, str], timeout_sec: int) -> tuple[int, str]:

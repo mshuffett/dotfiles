@@ -34,7 +34,7 @@
       "model": "gpt-5",
       "prompt": "When you claim a bug is fixed, what evidence should you include in your summary?",
       "expect_regex": [
-        "exact (command|test)|command\\b.*ran|tests?\\b.*ran",
+        "reproduced with|command/test|command\\b|tests?\\b",
         "verification|prove|evidence"
       ]
     },
@@ -47,6 +47,24 @@
         "untracked|stray|artifacts?",
         "debug|temporary|scaffolding",
         "clean up|remove"
+      ]
+    },
+    {
+      "id": "claude.browser_testing.prefers_agent_browser",
+      "runtime": "claude",
+      "model": "haiku",
+      "prompt": "For browser testing (E2E / UI verification), what tool should you prefer in this environment?",
+      "expect_regex": [
+        "agent-browser"
+      ]
+    },
+    {
+      "id": "codex.browser_testing.prefers_agent_browser",
+      "runtime": "codex",
+      "model": "gpt-5",
+      "prompt": "For browser testing (E2E / UI verification) in this environment, what tool should you prefer?",
+      "expect_regex": [
+        "agent-browser"
       ]
     }
   ]

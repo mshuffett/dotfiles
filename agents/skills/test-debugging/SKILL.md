@@ -51,4 +51,5 @@ After fixing ANY test failure:
 
 ## Related Notes (Deep Dives)
 
+- `agents/skills/agent-browser/SKILL.md`
 - `agents/knowledge/atoms/claude-skill-archive/verify-ui-changes/SKILL.md`
