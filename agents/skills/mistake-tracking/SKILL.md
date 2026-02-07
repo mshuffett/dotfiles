@@ -26,6 +26,14 @@ description: Use when logging or reviewing mistakes; append JSONL events and pro
    - 2+ repos each with a miss in 14 days -> add universal guardrail to root CLAUDE
 3. **Demote** when 14-30 quiet days pass -> propose removal of one-liners (policy stays in guides)
 
+## Semantic Recall (Before Logging)
+
+Before logging a mistake, quickly check whether it (or a close cousin) has happened before so you can re-use the existing fix/guardrail language:
+
+```bash
+agent-recall search "<mistake symptom / task context>"
+```
+
 ## Enforcement
 
 Procedural tasks with known triggers MUST record which guide was consulted and whether acceptance checks passed. If no guide consulted, log `guide.not_consulted` with `condition` and halt.

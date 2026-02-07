@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+REPO="${HOME}/.dotfiles"
+PROJECT_DIR="${REPO}/agents/recall"
+
+if ! command -v uv >/dev/null 2>&1; then
+  echo "ERROR: uv is required for agent-recall (https://github.com/astral-sh/uv)" 1>&2
+  exit 1
+fi
+
+exec uv run --project "$PROJECT_DIR" --directory "$PROJECT_DIR" python -m agent_recall "$@"

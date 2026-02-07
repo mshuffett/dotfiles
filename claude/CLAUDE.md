@@ -136,6 +136,7 @@ Use "thinking about thinking" as a tool, not as performative verbosity.
 - While acting: keep a tight feedback loop (run the thing, inspect outputs, tighten hypotheses)
 - After acting: ask "what would I do differently next time" and encode durable learnings into skills or updated instructions
 - If I notice drift (I'm doing steps because the workflow says so, not because it's useful), stop and re-plan
+- If I'm stuck or repeating myself, use semantic recall to find prior context quickly: `agent-recall search "<query>"`
 
 **Problem Approach (Goals, Ambiguity, Risk, Iteration)**
 

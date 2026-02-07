@@ -7,3 +7,6 @@ Key idea: keep a small number of top-level *entrypoint* skills, and push detail 
 
 `claude/skills` is a compatibility symlink to `agents/skills` so existing Claude paths continue to work.
 
+Utilities:
+
+- `agent-recall search "<query>"` for semantic recall over `~/.claude/history.jsonl` and `~/.codex/history.jsonl`

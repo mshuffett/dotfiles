@@ -42,3 +42,17 @@ Changes to this system should be treated as experiments:
 
 See: `agents/knowledge/protocols/memory-experiments.md`.
 
+## Semantic Recall (Conversations)
+
+When you're stuck, repeating a mistake, or suspect you've solved something before, use local semantic recall to search prior prompts/outputs:
+
+```bash
+agent-recall search "your query"
+```
+
+This searches across:
+
+- `~/.claude/history.jsonl` (Claude Code prompts)
+- `~/.codex/history.jsonl` (Codex prompts/outputs)
+
+Use this to reduce hop-cost: find the prior context quickly, then capture the durable part as an atom or promote a guardrail.

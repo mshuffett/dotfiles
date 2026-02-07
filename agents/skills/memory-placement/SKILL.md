@@ -16,6 +16,16 @@ Use hop cost intentionally:
 - Keep `agents/skills/*/SKILL.md` as a small set of entrypoints (L1)
 - Put deeper specifics in referenced notes (L2+) and promote them upward only when they prove high-risk or frequently missed
 
+## Semantic Recall (Search Prior Conversations)
+
+If you're stuck, repeating a failure mode, or suspect "I've solved this before", search conversation history semantically before inventing a new approach:
+
+```bash
+agent-recall search "<query>"
+```
+
+This is cross-runtime and can pull from both Claude and Codex histories (depending on what's present locally).
+
 ## Core Decision: Where Should This Go?
 
 **Ask yourself**: "Do I need this most of the time when assisting, or might I make a mistake without it?"
