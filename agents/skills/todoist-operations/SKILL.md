@@ -230,3 +230,8 @@ add_comment(task_id, "Moved to Raw Ideas project")      # Wrong
 - `~/ws/everything-monorepo/notes/5-Tools/Todoist/TODOIST_LEARNINGS.md`
 - `~/ws/everything-monorepo/notes/5-Tools/Todoist/workflow_guide.md`
 - `~/ws/everything-monorepo/notes/5-Tools/Todoist/scripts/` (bulk operation scripts)
+
+## Related Notes (Deep Dives)
+
+- `agents/skills/todoist-triage/SKILL.md`
+- `agents/knowledge/atoms/claude-skill-archive/calendar-operations/SKILL.md`

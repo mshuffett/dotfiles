@@ -170,3 +170,8 @@ When done:
 - Making quick fixes on current branch
 - User hasn't requested parallel development
 - Working on a single feature already checked out
+
+## Related Notes (Deep Dives)
+
+- `agents/knowledge/atoms/claude-skill-archive/create-pr/SKILL.md`
+- `agents/knowledge/atoms/claude-skill-archive/git-stash-safety/SKILL.md`

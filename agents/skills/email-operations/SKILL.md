@@ -118,3 +118,7 @@ gmail archive <id>
 - **"Credentials file not found"**: Download OAuth credentials from GCP Console
 - **"Token expired"**: Run `gmail auth` to re-authenticate
 - **"Insufficient permissions"**: Re-authenticate with `gmail auth` (scopes may have changed)
+
+## Related Notes (Deep Dives)
+
+- `agents/knowledge/atoms/claude-skill-archive/email-triage/SKILL.md`

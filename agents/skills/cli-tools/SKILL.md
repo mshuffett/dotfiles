@@ -112,3 +112,8 @@ Measured on macOS ARM:
 | Python + typer | 80ms |
 
 For tools involving network/disk I/O, the startup difference is negligible.
+
+## Related Notes (Deep Dives)
+
+- `agents/knowledge/atoms/claude-skill-archive/tmux-patterns/SKILL.md`
+- `agents/knowledge/atoms/claude-skill-archive/terminal-images/SKILL.md`

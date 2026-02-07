@@ -24,6 +24,10 @@ DATABASE_URL=postgresql://localhost:5432/mydb
 API_KEY=your_secret_key_here
 ```
 
+## Related Notes (Deep Dives)
+
+- `agents/knowledge/atoms/claude-skill-archive/aws-credentials/SKILL.md`
+
 ## Acceptance Checks
 
 - [ ] Secrets stored in `~/.env.zsh` (global) or `.env.local` (project)

@@ -14,6 +14,11 @@ This skill provides the mapping between PARA categories across Todoist, Notion, 
 - **R**esources: Reference material and information
 - **A**rchive: Completed/inactive items
 
+## Related Notes (Deep Dives)
+
+- `agents/knowledge/atoms/claude-skill-archive/notion-ppv/SKILL.md`
+- `agents/knowledge/atoms/claude-skill-archive/para-notes/SKILL.md`
+
 ## System Integration
 
 ### Notion PPV (Source of Truth for Projects)

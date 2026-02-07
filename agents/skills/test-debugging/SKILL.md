@@ -48,3 +48,7 @@ After fixing ANY test failure:
 - Document project-specific patterns in the project's CLAUDE.md or docs
 - Update root memory only if the pattern is universal
 - Commit learnings immediately
+
+## Related Notes (Deep Dives)
+
+- `agents/knowledge/atoms/claude-skill-archive/verify-ui-changes/SKILL.md`
