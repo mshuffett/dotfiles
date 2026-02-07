@@ -56,3 +56,11 @@ This searches across:
 - `~/.codex/history.jsonl` (Codex prompts/outputs)
 
 Use this to reduce hop-cost: find the prior context quickly, then capture the durable part as an atom or promote a guardrail.
+
+## Future Improvements
+
+Ideas to improve the memory system over time (not implemented yet):
+
+- Out-of-band procedural memory updates: periodically run a background job that reviews logs/evals/mistakes and proposes/promotes/demotes memory items without blocking interactive work (there is an implementation pattern in a third-party repo; note for future integration).
+- Expand eval coverage: add more suites for high-risk workflows (git safety, secrets, delegation handoffs) and track timing trends for regressions.
+- Automated hop-cost promotion tooling: detect repeated misses and suggest moving key guardrails up a level (atom -> entrypoint -> L0) with minimal diff.
