@@ -371,17 +371,32 @@ def cmd_update(args):
         # Get existing event
         event = service.events().get(calendarId='primary', eventId=args.event_id).execute()
 
+        if 'dateTime' not in event.get('start', {}) or 'dateTime' not in event.get('end', {}):
+            raise ValueError("Only timed events are supported by gcal update (missing start/end dateTime).")
+
         if args.title:
             event['summary'] = args.title
 
+        old_start = datetime.fromisoformat(event['start']['dateTime'].replace('Z', '+00:00'))
+        old_end = datetime.fromisoformat(event['end']['dateTime'].replace('Z', '+00:00'))
+
+        start_dt = None
         if args.when:
             start_dt = parse_datetime(args.when)
-            # Keep same duration
-            old_start = datetime.fromisoformat(event['start']['dateTime'].replace('Z', '+00:00'))
-            old_end = datetime.fromisoformat(event['end']['dateTime'].replace('Z', '+00:00'))
-            duration = old_end - old_start
-            end_dt = start_dt + duration
+        else:
+            # Preserve existing start time if only changing duration.
+            start_dt = old_start.astimezone(TZ)
 
+        duration = None
+        if args.duration is not None:
+            if args.duration <= 0:
+                raise ValueError("--duration must be a positive number of minutes")
+            duration = timedelta(minutes=args.duration)
+        else:
+            duration = old_end - old_start
+
+        if args.when or args.duration is not None:
+            end_dt = start_dt + duration
             event['start'] = {'dateTime': start_dt.isoformat(), 'timeZone': DEFAULT_TIMEZONE}
             event['end'] = {'dateTime': end_dt.isoformat(), 'timeZone': DEFAULT_TIMEZONE}
 
@@ -522,6 +537,7 @@ def main():
     update_parser.add_argument('event_id', help='Event ID')
     update_parser.add_argument('--title', '-t', help='New title')
     update_parser.add_argument('--when', '-w', help='New start time')
+    update_parser.add_argument('--duration', '-d', type=int, help='Duration in minutes (optional)')
     update_parser.add_argument('--location', '-l', help='New location')
     update_parser.add_argument('--description', help='New description')
 
