@@ -129,6 +129,19 @@ type CurrentEntry = {
 
 type Workspace = { id: number; name: string };
 
+type TimeEntry = {
+  id: number;
+  description?: string;
+  start?: string;
+  stop?: string | null;
+  duration?: number;
+  workspace_id?: number;
+  wid?: number;
+  project_id?: number;
+  pid?: number;
+  tags?: string[];
+};
+
 const main = defineCommand({
   meta: {
     name: "toggl",
@@ -273,6 +286,88 @@ const main = defineCommand({
         if (args.projectId) payload.project_id = args.projectId;
         await api(`/workspaces/${wid}/time_entries`, { method: "POST", body: JSON.stringify(payload) });
         console.log("Logged.");
+      },
+    }),
+
+    plan: defineCommand({
+      meta: {
+        description:
+          'Create a "planned" future block as a time entry (tagged plan). Note: Toggl Track does not have separate plan-vs-actual objects.',
+      },
+      args: {
+        desc: { type: "string", required: true, description: "Description" },
+        start: { type: "string", required: true, description: 'Start time, e.g. "2026-02-09 10:00"' },
+        minutes: { type: "number", required: true, description: "Duration in minutes" },
+        workspace: { type: "number", description: "Workspace ID (overrides config)" },
+        projectId: { type: "number", description: "Project ID" },
+        tags: { type: "string", description: "Comma-separated tags (plan is always added)" },
+      },
+      run: async ({ args }) => {
+        const wid = requireWorkspaceId(args.workspace);
+        const startDt = parseLocalDateTime(args.start);
+        const seconds = Math.round(args.minutes * 60);
+        const tags = (args.tags ? args.tags.split(",") : [])
+          .map((t) => t.trim())
+          .filter(Boolean);
+        if (!tags.includes("plan")) tags.unshift("plan");
+
+        const payload: any = {
+          created_with: "toggl.ts",
+          description: args.desc,
+          workspace_id: wid,
+          duration: seconds,
+          start: startDt.toISOString(),
+          tags,
+        };
+        if (args.projectId) payload.project_id = args.projectId;
+        const created = await api<TimeEntry>(`/workspaces/${wid}/time_entries`, {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+        console.log(`Planned: ${created.id}`);
+      },
+    }),
+
+    list: defineCommand({
+      meta: { description: "List time entries in a date/time range" },
+      args: {
+        from: { type: "string", required: true, description: 'Start (e.g. "2026-02-09" or "2026-02-09 10:00")' },
+        to: { type: "string", required: true, description: 'End (e.g. "2026-02-09" or "2026-02-09 18:00")' },
+        tag: { type: "string", description: "Filter: entries that include this tag" },
+      },
+      run: async ({ args }) => {
+        const from = parseLocalDateTime(args.from);
+        // If user passed only a date, parseLocalDateTime will be midnight.
+        // For "to", if it's midnight and input looked like a date, interpret it as end-of-day.
+        let to = parseLocalDateTime(args.to);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(args.to.trim())) {
+          to = new Date(to.getTime());
+          to.setHours(23, 59, 59, 999);
+        }
+
+        const qs = new URLSearchParams({
+          start_date: from.toISOString(),
+          end_date: to.toISOString(),
+        });
+        const entries = await api<TimeEntry[]>(`/me/time_entries?${qs.toString()}`);
+        const filtered = args.tag
+          ? entries.filter((e) => (e.tags || []).includes(args.tag!))
+          : entries;
+
+        if (!filtered.length) {
+          console.log("No entries in range.");
+          return;
+        }
+
+        for (const e of filtered) {
+          const start = e.start ? new Date(e.start).toLocaleString() : "";
+          const mins =
+            typeof e.duration === "number" ? Math.round(Math.abs(e.duration) / 60) : undefined;
+          const tags = (e.tags || []).join(",");
+          console.log(
+            `${e.id}\t${start}\t${mins !== undefined ? `${mins}m` : ""}\t${e.description || ""}${tags ? `\t[${tags}]` : ""}`
+          );
+        }
       },
     }),
   },
