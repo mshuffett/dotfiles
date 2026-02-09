@@ -18,6 +18,9 @@ Compatibility:
 - `~/.dotfiles/claude/skills/` is a symlink to `~/.dotfiles/agents/skills/`
 - Claude Code may also have its own `~/.claude/skills/` discovery path depending on setup
 - For Codex compatibility, the YAML frontmatter must include both `name:` and `description:`
+- Repo-local skills (per-repo):
+  - Codex CLI: `./skills/<skill-name>/SKILL.md` auto-loads (verified in `~/ws/notes` on 2026-02-08).
+  - Claude Code: `./.claude/skills/<skill-name>/SKILL.md` is the repo-local skills directory (verified in `~/ws/notes` on 2026-02-08).
 
 Deeper notes (atoms) live here:
 
