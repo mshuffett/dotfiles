@@ -1,6 +1,6 @@
 ---
 name: pomodoro-coaching
-description: Use when coaching Pomodoro single-task sessions (30m blocks) with end check-ins and note-driven must-do/maybe-do plans.
+description: Use when coaching Pomodoro single-task sessions (30m blocks). Includes end check-ins, weekly planning, and calendar-aware evening review.
 ---
 
 # Pomodoro Coaching (Notes Vault)
@@ -11,17 +11,26 @@ description: Use when coaching Pomodoro single-task sessions (30m blocks) with e
 - Use 30-minute Pomodoros as the unit of planning and verification.
 - Use end-of-Pomodoro check-ins (2 minutes) to validate output and choose the next block.
 
+## Canonical References (Global)
+
+- User operational profile: `agents/knowledge/atoms/michael-user-info.md`
+- Coaching basics: `agents/knowledge/atoms/coaching-lite.md`
+- Evening review: `agents/knowledge/atoms/evening-review-lite.md`
+- Calendar CLI: `agents/knowledge/atoms/gcal-cli.md`
+
 ## Workflow (Notes Repo)
 
 When working inside the `notes` vault/repo:
 
-1. Use `+Inbox/Strategy.md` as the live checklist for the session.
+1. Prefer a **project homepage** + **checklist note** over `+Inbox/`.
+   - If this exists, use it as the homepage: `1-Projects/Everything AI - Demo Day/00-Start Here.md`
+   - If this exists, use it as the checklist: `1-Projects/Everything AI - Demo Day/01-Planning/Everything AI - Demo Day - Pomodoro Checklist.md`
 2. Ensure each checklist item includes:
    - `⏱` estimate
    - `🍅` Pomodoro count
    - a clear **Deliverable**
    - a linked subpage note (one note per task)
-3. Create/maintain subpage notes in `+Inbox/`:
+3. Create/maintain subpage notes near the project checklist:
    - Title format: `Strategy - <task>.md`
    - Include: `Start time:`
    - Include the deliverable bullets
@@ -51,8 +60,7 @@ Keep it short:
 
 ## Acceptance Checks
 
-- [ ] `+Inbox/Strategy.md` has a Must-Dos/Maybe-Dos split with `🍅` totals.
-- [ ] Every task in `+Inbox/Strategy.md` links to a `+Inbox/Strategy - ... .md` subpage.
+- [ ] Checklist note has a Must-Dos/Maybe-Dos split with `🍅` totals.
+- [ ] Every checklist task links to a corresponding `Strategy - ... .md` subpage.
 - [ ] Each subpage has `Start time`, deliverables, `Output`, and `2-Min End Check-In`.
 - [ ] Coaching avoids making priority decisions; it asks for user context first.
-

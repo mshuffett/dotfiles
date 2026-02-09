@@ -30,6 +30,7 @@ import os
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 try:
     from google.auth.transport.requests import Request
@@ -57,6 +58,8 @@ SCOPES = [
 
 CREDENTIALS_PATH = Path(os.environ.get('GOOGLE_CREDENTIALS_PATH', '~/.config/google/credentials.json')).expanduser()
 TOKEN_PATH = Path(os.environ.get('GOOGLE_TOKEN_PATH', '~/.config/google/token.json')).expanduser()
+DEFAULT_TIMEZONE = os.environ.get('GCAL_TIMEZONE', 'America/Los_Angeles')
+TZ = ZoneInfo(DEFAULT_TIMEZONE)
 
 # Calendars to check by default
 DEFAULT_CALENDARS = [
@@ -100,7 +103,7 @@ def get_service():
 def parse_datetime(text):
     """Parse natural language datetime."""
     text = text.lower().strip()
-    now = datetime.now()
+    now = datetime.now(TZ)
 
     # Handle relative dates
     if text == 'today':
@@ -120,9 +123,19 @@ def parse_datetime(text):
 
     # Try parsing with dateutil
     try:
-        return date_parser.parse(text, fuzzy=True)
+        dt = date_parser.parse(text, fuzzy=True)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=TZ)
+        return dt
     except Exception:
         raise ValueError(f"Could not parse date: {text}")
+
+
+def to_utc_rfc3339(dt: datetime) -> str:
+    """Convert a datetime to RFC3339 UTC format (ending with 'Z') for Calendar API."""
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=TZ)
+    return dt.astimezone(timezone.utc).isoformat().replace('+00:00', 'Z')
 
 
 def format_event(event):
@@ -133,13 +146,13 @@ def format_event(event):
     # Parse and format times
     if 'T' in start:
         start_dt = datetime.fromisoformat(start.replace('Z', '+00:00'))
-        start_str = start_dt.strftime('%Y-%m-%d %H:%M')
+        start_str = start_dt.astimezone(TZ).strftime('%Y-%m-%d %H:%M')
     else:
         start_str = start
 
     if 'T' in end:
         end_dt = datetime.fromisoformat(end.replace('Z', '+00:00'))
-        end_str = end_dt.strftime('%H:%M')
+        end_str = end_dt.astimezone(TZ).strftime('%H:%M')
     else:
         end_str = end
 
@@ -165,9 +178,9 @@ def cmd_auth(args):
 def cmd_today(args):
     """Show today's events."""
     service = get_service()
-    now = datetime.now(timezone.utc).replace(tzinfo=None)
-    start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat() + 'Z'
-    end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=0).isoformat() + 'Z'
+    now = datetime.now(TZ)
+    start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_of_day = start_of_day + timedelta(days=1)
 
     try:
         all_events = []
@@ -175,8 +188,8 @@ def cmd_today(args):
             try:
                 events_result = service.events().list(
                     calendarId=cal_id,
-                    timeMin=start_of_day,
-                    timeMax=end_of_day,
+                    timeMin=to_utc_rfc3339(start_of_day),
+                    timeMax=to_utc_rfc3339(end_of_day),
                     singleEvents=True,
                     orderBy='startTime'
                 ).execute()
@@ -215,7 +228,7 @@ def cmd_today(args):
 def cmd_week(args):
     """Show this week's events."""
     service = get_service()
-    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    now = datetime.now(TZ)
     start_of_week = (now - timedelta(days=now.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
     end_of_week = start_of_week + timedelta(days=7)
 
@@ -225,8 +238,8 @@ def cmd_week(args):
             try:
                 events_result = service.events().list(
                     calendarId=cal_id,
-                    timeMin=start_of_week.isoformat() + 'Z',
-                    timeMax=end_of_week.isoformat() + 'Z',
+                    timeMin=to_utc_rfc3339(start_of_week),
+                    timeMax=to_utc_rfc3339(end_of_week),
                     singleEvents=True,
                     orderBy='startTime'
                 ).execute()
@@ -279,8 +292,8 @@ def cmd_list(args):
             try:
                 events_result = service.events().list(
                     calendarId=cal_id,
-                    timeMin=start_dt.isoformat() + 'Z',
-                    timeMax=end_dt.isoformat() + 'Z',
+                    timeMin=to_utc_rfc3339(start_dt),
+                    timeMax=to_utc_rfc3339(end_dt),
                     singleEvents=True,
                     orderBy='startTime'
                 ).execute()
@@ -326,8 +339,8 @@ def cmd_create(args):
 
         event = {
             'summary': args.title,
-            'start': {'dateTime': start_dt.isoformat(), 'timeZone': 'America/Chicago'},
-            'end': {'dateTime': end_dt.isoformat(), 'timeZone': 'America/Chicago'},
+            'start': {'dateTime': start_dt.isoformat(), 'timeZone': DEFAULT_TIMEZONE},
+            'end': {'dateTime': end_dt.isoformat(), 'timeZone': DEFAULT_TIMEZONE},
         }
 
         if args.location:
@@ -369,8 +382,8 @@ def cmd_update(args):
             duration = old_end - old_start
             end_dt = start_dt + duration
 
-            event['start'] = {'dateTime': start_dt.isoformat(), 'timeZone': 'America/Chicago'}
-            event['end'] = {'dateTime': end_dt.isoformat(), 'timeZone': 'America/Chicago'}
+            event['start'] = {'dateTime': start_dt.isoformat(), 'timeZone': DEFAULT_TIMEZONE}
+            event['end'] = {'dateTime': end_dt.isoformat(), 'timeZone': DEFAULT_TIMEZONE}
 
         if args.location:
             event['location'] = args.location
@@ -411,8 +424,8 @@ def cmd_freebusy(args):
         end = start + timedelta(days=1)
 
         body = {
-            "timeMin": start.isoformat() + 'Z',
-            "timeMax": end.isoformat() + 'Z',
+            "timeMin": to_utc_rfc3339(start),
+            "timeMax": to_utc_rfc3339(end),
             "items": [{"id": cal_id} for cal_id in DEFAULT_CALENDARS]
         }
 

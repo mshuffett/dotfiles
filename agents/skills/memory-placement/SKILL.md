@@ -52,6 +52,7 @@ Metacognitive checks:
 - **Entrypoint skills (cross-runtime)**: `~/.dotfiles/agents/skills/` (canonical)
   - Compatibility: `~/.dotfiles/claude/skills/` is a symlink to `~/.dotfiles/agents/skills/`
 - **Deeper notes (atoms)**: `~/.dotfiles/agents/knowledge/atoms/`
+  - User profile (operational defaults): `~/.dotfiles/agents/knowledge/atoms/michael-user-info.md`
 - **Repo-local skills (per-repo)**:
   - Codex CLI: `./skills/<skill-name>/SKILL.md` auto-loads (verified in `~/ws/notes` on 2026-02-08).
   - Claude Code: `./.claude/skills/<skill-name>/SKILL.md` is a repo-local skills directory (verified in `~/ws/notes` on 2026-02-08 via `claude -p --setting-sources project`).
