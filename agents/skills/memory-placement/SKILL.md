@@ -54,7 +54,9 @@ Metacognitive checks:
 - **Deeper notes (atoms)**: `~/.dotfiles/agents/knowledge/atoms/`
 - **Repo-local skills (per-repo)**:
   - Codex CLI: `./skills/<skill-name>/SKILL.md` auto-loads (verified in `~/ws/notes` on 2026-02-08).
-  - Claude Code: repo-local skills dir is not confirmed; observed auto-load path is global `~/.claude/skills/` (symlinked to dotfiles on this machine).
+  - Claude Code: `./.claude/skills/<skill-name>/SKILL.md` is a repo-local skills directory (verified in `~/ws/notes` on 2026-02-08 via `claude -p --setting-sources project`).
+  - Claude Code (global): `~/.claude/skills/` also exists on this machine (symlinked to dotfiles).
+  - If you want one source of truth for both tools, keep the canonical skill under `./skills/` and keep `./.claude/skills/` in sync (or symlink when your environment allows).
 
 ## Claude Plugin Architecture (Separate System)
 
