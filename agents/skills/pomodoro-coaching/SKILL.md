@@ -19,6 +19,22 @@ description: Use when coaching Pomodoro single-task sessions (30m blocks), inclu
 - Coaching basics: `agents/knowledge/atoms/coaching-lite.md`
 - Evening review: `agents/knowledge/atoms/evening-review-lite.md`
 - Calendar CLI: `agents/knowledge/atoms/gcal-cli.md`
+- Time tracking (Toggl): use `toggl` CLI (see below)
+
+## Time Tracking (Toggl)
+
+If the user wants time tracking, default to Toggl Track:
+
+Setup (one time):
+- Put `TOGGL_API_TOKEN` in `~/.env.zsh` (global secret).
+- Run `toggl init` to store the default `workspaceId`.
+
+During Pomodoros:
+- Prefer logging after each block (manual mode) so it's exact and doesn't require start/stop discipline:
+  - `toggl log --desc "Pomodoro #N: <task>" --start "YYYY-MM-DD HH:MM" --minutes 30 --tags "pomodoro"`
+- Alternatively use a running timer:
+  - `toggl start --desc "<task>" --tags "pomodoro"`
+  - `toggl stop`
 
 ## Coach Mode (Works Anywhere)
 
