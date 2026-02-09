@@ -36,6 +36,11 @@ During Pomodoros:
   - `toggl start --desc "<task>" --tags "pomodoro"`
   - `toggl stop`
 
+Planning (optional):
+- If the user wants the plan mirrored into Toggl, use `toggl plan` to create future blocks tagged `plan`:
+  - `toggl plan --desc "Deep Work: <objective>" --start "YYYY-MM-DD HH:MM" --minutes 240 --tags "deep-work"`
+- Note: Toggl Track has no separate "plan" object; this is still a time entry. Treat `plan` as provisional and reconcile during evening review.
+
 ## Coach Mode (Works Anywhere)
 
 When coaching outside any particular repo, the goal is still the same: the user can run a clean 30m block and ship a concrete deliverable.
