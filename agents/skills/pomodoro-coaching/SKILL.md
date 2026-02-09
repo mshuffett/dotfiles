@@ -1,15 +1,16 @@
 ---
 name: pomodoro-coaching
-description: Use when coaching Pomodoro single-task sessions (30m blocks). Includes end check-ins, weekly planning, and calendar-aware evening review.
+description: Use when coaching Pomodoro single-task sessions (30m blocks), including 2-min end check-ins, evening review + tomorrow plan, and weekly scope planning.
 ---
 
-# Pomodoro Coaching (Notes Vault)
+# Pomodoro Coaching (Global)
 
 ## Core Behavior
 
 - Do not decide the user's priorities. Ask for the minimum context first; propose neutral structure; let the user choose.
 - Use 30-minute Pomodoros as the unit of planning and verification.
 - Use end-of-Pomodoro check-ins (2 minutes) to validate output and choose the next block.
+- Calendar writes: audit and propose timeblocks as text; do not create/update calendar events unless the user explicitly approves.
 
 ## Canonical References (Global)
 
@@ -18,7 +19,18 @@ description: Use when coaching Pomodoro single-task sessions (30m blocks). Inclu
 - Evening review: `agents/knowledge/atoms/evening-review-lite.md`
 - Calendar CLI: `agents/knowledge/atoms/gcal-cli.md`
 
-## Workflow (Notes Repo)
+## Coach Mode (Works Anywhere)
+
+When coaching outside any particular repo, the goal is still the same: the user can run a clean 30m block and ship a concrete deliverable.
+
+Use the lightest artifact that preserves single-tasking:
+- If there is a repo/project note system, use it (project homepage + checklist + subpages).
+- If not, create a temporary checklist note in the current workspace (or ask where to put it) with:
+  - Must-Dos vs Maybe-Dos
+  - `🍅` Pomodoro counts (30m units) and totals
+  - explicit deliverables/outcomes per Pomodoro
+
+## Workflow (Notes Vault / Obsidian Repo)
 
 When working inside the `notes` vault/repo:
 
@@ -35,7 +47,7 @@ When working inside the `notes` vault/repo:
    - Include: `Start time:`
    - Include the deliverable bullets
    - Include an `Output` section to paste the deliverable
-   - Include a `2-Min End Check-In` section:
+    - Include a `2-Min End Check-In` section:
      - On track?
      - Any distractions?
      - Next Pomodoro:
@@ -58,9 +70,39 @@ Keep it short:
 - "Any distractions?" (one line; no deep postmortems unless requested)
 - "Next Pomodoro?" (pick the next task/subpage)
 
+## Evening Review (5-10 min) + Tomorrow Plan (Required)
+
+Use this when the user says "evening review", "end of day", "plan tomorrow", or they seem tired and want the minimum effective planning.
+
+Ask the user for:
+- Shipped today (1-5 bullets)
+- Time tracked today (hours/minutes)
+- Productivity (0-10) + 1 sentence why
+- Distractions (one line)
+- Improvements for tomorrow (0-3 bullets)
+- Out-of-scope work? (especially off-scope coding) If yes: what triggered it?
+- Was Palmer Square / standups / relationship context a good use of time today, or distracting? (one line)
+
+Then do:
+1. Update hill estimates for the active deliverables (only if the user is running a hill-style process).
+2. Calendar lookahead:
+   - Use `gcal` to review the next 1-2 days.
+   - Paste the schedule into the review.
+   - Propose deep work blocks and key timeblocks as text first; only write calendar events after explicit approval.
+3. Draft tomorrow plan:
+   - top outcomes (1-3)
+   - Pomodoro #1 deliverable
+   - Pomodoro #2 deliverable
+   - deep work target (🍅) and a 1-line deep work objective (concrete artifact)
+4. Remind close-down hygiene:
+   - Close Google Chrome tabs.
+   - Park/shut down agent sessions so they don't hijack the next morning.
+
 ## Acceptance Checks
 
 - [ ] Checklist note has a Must-Dos/Maybe-Dos split with `🍅` totals.
 - [ ] Every checklist task links to a corresponding `Strategy - ... .md` subpage.
 - [ ] Each subpage has `Start time`, deliverables, `Output`, and `2-Min End Check-In`.
 - [ ] Coaching avoids making priority decisions; it asks for user context first.
+- [ ] Evening review collects time tracked + productivity + distractions, updates tomorrow plan, and includes a pasted calendar lookahead.
+- [ ] Calendar writes are proposal-first; no event creation without explicit approval.
