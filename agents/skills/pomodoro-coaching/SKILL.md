@@ -11,6 +11,7 @@ description: Use when coaching Pomodoro single-task sessions (30m blocks), inclu
 - Use 30-minute Pomodoros as the unit of planning and verification.
 - Use end-of-Pomodoro check-ins (2 minutes) to validate output and choose the next block.
 - Calendar writes: audit and propose timeblocks as text; do not create/update calendar events unless the user explicitly approves.
+- Time sanity check: when the user references "today/tomorrow/yesterday" or day-of-week, verify via system time (`date`) and (if relevant) calendar (`gcal today`) rather than trusting stale prompt metadata.
 
 ## Canonical References (Global)
 
