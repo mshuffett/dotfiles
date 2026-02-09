@@ -118,7 +118,14 @@ type MeResponse = {
   default_workspace_id?: number;
 };
 
-type CurrentEntryResponse = { data: null | { id: number; wid?: number; workspace_id?: number; description?: string; start?: string; duration?: number } };
+type CurrentEntry = {
+  id: number;
+  wid?: number;
+  workspace_id?: number;
+  description?: string;
+  start?: string;
+  duration?: number;
+};
 
 type Workspace = { id: number; name: string };
 
@@ -187,17 +194,17 @@ const main = defineCommand({
     status: defineCommand({
       meta: { description: "Show currently running time entry (if any)" },
       run: async () => {
-        const cur = await api<CurrentEntryResponse>("/me/time_entries/current");
-        if (!cur.data) {
+        const cur = await api<CurrentEntry | null>("/me/time_entries/current");
+        if (!cur) {
           console.log("No running time entry.");
           return;
         }
-        const wid = cur.data.workspace_id ?? cur.data.wid;
-        console.log(`id: ${cur.data.id}`);
+        const wid = cur.workspace_id ?? cur.wid;
+        console.log(`id: ${cur.id}`);
         if (wid) console.log(`workspaceId: ${wid}`);
-        if (cur.data.description) console.log(`description: ${cur.data.description}`);
-        if (cur.data.start) console.log(`start: ${cur.data.start}`);
-        if (typeof cur.data.duration === "number") console.log(`duration: ${cur.data.duration}`);
+        if (cur.description) console.log(`description: ${cur.description}`);
+        if (cur.start) console.log(`start: ${cur.start}`);
+        if (typeof cur.duration === "number") console.log(`duration: ${cur.duration}`);
       },
     }),
 
@@ -229,14 +236,14 @@ const main = defineCommand({
     stop: defineCommand({
       meta: { description: "Stop the currently running time entry" },
       run: async () => {
-        const cur = await api<CurrentEntryResponse>("/me/time_entries/current");
-        if (!cur.data) {
+        const cur = await api<CurrentEntry | null>("/me/time_entries/current");
+        if (!cur) {
           console.log("No running time entry.");
           return;
         }
-        const wid = cur.data.workspace_id ?? cur.data.wid;
+        const wid = cur.workspace_id ?? cur.wid;
         if (!wid) throw new Error("Current entry missing workspace id.");
-        await api(`/workspaces/${wid}/time_entries/${cur.data.id}/stop`, { method: "PATCH" });
+        await api(`/workspaces/${wid}/time_entries/${cur.id}/stop`, { method: "PATCH" });
         console.log("Stopped.");
       },
     }),
