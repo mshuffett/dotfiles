@@ -82,6 +82,7 @@ Ask the user for:
 - Improvements for tomorrow (0-3 bullets)
 - Out-of-scope work? (especially off-scope coding) If yes: what triggered it?
 - Was Palmer Square / standups / relationship context a good use of time today, or distracting? (one line)
+- Oliver + schedule adherence: did you avoid making a decision / avoid disruption, and did you stick to the intended work + time blocks? (1-2 lines)
 
 Then do:
 1. Update hill estimates for the active deliverables (only if the user is running a hill-style process).
