@@ -51,6 +51,26 @@ Length constraints (current + recommended):
   - L1 SKILL.md: keep “routing” section small (the rest can link out).
   - Atoms: keep one idea per atom; split if it becomes hard to scan.
 
+## Entrypoint Portfolio Optimization (K=20)
+
+We have a fixed budget of entrypoints (1 hop from root). To add a more fundamental entrypoint, we must swap out something less valuable.
+
+Treat entrypoints as a routing portfolio over the distribution of situations we actually encounter.
+
+Per entrypoint `e` over a window:
+- `A(e)` access frequency (how often this route was needed / correct)
+- `S(e)` severity if missed (expected time/rework cost)
+- `O(e)` overlap/confusion with other entrypoints (misroutes, “which one is this?”)
+
+Practical scoring sketch:
+- `Score(e) = A(e) * S(e) - O(e) - maintenance_cost(e)`
+
+Portfolio goal: pick 20 entrypoints that are **highly differentiated** and cover most situations with low hop cost, while keeping some “small but critical” safety/tool entrypoints even if low-frequency.
+
+Rebalance is approval-gated:
+- prefer relabeling (editing YAML `description`) over adding an entrypoint; description edits are the highest-leverage routing improvement.
+- if a new entrypoint is needed: demote one low-score entrypoint into atoms; preserve a link from the closest remaining entrypoint so knowledge isn’t lost.
+
 ## Objective
 
 Minimize expected “time-to-correctness” over sessions while maintaining high recall.
@@ -99,4 +119,3 @@ Implement as a pre-commit step that only runs when explicitly enabled:
 - optional `AGENTS_LLM_REVIEW_STRICT=1` → fail commit on “fail” verdict
 
 Keep it opt-in so it doesn’t create process drag.
-
