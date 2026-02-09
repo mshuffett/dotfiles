@@ -115,10 +115,12 @@ type MeResponse = {
   id: number;
   email: string;
   fullname?: string;
-  workspaces?: Array<{ id: number; name: string }>;
+  default_workspace_id?: number;
 };
 
 type CurrentEntryResponse = { data: null | { id: number; wid?: number; workspace_id?: number; description?: string; start?: string; duration?: number } };
+
+type Workspace = { id: number; name: string };
 
 const main = defineCommand({
   meta: {
@@ -134,10 +136,19 @@ const main = defineCommand({
         const me = await api<MeResponse>("/me");
         console.log(`email: ${me.email}`);
         if (me.fullname) console.log(`name: ${me.fullname}`);
-        if (me.workspaces?.length) {
-          console.log("workspaces:");
-          for (const w of me.workspaces) console.log(`- ${w.id}\t${w.name}`);
+        if (me.default_workspace_id) console.log(`defaultWorkspaceId: ${me.default_workspace_id}`);
+      },
+    }),
+
+    workspaces: defineCommand({
+      meta: { description: "List workspaces available to the current user" },
+      run: async () => {
+        const wss = await api<Workspace[]>("/me/workspaces");
+        if (!wss.length) {
+          console.log("No workspaces found.");
+          return;
         }
+        for (const w of wss) console.log(`- ${w.id}\t${w.name}`);
       },
     }),
 
@@ -152,14 +163,17 @@ const main = defineCommand({
       },
       run: async ({ args }) => {
         const me = await api<MeResponse>("/me");
-        const wss = me.workspaces || [];
-        if (!wss.length) throw new Error("No workspaces found on /me response.");
+        const wss = await api<Workspace[]>("/me/workspaces");
+        if (!wss.length) throw new Error("No workspaces found for this user.");
 
         let chosen: { id: number; name: string } | undefined;
         if (args.workspace) chosen = wss.find((w) => w.id === args.workspace);
         if (!chosen && args.workspaceName) {
           const needle = args.workspaceName.toLowerCase();
           chosen = wss.find((w) => w.name.toLowerCase().includes(needle));
+        }
+        if (!chosen && me.default_workspace_id) {
+          chosen = wss.find((w) => w.id === me.default_workspace_id);
         }
         if (!chosen) chosen = wss[0];
 
@@ -258,4 +272,3 @@ const main = defineCommand({
 });
 
 runMain(main);
-
