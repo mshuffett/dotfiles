@@ -575,7 +575,11 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.cmd == "index":
         meta = do_index(store_dir, sources)
-        print(json.dumps(meta, ensure_ascii=True, indent=2))
+        # Allow piping to tools like `head` without crashing on BrokenPipeError.
+        try:
+            print(json.dumps(meta, ensure_ascii=True, indent=2))
+        except BrokenPipeError:
+            return
         return
 
     if args.cmd == "search":
