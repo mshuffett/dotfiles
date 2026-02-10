@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 
 SKILLS_DIR="$ROOT/agents/skills"
-MAX_ENTRYPOINTS="${MAX_AGENT_SKILLS_ENTRYPOINTS:-20}"
+MAX_ENTRYPOINTS="${MAX_AGENT_SKILLS_ENTRYPOINTS:-30}"
 
 if [ ! -d "$SKILLS_DIR" ]; then
   echo "ERROR: missing $SKILLS_DIR" >&2

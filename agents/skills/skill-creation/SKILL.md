@@ -1,6 +1,6 @@
 ---
 name: skill-creation
-description: Use when creating a new entrypoint skill, adding reusable knowledge, or user says "remember this". Prefer atoms; keep entrypoint skills <= 20. Commit changes to dotfiles repo.
+description: Use when creating a new entrypoint skill, adding reusable knowledge, or user says "remember this". Covers frontmatter, invocation control, subagent execution, and supporting files. Commit changes to dotfiles repo.
 ---
 
 # Skill Creation
@@ -16,13 +16,13 @@ Canonical entrypoint skills live in the dotfiles repo:
 Compatibility:
 
 - `~/.dotfiles/claude/skills/` is a symlink to `~/.dotfiles/agents/skills/`
-- Claude Code may also have its own `~/.claude/skills/` discovery path depending on setup
+- Claude Code discovers skills at `~/.claude/skills/` (symlinked to dotfiles on this machine)
 - For Codex compatibility, the YAML frontmatter must include both `name:` and `description:`
 - Repo-local skills (per-repo):
-  - Codex CLI: `./skills/<skill-name>/SKILL.md` auto-loads (verified in `~/ws/notes` on 2026-02-08).
-  - Claude Code: `./.claude/skills/<skill-name>/SKILL.md` is a repo-local skills directory (verified in `~/ws/notes` on 2026-02-08 via `claude -p --setting-sources project`).
-  - Claude Code (global): `~/.claude/skills/` also exists on this machine (symlinked to dotfiles).
-  - If you want one source of truth for both tools, keep the canonical skill under `./skills/` and keep `./.claude/skills/` in sync (or symlink when your environment allows).
+  - Codex CLI: `./skills/<skill-name>/SKILL.md` auto-loads
+  - Claude Code: `./.claude/skills/<skill-name>/SKILL.md` is a repo-local skills directory
+  - Claude Code auto-discovers nested `.claude/skills/` in subdirectories (monorepo support)
+  - Skills from `--add-dir` directories are loaded automatically with live change detection
 
 Deeper notes (atoms) live here:
 
@@ -32,12 +32,11 @@ Deeper notes (atoms) live here:
 
 ## Decide: Entrypoint Skill vs Atom
 
-Hops are expensive. Default to atoms unless the guidance is truly likely to be needed without prompting.
+Skill descriptions consume context budget (2% of context window, ~16K chars fallback). Too many skills can exceed this — run `/context` to check for warnings. Override with `SLASH_COMMAND_TOOL_CHAR_BUDGET` env var.
 
 - Create an **entrypoint skill** when it should auto-load frequently and missing it would cause mistakes.
 - Create an **atom** when it's detailed, rare, or only relevant after the entrypoint is triggered.
-
-If adding a new entrypoint pushes `agents/skills` above ~20, prefer consolidating or moving detail into atoms.
+- If adding a new entrypoint pushes `agents/skills` above ~30, prefer consolidating or moving detail into atoms.
 
 ## Quick Creation
 
@@ -55,6 +54,7 @@ cd ~/.dotfiles && git add agents/skills/<skill-name> && git commit -m "feat(agen
 
 ```markdown
 ---
+name: my-skill
 description: Use when <trigger conditions>. <What it provides/does>.
 ---
 
@@ -67,49 +67,119 @@ description: Use when <trigger conditions>. <What it provides/does>.
 - [ ] <Verification criteria>
 ```
 
-## Frontmatter Rules
+## Frontmatter Reference
 
-**Description format**: Start with "Use when..." and include:
-- Trigger conditions (when should this skill load?)
-- Key constraints or requirements
-- Keep under 200 characters
+All fields are optional. Only `description` is recommended.
 
-**Good examples**:
+| Field | Description |
+|-------|-------------|
+| `name` | Display name and `/slash-command`. Lowercase, numbers, hyphens only (max 64 chars). Defaults to directory name. |
+| `description` | What the skill does and when to use it. Claude uses this for auto-invocation decisions. |
+| `argument-hint` | Hint for autocomplete, e.g. `[issue-number]` or `[filename] [format]` |
+| `disable-model-invocation` | `true` = only user can invoke via `/name`. Use for side-effect workflows (deploy, commit). |
+| `user-invocable` | `false` = hidden from `/` menu. Use for background knowledge Claude should auto-load. |
+| `allowed-tools` | Tools Claude can use without permission prompts when skill is active, e.g. `Read, Grep, Glob` |
+| `model` | Model to use when skill is active |
+| `context` | `fork` = run in isolated subagent context |
+| `agent` | Subagent type when `context: fork` is set. Options: `Explore`, `Plan`, `general-purpose`, or custom agent name. |
+| `hooks` | Hooks scoped to this skill's lifecycle |
+
+### Invocation Control Matrix
+
+| Frontmatter | User can invoke | Claude can invoke | Description in context |
+|-------------|:-:|:-:|:-:|
+| (default) | Yes | Yes | Yes |
+| `disable-model-invocation: true` | Yes | No | No |
+| `user-invocable: false` | No | Yes | Yes |
+
+### String Substitutions
+
+| Variable | Description |
+|----------|-------------|
+| `$ARGUMENTS` | All arguments passed when invoking. If absent, args appended as `ARGUMENTS: <value>`. |
+| `$ARGUMENTS[N]` / `$N` | Specific argument by 0-based index (`$0` = first, `$1` = second) |
+| `${CLAUDE_SESSION_ID}` | Current session ID |
+
+### Dynamic Context Injection
+
+`` !`command` `` runs shell commands before content is sent to Claude. Output replaces the placeholder.
+
 ```yaml
-description: Use when generating images. Choose provider based on quality needs (Gemini Pro for best, OpenAI for fast).
-description: Use when about to kill a port process. Never kill processes you didn't start without asking.
+---
+name: pr-summary
+context: fork
+agent: Explore
+---
+
+PR diff: !`gh pr diff`
+Changed files: !`gh pr diff --name-only`
+
+Summarize this pull request.
 ```
 
-**Bad examples**:
+## Subagent Execution
+
+Add `context: fork` to run a skill in an isolated subagent. The skill content becomes the subagent's task prompt. The subagent does NOT get the conversation history.
+
+```yaml
+---
+name: deep-research
+description: Research a topic thoroughly
+context: fork
+agent: Explore
+---
+
+Research $ARGUMENTS thoroughly:
+1. Find relevant files using Glob and Grep
+2. Read and analyze the code
+3. Summarize findings with specific file references
+```
+
+Only use `context: fork` for skills with explicit task instructions, not for reference/guideline skills.
+
+## Description Rules
+
+**Format**: Start with "Use when..." and include trigger conditions.
+
+**Good**:
+```yaml
+description: Use when generating images. Choose provider based on quality needs.
+description: Use when about to kill a port process. Never kill without asking.
+```
+
+**Bad**:
 ```yaml
 description: Provides image generation guidance.  # No triggers
-description: This skill helps with images.  # Vague, no "Use when"
+description: This skill helps with images.  # Vague
 ```
 
 ## Content Guidelines
 
-1. **Keep it lean** - Target 500-2000 words
-2. **Imperative form** - "Run X" not "You should run X"
-3. **Include acceptance checks** - How to verify correct execution
-4. **Add code examples** with language specifiers (```bash, ```python, etc.)
+1. **Keep SKILL.md under 500 lines** — move detailed reference to supporting files
+2. **Imperative form** — "Run X" not "You should run X"
+3. **Include acceptance checks** — how to verify correct execution
+4. **Add code examples** with language specifiers
 
-## Optional: Reference Files
+## Supporting Files
 
-For detailed content, add reference files:
+For complex skills, add supporting files in the skill directory:
 
 ```
 skill-name/
-├── SKILL.md           # Core content (always loaded)
-├── references/        # Detailed docs (loaded on demand)
-│   └── patterns.md
-└── examples/          # Working examples
-    └── sample.sh
+├── SKILL.md           # Core instructions (required, <500 lines)
+├── template.md        # Template for Claude to fill in
+├── reference.md       # Detailed docs (loaded on demand)
+├── examples/
+│   └── sample.md      # Example output
+└── scripts/
+    └── helper.py      # Script Claude can execute
 ```
 
-Reference them in SKILL.md:
+Reference them from SKILL.md:
 ```markdown
 ## References
-- `references/patterns.md` - Detailed patterns
+- For complete API details, see [reference.md](reference.md)
+- For usage examples, see [examples/](examples/)
 ```
 
 ## After Creation
@@ -120,13 +190,13 @@ Always commit new skills:
 cd ~/.dotfiles
 git add agents/skills/<skill-name>
 git commit -m "feat(agents-skills): add <skill-name> entrypoint"
-git push
 ```
 
 ## Acceptance Checks
 
-- [ ] Entrypoint skill created in `~/.dotfiles/agents/skills/<name>/SKILL.md` (or atom created under `agents/knowledge/atoms/`)
+- [ ] Entrypoint skill created in `~/.dotfiles/agents/skills/<name>/SKILL.md` (or atom in `agents/knowledge/atoms/`)
+- [ ] Frontmatter includes `name:` and `description:` (required for Codex compatibility)
 - [ ] Description starts with "Use when..."
-- [ ] Description under 200 characters
 - [ ] Content uses imperative form
+- [ ] SKILL.md under 500 lines (detail in supporting files)
 - [ ] Committed to dotfiles repo
