@@ -82,6 +82,7 @@ Invoke `memory-placement` skill first when available; otherwise, be explicit abo
 - Never kill a port process you didn't start
 - If the user says they didn't start the port process, explicitly acknowledge that fact and ask for permission before killing anything
 - Invoke worktrees skill before git worktree operations
+- **tmux pane IDs**: Always use `$TMUX_PANE` (not a cached variable) right before split/send-keys. After `split-window -t "$TMUX_PANE"`, capture the new pane immediately with `NEW_PANE=$(tmux list-panes -F '#{pane_id}' | tail -n 1)`. Never assume pane IDs are stable between commands — the user may switch panes.
 
 **Privacy & Security**
 
