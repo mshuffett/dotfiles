@@ -119,6 +119,3 @@ gmail archive <id>
 - **"Token expired"**: Run `gmail auth` to re-authenticate
 - **"Insufficient permissions"**: Re-authenticate with `gmail auth` (scopes may have changed)
 
-## Related Notes (Deep Dives)
-
-- `agents/knowledge/atoms/claude-skill-archive/email-triage/SKILL.md`

@@ -1,5 +1,5 @@
 ---
-name: CLI Tools
+name: cli-tools
 description: This skill should be used when the user asks to "create a CLI tool", "build a command line app", "add a dev command", "write a CLI script", or when editing files in ~/.dotfiles/bin/. Provides guidance on the preferred stack for building CLI tools.
 ---
 
@@ -113,7 +113,3 @@ Measured on macOS ARM:
 
 For tools involving network/disk I/O, the startup difference is negligible.
 
-## Related Notes (Deep Dives)
-
-- `agents/knowledge/atoms/claude-skill-archive/tmux-patterns/SKILL.md`
-- `agents/knowledge/atoms/claude-skill-archive/terminal-images/SKILL.md`

@@ -72,10 +72,6 @@ time codex exec --skip-git-repo-check --sandbox read-only -m <MODEL> -- "$PROMPT
 
 - List description lines: `~/.dotfiles/claude/scripts/list-command-descriptions.sh`
 
-## Related Notes (Deep Dives)
-
-- `agents/knowledge/atoms/claude-skill-archive/prompt-engineering/SKILL.md`
-
 ## Acceptance Checks
 
 - [ ] Baseline failures documented

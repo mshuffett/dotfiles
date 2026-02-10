@@ -63,10 +63,6 @@ After all sources return (check background tasks with `TaskOutput`):
 - ...
 ```
 
-## Related Notes (Deep Dives)
-
-- `agents/knowledge/atoms/claude-skill-archive/domain-research/SKILL.md`
-
 ## Acceptance Checks
 
 - [ ] All three sources queried in parallel (background mode for CLI tools)

@@ -18,6 +18,3 @@ This consolidates the previous `todoist-operations` and `todoist-triage` entrypo
 - **Operations** (API calls, bulk edits, moving tasks, due dates): see [references/operations.md](references/operations.md)
 - **Triage** (classification, recommendations, “what should I do with these tasks”): see [references/triage.md](references/triage.md)
 
-## Related Notes (Deep Dives)
-
-- `agents/knowledge/atoms/claude-skill-archive/calendar-operations/SKILL.md`

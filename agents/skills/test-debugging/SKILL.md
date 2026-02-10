@@ -50,7 +50,3 @@ After fixing ANY test failure:
 - Update root memory only if the pattern is universal
 - Commit learnings immediately
 
-## Related Notes (Deep Dives)
-
-- `agents/skills/agent-browser/SKILL.md`
-- `agents/knowledge/atoms/claude-skill-archive/verify-ui-changes/SKILL.md`
