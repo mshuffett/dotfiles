@@ -1,53 +1,47 @@
 ---
 name: skill-creation
-description: Use when creating a new entrypoint skill, adding reusable knowledge, or user says "remember this". Covers frontmatter, invocation control, subagent execution, and supporting files. Commit changes to dotfiles repo.
+description: Creates and organizes Agent Skills (SKILL.md files) following the AgentSkills spec. Covers frontmatter, invocation control, subagent execution, progressive disclosure, and supporting files. Commit changes to dotfiles repo.
 ---
 
 # Skill Creation
 
 ## Location
 
-Canonical entrypoint skills live in the dotfiles repo:
+Personal skills (available across all projects):
 
 ```
 ~/.dotfiles/agents/skills/<skill-name>/SKILL.md
 ```
 
-Compatibility:
-
 - `~/.dotfiles/claude/skills/` is a symlink to `~/.dotfiles/agents/skills/`
-- Claude Code discovers skills at `~/.claude/skills/` (symlinked to dotfiles on this machine)
-- For Codex compatibility, the YAML frontmatter must include both `name:` and `description:`
-- Repo-local skills (per-repo):
-  - Codex CLI: `./skills/<skill-name>/SKILL.md` auto-loads
-  - Claude Code: `./.claude/skills/<skill-name>/SKILL.md` is a repo-local skills directory
-  - Claude Code auto-discovers nested `.claude/skills/` in subdirectories (monorepo support)
-  - Skills from `--add-dir` directories are loaded automatically with live change detection
+- Claude Code discovers at `~/.claude/skills/` (symlinked to dotfiles on this machine)
 
-Deeper notes (atoms) live here:
+Project skills (per-repo):
 
 ```
-~/.dotfiles/agents/knowledge/atoms/
+.claude/skills/<skill-name>/SKILL.md
 ```
 
-## Decide: Entrypoint Skill vs Atom
+- Claude Code auto-discovers nested `.claude/skills/` in subdirectories (monorepo support)
+- Skills from `--add-dir` directories load automatically with live change detection
+- Codex CLI also loads from `./skills/<skill-name>/SKILL.md`
 
-Skill descriptions consume context budget (2% of context window, ~16K chars fallback). Too many skills can exceed this — run `/context` to check for warnings. Override with `SLASH_COMMAND_TOOL_CHAR_BUDGET` env var.
+## Skill Count & Budget
 
-- Create an **entrypoint skill** when it should auto-load frequently and missing it would cause mistakes.
-- Create an **atom** when it's detailed, rare, or only relevant after the entrypoint is triggered.
-- If adding a new entrypoint pushes `agents/skills` above ~30, prefer consolidating or moving detail into atoms.
+There is **no hard limit** on skill count. The real constraint is the **description character budget**: 2% of context window (~16K chars fallback). Only descriptions load at startup; full content loads on invocation.
+
+- Run `/context` to check if skills are being excluded
+- Override budget with `SLASH_COMMAND_TOOL_CHAR_BUDGET` env var
+- Keep descriptions concise to maximize how many skills fit
+
+Our lint hook (`script/agents-skill-lint.sh`) warns above 30 skills as a soft guardrail.
 
 ## Quick Creation
 
 ```bash
-# 1. Create skill directory
 mkdir -p ~/.dotfiles/agents/skills/<skill-name>
-
-# 2. Write SKILL.md (see template below)
-
-# 3. Commit to dotfiles
-cd ~/.dotfiles && git add agents/skills/<skill-name> && git commit -m "feat(agents-skills): add <skill-name> entrypoint"
+# Write SKILL.md (see template below)
+cd ~/.dotfiles && git add agents/skills/<skill-name> && git commit -m "feat(agents-skills): add <skill-name>"
 ```
 
 ## SKILL.md Template
@@ -55,12 +49,12 @@ cd ~/.dotfiles && git add agents/skills/<skill-name> && git commit -m "feat(agen
 ```markdown
 ---
 name: my-skill
-description: Use when <trigger conditions>. <What it provides/does>.
+description: Processes X and generates Y. Use when working with X or when the user mentions Y.
 ---
 
 # Skill Title
 
-<Core content - what Claude needs to know>
+<Core content>
 
 ## Acceptance Checks
 
@@ -69,24 +63,37 @@ description: Use when <trigger conditions>. <What it provides/does>.
 
 ## Frontmatter Reference
 
-All fields are optional. Only `description` is recommended.
+### Required Fields (AgentSkills Spec)
+
+| Field | Constraints |
+|-------|-------------|
+| `name` | Max 64 chars. Lowercase, numbers, hyphens only. **Must match parent directory name.** No consecutive hyphens, can't start/end with hyphen. |
+| `description` | Max 1024 chars. What the skill does AND when to use it. Write in third person. |
+
+### Optional Fields (AgentSkills Spec)
 
 | Field | Description |
 |-------|-------------|
-| `name` | Display name and `/slash-command`. Lowercase, numbers, hyphens only (max 64 chars). Defaults to directory name. |
-| `description` | What the skill does and when to use it. Claude uses this for auto-invocation decisions. |
-| `argument-hint` | Hint for autocomplete, e.g. `[issue-number]` or `[filename] [format]` |
-| `disable-model-invocation` | `true` = only user can invoke via `/name`. Use for side-effect workflows (deploy, commit). |
-| `user-invocable` | `false` = hidden from `/` menu. Use for background knowledge Claude should auto-load. |
-| `allowed-tools` | Tools Claude can use without permission prompts when skill is active, e.g. `Read, Grep, Glob` |
+| `license` | License name or reference to bundled LICENSE file |
+| `compatibility` | Max 500 chars. Environment requirements (required tools, network access, etc.) |
+| `metadata` | Arbitrary key-value map (e.g., `author`, `version`) |
+| `allowed-tools` | Space-delimited pre-approved tools, e.g. `Read Grep Glob` or `Bash(git:*) Read` |
+
+### Claude Code Extensions
+
+| Field | Description |
+|-------|-------------|
+| `argument-hint` | Autocomplete hint, e.g. `[issue-number]` |
+| `disable-model-invocation` | `true` = only user can invoke via `/name`. Use for side-effect workflows. |
+| `user-invocable` | `false` = hidden from `/` menu. Use for background knowledge. |
 | `model` | Model to use when skill is active |
 | `context` | `fork` = run in isolated subagent context |
-| `agent` | Subagent type when `context: fork` is set. Options: `Explore`, `Plan`, `general-purpose`, or custom agent name. |
+| `agent` | Subagent type when `context: fork`. Options: `Explore`, `Plan`, `general-purpose`, or custom. |
 | `hooks` | Hooks scoped to this skill's lifecycle |
 
 ### Invocation Control Matrix
 
-| Frontmatter | User can invoke | Claude can invoke | Description in context |
+| Frontmatter | User invokes | Claude invokes | Description in context |
 |-------------|:-:|:-:|:-:|
 | (default) | Yes | Yes | Yes |
 | `disable-model-invocation: true` | Yes | No | No |
@@ -96,35 +103,67 @@ All fields are optional. Only `description` is recommended.
 
 | Variable | Description |
 |----------|-------------|
-| `$ARGUMENTS` | All arguments passed when invoking. If absent, args appended as `ARGUMENTS: <value>`. |
-| `$ARGUMENTS[N]` / `$N` | Specific argument by 0-based index (`$0` = first, `$1` = second) |
+| `$ARGUMENTS` / `$ARGUMENTS[N]` / `$N` | Arguments passed on invocation |
 | `${CLAUDE_SESSION_ID}` | Current session ID |
+| `` !`command` `` | Dynamic context injection — shell command output replaces placeholder before Claude sees it |
 
-### Dynamic Context Injection
+## Description Best Practices
 
-`` !`command` `` runs shell commands before content is sent to Claude. Output replaces the placeholder.
+Write in **third person**. Include what the skill does AND when to use it.
 
 ```yaml
----
-name: pr-summary
-context: fork
-agent: Explore
----
+# Good — third person, specific triggers, key terms
+description: Extracts text and tables from PDF files, fills forms, merges documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
 
-PR diff: !`gh pr diff`
-Changed files: !`gh pr diff --name-only`
+# Bad — vague, no triggers
+description: Helps with documents.
+```
 
-Summarize this pull request.
+## Naming Conventions
+
+Prefer **gerund form** (verb + -ing): `processing-pdfs`, `testing-code`, `managing-databases`.
+
+Acceptable alternatives: noun phrases (`pdf-processing`), action-oriented (`process-pdfs`).
+
+Avoid: vague (`helper`, `utils`), overly generic (`data`, `files`).
+
+## Progressive Disclosure
+
+The key architectural pattern for skills. Three layers:
+
+1. **Metadata** (~100 tokens): `name` + `description` loaded at startup for all skills
+2. **Instructions** (<5000 tokens recommended): `SKILL.md` body loaded when skill activates
+3. **Resources** (as needed): Supporting files loaded only when required
+
+Keep **SKILL.md under 500 lines**. Move detail to supporting files:
+
+```
+skill-name/
+├── SKILL.md           # Core instructions (required, <500 lines)
+├── references/        # Detailed docs (loaded on demand)
+│   └── api-guide.md
+├── scripts/           # Executable scripts (run, not loaded)
+│   └── validate.py
+└── assets/            # Templates, schemas, data files
+    └── template.md
+```
+
+Keep file references **one level deep** from SKILL.md. Avoid nested reference chains.
+
+Reference from SKILL.md:
+```markdown
+- For API details, see [references/api-guide.md](references/api-guide.md)
+- Run validation: `python scripts/validate.py`
 ```
 
 ## Subagent Execution
 
-Add `context: fork` to run a skill in an isolated subagent. The skill content becomes the subagent's task prompt. The subagent does NOT get the conversation history.
+Add `context: fork` to run in an isolated subagent. The skill content becomes the task prompt (no conversation history).
 
 ```yaml
 ---
 name: deep-research
-description: Research a topic thoroughly
+description: Researches a topic thoroughly using codebase exploration.
 context: fork
 agent: Explore
 ---
@@ -135,68 +174,40 @@ Research $ARGUMENTS thoroughly:
 3. Summarize findings with specific file references
 ```
 
-Only use `context: fork` for skills with explicit task instructions, not for reference/guideline skills.
+Only use `context: fork` for skills with explicit task instructions, not reference/guideline skills.
 
-## Description Rules
+## Personal Knowledge Organization
 
-**Format**: Start with "Use when..." and include trigger conditions.
-
-**Good**:
-```yaml
-description: Use when generating images. Choose provider based on quality needs.
-description: Use when about to kill a port process. Never kill without asking.
-```
-
-**Bad**:
-```yaml
-description: Provides image generation guidance.  # No triggers
-description: This skill helps with images.  # Vague
-```
-
-## Content Guidelines
-
-1. **Keep SKILL.md under 500 lines** — move detailed reference to supporting files
-2. **Imperative form** — "Run X" not "You should run X"
-3. **Include acceptance checks** — how to verify correct execution
-4. **Add code examples** with language specifiers
-
-## Supporting Files
-
-For complex skills, add supporting files in the skill directory:
+Beyond the standard skill pattern, we maintain deeper reference material in atoms:
 
 ```
-skill-name/
-├── SKILL.md           # Core instructions (required, <500 lines)
-├── template.md        # Template for Claude to fill in
-├── reference.md       # Detailed docs (loaded on demand)
-├── examples/
-│   └── sample.md      # Example output
-└── scripts/
-    └── helper.py      # Script Claude can execute
+~/.dotfiles/agents/knowledge/atoms/
 ```
 
-Reference them from SKILL.md:
-```markdown
-## References
-- For complete API details, see [reference.md](reference.md)
-- For usage examples, see [examples/](examples/)
+Atoms are detailed, topic-specific files that skills or MEMORY.md can point to. They're loaded on demand when referenced. The standard AgentSkills approach is to use `references/` within the skill directory itself — atoms are our extension for cross-cutting knowledge that doesn't belong to any single skill.
+
+## Validation
+
+Use the `skills-ref` reference library to validate skills:
+
+```bash
+skills-ref validate ./my-skill
 ```
 
 ## After Creation
 
-Always commit new skills:
-
 ```bash
 cd ~/.dotfiles
 git add agents/skills/<skill-name>
-git commit -m "feat(agents-skills): add <skill-name> entrypoint"
+git commit -m "feat(agents-skills): add <skill-name>"
 ```
 
 ## Acceptance Checks
 
-- [ ] Entrypoint skill created in `~/.dotfiles/agents/skills/<name>/SKILL.md` (or atom in `agents/knowledge/atoms/`)
-- [ ] Frontmatter includes `name:` and `description:` (required for Codex compatibility)
-- [ ] Description starts with "Use when..."
-- [ ] Content uses imperative form
-- [ ] SKILL.md under 500 lines (detail in supporting files)
+- [ ] Skill directory created with `SKILL.md`
+- [ ] `name` field matches directory name exactly
+- [ ] `name` and `description` both present (required by spec)
+- [ ] Description is third-person, includes what + when
+- [ ] SKILL.md under 500 lines
+- [ ] File references one level deep (no nested chains)
 - [ ] Committed to dotfiles repo
