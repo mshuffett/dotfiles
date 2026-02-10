@@ -34,7 +34,7 @@ There is **no hard limit** on skill count. The real constraint is the **descript
 - Override budget with `SLASH_COMMAND_TOOL_CHAR_BUDGET` env var
 - Keep descriptions concise to maximize how many skills fit
 
-Our lint hook (`script/agents-skill-lint.sh`) warns above 30 skills as a soft guardrail.
+Our lint hook (`script/agents-skill-lint.sh`) checks total description chars against this budget.
 
 ## Quick Creation
 
@@ -107,9 +107,29 @@ description: Processes X and generates Y. Use when working with X or when the us
 | `${CLAUDE_SESSION_ID}` | Current session ID |
 | `` !`command` `` | Dynamic context injection — shell command output replaces placeholder before Claude sees it |
 
+## Content Principles
+
+**The context window is a public good.** Skills share it with system prompt, conversation history, other skills' metadata, and the user's actual request.
+
+- **Claude is already smart** — only add context Claude doesn't already have. Challenge each paragraph: "Does this justify its token cost?"
+- **Prefer concise examples over verbose explanations**
+- **No extraneous files** — don't create README.md, INSTALLATION_GUIDE.md, CHANGELOG.md, or QUICK_REFERENCE.md. The skill should only contain what an AI agent needs to do the job.
+
+### Degrees of Freedom
+
+Match specificity to how fragile the task is:
+
+| Level | When | Example |
+|-------|------|---------|
+| **High** (text instructions) | Multiple approaches valid, context-dependent | "Choose the right testing strategy based on the component" |
+| **Medium** (pseudocode/parameterized scripts) | Preferred pattern exists, some variation OK | "Use this template but adjust the provider config" |
+| **Low** (specific scripts, few params) | Fragile operations, consistency critical | "Run exactly this command sequence for PDF rotation" |
+
+Think of it as path width: narrow bridge with cliffs needs guardrails (low freedom), open field allows many routes (high freedom).
+
 ## Description Best Practices
 
-Write in **third person**. Include what the skill does AND when to use it.
+Write in **third person**. Include what the skill does AND when to use it. All "when to use" info belongs in the description, not the body — the body only loads after triggering.
 
 ```yaml
 # Good — third person, specific triggers, key terms
@@ -140,15 +160,17 @@ Keep **SKILL.md under 500 lines**. Move detail to supporting files:
 ```
 skill-name/
 ├── SKILL.md           # Core instructions (required, <500 lines)
-├── references/        # Detailed docs (loaded on demand)
+├── references/        # Docs loaded into context on demand (schemas, API guides, domain knowledge)
 │   └── api-guide.md
-├── scripts/           # Executable scripts (run, not loaded)
+├── scripts/           # Executable code — run, not loaded into context (deterministic, token-efficient)
 │   └── validate.py
-└── assets/            # Templates, schemas, data files
-    └── template.md
+└── assets/            # Files used in output, not loaded into context (templates, images, fonts)
+    └── template.pptx
 ```
 
-Keep file references **one level deep** from SKILL.md. Avoid nested reference chains.
+**Key distinction**: `references/` = read into context to inform Claude's thinking. `assets/` = used in output without being read. `scripts/` = executed without being read (but may be read for patching).
+
+Keep file references **one level deep** from SKILL.md. Avoid nested reference chains. For files >100 lines, include a table of contents at the top.
 
 Reference from SKILL.md:
 ```markdown
