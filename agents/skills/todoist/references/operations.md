@@ -231,4 +231,3 @@ add_comment(task_id, "Moved to Raw Ideas project")      # Wrong
 ## Related Notes (Deep Dives)
 
 - `agents/skills/todoist/references/triage.md`
-- `agents/knowledge/atoms/claude-skill-archive/calendar-operations/SKILL.md`
