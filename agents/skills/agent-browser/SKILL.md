@@ -26,6 +26,50 @@ If you do not have the skill installed in your current runtime, you can install 
 npx skills add https://github.com/vercel-labs/skills --skill find-skills
 ```
 
+## Gotchas & Practical Notes
+
+### Always use `--profile` for login-required sites
+Without `--profile`, cookies are lost when the browser closes. For any site requiring authentication, use a persistent profile:
+```bash
+mkdir -p ~/.agent-browser/profiles
+agent-browser --headed --profile ~/.agent-browser/profiles/<site-name> open <url>
+```
+Profiles persist cookies/storage across sessions — no need to re-login each time.
+
+### Known profiles (`~/.agent-browser/profiles/`)
+| Profile | URL | Notes |
+|---------|-----|-------|
+| `bookface` | `https://bookface.ycombinator.com` | YC internal platform, requires manual login |
+
+### `--profile` is set at launch, not per-command
+If the daemon is already running, `--profile` is ignored with a warning. You must `agent-browser close` first to restart with a different profile.
+
+### "Browser not launched. Call launch first." error
+This means a stale session exists from a previous run. Fix: `agent-browser close` then retry your `open` command.
+
+### Check `session list` before opening
+Stale sessions accumulate. Run `agent-browser session list` to see what's lingering. Close ones you don't need.
+
+### First-time setup
+Run `agent-browser install` before first use to install Chromium binaries. The npm warning about playwright can be ignored.
+
+### `--headed` for manual login
+When the user needs to log in manually (OAuth, 2FA, etc.), always use `--headed` so they can see and interact with the browser window. Combine with `--profile` to save the session:
+```bash
+agent-browser --headed --profile ~/.agent-browser/profiles/<site> open <login-url>
+# User logs in manually in the visible browser
+# Cookies are saved in the profile for future headless use
+```
+
+### Global flags go BEFORE the command
+```bash
+# Correct:
+agent-browser --headed --profile /path open https://example.com
+
+# Wrong (will error or be ignored):
+agent-browser open https://example.com --headed --profile /path
+```
+
 ## Core workflow
 
 1. Navigate: `agent-browser open <url>`

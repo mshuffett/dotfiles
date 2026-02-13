@@ -101,9 +101,13 @@
     "hookify@claude-code-plugins": false,
     "plannotator@plannotator": true,
     "playground@claude-plugins-official": true,
-    "ralph-loop@claude-plugins-official": true
+    "ralph-loop@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "notion-workspace-plugin@notion-plugin-marketplace": true
   },
   "alwaysThinkingEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
   "disabledMcpServers": [
     "playwright"
   ]
