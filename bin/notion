@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Thin wrapper around restish for Notion API
+# Injects NOTION_API_KEY from environment as bearer token
+exec restish notion -H "Authorization:Bearer $NOTION_API_KEY" "$@"
