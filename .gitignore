@@ -17,3 +17,4 @@ clawdbot/credentials/
 agents/recall/.venv/
 **/__pycache__/
 *.pyc
+agents/skills/.system/
