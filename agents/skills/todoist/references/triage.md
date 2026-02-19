@@ -187,29 +187,28 @@ For each task:
 4. **Present to Michael** for review/commentary
 5. **Execute** based on approved actions
 
-## API Reference
+## CLI Reference
 
-### Fetch Tasks (API v1)
+### Fetch Tasks
 
 ```bash
-curl -s "https://api.todoist.com/api/v1/tasks" \
-  -H "Authorization: Bearer $TODOIST_API_TOKEN"
-# Returns {"results": [...], "next_cursor": "..."}
-# Paginate with ?cursor=<next_cursor> until next_cursor is null
+td today --json                       # Today + overdue (JSON)
+td today                              # Human-readable
+td inbox --json                       # Inbox tasks
+td task list --all --json             # Everything
 ```
 
 ### Fetch Comments
 
 ```bash
-curl -s "https://api.todoist.com/api/v1/comments?task_id={ID}" \
-  -H "Authorization: Bearer $TODOIST_API_TOKEN"
+td comment list id:<task_id>          # Comments on a task
 ```
 
 ### User ID for Filtering
 
 Michael's Todoist user ID: `486423`
 
-Filter client-side: `responsible_uid == null OR responsible_uid == "486423"`
+When using `--json`, filter by `responsible_uid == null OR responsible_uid == "486423"`
 
 ## Related Skills
 
