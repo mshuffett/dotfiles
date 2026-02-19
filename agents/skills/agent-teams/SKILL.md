@@ -44,6 +44,16 @@ Use **teams** when workers need to message each other, share findings, and self-
 - **TeammateIdle**: Exit code 2 = send feedback, keep working
 - **TaskCompleted**: Exit code 2 = prevent completion, send feedback
 
+## Model Configuration
+
+**Always pass an explicit `model` parameter** when spawning teammates via Task tool. Do NOT rely on `inherit` — model inheritance is buggy for tmux-spawned teammates (known issue, partially fixed through v2.1.47 but still unreliable).
+
+- Use `model: "haiku"` for simple bash/checking tasks
+- Use `model: "sonnet"` for research, code review, moderate complexity
+- Use `model: "opus"` only for complex reasoning tasks
+
+Defaulting all teammates to Opus wastes cost. Match model to task complexity.
+
 ## Known Limitations
 
 - No session resumption for in-process teammates
@@ -61,4 +71,5 @@ Always clean up via the lead. Shut down all teammates first, then ask lead to cl
 - [ ] Display mode appropriate to terminal
 - [ ] Tasks sized ~5-6 per teammate
 - [ ] Non-overlapping file assignments
+- [ ] Explicit `model` set on each teammate (not `inherit`)
 - [ ] Team cleaned up via lead when done

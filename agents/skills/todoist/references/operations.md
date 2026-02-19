@@ -222,11 +222,35 @@ add_comment(task_id, "cc: Moved to Raw Ideas project")  # Correct
 add_comment(task_id, "Moved to Raw Ideas project")      # Wrong
 ```
 
-## Reference Documentation
+## Task Display Requirements
 
-- `~/ws/everything-monorepo/notes/5-Tools/Todoist/TODOIST_LEARNINGS.md`
-- `~/ws/everything-monorepo/notes/5-Tools/Todoist/workflow_guide.md`
-- `~/ws/everything-monorepo/notes/5-Tools/Todoist/scripts/` (bulk operation scripts)
+When showing tasks to the user, ALWAYS include:
+- **Labels with emojis** (e.g., 🎯 Everything AI, ⚠️ Decision, ✅ Approval, 📨 Awaiting)
+- **Comment count** if available (e.g., 💬 3 comments)
+- **For Decision/Approval labels**: Suggest reassigning to task creator
+- **Format in table**: Use nice tables for readability
+
+## Default Task Filtering
+
+- **Always use `filter=today|overdue`** to match the Todoist UI (includes tasks with no due dates in Today view)
+- **DEFAULT: Filter to tasks for me** — exclude tasks assigned to others unless explicitly requested
+  - Include: No assignee OR assigned to Michael (ID: 486423)
+  - Exclude: Tasks assigned to Michelle (42258732) or others unless user asks for "all tasks"
+- **Today view includes**: Tasks with today's date + overdue + manually moved to Today (no date)
+
+## Known API Limitations
+
+- REST API `filter=today` captures ~43 tasks (includes no-date tasks in Today view)
+- Simple date queries only show ~20 tasks (misses Today-view tasks without dates)
+- Shared projects (31 total) use same token but may have visibility differences
+
+## Notes Repo Scripts & Templates
+
+When working in `~/ws/notes`:
+- **Bulk Operations:** `5-Tools/Todoist/scripts/` — `check_inbox.sh`, `move_tasks.sh`, `remove_dates.sh`
+- **Processing Templates:** `5-Tools/Todoist/templates/` — `inbox_cleanup_template.md`, `idea_review_process.md`
+- **Full Today view script:** `5-Tools/Todoist/scripts/fetch_today_complete.py`
+- **API Reference:** `5-Tools/Todoist/TODOIST_LEARNINGS.md`
 
 ## Related Notes (Deep Dives)
 

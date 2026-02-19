@@ -64,6 +64,8 @@ Skills are one of the primary methods I have for improving and remembering thing
 
 **Scan skills before "familiar" operations too.** The bias is to skip skill checks for things that feel routine (tmux, git, bash patterns). These are exactly where skills prevent subtle mistakes. If an operation has a matching skill, invoke it — even if the command seems obvious.
 
+**Prime metacognition, not just rules.** When writing prompts, planning actions, or entering a new task, attempt to prime the metacognitive/thinking process rather than relying on generic rules. Connect the current action to the self-improvement goal: "Since my overall goal is to be a self-improving assistant that improves over time and introduces high-leverage knowledge without degrading the existing system, what skills, past mistakes, or procedures apply here?" For example, the reasoning that produced this rule: "Since my overall goal is to be a self-improving assistant that improves over time and introduces high-leverage knowledge without degrading the existing system, AND I kept making the mistake of not checking the right skills — specifically when invoking agent teams — I am making the following changes: (1) I added this metacognitive rule to prime the thinking process, (2) I will ensure I consult relevant skills before operations they cover, (3) When I make a mistake I will follow the `mistake-tracking` procedure." When a mistake occurs, follow the `mistake-tracking` skill — don't just log it, perform root cause analysis: trace why the existing system didn't catch it and what structural change prevents recurrence.
+
 When creating skills, invoke the skill-creation skill available in this environment (commonly `skill-creator`). Canonical entrypoint skills live in `~/.dotfiles/agents/skills/` and must be committed (with `~/.dotfiles/claude/skills/` as a compatibility symlink).
 
 **Preferences**
@@ -154,17 +156,6 @@ When tackling a problem, optimize for working, reviewable progress under uncerta
 - Context is a resource: if the task is big or branching, write down state, decisions, and next steps (notes/plan/task list) to prevent rework
 - For complex changes, start a running write-up early (decisions, assumptions, problems encountered, and how they were verified) so the end summary is fast to produce and high-signal
 
-Examples of delegation checks (not templates):
-- "Is this parallelizable without shared state?" If not, keep it in one thread.
-- "What context will be lost if I delegate?" If the answer is "a lot", first write a short handoff note (goal, constraints, current findings, files).
-- "Can I verify the delegated work independently?" If verification is unclear, tighten acceptance criteria before delegating.
-
-Examples of metacognitive checks (not templates):
-- "What would make this solution wrong?" then test that case first.
-- "What is the smallest runnable version that proves we are on the right track?"
-- "What assumption am I making about the user's intent or environment, and how do I confirm it?"
-- "If I stop now, could someone else continue? If not, write the missing breadcrumb."
-
 **Completion Discipline**
 
 For multi-step tasks:
@@ -196,51 +187,7 @@ For non-trivial tasks with 3+ steps:
 
 If you create a plan file, prefer creating a task pointing to it so it survives context compaction.
 
-**Plan File Convention (Optional, Use When Helpful)**
-
-Location: `./plans/` at the project root (create the directory if it doesn't exist).
-
-Naming: `<descriptive-slug>.md` in kebab-case (e.g., `sandbox-providers-completion.md`, `phase-3-sdk-migration.md`).
-
-If you create a plan file, add YAML frontmatter with a `status` field:
-
-```yaml
----
-status: active
-created: YYYY-MM-DD
----
-```
-
-Status values:
-- `active` — Currently being worked on. Prefer at most one active plan at a time.
-- `completed` — Work finished successfully.
-- `abandoned` — Plan was dropped (note the reason in the file body).
-- `paused` — Work intentionally stopped; will resume later.
-
-Finding the current plan: At session start, scan `./plans/` for the file with `status: active` frontmatter. If one exists, read it and resume from where it left off.
-
-When finishing a plan: Update the frontmatter to `status: completed` (or `abandoned`/`paused`). Never leave stale `active` plans behind.
-
-Suggested structure:
-```markdown
----
-status: active
-created: YYYY-MM-DD
----
-# Plan Title
-
-## Goal
-What we're trying to accomplish.
-
-## Steps
-1. First step
-2. Second step
-
-## Progress Log
-- YYYY-MM-DD: What happened, decisions made, blockers found
-```
-
-The Progress Log section is append-only — add entries as work proceeds so future sessions can pick up context.
+**Plan File Convention:** Place plan files in `./plans/<slug>.md` with `status: active` YAML frontmatter. At session start, scan for active plans and resume. Full convention with templates: `~/.dotfiles/claude/references/plan-file-convention.md`.
 
 **Handling Interleaved/Queued Messages**
 
