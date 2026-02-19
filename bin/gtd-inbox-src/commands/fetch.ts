@@ -1,6 +1,7 @@
 // gtd-inbox fetch - Fetch items from sources
 import { defineCommand } from "citty";
-import { loadProfile, getApiToken } from "../lib/config";
+import { execSync } from "child_process";
+import { loadProfile } from "../lib/config";
 import type { FetchedItem, TodoistProfile } from "../types";
 
 export const fetchCommand = defineCommand({
@@ -44,25 +45,40 @@ export const fetchCommand = defineCommand({
   },
 });
 
-interface TodoistTask {
+// td CLI output types (camelCase fields)
+interface TdTask {
   id: string;
   content: string;
   description: string;
-  created_at: string;
-  due?: {
-    date: string;
-    string: string;
-  };
+  addedAt?: string; // only present with --full
+  due?: { date: string; string?: string } | null;
   labels: string[];
   priority: number;
-  parent_id?: string;
-  project_id: string;
-  section_id?: string;
+  parentId?: string | null;
+  projectId: string;
+  sectionId?: string | null;
 }
 
-interface TodoistProject {
+interface TdProject {
   id: string;
   name: string;
+  inboxProject?: boolean;
+}
+
+interface TdPaginatedResponse<T> {
+  results: T[];
+  nextCursor?: string | null;
+}
+
+/** Shell-escape a string for safe interpolation into a command */
+function shellEscape(s: string): string {
+  return "'" + s.replace(/'/g, "'\\''") + "'";
+}
+
+/** Run a td CLI command and parse its JSON output */
+function tdJson<T>(cmd: string): TdPaginatedResponse<T> {
+  const raw = execSync(cmd, { encoding: "utf-8", maxBuffer: 10 * 1024 * 1024 }).trim();
+  return JSON.parse(raw) as TdPaginatedResponse<T>;
 }
 
 async function fetchTodoist(args: {
@@ -70,86 +86,73 @@ async function fetchTodoist(args: {
   project?: string;
 }): Promise<void> {
   const profile = loadProfile<TodoistProfile>("todoist");
-  const token = getApiToken(profile.api.token_env);
-
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
 
   // Get projects to resolve names
-  const projectsRes = await fetch("https://api.todoist.com/rest/v2/projects", {
-    headers,
-  });
-  if (!projectsRes.ok) {
-    console.error(`Failed to fetch projects: ${projectsRes.statusText}`);
-    process.exit(1);
-  }
-  const projects: TodoistProject[] = await projectsRes.json();
+  const { results: projects } = tdJson<TdProject>("td project list --json --all");
   const projectMap = new Map(projects.map((p) => [p.id, p.name]));
 
   // Determine which project to fetch from
-  let projectId: string | undefined;
+  let projectFilter: string | undefined;
   if (args.project) {
     // Check if it's an ID or name
     const matchById = projects.find((p) => p.id === args.project);
     const matchByName = projects.find(
       (p) => p.name.toLowerCase() === args.project?.toLowerCase()
     );
-    projectId = matchById?.id || matchByName?.id;
-    if (!projectId) {
+    const matched = matchById || matchByName;
+    if (!matched) {
       console.error(`Project not found: ${args.project}`);
       process.exit(1);
     }
+    projectFilter = `id:${matched.id}`;
   } else if (profile.fetch.project_filter === "inbox") {
     // Find inbox project
-    const inbox = projects.find((p) => p.name.toLowerCase() === "inbox");
-    projectId = inbox?.id;
+    const inbox = projects.find(
+      (p) => p.name.toLowerCase() === "inbox" || p.inboxProject
+    );
+    if (inbox) projectFilter = `id:${inbox.id}`;
   }
 
-  // Fetch tasks
-  let url = "https://api.todoist.com/rest/v2/tasks";
-  if (projectId) {
-    url += `?project_id=${projectId}`;
+  // Fetch tasks (use --full to get addedAt timestamps)
+  let cmd = "td task list --json --full --all";
+  if (projectFilter) {
+    cmd += ` --project ${shellEscape(projectFilter)}`;
   }
 
-  const tasksRes = await fetch(url, { headers });
-  if (!tasksRes.ok) {
-    console.error(`Failed to fetch tasks: ${tasksRes.statusText}`);
-    process.exit(1);
-  }
-
-  let tasks: TodoistTask[] = await tasksRes.json();
+  const { results: tasks } = tdJson<TdTask>(cmd);
 
   // Apply limit
+  let limited = tasks;
   if (args.limit) {
     const limit = parseInt(args.limit, 10);
-    tasks = tasks.slice(0, limit);
+    limited = tasks.slice(0, limit);
   }
 
-  // Sort by created_at
-  tasks.sort((a, b) => {
+  // Sort by addedAt
+  limited.sort((a, b) => {
+    const aTime = new Date(a.addedAt || 0).getTime();
+    const bTime = new Date(b.addedAt || 0).getTime();
     if (profile.fetch.sort_order === "desc") {
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      return bTime - aTime;
     }
-    return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+    return aTime - bTime;
   });
 
   // Convert to FetchedItem and output as JSONL
-  for (const task of tasks) {
+  for (const task of limited) {
     const item: FetchedItem = {
       id: `todoist-${task.id}`,
       text: task.content,
       source: "todoist",
       source_id: task.id,
-      created_at: task.created_at,
+      created_at: task.addedAt,
       due_date: task.due?.date,
       labels: task.labels,
       priority: task.priority,
       description: task.description || undefined,
-      parent_id: task.parent_id,
-      project_id: task.project_id,
-      project_name: projectMap.get(task.project_id),
+      parent_id: task.parentId || undefined,
+      project_id: task.projectId,
+      project_name: projectMap.get(task.projectId),
     };
 
     console.log(JSON.stringify(item));

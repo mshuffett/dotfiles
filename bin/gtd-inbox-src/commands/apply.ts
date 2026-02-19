@@ -1,14 +1,14 @@
 // gtd-inbox apply - Apply decisions to destinations
 import { defineCommand } from "citty";
+import { execSync } from "child_process";
 import { Client as NotionClient } from "@notionhq/client";
 import { writeFileSync, mkdirSync, existsSync } from "fs";
 import { join, dirname } from "path";
-import { loadConfig, loadProfile, getApiToken } from "../lib/config";
+import { loadConfig } from "../lib/config";
 import type {
   ReviewedItem,
   AppliedItem,
   ApplyResult,
-  TodoistProfile,
 } from "../types";
 
 export const applyCommand = defineCommand({
@@ -301,42 +301,45 @@ ${reference_location ? `- Location: ${reference_location}` : ""}
   }
 }
 
+/** Shell-escape a string for safe interpolation into a td CLI command */
+function shellEscape(s: string): string {
+  return "'" + s.replace(/'/g, "'\\''") + "'";
+}
+
+// Uses td CLI instead of dead REST v2 API. User content is shell-escaped.
 async function applyToTodoist(
   item: ReviewedItem,
   config: ReturnType<typeof loadConfig>
 ): Promise<ApplyResult> {
-  const profile = loadProfile<TodoistProfile>("todoist");
-  const token = getApiToken(profile.api.token_env);
-
   const { destination, next_action } = item.decision;
   const projectId =
     config.destinations.todoist.projects[destination.target] ||
     config.destinations.todoist.projects.areas;
 
   try {
-    const response = await fetch("https://api.todoist.com/rest/v2/tasks", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        content: next_action || item.text,
-        project_id: String(projectId),
-        description: item.description,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Todoist API error: ${response.statusText}`);
+    const content = next_action || item.text;
+    // Build td task add command with shell-escaped arguments
+    let cmd = `td task add ${shellEscape(content)} --project ${shellEscape(`id:${projectId}`)}`;
+    if (item.description) {
+      cmd += ` --description ${shellEscape(item.description)}`;
     }
 
-    const task = (await response.json()) as { id: string };
+    const output = execSync(cmd, { encoding: "utf-8" }).trim();
+
+    // td task add prints the created task info; try to extract an ID
+    let createdId: string | undefined;
+    try {
+      const parsed = JSON.parse(output);
+      createdId = parsed.id;
+    } catch {
+      // Non-JSON output is normal for td task add; task was still created
+      createdId = undefined;
+    }
 
     return {
       destination_type: "todoist",
       success: true,
-      created_id: task.id,
+      created_id: createdId,
     };
   } catch (error) {
     return {
@@ -347,24 +350,10 @@ async function applyToTodoist(
   }
 }
 
+// Uses td CLI instead of dead REST v2 API. taskId is an internal ID, safe for interpolation.
 async function completeInTodoist(taskId: string): Promise<ApplyResult> {
-  const profile = loadProfile<TodoistProfile>("todoist");
-  const token = getApiToken(profile.api.token_env);
-
   try {
-    const response = await fetch(
-      `https://api.todoist.com/rest/v2/tasks/${taskId}/close`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Todoist API error: ${response.statusText}`);
-    }
+    execSync(`td task complete id:${shellEscape(taskId)}`, { encoding: "utf-8" });
 
     return {
       destination_type: "todoist",

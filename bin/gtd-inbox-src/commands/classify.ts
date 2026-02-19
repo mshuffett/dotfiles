@@ -1,5 +1,6 @@
 // gtd-inbox classify - Agentic classification with research tools
 import { defineCommand } from "citty";
+import { execSync } from "child_process";
 import Anthropic from "@anthropic-ai/sdk";
 import { loadConfig } from "../lib/config";
 import type { FetchedItem, ClassifiedItem, Category } from "../types";
@@ -443,32 +444,24 @@ async function searchNotion(query: string): Promise<string> {
   }
 }
 
-// Search Todoist for related tasks
+// Search Todoist for related tasks (via td CLI — no user input in command)
 async function searchTodoist(query: string): Promise<string> {
-  const todoistToken = process.env.TODOIST_API_TOKEN;
-  if (!todoistToken) {
-    return "Todoist API token not configured (TODOIST_API_TOKEN)";
-  }
-
   try {
-    // Get all tasks and filter locally (Todoist REST API doesn't have search)
-    const response = await fetch("https://api.todoist.com/rest/v2/tasks", {
-      headers: {
-        Authorization: `Bearer ${todoistToken}`,
-      },
-    });
+    // Get all tasks via td CLI and filter locally
+    const raw = execSync("td task list --all --json --full", {
+      encoding: "utf-8",
+      maxBuffer: 10 * 1024 * 1024,
+    }).trim();
 
-    if (!response.ok) {
-      return `Todoist API error: ${response.status}`;
-    }
-
-    const tasks = (await response.json()) as Array<{
-      id: string;
-      content: string;
-      description: string;
-      project_id: string;
-      due?: { date: string };
-    }>;
+    const { results: tasks } = JSON.parse(raw) as {
+      results: Array<{
+        id: string;
+        content: string;
+        description: string;
+        projectId: string;
+        due?: { date: string } | null;
+      }>;
+    };
 
     // Simple search - filter tasks containing query words
     const queryLower = query.toLowerCase();

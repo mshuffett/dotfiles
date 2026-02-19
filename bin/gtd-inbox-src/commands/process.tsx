@@ -1,13 +1,13 @@
 // gtd-inbox process - Full pipeline: fetch → classify → review → apply
 import { defineCommand } from "citty";
-import { spawn } from "child_process";
+import { spawn, execSync } from "child_process";
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from "fs";
 import { join } from "path";
 import { render } from "ink";
 import React from "react";
 import Anthropic from "@anthropic-ai/sdk";
 import { ReviewApp } from "../components/ReviewApp";
-import { loadConfig, loadProfile, getApiToken, ensureCacheDir } from "../lib/config";
+import { loadConfig, loadProfile, ensureCacheDir } from "../lib/config";
 import type { FetchedItem, ClassifiedItem, TodoistProfile, Category } from "../types";
 
 export const processCommand = defineCommand({
@@ -185,6 +185,18 @@ export const processCommand = defineCommand({
   },
 });
 
+// td CLI output types (camelCase fields)
+interface TdPaginatedResponse<T> {
+  results: T[];
+  nextCursor?: string | null;
+}
+
+/** Shell-escape a string for safe interpolation into a command */
+function shellEscape(s: string): string {
+  return "'" + s.replace(/'/g, "'\\''") + "'";
+}
+
+// Uses td CLI instead of dead REST v2 API. No user input in shell commands.
 async function fetchItems(
   source: string,
   limit?: string
@@ -194,55 +206,60 @@ async function fetchItems(
   }
 
   const profile = loadProfile<TodoistProfile>("todoist");
-  const token = getApiToken(profile.api.token_env);
 
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
-
-  // Get projects
-  const projectsRes = await fetch("https://api.todoist.com/rest/v2/projects", {
-    headers,
-  });
-  const projects: Array<{ id: string; name: string }> = await projectsRes.json();
+  // Get projects via td CLI
+  const projectsRaw = execSync("td project list --json --all", {
+    encoding: "utf-8",
+    maxBuffer: 10 * 1024 * 1024,
+  }).trim();
+  const { results: projects } = JSON.parse(projectsRaw) as TdPaginatedResponse<{
+    id: string;
+    name: string;
+    inboxProject?: boolean;
+  }>;
   const projectMap = new Map(projects.map((p) => [p.id, p.name]));
 
   // Find inbox project
-  let projectId: string | undefined;
+  let projectFilter: string | undefined;
   if (profile.fetch.project_filter === "inbox") {
-    const inbox = projects.find((p) => p.name.toLowerCase() === "inbox");
-    projectId = inbox?.id;
+    const inbox = projects.find(
+      (p) => p.name.toLowerCase() === "inbox" || p.inboxProject
+    );
+    if (inbox) projectFilter = `id:${inbox.id}`;
   }
 
-  // Fetch tasks
-  let url = "https://api.todoist.com/rest/v2/tasks";
-  if (projectId) {
-    url += `?project_id=${projectId}`;
+  // Fetch tasks via td CLI (--full for addedAt timestamps)
+  let cmd = "td task list --json --full --all";
+  if (projectFilter) {
+    cmd += ` --project ${shellEscape(projectFilter)}`;
   }
 
-  const tasksRes = await fetch(url, { headers });
-  let tasks: Array<{
+  const tasksRaw = execSync(cmd, {
+    encoding: "utf-8",
+    maxBuffer: 10 * 1024 * 1024,
+  }).trim();
+  const { results: allTasks } = JSON.parse(tasksRaw) as TdPaginatedResponse<{
     id: string;
     content: string;
     description: string;
-    created_at: string;
-    due?: { date: string };
+    addedAt?: string;
+    due?: { date: string } | null;
     labels: string[];
     priority: number;
-    parent_id?: string;
-    project_id: string;
-  }> = await tasksRes.json();
+    parentId?: string | null;
+    projectId: string;
+  }>;
 
   // Apply limit
+  let tasks = allTasks;
   if (limit) {
-    tasks = tasks.slice(0, parseInt(limit, 10));
+    tasks = allTasks.slice(0, parseInt(limit, 10));
   }
 
-  // Sort
+  // Sort by addedAt
   tasks.sort(
     (a, b) =>
-      new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      new Date(a.addedAt || 0).getTime() - new Date(b.addedAt || 0).getTime()
   );
 
   return tasks.map((task) => ({
@@ -250,14 +267,14 @@ async function fetchItems(
     text: task.content,
     source: "todoist" as const,
     source_id: task.id,
-    created_at: task.created_at,
+    created_at: task.addedAt,
     due_date: task.due?.date,
     labels: task.labels,
     priority: task.priority,
     description: task.description || undefined,
-    parent_id: task.parent_id,
-    project_id: task.project_id,
-    project_name: projectMap.get(task.project_id),
+    parent_id: task.parentId || undefined,
+    project_id: task.projectId,
+    project_name: projectMap.get(task.projectId),
   }));
 }
 
