@@ -160,4 +160,5 @@ alias j='just'
 # Claude Code worktree launcher
 alias cw='claude-worktree'
 alias ...='cd ../..'
-alias cs='claudesp --dangerously-skip-permissions'
+alias ao='agentops --dangerously-skip-permissions'
+alias cf='fresh --dangerously-skip-permissions'
