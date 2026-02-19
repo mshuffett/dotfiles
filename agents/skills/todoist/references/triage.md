@@ -189,17 +189,19 @@ For each task:
 
 ## API Reference
 
-### Fetch Tasks
+### Fetch Tasks (API v1)
 
 ```bash
-curl -s "https://api.todoist.com/rest/v2/tasks" \
+curl -s "https://api.todoist.com/api/v1/tasks" \
   -H "Authorization: Bearer $TODOIST_API_TOKEN"
+# Returns {"results": [...], "next_cursor": "..."}
+# Paginate with ?cursor=<next_cursor> until next_cursor is null
 ```
 
 ### Fetch Comments
 
 ```bash
-curl -s "https://api.todoist.com/rest/v2/comments?task_id={ID}" \
+curl -s "https://api.todoist.com/api/v1/comments?task_id={ID}" \
   -H "Authorization: Bearer $TODOIST_API_TOKEN"
 ```
 
@@ -207,7 +209,7 @@ curl -s "https://api.todoist.com/rest/v2/comments?task_id={ID}" \
 
 Michael's Todoist user ID: `486423`
 
-Filter: `assignee_id == null OR assignee_id == "486423"`
+Filter client-side: `responsible_uid == null OR responsible_uid == "486423"`
 
 ## Related Skills
 

@@ -69,6 +69,12 @@ When a task has `assignee_id` != user's ID, it's already hidden from their view.
 
 ### Python API Helper (Preferred)
 
+**API v1** (as of Feb 2026 — REST v2 and Sync v9 are dead, returning 410 Gone).
+
+Base URL: `https://api.todoist.com/api/v1`
+
+v1 responses wrap lists in `{"results": [...], "next_cursor": "..."}`. Always paginate with `cursor` param.
+
 ```python
 import os
 import json
@@ -76,25 +82,46 @@ import urllib.request
 
 token = os.environ.get('TODOIST_API_TOKEN')
 headers = {'Authorization': f'Bearer {token}'}
+BASE = 'https://api.todoist.com/api/v1'
 
-def get_tasks(filter_str=None):
-    url = 'https://api.todoist.com/rest/v2/tasks'
-    if filter_str:
-        url += f'?filter={filter_str}'
-    req = urllib.request.Request(url, headers=headers)
+def _request(url, data=None, method=None):
+    """Make API request, handle paginated responses with control chars."""
+    req = urllib.request.Request(url, data=data, headers={**headers, 'Content-Type': 'application/json'} if data else headers)
+    if method:
+        req.method = method
     with urllib.request.urlopen(req) as response:
-        return json.loads(response.read())
+        return json.loads(response.read(), strict=False)
+
+def get_tasks(cursor=None):
+    """Get a page of tasks (50 per page). Use cursor for pagination."""
+    url = f'{BASE}/tasks'
+    if cursor:
+        url += f'?cursor={cursor}'
+    return _request(url)  # returns {"results": [...], "next_cursor": "..."|null}
+
+def get_all_tasks():
+    """Paginate through ALL tasks."""
+    all_tasks = []
+    cursor = None
+    while True:
+        data = get_tasks(cursor)
+        all_tasks.extend(data.get('results', []))
+        cursor = data.get('next_cursor')
+        if not cursor:
+            break
+    return all_tasks
+
+def get_task(task_id):
+    return _request(f'{BASE}/tasks/{task_id}')
 
 def get_comments(task_id):
-    url = f'https://api.todoist.com/rest/v2/comments?task_id={task_id}'
-    req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req) as response:
-        return json.loads(response.read())
+    return _request(f'{BASE}/comments?task_id={task_id}')
 
 def extract_attachments_from_comments(comments):
     """Extract attachments - images may have empty content field!"""
+    items = comments.get('results', comments) if isinstance(comments, dict) else comments
     attachments = []
-    for comment in comments:
+    for comment in (items if isinstance(items, list) else []):
         if comment.get('attachment'):
             att = comment['attachment']
             attachments.append({
@@ -107,42 +134,22 @@ def extract_attachments_from_comments(comments):
 
 def add_comment(task_id, content, prefix="cc: "):
     """Add comment with 'cc:' prefix (marks as automated)"""
-    url = 'https://api.todoist.com/rest/v2/comments'
     if prefix and not content.startswith(prefix):
         content = prefix + content
     data = json.dumps({'task_id': task_id, 'content': content}).encode('utf-8')
-    req = urllib.request.Request(url, data=data, headers={**headers, 'Content-Type': 'application/json'}, method='POST')
-    with urllib.request.urlopen(req) as response:
-        return json.loads(response.read())
+    return _request(f'{BASE}/comments', data=data)
 
 def update_task(task_id, **kwargs):
-    url = f'https://api.todoist.com/rest/v2/tasks/{task_id}'
     data = json.dumps(kwargs).encode('utf-8')
-    req = urllib.request.Request(url, data=data, headers={**headers, 'Content-Type': 'application/json'}, method='POST')
-    with urllib.request.urlopen(req) as response:
-        return json.loads(response.read())
-```
+    return _request(f'{BASE}/tasks/{task_id}', data=data, method='POST')
 
-### Moving Tasks (Sync API v9 Required)
-
-REST API v2 cannot move tasks between projects. Use Sync API:
-
-```python
-import uuid
+def close_task(task_id):
+    return _request(f'{BASE}/tasks/{task_id}/close', data=b'{}', method='POST')
 
 def move_task(task_id, project_id):
-    url = 'https://api.todoist.com/sync/v9/sync'
-    data = json.dumps({
-        "sync_token": "*",
-        "commands": [{
-            "type": "item_move",
-            "uuid": str(uuid.uuid4()),
-            "args": {"id": task_id, "project_id": project_id}
-        }]
-    }).encode('utf-8')
-    req = urllib.request.Request(url, data=data, headers={**headers, 'Content-Type': 'application/json'})
-    with urllib.request.urlopen(req) as response:
-        return json.loads(response.read())
+    """Move task to a different project (v1 has native move endpoint)."""
+    data = json.dumps({'project_id': project_id}).encode('utf-8')
+    return _request(f'{BASE}/tasks/{task_id}/move', data=data, method='POST')
 ```
 
 ### Removing Due Dates
@@ -156,7 +163,7 @@ update_task(task_id, due_string="no date")
 ### Create Task (curl)
 
 ```bash
-curl -X POST "https://api.todoist.com/rest/v2/tasks" \
+curl -X POST "https://api.todoist.com/api/v1/tasks" \
   -H "Authorization: Bearer $TODOIST_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"content": "Task title", "description": "Details", "priority": 4, "project_id": "377445380"}'
@@ -232,16 +239,18 @@ When showing tasks to the user, ALWAYS include:
 
 ## Default Task Filtering
 
-- **Always use `filter=today|overdue`** to match the Todoist UI (includes tasks with no due dates in Today view)
+- **v1 API does not support server-side filter params on `GET /tasks`** — fetch all tasks via pagination and filter client-side
 - **DEFAULT: Filter to tasks for me** — exclude tasks assigned to others unless explicitly requested
-  - Include: No assignee OR assigned to Michael (ID: 486423)
-  - Exclude: Tasks assigned to Michelle (42258732) or others unless user asks for "all tasks"
+  - Include: No `responsible_uid` OR `responsible_uid` == `"486423"` (Michael)
+  - Exclude: Tasks with `responsible_uid` == `"42258732"` (Michelle) or others unless user asks for "all tasks"
 - **Today view includes**: Tasks with today's date + overdue + manually moved to Today (no date)
+- Use `get_all_tasks()` and filter in Python by `task.get('due', {}).get('date', '')` for date-based filtering
 
-## Known API Limitations
+## Known API Limitations (v1)
 
-- REST API `filter=today` captures ~43 tasks (includes no-date tasks in Today view)
-- Simple date queries only show ~20 tasks (misses Today-view tasks without dates)
+- `GET /api/v1/tasks` returns 50 results per page with cursor-based pagination
+- No server-side `filter=` query param on the tasks list endpoint (use `GET /api/v1/tasks/by_filter` but param format may differ)
+- Responses may contain control characters in description fields — always use `json.loads(data, strict=False)`
 - Shared projects (31 total) use same token but may have visibility differences
 
 ## Notes Repo Scripts & Templates
