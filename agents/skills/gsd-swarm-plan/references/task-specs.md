@@ -27,15 +27,16 @@ GSD plan-phase workflow.
 
 ## How to Work
 
-Read these agent definitions — they contain your complete methodology:
-- `/Users/michael/.claude/agents/gsd-phase-researcher.md` — research methodology, output format, tool strategy
-- `/Users/michael/.claude/agents/gsd-planner.md` — plan format, task breakdown, dependency graphs, must_haves
+Follow the standard GSD plan-phase workflow — it's your primary reference:
+- `/Users/michael/.claude/get-shit-done/workflows/plan-phase.md` — the full orchestration flow (init, research, plan, verify, iterate)
 
-Follow those workflows. You can also spawn subagents (gsd-phase-researcher, gsd-planner,
-gsd-plan-checker) if you prefer to delegate, since you have access to the Task tool.
+This workflow references these agent definitions, which you can also read directly:
+- `/Users/michael/.claude/agents/gsd-phase-researcher.md` — research methodology
+- `/Users/michael/.claude/agents/gsd-planner.md` — plan format, task breakdown, must_haves
+- `/Users/michael/.claude/agents/gsd-plan-checker.md` — plan verification
 
-Use `gsd-tools.js` for initialization, validation, and commits — the agent definitions
-reference the exact commands.
+You can spawn subagents (gsd-phase-researcher, gsd-planner, gsd-plan-checker) since you
+have access to the Task tool. The workflow file shows the exact prompts and spawn patterns.
 
 ## Project Context
 
