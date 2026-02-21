@@ -1,6 +1,6 @@
 ---
 name: "imagegen"
-description: "Use when the user asks to generate or edit images via the OpenAI Image API (for example: generate image, edit/inpaint/mask, background removal or replacement, transparent background, product shots, concept art, covers, or batch variants); run the bundled CLI (`scripts/image_gen.py`) and require `OPENAI_API_KEY` for live calls."
+description: "Use when generating or editing images. Primary tool: bundled `scripts/image_gen.py` (OpenAI GPT Image 1.5). For non-OpenAI providers (Gemini Pro, Gemini, Imagen), use the `generate-image` CLI. Covers generate, edit/inpaint/mask, background removal, transparent background, product shots, concept art, covers, and batch variants."
 ---
 
 
@@ -56,13 +56,25 @@ If the key is missing, give the user these steps:
 
 If installation isn't possible in this environment, tell the user which dependency is missing and how to install it locally.
 
+## Non-OpenAI providers (`generate-image` CLI)
+
+For Gemini Pro, Gemini, or Imagen, use the `generate-image` bash CLI (`~/.dotfiles/bin/generate-image`) instead of `scripts/image_gen.py`. It requires no Python — just `curl` and a `GEMINI_API_KEY`.
+
+Quick example:
+```bash
+generate-image "A sunset over mountains" --provider gemini-pro --size 2048x2048
+```
+
+Full reference (providers, flags, input-image limits, sizes): `references/generate-image-cli.md`.
+
 ## Defaults & rules
-- Use `gpt-image-1.5` unless the user explicitly asks for `gpt-image-1-mini` or explicitly prefers a cheaper/faster model.
+- Use `gpt-image-1.5` via `scripts/image_gen.py` unless the user explicitly asks for a non-OpenAI provider or a cheaper/faster model.
+- For non-OpenAI providers (Gemini Pro, Gemini, Imagen), use `generate-image` CLI.
 - Assume the user wants a new image unless they explicitly ask for an edit.
-- Require `OPENAI_API_KEY` before any live API call.
-- Use the OpenAI Python SDK (`openai` package) for all API calls; do not use raw HTTP.
-- If the user requests edits, use `client.images.edit(...)` and include input images (and mask if provided).
-- Prefer the bundled CLI (`scripts/image_gen.py`) over writing new one-off scripts.
+- Require `OPENAI_API_KEY` for OpenAI calls; `GEMINI_API_KEY` for Gemini/Imagen calls.
+- Use the OpenAI Python SDK (`openai` package) for OpenAI API calls; do not use raw HTTP.
+- If the user requests edits, use `client.images.edit(...)` (OpenAI) or `generate-image -i` (Gemini).
+- Prefer the bundled CLIs over writing new one-off scripts.
 - Never modify `scripts/image_gen.py`. If something is missing, ask the user before doing anything else.
 - If the result isn’t clearly relevant or doesn’t satisfy constraints, iterate with small targeted prompt changes; only ask a question if a missing detail blocks success.
 
@@ -168,7 +180,9 @@ Asset-type templates (website assets, game assets, wireframes, logo) are consoli
 
 ## Reference map
 - **`references/cli.md`**: how to *run* image generation/edits/batches via `scripts/image_gen.py` (commands, flags, recipes).
+- **`references/generate-image-cli.md`**: `generate-image` bash CLI for non-OpenAI providers (Gemini Pro, Gemini, Imagen) — commands, provider table, input limits.
 - **`references/image-api.md`**: what knobs exist at the API level (parameters, sizes, quality, background, edit-only fields).
 - **`references/prompting.md`**: prompting principles (structure, constraints/invariants, iteration patterns).
 - **`references/sample-prompts.md`**: copy/paste prompt recipes (generate + edit workflows; examples only).
+- **`references/batch-workflow.md`**: batch generation workflow patterns.
 - **`references/codex-network.md`**: environment/sandbox/network-approval troubleshooting.

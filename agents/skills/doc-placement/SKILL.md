@@ -1,6 +1,6 @@
 ---
 name: doc-placement
-description: Use when adding or updating documentation; prefer updating existing content, put deep guides under docs/, use feature-specific names, link from parent docs.
+description: Use when creating or relocating project documentation files for human readers (guides, implementation notes, reference pages); not for AI agent memory or skill files. For agent knowledge routing, see memory-placement.
 ---
 
 # Documentation Placement

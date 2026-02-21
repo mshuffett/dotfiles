@@ -5,10 +5,14 @@ description: Use when logging or reviewing mistakes; append JSONL events and pro
 
 # Mistake Tracking
 
+**Related skills**:
+- `mistake-analysis` — RCA framework, severity assessment, prevention strategy
+- Project-level `mistakes` skill — catalog of known anti-patterns for the current repo
+
 ## Files
 
 - Global log: `~/.claude/mistakes.jsonl`
-- Project log: `<repo>/memory/mistakes.jsonl`
+- Project log: `<repo>/logs/mistakes.jsonl`
 
 ## Event Schema (JSONL)
 
@@ -17,7 +21,7 @@ description: Use when logging or reviewing mistakes; append JSONL events and pro
 ```
 
 **Required fields**: `ts` (ISO), `mistake_id` (kebab/dot case), `scope` (global|project), `detector` (self|user), `notes`
-**Optional fields**: `repo`, `guide`, `guide_exists`, `condition`, `accepted_checks`
+**Optional fields**: `repo`, `type` (mistake|near-miss|violation|learning), `category` (git|testing|api|deployment|auth|ui|etc), `severity` (critical|high|medium|low), `guide`, `guide_exists`, `condition`, `accepted_checks`, `action_taken`, `session_id`
 
 ## Review Procedure (Session Start/End)
 

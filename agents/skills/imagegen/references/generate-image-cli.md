@@ -1,18 +1,15 @@
----
-name: image-generation
-description: Use when generating images, creating visual assets, or working with AI image generation. Covers generate-image CLI with OpenAI GPT Image 1.5, Gemini Pro, Gemini, and Imagen providers.
----
+# `generate-image` CLI reference
 
-# Image Generation
-
-Use the `generate-image` command to create images with OpenAI GPT Image 1.5, Google Gemini, or Imagen.
+Bash script at `~/.dotfiles/bin/generate-image`. Supports multiple providers beyond OpenAI. No Python dependency — uses `curl` directly.
 
 ## Provider Selection
 
-- **openai** (default) - GPT Image 1.5, best quality, supports image editing, excellent text rendering
-- **gemini-pro** - Nano Banana Pro, high resolution (up to 4K), great text rendering
-- **gemini** - Nano Banana, faster generation, use when speed matters
-- **imagen** - Google Imagen 4.0, photorealistic
+| Provider     | Model ID                       | Best For                         |
+|--------------|--------------------------------|----------------------------------|
+| `openai`     | gpt-image-1.5                  | Best quality, editing (default)  |
+| `gemini-pro` | gemini-3-pro-image-preview     | High-res (up to 4K), text rendering |
+| `gemini`     | gemini-2.5-flash-image         | Faster, general use              |
+| `imagen`     | imagen-4.0-generate-001        | Photorealistic                   |
 
 ## Commands
 
@@ -45,15 +42,6 @@ Use `-i` or `--input` for editing, style transfer, or composition:
 
 **Mask (OpenAI only):** Use `-k` or `--mask` with a PNG that has transparent areas indicating where to edit. Must match input dimensions.
 
-## Providers and Models
-
-| Provider     | Model ID                       | Best For                         |
-|--------------|--------------------------------|----------------------------------|
-| `openai`     | gpt-image-1.5                  | Best quality, editing (default)  |
-| `gemini-pro` | gemini-3-pro-image-preview     | High-res, text rendering         |
-| `gemini`     | gemini-2.5-flash-image         | Faster, general use              |
-| `imagen`     | imagen-4.0-generate-001        | Photorealistic                   |
-
 ## Sizes
 
 - Standard (all providers): 1024x1024, 1024x1536, 1536x1024
@@ -61,13 +49,12 @@ Use `-i` or `--input` for editing, style transfer, or composition:
 
 ## Environment Variables
 
-- `OPENAI_API_KEY` - required for openai provider (default)
-- `GEMINI_API_KEY` - required for gemini, gemini-pro, and imagen providers
+- `OPENAI_API_KEY` — required for openai provider (default)
+- `GEMINI_API_KEY` — required for gemini, gemini-pro, and imagen providers
 
-## Prompting Tips
+## Prompting Tips (Gemini Pro)
 
-For detailed prompts (especially Gemini Pro), include:
-
+For detailed prompts, include:
 - **Style**: "editorial photography", "vintage poster", "cinematic", "flat lay"
 - **Color palette**: Specific colors and interactions ("warm orange glow contrasting with cool blue shadows")
 - **Lighting**: Direction, quality, mood ("harsh overhead spotlight", "golden hour backlight")
@@ -75,12 +62,15 @@ For detailed prompts (especially Gemini Pro), include:
 - **Texture**: "film grain", "halftone dots", "distressed paper", "chalk texture"
 - **Specific text**: Enclose in single quotes within the prompt
 
-For batch generation workflow, see [references/batch-workflow.md](references/batch-workflow.md).
+## When to use `generate-image` vs `scripts/image_gen.py`
 
-The command is available at `~/.dotfiles/bin/generate-image`.
+| Scenario | Tool |
+|----------|------|
+| Non-OpenAI provider (Gemini, Imagen) | `generate-image` |
+| Quick one-off generation from any provider | `generate-image` |
+| Batch generation (JSONL, concurrent) | `scripts/image_gen.py` |
+| Prompt augmentation fields (use-case, composition, etc.) | `scripts/image_gen.py` |
+| Structured edit workflow with masks | Either (both support masks for OpenAI) |
+| No Python available | `generate-image` (bash only) |
 
-## Acceptance Checks
-
-- [ ] API key is set for the chosen provider (`OPENAI_API_KEY` or `GEMINI_API_KEY`)
-- [ ] Image was generated and saved to the expected location
-- [ ] Output filename follows project conventions (if applicable)
+For batch workflows, see `references/batch-workflow.md`.

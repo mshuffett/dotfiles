@@ -159,6 +159,8 @@ Checklist:
 4. **Cross-repo recurrence (2+ repos in 14 days)** → Add one-line guardrail to root CLAUDE.md
 5. **Cooldown after 14-30 quiet days** → Propose removing one-liners; skill remains canonical
 
+**Note**: For human-readable project documentation (guides, implementation notes), see the `doc-placement` skill.
+
 ## Acceptance Checks
 
 - [ ] Information routed to correct location per decision tree
