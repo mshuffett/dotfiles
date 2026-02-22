@@ -73,6 +73,7 @@ When creating or modifying skills, always invoke `skill-creator:skill-creator` f
 - Vercel AI SDK over provider SDKs; fetch docs via Context7 (never rely on memory)
 - pnpm, Ultracite linter
 - CLI: rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec, atuin, gcal (Google Calendar)
+- Obsidian vault at `~/ws/notes/` (PARA structure) — invoke `para-index` skill before filing notes or deciding where content belongs
 
 **Editing This File**
 

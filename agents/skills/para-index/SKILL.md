@@ -1,6 +1,6 @@
 ---
 name: para-index
-description: Use when organizing tasks, processing inbox items, or mapping between Todoist, Notion, and Obsidian PARA systems.
+description: Use when filing notes to Obsidian vault (~/ws/notes/), organizing tasks across systems, processing inbox items, or deciding where content belongs in the PARA structure (Todoist, Notion, Obsidian). Covers vault area conventions, document maturity (idea → concept → PRD), and system ID mappings.
 ---
 
 # Universal PARA Index
@@ -28,6 +28,43 @@ This skill provides the mapping between PARA categories across Todoist, Notion, 
 - Priority options: Immediate, Quick, Scheduled, 1st-5th Priority, Errand, Remember
 
 For full Todoist IDs, Obsidian folders, and Notion database IDs, see [references/system-ids.md](references/system-ids.md).
+
+## Obsidian Filing Convention (`~/ws/notes/`)
+
+### Before Filing
+
+Scan existing structure first: `ls 2-Areas/`, `3-Resources/`, `1-Projects/`. Present existing matches + "create new" option — don't assume existing = correct home. Always add cross-links (`[[Related Note]]`) to related areas.
+
+### Document Maturity Ladder
+
+| Stage | Location | Signal |
+|-------|----------|--------|
+| Raw capture / voice note / brainstorm | `2-Areas/Ideas/` | Unstructured, single thought |
+| Developed concept with design decisions | `2-Areas/Future of UX and Agent Ideas/` | Has architecture, tradeoffs, open questions |
+| Formal product requirement | `2-Areas/PRDs/` | Ready to implement |
+
+### Key Area Conventions
+
+| Area | What Goes Here |
+|------|----------------|
+| `Ideas/` | Raw captures, brainstorming. **`Ideas MOC.md` is the entrypoint** — all idea notes must be linked from it. |
+| `Future of UX and Agent Ideas/` | Developed concepts: outliner UX, agent architecture, buffer models, interaction patterns. More than an idea, less than a PRD. |
+| `PRDs/` | Formal product requirement docs ready for implementation. |
+| `Orchestration/` | Orchestration tools, frameworks, and evaluations. |
+| `Everything AI Strategy/` | EAI product direction, principles, feature ideas. |
+| `Everything Backlog/` | Actionable EAI items not yet scheduled. |
+| `Agents/` | Agent development, capability ideas, agent productivity tools. |
+| `People/` | Contact notes. Link from other notes that mention the person. |
+| `Wellness/` | Health, supplements, protocols. |
+| `Networking/` | Community, events, networking strategy. |
+| `Hackathon/` | Hackathon projects and event notes. |
+
+### Note Conventions
+
+- Preserve ALL raw content (title + description + comments) verbatim in quotes
+- Use `source: todoist-inbox-triage` in frontmatter for triaged items
+- Add `## Connections` section with wiki-links to related notes
+- When creating a note in an area with an MOC, add the new note to the MOC
 
 ## Task Processing Workflow
 
