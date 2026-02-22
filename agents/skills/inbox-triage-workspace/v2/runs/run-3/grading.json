@@ -1,0 +1,1 @@
+{"eval_id": 3, "version": "v2", "run": 1, "pass_rate": 1.0, "passed": 8, "total": 8, "notes": "All fixes confirmed: Chen-Chen→EAI, 'Let me'→seed, Puffin→Project Seed (not Clarify). Zero regressions from v0."}

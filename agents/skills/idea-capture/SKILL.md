@@ -18,7 +18,7 @@ description: Use when user shares a raw idea ("I have an idea...", "What if we..
 
 ### 1. Create Note
 
-**Location**: `~/ws/everything-monorepo/notes/3-Resources/Raw Ideas/`
+**Location**: `~/ws/notes/3-Resources/💡 Raw Ideas/`
 **Filename**: `YYYY-MM-DD-brief-title.md` (lowercase, hyphens, 3-5 word slug)
 
 ### 2. Template
@@ -53,19 +53,19 @@ Search patterns: keywords from the idea, related concepts, similar features.
 - `2-Areas/Everything Backlog/` - Product ideas
 - `2-Areas/Everything AI Strategy/` - Strategic ideas
 - `1-Projects/` - Active project connections
-- `3-Resources/Raw Ideas/` - Other raw ideas
+- `3-Resources/💡 Raw Ideas/` - Other raw ideas
 
 ### 4. Generate Obsidian URL
 
-**Format**: `obsidian://open?vault=notes&file=3-Resources%2FRaw%20Ideas%2FFILENAME.md`
+**Format**: `obsidian://open?vault=80e3750e23d08134&file=3-Resources%2F%F0%9F%92%A1%20Raw%20Ideas%2FFILENAME`
 
 Return as: `[YYYY-MM-DD-brief-title](obsidian://...)`
 
 ### 5. Commit and Push
 
 ```bash
-cd ~/ws/everything-monorepo/notes
-git add "3-Resources/Raw Ideas/YYYY-MM-DD-filename.md"
+cd ~/ws/notes
+git add "3-Resources/💡 Raw Ideas/YYYY-MM-DD-filename.md"
 git commit -m "Add raw idea: [brief description]"
 git push
 ```

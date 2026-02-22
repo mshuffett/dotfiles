@@ -1,0 +1,69 @@
+{
+  "eval_id": 1,
+  "version": "v0",
+  "run": 1,
+  "expectations": [
+    {
+      "id": 1,
+      "text": "Each of the 8 items is classified into exactly one category",
+      "pass": true,
+      "evidence": "All 8 items appear: 5 as Action (cancel, QSBS, follow-up, brex, intro), 3 as Reference (reflection, temporal, anar feedback)"
+    },
+    {
+      "id": 2,
+      "text": "'cancel whispr flow' is classified as Action",
+      "pass": true,
+      "evidence": "Action → Manage Finances: 'Cancel Whispr Flow subscription'"
+    },
+    {
+      "id": 3,
+      "text": "'Follow up with raiya' is classified as Action",
+      "pass": true,
+      "evidence": "Action → Everything AI: 'Follow up with Raiya'"
+    },
+    {
+      "id": 4,
+      "text": "'send anar an intro request for quiet' is classified as Action",
+      "pass": true,
+      "evidence": "Action → Everything AI: 'Send Anar intro request for Quiet'"
+    },
+    {
+      "id": 5,
+      "text": "The philosophical reflection is NOT classified as Action",
+      "pass": true,
+      "evidence": "Reference note: 'The Inner Stop-Gap — On Self-Doubt as a Structural Force'"
+    },
+    {
+      "id": 6,
+      "text": "'temporal' is NOT classified as Action",
+      "pass": true,
+      "evidence": "Reference note: 'Temporal — AWS Marketplace Billing'"
+    },
+    {
+      "id": 7,
+      "text": "'feedback from anar' is classified as Reference",
+      "pass": true,
+      "evidence": "Reference note, clustered with intro item: 'Anar — Feedback & Connections'"
+    },
+    {
+      "id": 8,
+      "text": "Original inbox text is preserved verbatim for each item",
+      "pass": true,
+      "evidence": "Every note includes original text in Source section; every action includes Original field"
+    },
+    {
+      "id": 9,
+      "text": "A triage report is produced with summary stats",
+      "pass": true,
+      "evidence": "Report includes: Items processed: 8, Actions: 5, References: 3, Clusters: 1, Clarification: 0"
+    },
+    {
+      "id": 10,
+      "text": "Action items have verb-first titles and project assignments",
+      "pass": true,
+      "evidence": "All 5 actions start with verbs (Cancel, Research, Follow up, Check, Send) and have project assignments"
+    }
+  ],
+  "pass_rate": 1.0,
+  "notes": "Strong baseline. Borderline case: QSBS item ('Figure out if I can...') classified as Action despite speculative language — reasonable given it's a specific financial investigation task, not brainstorming. Anar clustering was a good call combining feedback + intro request."
+}

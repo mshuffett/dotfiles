@@ -1,0 +1,9 @@
+{
+  "eval_id": 1, "version": "v1", "run": 1,
+  "pass_rate": 0.8, "passed": 8, "total": 10,
+  "failures": [
+    {"id": 1, "text": "Each item → exactly one category", "evidence": "Item 7 dual-classified as Action + Reference"},
+    {"id": 7, "text": "'feedback from anar' → Reference", "evidence": "Dual-classified as Action + Reference. Person-association rule caused over-classification."}
+  ],
+  "notes": "Person-association annotation made model treat feedback FROM a person as action. Also: QSBS now Project Seed (better than v0's Action), Brex now Manage Finances (debatable)."
+}

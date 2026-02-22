@@ -1,0 +1,11 @@
+{
+  "eval_id": 3, "version": "v1", "run": 1,
+  "pass_rate": 0.875, "passed": 7, "total": 8,
+  "failures": [
+    {"id": 3, "text": "'Puffin' → Reference or Project Seed", "evidence": "Classified as Clarify instead. Stricter voice rules made model too cautious on creative items."}
+  ],
+  "qualitative_wins": [
+    "Chen-Chen → Everything AI (was Demo Day in v0) — FIXED",
+    "'Let me either...' → NOT Action (was Action in v0) — FIXED"
+  ]
+}

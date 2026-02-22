@@ -1,0 +1,7 @@
+{
+  "source": "todoist",
+  "fetched_at": "2026-02-21",
+  "scope": "inbox + today + overdue",
+  "total_items": 160,
+  "note": "156 inbox items + 32 today/overdue (with overlap). Items with descriptions have been enriched inline."
+}

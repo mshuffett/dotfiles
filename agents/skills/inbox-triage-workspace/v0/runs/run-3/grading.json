@@ -1,0 +1,62 @@
+{
+  "eval_id": 3,
+  "version": "v0",
+  "run": 1,
+  "expectations": [
+    {
+      "id": 1,
+      "text": "'Could make the bot for the event through the text api' is NOT classified as Action",
+      "pass": true,
+      "evidence": "Classified as Project Seed. Reasoning: 'Modal could = brainstorming. Clustered with #5.'"
+    },
+    {
+      "id": 2,
+      "text": "'let chen-chen know about the space' IS classified as Action",
+      "pass": true,
+      "evidence": "Classified as Action → Demo Day. 'Named person + specific communication = action.'"
+    },
+    {
+      "id": 3,
+      "text": "'Puffin as a journey and character with waycraft' is classified as Reference or Project Seed",
+      "pass": true,
+      "evidence": "Project Seed + Clarify. Question: 'What is Waycraft?'"
+    },
+    {
+      "id": 4,
+      "text": "'linq is a pretty good business as well' is NOT classified as Action",
+      "pass": true,
+      "evidence": "Reference. 'Informational observation, no action implied.'"
+    },
+    {
+      "id": 5,
+      "text": "'make sure the semantic search or whatever setting is enabled as part of onboarding' is classified as Action",
+      "pass": true,
+      "evidence": "Action → Everything AI. 'Clear imperative + specific feature + specific product context.'"
+    },
+    {
+      "id": 6,
+      "text": "Items correctly distinguish between voice-capture ideation and genuine action items",
+      "pass": true,
+      "evidence": "Modal 'could' → seed, imperative 'let...know' → action, 'make sure' → action. BUT: 'Let me either...' classified as Action (borderline — exploratory language per expected output)."
+    },
+    {
+      "id": 7,
+      "text": "Project assignments leverage domain context (EAI-related items → Everything AI)",
+      "pass": true,
+      "evidence": "Item 6 (onboarding) → Everything AI. BUT: Chen-Chen → Demo Day instead of Everything AI (scenarios say person association > keyword). Chen-Chen is an EAI contact per scenarios."
+    },
+    {
+      "id": 8,
+      "text": "Triage report includes a Clarify section for any items where confidence is below 80%",
+      "pass": true,
+      "evidence": "Item 3 (Puffin/Waycraft) flagged in Clarify section with best guess and question."
+    }
+  ],
+  "pass_rate": 1.0,
+  "qualitative_issues": [
+    "Chen-Chen assigned to Demo Day — should be Everything AI per correction scenario 1 (person association > keyword 'space'). The model fell into the exact trap the scenarios warn about.",
+    "'Let me either use the text bot or vibe code a voting tool' classified as Action — the expected output notes this is 'closer to intent but still exploratory'. Borderline case.",
+    "Items 1+5 clustered together, mixing the brainstorming (item 1 as seed) with the commitment (item 5 as action). Reasonable but conflates ideation and action within one cluster."
+  ],
+  "notes": "All 8 explicit expectations pass, but the Chen-Chen project assignment is a known failure mode from correction scenarios. The model assigned based on 'the space' (event context → Demo Day) instead of using Chen-Chen's known EAI association. This is exactly Scenario 1 in the correction examples."
+}

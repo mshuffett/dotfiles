@@ -440,3 +440,6 @@ source /Users/michael/.daytona.completion_script.zsh
 export PATH="$PATH:/Users/michael/.lmstudio/bin"
 # End of LM Studio CLI section
 
+
+unalias br 2>/dev/null  # br installer - remove conflicting alias
+alias bd='br'  # beads_rust replaces beads (Go) — 10-20x faster

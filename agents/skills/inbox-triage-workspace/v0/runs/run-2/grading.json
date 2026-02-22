@@ -1,0 +1,45 @@
+{
+  "eval_id": 2,
+  "version": "v0",
+  "run": 1,
+  "expectations": [
+    {
+      "id": 1,
+      "text": "Items 1, 2, and 3 (orchestration tools/Claude Code tooling) are clustered into one reference note",
+      "pass": false,
+      "evidence": "Items 1+2 clustered (Note 1: 'Claude Code Orchestration Frameworks'), but item 3 clustered with item 4 (Note 2: 'OpenClaw Ecosystem and Security'). Split by sub-domain (orchestration vs ecosystem) rather than grouping all Claude Code tooling together."
+    },
+    {
+      "id": 2,
+      "text": "The clustered note groups them by problem domain, not by source",
+      "pass": true,
+      "evidence": "Note 1 groups by function ('structuring Claude Code agent workflows'), describes 'Key Tension' between philosophies."
+    },
+    {
+      "id": 3,
+      "text": "Item 4 (security feature discussion) is identified as relevant to Everything AI",
+      "pass": true,
+      "evidence": "Note 2: 'Why This Matters for Everything AI' section, project-relevance: Everything AI in frontmatter"
+    },
+    {
+      "id": 4,
+      "text": "Item 5 (Spec for EAI) is connected to Everything AI project",
+      "pass": true,
+      "evidence": "Action filed: 'Draft EAI spec' → Everything AI. 'EAI = Everything AI' in reasoning."
+    },
+    {
+      "id": 5,
+      "text": "A MOC is suggested if 3+ items cluster under one topic",
+      "pass": true,
+      "evidence": "'Claude Code Agent Ecosystem' MOC suggested with stub. '4 of 5 items this session are about Claude Code tooling.'"
+    },
+    {
+      "id": 6,
+      "text": "GitHub/link descriptions are concise (what it does + activity), not full README summaries",
+      "pass": true,
+      "evidence": "Each repo gets 1-2 sentence description. No activity signals (couldn't fetch URLs), but descriptions are knowledge-based and concise."
+    }
+  ],
+  "pass_rate": 0.833,
+  "notes": "Main issue: clustering too narrow. Items 1+2+3 are all Claude Code tooling but split into two clusters (orchestration vs ecosystem). The skill should encourage broader domain clustering when items share the same technology ecosystem. The reasoning is sensible (sub-domains differ) but the user would evaluate all Claude Code tools together."
+}
