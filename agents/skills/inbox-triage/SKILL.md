@@ -21,7 +21,7 @@ Present the active projects and ask if anything changed. Use `para-index` skill'
 
 ### Enrich
 
-- **Links/URLs**: Fetch and summarize briefly. For GitHub repos, keep it to one sentence on what it does plus activity signals (stars, last commit). The user will read the repo themselves if interested — your job is to help them decide if it's worth reading, not to summarize it for them.
+- **Links/URLs**: Fetch and summarize briefly. For GitHub repos: one sentence on what it does, plus stars/maintenance status. That's it — no architecture details, no version history, no feature lists. The user will read the repo themselves if interested; your job is triage-level "is this worth clicking," not a summary.
 - **Voice captures**: These are thinking-out-loud, captured on the go. The language matters — modal verbs (could, might, what if, maybe), deliberation ("Let me...", "either...or", "I'm thinking about"), and observation ("is a pretty good...", "I guess...") all signal brainstorming, not commitment. Only imperative language with a specific person or target ("tell X about Y", "send the contract", "make sure X is enabled") signals a real action.
 - **Ambiguous items**: Flag them rather than guessing. It's better to ask one question than to silently misfile something.
 

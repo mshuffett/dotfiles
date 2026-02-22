@@ -48,6 +48,22 @@
         "Project assignments leverage domain context (EAI-related items → Everything AI)",
         "Triage report includes a Clarify section for any items where confidence is below 80%"
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "Process these Todoist inbox items:\n\n1. \"check this out\" with link to https://github.com/anthropics/anthropic-cookbook\n2. \"interesting agent framework\" with link to https://github.com/microsoft/autogen\n3. \"tool for running claude in ci\" with link to https://github.com/anthropics/claude-code-action\n4. \"tell raiya about the autogen thing\"\n5. \"I wonder if we could use something like this for the onboarding flow\" (referring to item 3)\n\nActive projects: Everything AI, Demo Day, Manage Finances",
+      "expected_output": "Items 1-3 are GitHub link captures. Each should get a concise summary (one sentence on what it does, activity signals like stars/last-commit) — NOT a full README summary or multi-paragraph description. Item 4 is an action (imperative + person). Item 5 is voice-capture ideation (modal 'I wonder if we could').",
+      "files": [],
+      "expectations": [
+        "GitHub repo summaries are concise: each is 1-3 sentences max describing what the tool does and its activity level (stars, maintenance status)",
+        "GitHub summaries do NOT include full feature lists, installation instructions, or multi-paragraph README content",
+        "Item 1 (anthropic-cookbook) is classified as Reference",
+        "Item 2 (autogen) is classified as Reference",
+        "Item 3 (claude-code-action) is classified as Reference and noted as relevant to Everything AI",
+        "Item 4 ('tell raiya about the autogen thing') is classified as Action with Everything AI project (Raiya is EAI contact)",
+        "Item 5 ('I wonder if we could use...') is NOT classified as Action — it's ideation/brainstorming (modal language)",
+        "Items 1-3 are considered for clustering since they're all developer tools in the AI/agent ecosystem"
+      ]
     }
   ]
 }
