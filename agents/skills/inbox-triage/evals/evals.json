@@ -1,0 +1,53 @@
+{
+  "skill_name": "inbox-triage",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Process these Todoist inbox items:\n\n1. \"cancel whispr flow\"\n2. \"There's like this force in all of us that says I'm not good enough. It's like a stop gap to keep the world from chaos. But it can be factored out.\"\n3. \"Figure out if I can do some kind of QSBS with compose or something\"\n4. \"Follow up with raiya\"\n5. \"look at brex for everything ai i don't want to run out on that as well\"\n6. \"i guess temporal offers billing through aws marketplace\"\n7. \"feedback from anar -- my site for puffin bot made it look simpler than clawdbot\"\n8. \"send anar an intro request for quiet\"\n\nActive projects: Everything AI, Demo Day, Manage Finances",
+      "expected_output": "A triage report classifying all 8 items. Items 1, 4, 5, 8 are clear actions (imperative language with specific targets). Item 2 is a philosophical reflection (Reference). Item 3 has speculative 'if I can' language but contains a specific financial task. Item 6 is an observation about a tool (Reference). Item 7 is feedback to remember (Reference).",
+      "files": ["evals/files/real-inbox.json"],
+      "expectations": [
+        "Each of the 8 items is classified into exactly one category (Action, Reference, Project Seed, or Clarify)",
+        "'cancel whispr flow' is classified as Action (imperative verb + specific target)",
+        "'Follow up with raiya' is classified as Action (imperative + person)",
+        "'send anar an intro request for quiet' is classified as Action (imperative + person + specific request)",
+        "The philosophical reflection (item 2) is NOT classified as Action — it's Reference or Project Seed",
+        "'i guess temporal offers billing through aws marketplace' is NOT classified as Action — it's an observation (Reference)",
+        "'feedback from anar' is classified as Reference (information to preserve, not actionable right now)",
+        "Original inbox text is preserved verbatim for each item",
+        "A triage report is produced with summary stats",
+        "Action items have verb-first titles and project assignments"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Process these Todoist inbox items:\n\n1. \"two orchestration frameworks\" with description containing links to github.com/glittercowboy/get-shit-done and github.com/othmanadi/planning-with-files\n2. \"one way to go about it would be to basically research a bunch of these\" with description linking to github.com/automazeio/ccpm\n3. \"there are so many openclaws and shit\" with description linking to a tweet about Claude Code tools\n4. \"security feature from anar\" with description about OpenClaw security docs and prompt injection mitigation\n5. \"Spec for EAI\" with description about craft editor + planning loops + cloud onboarding\n\nActive projects: Everything AI, Demo Day, Manage Finances",
+      "expected_output": "Items 1-3 should cluster as they're all about Claude Code orchestration/project management tools. Item 4 is a detailed feature discussion (Project Seed or Reference with Everything AI relevance). Item 5 is a project seed or action for Everything AI. The cluster should produce one reference note, not three.",
+      "files": ["evals/files/real-inbox.json"],
+      "expectations": [
+        "Items 1, 2, and 3 (orchestration tools/Claude Code tooling) are clustered into one reference note rather than filed separately",
+        "The clustered note groups them by problem domain (orchestration/project management), not by source",
+        "Item 4 (security feature discussion) is identified as relevant to Everything AI",
+        "Item 5 (Spec for EAI) is connected to Everything AI project",
+        "A MOC is suggested if 3+ items cluster under one topic",
+        "GitHub/link descriptions are concise (what it does + activity), not full README summaries"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Process these Todoist inbox items:\n\n1. \"Could make the bot for the event through the text api\"\n2. \"let chen-chen know about the space\"\n3. \"Puffin as a journey and character with waycraft\"\n4. \"linq is a pretty good business as well\"\n5. \"Let me either use the text bot or vibe code a voting tool\"\n6. \"make sure the semantic search or whatever setting is enabled as part of onboarding\"\n\nActive projects: Everything AI, Demo Day, Manage Finances",
+      "expected_output": "Item 1 uses 'Could make' (modal) — brainstorming, NOT action. Item 2 is a clear action (imperative + person). Item 3 is ideation about a product concept. Item 4 is an observation. Item 5 has 'Let me' which is closer to intent but still exploratory. Item 6 is a specific task for EAI onboarding.",
+      "files": ["evals/files/real-inbox.json"],
+      "expectations": [
+        "'Could make the bot for the event through the text api' is NOT classified as Action (modal 'could' = brainstorming)",
+        "'let chen-chen know about the space' IS classified as Action (imperative + person)",
+        "'Puffin as a journey and character with waycraft' is classified as Reference or Project Seed (ideation, no verb)",
+        "'linq is a pretty good business as well' is NOT classified as Action (observation/reference)",
+        "'make sure the semantic search or whatever setting is enabled as part of onboarding' is classified as Action (specific task for EAI)",
+        "Items correctly distinguish between voice-capture ideation (modal language) and genuine action items (imperative + target)",
+        "Project assignments leverage domain context (EAI-related items → Everything AI)",
+        "Triage report includes a Clarify section for any items where confidence is below 80%"
+      ]
+    }
+  ]
+}

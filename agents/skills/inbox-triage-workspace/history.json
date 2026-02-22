@@ -1,0 +1,69 @@
+{
+  "started_at": "2026-02-21T23:47:08Z",
+  "skill_name": "inbox-triage",
+  "current_best": "v2",
+  "iterations": [
+    {
+      "version": "v0",
+      "parent": null,
+      "eval_results": {
+        "eval_1": { "pass_rate": 1.0, "passed": 10, "total": 10 },
+        "eval_2": { "pass_rate": 0.833, "passed": 5, "total": 6 },
+        "eval_3": { "pass_rate": 1.0, "passed": 8, "total": 8 }
+      },
+      "expectation_pass_rate": 0.958,
+      "grading_result": "baseline",
+      "is_current_best": false,
+      "qualitative_issues": [
+        "Clustering too narrow — split Claude Code tooling into 2 clusters",
+        "Chen-Chen → Demo Day instead of Everything AI (person > keyword)",
+        "'Let me either...' classified as Action (exploratory language)"
+      ]
+    },
+    {
+      "version": "v1",
+      "parent": "v0",
+      "changes": [
+        "Broader clustering instruction (technology ecosystem level)",
+        "Project annotations with key contacts (Chen-Chen, Raiya, Anar → EAI)",
+        "Added 'Let me...' and 'either...or' to non-action language signals"
+      ],
+      "eval_results": {
+        "eval_1": { "pass_rate": 0.8, "passed": 8, "total": 10 },
+        "eval_2": { "pass_rate": 1.0, "passed": 6, "total": 6 },
+        "eval_3": { "pass_rate": 0.875, "passed": 7, "total": 8 }
+      },
+      "expectation_pass_rate": 0.875,
+      "grading_result": "lost",
+      "is_current_best": false,
+      "regressions": [
+        "Anar feedback dual-classified as Action+Reference (person-association rule too broad)",
+        "Puffin classified as Clarify instead of Project Seed (too cautious)"
+      ]
+    },
+    {
+      "version": "v2",
+      "parent": "v1",
+      "changes": [
+        "Feedback FROM person ≠ action TO person (explicit rule)",
+        "Project Seed vs Clarify distinction: creative concepts you understand → Seed, genuinely ambiguous → Clarify",
+        "Exactly-one-category enforcement strengthened"
+      ],
+      "eval_results": {
+        "eval_1": { "pass_rate": 1.0, "passed": 10, "total": 10 },
+        "eval_2": { "pass_rate": 1.0, "passed": 6, "total": 6 },
+        "eval_3": { "pass_rate": 1.0, "passed": 8, "total": 8 }
+      },
+      "expectation_pass_rate": 1.0,
+      "grading_result": "won",
+      "is_current_best": true,
+      "improvements_over_v0": [
+        "Broader clustering (all Claude Code items together)",
+        "Chen-Chen → Everything AI (person association > keyword)",
+        "'Let me either...' → Project Seed (deliberation, not action)",
+        "Anar feedback stays Reference (feedback-from rule)",
+        "Puffin → Project Seed (creative concept, not Clarify)"
+      ]
+    }
+  ]
+}

@@ -1,108 +1,91 @@
 ---
 name: inbox-triage
-description: Process raw Todoist inbox items into a structured knowledge system using GTD (actions → Todoist) and PARA (reference → Obsidian). Use when batch-processing inbox captures, triaging voice notes and links, filing raw ideas into Obsidian with MOC suggestions, or running an inbox-to-knowledge-system pipeline. Handles enrichment (URL fetching, voice interpretation), clustering related items, generating Obsidian reference notes, filing Todoist actions, and producing a triage report. Self-improving via prompt-self-improvement protocol.
+description: Process raw Todoist inbox items into a structured knowledge system using GTD (actions → Todoist) and PARA (reference → Obsidian). Use this skill whenever the user says "process my inbox", "triage my todoist", "clean up inbox items", "file these captures", or has a batch of raw items (voice notes, links, ideas) that need classifying and filing. Also use when the user mentions inbox zero, PARA filing, or batch-processing captures into Obsidian notes — even if they don't explicitly say "triage".
 ---
 
 # Inbox Triage
 
-Process a batch of raw Todoist inbox items and produce: a triage report (audit trail), Obsidian reference notes (semi-atomic, linked), and Todoist action items (filed to projects).
+Take a batch of raw Todoist inbox items and turn them into three things: a triage report (the audit trail), Obsidian reference notes (linked, with MOC suggestions), and Todoist action items (filed to the right projects).
 
-## Step 0: Load Context
+## Before You Start
 
-1. Read [references/scenarios.md](references/scenarios.md) for correction patterns and domain-specific guidance
-2. Load recent triage sessions (prioritize ones with corrections)
-3. Check `~/ws/notes/.claude/rules/coach-patterns.md` for learned filing patterns
-4. Adapt approach based on what you see — don't apply rules mechanically
+1. Read [references/scenarios.md](references/scenarios.md) — these correction examples show the patterns that matter most (voice capture misclassification, clustering failures, project assignment errors)
+2. Check `~/ws/notes/.claude/rules/coach-patterns.md` for learned filing patterns from past sessions
+3. Load any recent triage sessions that have corrections — they're more valuable than ones without
 
-## Step 1: Project Check-In
+## Project Check-In
 
-Present the current active projects list and ask if anything has changed:
+Present the active projects and ask if anything changed. Use `para-index` skill's `references/system-ids.md` for current IDs. Wait for confirmation before processing — getting the project list wrong cascades into bad assignments.
 
-> **Current active projects:** [list from para-index system IDs]
-> Have any projects changed, been completed, or been added since last triage?
+## Processing Each Item
 
-Wait for confirmation before proceeding. Use the `para-index` skill's `references/system-ids.md` for current project/area/resource IDs across Todoist, Notion, and Obsidian.
+### Enrich
 
-## Step 2: Ingest & Classify
+- **Links/URLs**: Fetch and summarize briefly. For GitHub repos, keep it to one sentence on what it does plus activity signals (stars, last commit). The user will read the repo themselves if interested — your job is to help them decide if it's worth reading, not to summarize it for them.
+- **Voice captures**: These are thinking-out-loud, captured on the go. The language matters — modal verbs (could, might, what if, maybe), deliberation ("Let me...", "either...or", "I'm thinking about"), and observation ("is a pretty good...", "I guess...") all signal brainstorming, not commitment. Only imperative language with a specific person or target ("tell X about Y", "send the contract", "make sure X is enabled") signals a real action.
+- **Ambiguous items**: Flag them rather than guessing. It's better to ask one question than to silently misfile something.
 
-### 2a. Enrich
+### Classify
 
-- **URL/link items**: Fetch the page, summarize in 2-3 sentences (what it is, why relevant). For GitHub repos: one sentence on what it does, note stars/last-commit/activity, flag if relevant to active project. Don't summarize the README.
-- **Voice captures** (informal language, stream-of-consciousness): Interpret intent. Voice captures using modal/conditional language (could, might, what if, idea for) are ideation — classify as Reference or Project Seed. Imperative language (tell, send, make, build) with a specific target signals Action.
-- **Ambiguous items**: Flag for clarification rather than guessing.
+Each item goes into EXACTLY ONE of these categories — never two:
 
-### 2b. Classify into exactly one category
+| Category | Signal | Destination |
+|----------|--------|-------------|
+| **Action** | Imperative verb + specific target/person, no hedging | Todoist → matching project |
+| **Reference** | Information worth keeping, not actionable now. Includes feedback from others. | Obsidian → Resources or Area |
+| **Project Seed** | Creative concept or idea you understand but isn't actionable yet. Needs incubation. | Obsidian → Resources/Project Seeds |
+| **Clarify** | The words themselves are genuinely ambiguous — you can't even guess the domain or intent. | Hold in report with best guess + question |
 
-| Category | Definition | Destination |
-|----------|-----------|-------------|
-| **Action** | Clear next physical action. Imperative + specific target. | Todoist → matching active project |
-| **Reference** | Information, tool, framework, or idea worth keeping. Not actionable now. | Obsidian → Resources or relevant Area |
-| **Project Seed** | Could become a project. Needs incubation. | Obsidian → Resources/Project Seeds + flag in report |
-| **Clarify** | Can't determine intent without more context. | Hold → list in report with best guess + question |
+**The most common mistake is classifying brainstorming as action.** Voice captures are almost never direct action items. They're a thinking-out-loud channel. The rare exception is when the user names a specific person and a specific thing to communicate ("let X know about Y"). When in doubt between Action and Reference, choose Reference — a missed action is easy to catch in review, but a brainstorm filed as a task clutters the system and gets ignored.
 
-### 2c. Cluster Related Items
+**Feedback from others is Reference, not Action.** When someone shares feedback or information WITH the user (e.g., "feedback from X — they said Y"), that's information to preserve. Don't infer an action from feedback — the user decides what to do during review.
 
-Before filing, scan ALL items for clusters — items about the same topic, tool, or idea:
-- Multiple links about the same tool → one reference note
-- Several voice notes about the same concept → synthesize into one note
-- An action and a reference about the same project → link them
+**Project Seed vs Clarify:** If you understand the general nature of the item (it's a creative concept, a product idea, a brainstorm) but don't know the specifics — that's a Project Seed. Only use Clarify when the item's words don't give you enough to even guess the domain.
 
-**Cluster by problem domain and use case, not by source.** Multiple tools solving the same problem = one note.
+### Cluster Before Filing
 
-## Step 3: Generate Outputs
+Before writing anything, scan all items for related clusters. **Cluster broadly by technology ecosystem, not by sub-domain.** The user evaluates related tools and observations together — multiple repos, tools, discussions, and security notes about the same technology belong in one note, even if they address different aspects. The test: "Would the user want to see these items side-by-side?" If yes, cluster them. Don't split a cluster into sub-topics unless the items are genuinely about different technologies.
 
-### Obsidian Reference Notes
+If 3+ items cluster under one topic, suggest a MOC (Map of Content). Name it by concept ("Agent Orchestration Patterns") not by tool ("Claude Code Links").
 
-For each reference item or cluster, create a semi-atomic note. See [references/examples.md](references/examples.md) for the full template.
+## Outputs
 
-Key rules:
-- Tags: `[source-type, topic-tags]`
-- Include original inbox text verbatim in Source Links section
-- If 3+ notes cluster under one topic → suggest a MOC (Map of Content)
-- MOC naming: use conceptual theme, not tool name ("Agent Orchestration Frameworks" not "Claude Code Links")
-- Filing: `Resources/[Topic Area]/` or `Areas/[Area Name]/` — check `~/ws/notes/` vault structure. See `_agent/Idea-Places.md` for routing heuristics.
+### Obsidian Notes
+See [references/examples.md](references/examples.md) for the template. Key things: include frontmatter tags, preserve original inbox text verbatim in source links, suggest filing location based on vault structure (check `~/ws/notes/` and `_agent/Idea-Places.md` for routing).
 
 ### Todoist Actions
+Verb-first task title. Add `📎 See also: [[Note Title]]` if there's a related Obsidian note.
 
-For each action item:
-- **Task title**: Clear next action, starts with a verb
-- **Project**: Which active project (or Inbox if none match). When an item references a person, use their known project association as the primary signal over keywords.
-- **Context/label** if obvious (@computer, @call, @waiting-for)
-- **Link** to any related Obsidian note: `📎 See also: [[Note Title]]`
+**Project assignment priority:**
+1. When an item involves communicating WITH a known person (telling them, sending them, following up with them), use that person's project association as the PRIMARY signal — stronger than keywords. Note: feedback FROM a person doesn't trigger this rule.
+2. When keywords point to a project domain, use that.
+3. When neither applies, default to Everything AI for technical content.
+
+**Active projects (annotated):**
+- **Everything AI** — Agent orchestration platform. Domain: agents, orchestration, LLMs, prompts, tool use, MCP, Claude Code. Key contacts: Chen-Chen, Raiya, Anar.
+- **Demo Day** — Event planning. Domain: venue, logistics, presentations, audience.
+- **Manage Finances** — Financial ops. Domain: subscriptions, billing, taxes, equity, Brex.
 
 ### Triage Report
+The master document. See [references/examples.md](references/examples.md) for the full template. Includes: projects confirmed, summary stats, actions table, references table, clusters, clarifications needed, MOC suggestions.
 
-Master document per session. See [references/examples.md](references/examples.md) for the full template. Includes: projects confirmed, summary stats, actions filed table, reference notes table, clusters identified, items needing clarification, MOC suggestions.
+## Principles
 
-## Processing Principles
+- **Bias toward reference.** "I should look into this someday" is a note, not a task. Feedback from someone is reference, not action.
+- **Preserve raw captures.** The original text has context that clean titles lose.
+- **Don't over-organize.** No clear cluster → standalone note. Don't force taxonomy.
+- **Surface project connections.** If a reference relates to an active project, note it — but still file as reference unless there's a clear action.
+- **80% confidence rule.** Confident → proceed and flag reasoning. Not confident → Clarify.
+- **Primary domain default.** The user's main project (Everything AI) covers most technical content. Only flag for clarification when something clearly belongs elsewhere.
 
-1. **Bias toward reference over action.** "I should look into this someday" = reference note, not a task.
-2. **Preserve original context.** Always include original inbox text verbatim somewhere.
-3. **Don't over-organize.** No clear cluster → standalone note is fine.
-4. **Surface implicit project relevance.** Reference clearly related to active project → note the connection, still file as reference unless there's a clear action.
-5. **80% confidence threshold.** Above 80% → proceed but flag reasoning. Below 80% → Clarify.
-6. **Primary project default.** Items matching the user's primary project domain associate with it unless they clearly belong elsewhere.
-7. **Dynamic taxonomy.** Suggest new categories/MOCs when items reveal patterns without a home. But keep it minimal.
+## After Triage
 
-## Session Folder Structure
-
-```
-triage/
-  {date}-{uuid}/
-    input.json          # Raw Todoist items
-    triage-report.md    # The output
-    notes/              # Generated Obsidian notes
-    corrections.md      # User corrections (post-review)
-```
-
-## Self-Improvement
-
-This prompt is self-improving. After review, follow the `prompt-self-improvement` skill. Domain-specific correction examples are in [references/scenarios.md](references/scenarios.md).
+This skill improves from corrections. After the user reviews output, follow the `prompt-self-improvement` skill. Domain-specific correction examples: [references/scenarios.md](references/scenarios.md).
 
 ## Related Skills
 
-- **para-index** — System IDs for Todoist/Notion/Obsidian PARA structure
-- **todoist** — CLI operations for Todoist (`td` commands)
-- **idea-capture** — Real-time single-idea capture to Obsidian (this skill does batch processing)
-- **prompt-self-improvement** — General protocol for improving this prompt from corrections
-- **coach** — Daily startup/shutdown may surface items for triage
+- **para-index** — System IDs across Todoist/Notion/Obsidian
+- **todoist** — CLI operations (`td` commands)
+- **idea-capture** — Real-time single-idea capture (this skill does batch)
+- **prompt-self-improvement** — Improvement protocol for corrections
+- **coach** — Daily startup/shutdown surfaces items for triage
