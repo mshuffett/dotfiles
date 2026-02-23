@@ -204,8 +204,11 @@ set -g @tmux2k-ram-colors "orange black"
 set -g @tmux2k-battery-colors "yellow black"
 set -g @tmux2k-time-colors "blue black"
 
-# Explicitly disable pane border status
-set -g pane-border-status off
+# Pane borders — always-on title strip with active pane highlight
+set -g pane-border-status top
+set -g pane-border-format "#[fg=#82aaff] #{pane_index} #{pane_title} #[default]"
+set -g pane-border-style "fg=colour238"
+set -g pane-active-border-style "fg=cyan,bold"
 
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
@@ -234,6 +237,7 @@ set -g @fingers-compact-hints 0                # Full hints, not compact
 set -g @fingers-hint-format "#[fg=yellow,bold]%s"  # Yellow hints
 
 run '~/.tmux/plugins/tpm/tpm'
+
 
 # Override tmux-fzf's default C-f binding with our unified fuzzy finder
 # Must come AFTER tpm loads to override the plugin's binding
