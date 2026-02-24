@@ -1,58 +1,95 @@
 ---
 name: mistake-tracking
-description: Use when logging or reviewing mistakes; append JSONL events and promote/demote guardrails based on frequency.
+description: "Log, analyze, and prevent recurring mistakes. Use when: (1) a mistake or near-miss occurs (self-detected or user-detected), (2) session start/end review of recent patterns, (3) user asks to review or analyze mistakes, (4) after any corrective action to verify the fix was logged. Covers logging JSONL events, running RCA, promoting/demoting guardrails, and testing prevention."
 ---
 
 # Mistake Tracking
 
-**Related skills**:
-- `mistake-analysis` — RCA framework, severity assessment, prevention strategy
-- Project-level `mistakes` skill — catalog of known anti-patterns for the current repo
+Each mistake is an iteration on the prevention system. The goal is not just to log what happened, but to make the system better at catching the next one.
+
+**Cycle**: detect → understand → fix the system → test the fix → monitor
 
 ## Files
 
 - Global log: `~/.claude/mistakes.jsonl`
 - Project log: `<repo>/logs/mistakes.jsonl`
+- Analysis script: `scripts/analyze-mistakes.sh`
+- Validation script: `scripts/log-mistake.sh`
+- Known patterns: [references/common-antipatterns.md](references/common-antipatterns.md)
+- Testing guide: [references/testing.md](references/testing.md)
+- Eval scenarios: `evals/evals.json`
 
-## Event Schema (JSONL)
+## 1. Detect & Log
 
-```json
-{"ts":"2025-11-06T10:15:00Z","repo":"~/ws/everything-monorepo","mistake_id":"worktrees.preflight_skipped","scope":"global","detector":"self","notes":"ran git worktree without pre-flight"}
-```
-
-**Required fields**: `ts` (ISO), `mistake_id` (kebab/dot case), `scope` (global|project), `detector` (self|user), `notes`
-**Optional fields**: `repo`, `type` (mistake|near-miss|violation|learning), `category` (git|testing|api|deployment|auth|ui|etc), `severity` (critical|high|medium|low), `guide`, `guide_exists`, `condition`, `accepted_checks`, `action_taken`, `session_id`
-
-## Review Procedure (Session Start/End)
-
-1. Aggregate last 14-30 days of events
-2. **Promote** when:
-   - 2+ misses in 14 days in same repo -> add Hot Rule to that repo's agent file
-   - 2+ repos each with a miss in 14 days -> add universal guardrail to root CLAUDE
-3. **Demote** when 14-30 quiet days pass -> propose removal of one-liners (policy stays in guides)
-
-## Semantic Recall (Before Logging)
-
-Before logging a mistake, quickly check whether it (or a close cousin) has happened before so you can re-use the existing fix/guardrail language:
+When a mistake or near-miss occurs, use the validation script to log it:
 
 ```bash
-agent-recall search "<mistake symptom / task context>"
+scripts/log-mistake.sh '{"ts":"2026-02-23T00:00:00Z","repo":"~/ws/example","mistake_id":"guide.not_consulted","scope":"global","detector":"user","notes":"what happened","action_taken":"what systemic change was made"}'
 ```
 
-## Enforcement
+The script validates required fields and `mistake_id` format before appending. It rejects malformed entries.
 
-Procedural tasks with known triggers MUST record which guide was consulted and whether acceptance checks passed. If no guide consulted, log `guide.not_consulted` with `condition` and halt.
+**Required**: `ts`, `mistake_id` (lowercase dot-separated, e.g. `guide.not_consulted`), `scope` (global|project), `detector` (self|user), `notes`
+**Recommended**: `type` (mistake|near-miss|violation|learning), `severity` (critical|high|medium|low), `action_taken`, `repo`, `guide`, `condition`
 
-## Common Mistake IDs
+Before logging, check [references/common-antipatterns.md](references/common-antipatterns.md) — if it matches a known pattern, reuse the existing `mistake_id`.
 
-- `worktrees.preflight_skipped`
-- `ports.killed_without_permission`
-- `thirdparty.docs_not_looked_up`
-- `pr.conflicts_not_checked`
-- `guide.not_consulted`
-- `guide.acceptance_checks_skipped`
+## 2. Understand Why the System Missed It
+
+This is the key step. Don't just categorize the mistake — ask why the existing system didn't prevent it:
+
+1. **Was there a guardrail?** If no → the system has a gap. If yes → the guardrail failed.
+2. **Why did the guardrail fail?** Too passive? Wrong location? Doesn't match the trigger condition? I rationalized past it?
+3. **What's the smallest systemic change that would have caught this?** A stronger guardrail? A new one? A script? A check in a skill?
+
+## 3. Fix the System
+
+Based on the analysis, make a concrete change. Run `scripts/analyze-mistakes.sh` to see if this is part of a pattern:
+
+```bash
+scripts/analyze-mistakes.sh              # 14-day window, default log
+scripts/analyze-mistakes.sh --days=30    # wider window
+```
+
+The script outputs promotion candidates automatically. Act on them:
+
+**Promote** (when `action_needed: true`):
+- First occurrence → improve or create the relevant skill
+- 2+ in 14 days, same repo → add Hot Rule to that repo's CLAUDE.md
+- 2+ repos in 14 days → add universal guardrail to root `~/.claude/CLAUDE.md`
+- **Guardrail already exists but miss recurred** → "already exists" is never a reason to skip. Promote by rewriting the guardrail stronger: passive wording → imperative STOP gate, name the specific failure pattern, increase prominence.
+
+**Demote** (when 14-30 quiet days pass):
+- Propose removing one-liner hot rules (the skill/guide remains as canonical source)
+
+Always log `action_taken` in the JSONL event describing the systemic change.
+
+## 4. Test the Fix
+
+Don't assume the fix works — verify it. See [references/testing.md](references/testing.md) for the full procedure.
+
+**For guardrail changes** (CLAUDE.md edits, skill updates):
+1. Check `evals/evals.json` for an existing eval matching this `mistake_id`
+2. If none exists, create one: write the scenario prompt as the context that triggered the mistake, write expectations that check *process* (did the agent consult X, did it stop at Y)
+3. Run the eval — spawn a subagent with the scenario prompt, grade against expectations
+4. If it fails → the guardrail is insufficient, iterate (strengthen wording, add specificity, rerun)
+
+**For script/tooling changes**:
+1. Run the script against real data (not synthetic)
+2. Verify the output catches the pattern that was missed
+3. Test edge cases (empty log, old-format entries, boundary dates)
+
+## 5. Monitor
+
+At session start/end, run `scripts/analyze-mistakes.sh`:
+- `action_needed: true` → handle before starting work
+- New patterns → update [references/common-antipatterns.md](references/common-antipatterns.md)
+- Quiet periods (14-30 days) → consider demoting hot rules
 
 ## Acceptance Checks
 
-- [ ] Event appended to correct JSONL log
-- [ ] Promotion/demotion considered based on counts in last 14-30 days
+- [ ] JSONL event appended with `action_taken` field
+- [ ] `scripts/analyze-mistakes.sh` run, promotion candidates addressed
+- [ ] If guardrail existed and failed → guardrail rewritten stronger (not skipped)
+- [ ] Fix tested (subagent for guardrails, real data for scripts)
+- [ ] [references/common-antipatterns.md](references/common-antipatterns.md) updated if new pattern

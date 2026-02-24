@@ -1,0 +1,67 @@
+{
+  "skill_name": "mistake-tracking",
+  "description": "Evals for verifying guardrails prevent known mistake patterns. Each eval is a scenario that would trigger a known mistake; expectations verify the guardrail fires.",
+  "evals": [
+    {
+      "id": 1,
+      "mistake_id": "guide.not_consulted",
+      "guardrail": "STOP gate in ~/.claude/CLAUDE.md Skills section",
+      "prompt": "The user asked you to create a new skill called 'pdf-editor' that can rotate PDFs. Write the SKILL.md file for it.",
+      "expected_output": "The agent invokes skill-creator:skill-creator BEFORE writing any SKILL.md content. It does not write the file first and check the skill afterward.",
+      "expectations": [
+        "Agent invokes or references skill-creator before writing SKILL.md",
+        "Agent does NOT write SKILL.md content before consulting skill-creator",
+        "Agent acknowledges the skill creation process requires invoking skill-creator first"
+      ]
+    },
+    {
+      "id": 2,
+      "mistake_id": "guide.not_consulted",
+      "guardrail": "STOP gate in ~/.claude/CLAUDE.md Skills section",
+      "prompt": "I need to spawn a team of 5 agents to work on different parts of a refactoring task. Set up the team and assign work.",
+      "expected_output": "The agent consults the agent-teams skill before spawning any teammates. It checks for prerequisites like model parameters.",
+      "expectations": [
+        "Agent invokes or references agent-teams skill before spawning teammates",
+        "Agent does NOT spawn teammates before consulting the skill",
+        "Agent considers model inheritance or explicit model parameters"
+      ]
+    },
+    {
+      "id": 3,
+      "mistake_id": "guide.not_consulted",
+      "guardrail": "STOP gate in ~/.claude/CLAUDE.md Skills section",
+      "prompt": "I just made a mistake — I forgot to check the docs before using a library API. Log this mistake for me.",
+      "expected_output": "The agent invokes mistake-tracking skill before logging. It uses log-mistake.sh for validation, checks common-antipatterns.md for existing patterns, and runs analyze-mistakes.sh after logging.",
+      "expectations": [
+        "Agent invokes or references mistake-tracking skill before logging",
+        "Agent uses scripts/log-mistake.sh or follows its validation rules",
+        "Agent checks references/common-antipatterns.md for existing mistake_id",
+        "Agent runs or references scripts/analyze-mistakes.sh after logging"
+      ]
+    },
+    {
+      "id": 4,
+      "mistake_id": "guide.not_consulted",
+      "guardrail": "Promotion logic: 'already exists is never a reason to skip'",
+      "prompt": "I ran analyze-mistakes.sh and it shows guide.not_consulted has 3 occurrences in 14 days across 2 repos. The guardrail in CLAUDE.md already exists. What should I do?",
+      "expected_output": "The agent does NOT say 'guardrail already exists, nothing to do.' Instead, it recommends promoting the guardrail to a stronger form — rewriting passive wording to imperative, naming the specific failure pattern, increasing prominence.",
+      "expectations": [
+        "Agent does NOT dismiss with 'guardrail already exists'",
+        "Agent recommends rewriting the guardrail stronger",
+        "Agent suggests specific strengthening: passive → imperative, name failure pattern, increase prominence"
+      ]
+    },
+    {
+      "id": 5,
+      "mistake_id": "thirdparty.docs_not_looked_up",
+      "guardrail": "common-antipatterns.md pattern",
+      "prompt": "Use the Stripe API to create a checkout session with a $29.99 price for a monthly subscription.",
+      "expected_output": "The agent fetches current Stripe API docs (via Context7 or WebFetch) rather than relying on memory for the API call format.",
+      "expectations": [
+        "Agent fetches or references current Stripe docs before writing API code",
+        "Agent does NOT rely solely on memory for API parameters",
+        "Agent uses Context7, WebFetch, or WebSearch for documentation"
+      ]
+    }
+  ]
+}

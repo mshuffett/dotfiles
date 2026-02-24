@@ -1,43 +1,37 @@
-# Common Anti-Patterns (Universal)
+# Common Anti-Patterns
 
-Known mistakes that apply across all projects. Review these before implementing features.
+Known recurring mistakes from actual log data. Check these before logging a new event — if it matches, reuse the existing `mistake_id` and note the recurrence.
 
-## Git Operations
+## guide.not_consulted (HIGH FREQUENCY)
 
-### Pushing directly to main/develop branch
-**Issue**: Bypasses code review process
-**Prevention**: Always create feature branches; use `gh pr create`
-**Rule**: Feature branch creation is STEP 1 of any implementation task
+**Pattern**: Skipping a relevant skill/guide before performing an operation it covers. The most common failure mode — 3 occurrences across 2 repos in the last 14 days.
 
-### Committing unrelated staged changes
-**Issue**: Includes other people's work in your commit
-**Prevention**: Always run `git status` and only `git add` specific files you modified
-**Rule**: Use `git add` with specific files, never commit pre-staged changes
+**Typical trigger**: Feeling confident about the task and proceeding without checking if a skill exists for it.
 
-## Code Quality
+**Known instances**:
+- Creating skills without invoking `skill-creator`
+- Spawning agent teams without checking `agent-teams` skill
+- Logging mistakes without invoking `mistake-tracking` (meta!)
+- tmux operations without `terminal:tmux` skill
 
-### Not running tests before completing tasks
-**Issue**: Introduces bugs that could have been caught
-**Prevention**: Always run relevant tests before marking tasks complete
+**Current guardrail**: STOP gate in `~/.claude/CLAUDE.md` Skills section. Promoted from passive ("always invoke") to imperative ("STOP before writing any skill file") on 2026-02-23 after 3rd recurrence.
 
-### Creating unnecessary files
-**Issue**: Clutters codebase and duplicates functionality
-**Prevention**: Always prefer editing existing files over creating new ones
+**Prevention**: Before any procedural operation, scan the skill list for matches. Confidence is the danger signal, not a reason to skip.
 
-### Running independent tasks sequentially
-**Issue**: Wastes time when tasks don't depend on each other
-**Prevention**: Batch independent tasks in parallel (multiple tool invocations)
+## worktrees.preflight_skipped
 
-## Memory Management
+**Pattern**: Running `git worktree` commands without pre-flight checks from the worktrees skill.
 
-### Adding all "remember" requests to CLAUDE.md
-**Issue**: CLAUDE.md becomes too large and unfocused
-**Prevention**: Use memory hierarchy — only core info in CLAUDE.md
+**Prevention**: Invoke `git-worktrees` skill before any worktree operation.
 
-### Misplacing "always do" instructions
-**Issue**: "Always" instructions affect every interaction and must be in CLAUDE.md
-**Prevention**: Any instruction containing "always", "every time", or affecting all interactions → CLAUDE.md
+## ports.killed_without_permission
 
-### Using commands to reload memory files
-**Issue**: In Claude Code, CLAUDE.md and memory files are already loaded into context
-**Prevention**: Commands define behavior; memory provides context. Don't re-inject.
+**Pattern**: Killing a process on a port without confirming the user started it.
+
+**Prevention**: Invoke `port-safety` skill. Never kill a process you didn't start without explicit permission.
+
+## thirdparty.docs_not_looked_up
+
+**Pattern**: Relying on memory for third-party API/library usage instead of fetching current docs.
+
+**Prevention**: Use Context7 or WebFetch for any non-trivial library usage.
