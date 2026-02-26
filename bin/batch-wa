@@ -78,7 +78,7 @@ while IFS= read -r number || [[ -n "$number" ]]; do
     echo "  [dry-run] Would send: \"${MESSAGE:0:50}...\" (delay: ${delay}s)"
   else
     # Use heredoc to avoid exclamation mark escaping issues
-    clawdbot message send --channel whatsapp --to "$number" --message "$(cat <<EOF
+    wacli send text --to "$number" --message "$(cat <<EOF
 $MESSAGE
 EOF
 )"
