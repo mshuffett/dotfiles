@@ -176,11 +176,11 @@ The founder never sees this - it's just internal routing.
 2. **Draft first, send after approval** - Always write the draft in outreach-drafts.md and get Michael's approval before sending. Never send automatically.
 3. **Read it back** - Does this response actually make sense given what they said?
 
-**Use `clawdbot` to send WhatsApp messages, NOT `wacli send`.** The wacli tool is for reading/searching only - clawdbot handles sending through the gateway daemon.
+**Use `wacli send text` to send WhatsApp messages.**
 
 ### Single Message
 ```bash
-clawdbot message send --channel whatsapp --to "+14155551234" --json --message "$(cat <<'EOF'
+wacli send text --to "+14155551234" --message "$(cat <<'EOF'
 Your message here with punctuation!
 EOF
 )"
@@ -197,31 +197,15 @@ sqlite3 ~/clawd-founders/data/founders.db "SELECT phone FROM founders WHERE subg
 batch-wa --message "Your message here" --file phones.txt
 ```
 
-### Clawdbot Setup & Troubleshooting
+### WhatsApp Auth
 
-The gateway runs as a background daemon (LaunchAgent). WhatsApp Web session is maintained by the daemon.
+wacli maintains its own WhatsApp Web session locally (`~/.wacli/`).
 
-**Check status:**
+**If disconnected:**
 ```bash
-clawdbot daemon status      # Gateway daemon status
-clawdbot channels status    # Channel connection status
+wacli auth          # Re-authenticate (scan QR)
+wacli doctor        # Diagnostics
 ```
-
-**If WhatsApp shows "disconnected" or "stopped":**
-```bash
-# Restart the daemon - usually fixes connection issues
-clawdbot daemon restart
-
-# If still disconnected, re-link WhatsApp (scan QR)
-clawdbot channels login --channel whatsapp
-```
-
-**Login process:** The `channels login` command shows a QR code. Scan it with WhatsApp on your phone (Settings → Linked Devices → Link a Device). After linking, you can close the terminal - the daemon maintains the session.
-
-**Common issues:**
-- "No active WhatsApp Web listener" → Run `clawdbot daemon restart`
-- "ENOTFOUND web.whatsapp.com" → Network issue, restart daemon
-- QR code not showing → Check `clawdbot daemon status`, restart if needed
 
 ## Pipeline Management
 

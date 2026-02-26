@@ -65,32 +65,18 @@ export async function sendMessage(
   message: string
 ): Promise<ActionResult> {
   try {
-    // Use clawdbot to send the message
-    const escapedMessage = message.replace(/'/g, "'\\''");
-    const cmd = `clawdbot message send --channel whatsapp --to "${phone}" --json --message '${escapedMessage}'`;
-
-    const { stdout, stderr } = await execAsync(cmd, { timeout: 30000 });
+    // Send via wacli
+    const { stdout, stderr } = await execAsync(
+      `wacli send text --to "${phone}" --message ${JSON.stringify(message)}`,
+      { timeout: 30000 }
+    );
 
     if (stderr && !stdout) {
       return { success: false, error: stderr };
     }
 
-    // Parse the response to check for success
-    try {
-      const result = JSON.parse(stdout);
-      if (result.payload?.result?.messageId) {
-        revalidatePath("/");
-        return { success: true };
-      }
-      return { success: false, error: "No message ID in response" };
-    } catch {
-      // If it's not JSON, check if stdout contains success indicators
-      if (stdout.includes("Message sent") || stdout.includes("messageId")) {
-        revalidatePath("/");
-        return { success: true };
-      }
-      return { success: false, error: stdout || "Unknown error" };
-    }
+    revalidatePath("/");
+    return { success: true };
   } catch (e) {
     console.error("Failed to send message:", e);
     return { success: false, error: String(e) };
@@ -193,11 +179,11 @@ export async function sendDraftAndExecuteActions(
       message = draft.message;
     }
 
-    // Send the message
-    const escapedMessage = message.replace(/'/g, "'\\''");
-    const cmd = `clawdbot message send --channel whatsapp --to "${draft.phone}" --json --message '${escapedMessage}'`;
-
-    const { stdout, stderr } = await execAsync(cmd, { timeout: 30000 });
+    // Send via wacli
+    const { stdout, stderr } = await execAsync(
+      `wacli send text --to "${draft.phone}" --message ${JSON.stringify(message)}`,
+      { timeout: 30000 }
+    );
 
     if (stderr && !stdout) {
       return { success: false, error: stderr };

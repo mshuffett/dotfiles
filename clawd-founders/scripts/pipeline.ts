@@ -709,10 +709,10 @@ export async function sendMessage(
     }
   }
 
-  // Send via clawdbot
+  // Send via wacli
   const digits = normalizePhone(phone);
   try {
-    await $`clawdbot message send --channel whatsapp --to "+${digits}" --json --message ${message}`;
+    await $`wacli send text --to ${digits} --message ${message}`;
   } catch (e) {
     return {
       success: false,
