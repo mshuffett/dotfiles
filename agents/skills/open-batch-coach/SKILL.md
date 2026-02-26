@@ -27,8 +27,6 @@ Track the founder's progress using the CLI:
 TRACK="scripts/open-batch-track"
 ```
 
-This path is relative to this skill's directory. Resolve it to an absolute path before use.
-
 Always check state at the start of a session:
 
 ```bash
