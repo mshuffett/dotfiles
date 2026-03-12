@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Checks state and identifies remaining steps",
+      "passed": true,
+      "evidence": "Response has explicit \"Done\" and \"Still to do -- three things\" sections, showing clear state awareness. Done items: pitch locked, RSVP, practice session, pitch feedback. Remaining: vertebrae, full pitch script, slide & bio."
+    },
+    {
+      "text": "Routes to vertebrae as the next step",
+      "passed": true,
+      "evidence": "\"My recommendation: Let's start with vertebrae right now. They're the foundation for both the pitch script and the slide, so everything else gets easier once these are locked.\""
+    },
+    {
+      "text": "Lists remaining items (vertebrae, full script, slide, bio)",
+      "passed": true,
+      "evidence": "Three numbered sections: \"1. Vertebrae\", \"2. Full Pitch Script (2 minutes)\", \"3. Slide & Founder Bio\" -- all four items (vertebrae, full script, slide, bio) are covered."
+    },
+    {
+      "text": "Does not re-explain completed steps",
+      "passed": true,
+      "evidence": "Completed items listed as brief bullets (pitch text, RSVP status, practice session date, feedback reminder). No re-explanation of what those steps involved or why they matter."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 50.2},
+  "eval_feedback": {
+    "suggestions": ["Response is thorough but long. The detailed breakdown of full pitch script structure and slide content could be deferred until those steps are active, keeping the current response focused on vertebrae."],
+    "overall": "Accurately identifies remaining steps, routes to vertebrae correctly, and avoids re-explaining completed work. The Done/Still-to-do structure is clear and scannable."
+  }
+}

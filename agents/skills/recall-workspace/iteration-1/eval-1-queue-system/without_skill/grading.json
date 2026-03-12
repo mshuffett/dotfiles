@@ -1,0 +1,9 @@
+{
+  "assertions": [
+    {
+      "text": "Without-skill agent timed out trying to find historical context",
+      "passed": false,
+      "evidence": "Agent ran for 10+ minutes searching the codebase and was killed. Unable to locate prior queue implementations without recall search. Demonstrates the value gap."
+    }
+  ]
+}

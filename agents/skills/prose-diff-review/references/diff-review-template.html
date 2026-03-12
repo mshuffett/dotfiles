@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cover Letter Review — Original vs Final</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Google Sans', -apple-system, system-ui, sans-serif; background: #fff; color: #202124; line-height: 1.8; }
+
+  /* Top bar */
+  .top-bar { background: #f8f9fa; border-bottom: 1px solid #dadce0; padding: 12px 24px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
+  .top-bar h1 { font-size: 15px; font-weight: 500; color: #202124; }
+  .top-bar .subtitle { font-size: 13px; color: #5f6368; }
+  .top-bar .controls { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+  .top-bar .stats { font-size: 12px; color: #5f6368; display: flex; gap: 16px; }
+  .top-bar .stat { display: flex; align-items: center; gap: 4px; }
+  .top-bar .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .top-bar .dot-del { background: #f28b82; }
+  .top-bar .dot-ins { background: #81c995; }
+
+  /* View toggle */
+  .view-toggle { display: flex; background: #e8eaed; border-radius: 6px; padding: 2px; }
+  .view-toggle button {
+    font-family: inherit; font-size: 12px; font-weight: 500;
+    padding: 5px 14px; border: none; border-radius: 4px;
+    cursor: pointer; color: #5f6368; background: transparent;
+    transition: all 0.15s;
+  }
+  .view-toggle button.active { background: #fff; color: #202124; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+  .view-toggle button:hover:not(.active) { color: #202124; }
+
+  /* ===== INLINE VIEW ===== */
+  .view-inline .layout { display: flex; max-width: 1400px; margin: 0 auto; }
+  .view-inline .doc-pane { flex: 1; max-width: 816px; margin: 0 auto; padding: 72px 96px; min-height: 100vh; }
+  .view-inline .doc-pane p { margin-bottom: 1.4rem; font-family: Georgia, 'Times New Roman', serif; font-size: 14.5px; line-height: 1.85; color: #202124; }
+
+  /* Inline diffs */
+  del { background: #fce8e6; color: #c5221f; text-decoration: line-through; text-decoration-color: #ea8a8a; border-radius: 2px; padding: 0 1px; }
+  ins { background: #e6f4ea; color: #137333; text-decoration: none; border-radius: 2px; padding: 0 1px; }
+
+  /* Comment markers in text */
+  .comment-anchor { position: relative; }
+  .comment-marker {
+    display: inline-block;
+    width: 14px; height: 14px;
+    background: #fbbc04;
+    color: #202124;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 14px;
+    text-align: center;
+    border-radius: 3px;
+    vertical-align: super;
+    margin-left: 2px;
+    cursor: pointer;
+    font-family: -apple-system, system-ui, sans-serif;
+    user-select: none;
+  }
+  .comment-marker:hover { background: #f9a825; }
+  .comment-marker.active { background: #f9a825; box-shadow: 0 0 0 2px rgba(251,188,4,0.4); }
+
+  /* Sidebar (shared by both views) */
+  .sidebar { width: 340px; flex-shrink: 0; padding: 72px 16px 72px 0; position: relative; }
+  .comment-card {
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #3c4043;
+    box-shadow: 0 1px 3px rgba(60,64,67,0.08);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+  }
+  .comment-card:hover, .comment-card.active {
+    border-color: #fbbc04;
+    box-shadow: 0 1px 6px rgba(251,188,4,0.25);
+  }
+  .comment-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 11.5px;
+    color: #5f6368;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .comment-card .card-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px; height: 18px;
+    background: #fbbc04;
+    color: #202124;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 4px;
+  }
+  .comment-card .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-right: 4px;
+  }
+  .tag-strunk { background: #fef7e0; color: #b06000; }
+  .tag-source { background: #e6f4ea; color: #137333; }
+  .tag-skill { background: #e8eaf6; color: #3f51b5; }
+
+  .sidebar .para-divider {
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #80868b;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 20px 0 8px;
+    padding-left: 4px;
+  }
+
+  /* ===== SIDE-BY-SIDE VIEW ===== */
+  .view-sidebyside { display: none; }
+  .view-sidebyside .sbs-layout { display: flex; max-width: 1400px; margin: 0 auto; }
+  .view-sidebyside .sbs-columns { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .view-sidebyside .sbs-col { padding: 72px 40px; border-right: 1px solid #e8eaed; }
+  .view-sidebyside .sbs-col:last-of-type { border-right: none; }
+  .view-sidebyside .sbs-col p { margin-bottom: 1.4rem; font-family: Georgia, 'Times New Roman', serif; font-size: 13.5px; line-height: 1.85; color: #202124; }
+  .view-sidebyside .col-label {
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    padding-bottom: 8px; margin-bottom: 20px; border-bottom: 2px solid;
+  }
+  .view-sidebyside .col-label-original { color: #80868b; border-color: #dadce0; }
+  .view-sidebyside .col-label-final { color: #137333; border-color: #137333; }
+  .view-sidebyside .sbs-col-original del { background: #fce8e6; color: #c5221f; text-decoration: line-through; text-decoration-color: #ea8a8a; }
+  .view-sidebyside .sbs-col-final ins { background: #e6f4ea; color: #137333; text-decoration: none; }
+  /* Hide ins in original col, del in final col */
+  .view-sidebyside .sbs-col-original ins { display: none; }
+  .view-sidebyside .sbs-col-final del { display: none; }
+  /* Hide comment markers in sbs view */
+  .view-sidebyside .comment-marker { display: none; }
+  .view-sidebyside .sbs-sidebar { width: 300px; flex-shrink: 0; padding: 72px 16px 72px 0; }
+
+  /* Additions table at bottom */
+  .additions-section {
+    max-width: 816px;
+    margin: 0 auto;
+    padding: 0 96px 72px;
+    border-top: 1px solid #dadce0;
+  }
+  .additions-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #5f6368;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 24px 0 12px;
+  }
+  .additions-section table { width: 100%; font-size: 13px; border-collapse: collapse; }
+  .additions-section td { padding: 6px 12px 6px 0; border-bottom: 1px solid #f1f3f4; vertical-align: top; }
+  .additions-section td:first-child { font-weight: 600; color: #3c4043; width: 28%; }
+  .additions-section td:last-child { color: #5f6368; }
+
+  /* User annotations */
+  .user-highlight {
+    background: rgba(66, 133, 244, 0.15);
+    border-bottom: 2px solid #4285f4;
+    cursor: pointer;
+    position: relative;
+  }
+  .user-highlight:hover { background: rgba(66, 133, 244, 0.25); }
+
+  .user-comment-card {
+    background: #fff;
+    border: 1px solid #4285f4;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #3c4043;
+    box-shadow: 0 1px 3px rgba(66,133,244,0.15);
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .user-comment-card:hover, .user-comment-card.active {
+    border-color: #1a73e8;
+    box-shadow: 0 1px 6px rgba(66,133,244,0.3);
+  }
+  .user-comment-card .card-header {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+    font-weight: 600; font-size: 11.5px; color: #4285f4;
+    text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .user-comment-card .card-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; background: #4285f4; color: #fff;
+    font-size: 10px; font-weight: 700; border-radius: 4px;
+  }
+  .user-comment-card .quoted-text {
+    font-style: italic; color: #80868b; font-size: 11.5px;
+    border-left: 2px solid #dadce0; padding-left: 8px; margin-bottom: 6px;
+  }
+  .user-comment-card .comment-text { color: #202124; }
+  .user-comment-card .delete-btn {
+    float: right; font-size: 10px; color: #80868b; cursor: pointer;
+    border: none; background: none; padding: 2px 4px;
+  }
+  .user-comment-card .delete-btn:hover { color: #c5221f; }
+
+  /* Reply thread on existing cards */
+  .reply-thread { margin-top: 8px; border-top: 1px solid #f1f3f4; padding-top: 8px; }
+  .reply-item {
+    font-size: 12px; color: #202124; margin-bottom: 6px;
+    padding-left: 8px; border-left: 2px solid #4285f4;
+  }
+  .reply-item .reply-meta { font-size: 10px; color: #80868b; }
+  .reply-btn {
+    font-size: 11px; color: #4285f4; cursor: pointer;
+    border: none; background: none; padding: 2px 0; font-weight: 500;
+  }
+  .reply-btn:hover { text-decoration: underline; }
+
+  /* Comment popup */
+  .comment-popup {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    background: #fff;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    padding: 12px;
+    width: 300px;
+  }
+  .comment-popup textarea {
+    width: 100%; height: 60px; border: 1px solid #dadce0; border-radius: 4px;
+    padding: 8px; font-family: inherit; font-size: 13px; resize: vertical;
+    outline: none;
+  }
+  .comment-popup textarea:focus { border-color: #4285f4; }
+  .comment-popup .popup-actions { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+  .comment-popup .popup-actions button {
+    font-family: inherit; font-size: 12px; font-weight: 500;
+    padding: 6px 16px; border-radius: 4px; cursor: pointer; border: none;
+  }
+  .comment-popup .btn-cancel { background: #f1f3f4; color: #3c4043; }
+  .comment-popup .btn-cancel:hover { background: #e8eaed; }
+  .comment-popup .btn-save { background: #1a73e8; color: #fff; }
+  .comment-popup .btn-save:hover { background: #1557b0; }
+  .comment-popup .popup-quote {
+    font-size: 11px; color: #80868b; font-style: italic;
+    margin-bottom: 8px; padding: 4px 8px; background: #f8f9fa; border-radius: 4px;
+    max-height: 40px; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  /* Download button */
+  .download-btn {
+    font-family: inherit; font-size: 12px; font-weight: 500;
+    padding: 5px 14px; border: 1px solid #dadce0; border-radius: 6px;
+    cursor: pointer; color: #3c4043; background: #fff;
+    transition: all 0.15s; display: flex; align-items: center; gap: 6px;
+  }
+  .download-btn:hover { background: #f1f3f4; border-color: #c6c9cc; }
+  .download-btn svg { width: 14px; height: 14px; }
+
+  .annotation-count {
+    font-size: 11px; color: #4285f4; font-weight: 600;
+    padding: 2px 8px; background: #e8f0fe; border-radius: 10px;
+  }
+
+  @media (max-width: 1200px) {
+    .sidebar, .view-sidebyside .sbs-sidebar { width: 280px; }
+    .view-inline .doc-pane { padding: 48px 48px; }
+    .view-sidebyside .sbs-col { padding: 48px 24px; }
+    .additions-section { padding: 0 48px 48px; }
+  }
+  @media (max-width: 900px) {
+    .view-inline .layout { flex-direction: column; }
+    .sidebar { width: 100%; max-width: 816px; margin: 0 auto; padding: 0 48px 48px; }
+    .comment-marker { display: none; }
+    .view-sidebyside .sbs-layout { flex-direction: column; }
+    .view-sidebyside .sbs-columns { grid-template-columns: 1fr; }
+    .view-sidebyside .sbs-sidebar { width: 100%; padding: 0 48px 48px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>Cover Letter Review</h1>
+  <span class="subtitle">Executive Director of Arts & Culture, City and County of San Francisco</span>
+  <div class="controls">
+    <div class="view-toggle">
+      <button class="active" data-view="inline">Inline Diff</button>
+      <button data-view="sidebyside">Side by Side</button>
+    </div>
+    <span class="annotation-count" id="annotationCount" style="display:none">0 notes</span>
+    <button class="download-btn" id="copyFinalBtn" title="Copy final version to clipboard">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2h1a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h1zm2-1a1 1 0 0 0-1 1h6a1 1 0 0 0-1-1H6z"/></svg>
+      Copy Final
+    </button>
+    <button class="download-btn" id="downloadBtn" title="Download all annotations as JSON">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 12l-4-4h2.5V3h3v5H12L8 12zm-5 2h10v1H3v-1z"/></svg>
+      Export
+    </button>
+    <div class="stats">
+      <span class="stat"><span class="dot dot-del"></span> ~434 words original</span>
+      <span class="stat"><span class="dot dot-ins"></span> ~400 words final</span>
+      <span class="stat">7 revisions &middot; 4 rounds of dual review</span>
+    </div>
+  </div>
+</div>
+
+<!-- Comment popup (for text selection + reply) -->
+<div class="comment-popup" id="commentPopup">
+  <div class="popup-quote" id="popupQuote"></div>
+  <textarea id="popupText" placeholder="Add your comment..."></textarea>
+  <div class="popup-actions">
+    <button class="btn-cancel" id="popupCancel">Cancel</button>
+    <button class="btn-save" id="popupSave">Comment</button>
+  </div>
+</div>
+
+<!-- ==================== INLINE VIEW ==================== -->
+<div class="view-inline">
+<div class="layout">
+
+  <div class="doc-pane">
+
+    <p>
+      <del>I've spent my career integrating</del><ins>Integrating</ins> systems that <del>have naturally stayed</del><ins>stay</ins> siloed — government, nonprofits, corporate partners, <del>communities.</del><ins>communities — has been the through-line of my career.</ins><span class="comment-anchor"><span class="comment-marker" data-comment="1">1</span></span>
+      This inaugural role is that <del>same </del>work at city scale.
+      <del>The opportunity to unify three agencies</del><ins>Unifying the Arts Commission, Grants for the Arts, and the Film Commission</ins><span class="comment-anchor"><span class="comment-marker" data-comment="2">2</span></span> under a single strategy <del>and connect the arts</del><ins>— while connecting that new organization</ins> to San Francisco's broader priorities <ins>in</ins> housing, economic development, <ins>and</ins> neighborhood revitalization — is <del>a genuine convergence of</del><ins>where</ins> everything I've <del>built, and I'm deeply motivated by it.</del><ins>built converges.</ins><span class="comment-anchor"><span class="comment-marker" data-comment="3">3</span></span>
+    </p>
+
+    <p>
+      San Francisco is home to me. I run DrawBridge Arts — a nearly 40-year-old Bay Area nonprofit <del>that has provided trauma-informed arts programming to</del><ins>reaching</ins> 40,000+ children experiencing housing instability across 14 sites.<span class="comment-anchor"><span class="comment-marker" data-comment="4">4</span></span>
+      <ins>Our work integrates trauma-informed arts programming rooted in cultural equity into the housing system.</ins><span class="comment-anchor"><span class="comment-marker" data-comment="5">5</span></span>
+      I <del>also </del>curated and launched The Art of San Francisco: a 7,000 square foot gallery and civic gathering space at 2 Embarcadero Center.
+      Through <del>this work</del><ins>both,</ins> I've built partnerships across the city's cultural, corporate, and diplomatic landscape — Pixar, Stripe, BXP, the Canadian Consulate, Marriott<del> — connecting the Bay Area's arts community to national and international networks</del>.<span class="comment-anchor"><span class="comment-marker" data-comment="6">6</span></span>
+      <del>I work in this ecosystem every day, from shelters in the neighborhoods to the Embarcadero - and I see this work as a deeply integrated system, rather than distinctive.</del><span class="comment-anchor"><span class="comment-marker" data-comment="7">7</span></span>
+    </p>
+
+    <p>
+      <del>My background spans the specific areas this role requires.</del><ins>Every stage of my career demanded the same discipline: building coalitions across institutional lines, stewarding budgets, and earning community trust before redesigning systems.</ins><span class="comment-anchor"><span class="comment-marker" data-comment="8">8</span></span>
+      In my first year at DrawBridge, I secured a partnership that more than doubled the organization's resource base and <del>established research partnerships</del><ins>launched research collaborations</ins> with UC Berkeley and Dominican University <del>to build evidence-based, measurable arts</del><ins>for evidence-based</ins> programming.
+      At Scouts Canada, I led the first <del>organization-wide culture</del><ins>change</ins><span class="comment-anchor"><span class="comment-marker" data-comment="9">9</span></span> strategy across 50,000 members, raised millions<del> in grants and partnerships</del>, and <del>increased</del><ins>grew</ins> engagement 33% year-over-year — <del>with </del>four Commonwealth nations <del>looking to</del><ins>adopted</ins> our model.
+      <del>In</del><ins>Five years in</ins> government — for elected American Indian officials, the Government of Ontario, and Chiefs of Ontario — <del>I supervised</del><ins>meant supervising</ins> 150+ staff<del> over five years, presented</del><ins>, presenting</ins> fiscal analysis for $500M in budget decisions, and <del>co-led</del><ins>co-leading</ins> policy reform impacting 60,000 public servants.<span class="comment-anchor"><span class="comment-marker" data-comment="10">10</span></span>
+      My <del>long-standing </del>work with tribal nations <ins>— grounded in their self-determination —</ins> <del>required a discipline in listening-first, ground-up policy design that</del><ins>instilled a discipline</ins> I carry <del>into everything I do.</del><ins>everywhere: listen first, design with the community.</ins><span class="comment-anchor"><span class="comment-marker" data-comment="11">11</span></span>
+    </p>
+
+    <p>
+      <del>The arts sector has spent decades making its case to people who already believe.</del>
+      <ins>San Francisco has lost more than 30% of its arts organizations since 2019 — cultural displacement on a scale that threatens the city's identity.</ins><span class="comment-anchor"><span class="comment-marker" data-comment="12">12</span></span>
+      <del>I believe the real opportunity in this role is</del><ins>The opportunity is not more advocacy to the already convinced, but persuasion:</ins><span class="comment-anchor"><span class="comment-marker" data-comment="13">13</span></span> making every other sector <del>in San Francisco </del>— tech, healthcare, housing, education — see that the arts<del> solve problems they can't solve alone.</del><ins>, generating $1.8 billion in economic activity and a 9:1 return on public investment, are essential infrastructure.</ins><span class="comment-anchor"><span class="comment-marker" data-comment="14">14</span></span>
+      <del>Rather than a department that advocates for the arts, this is an opportunity to build the arts as essential to everything else this city is trying to do. </del>That <ins>case </ins>requires someone <del>without allegiances to any one agency, with genuine curiosity about all three, and with</del><ins>with allegiance to no single agency and</ins> the cross-sector fluency to <del>build those bridges. That's</del><ins>make all three work as one. That is</ins><span class="comment-anchor"><span class="comment-marker" data-comment="15">15</span></span> the career I've built, and I <del>would </del>welcome the <del>opportunity</del><ins>chance</ins> to discuss how it serves <del>the vision the Mayor's office is advancing.</del><ins>what Mayor Lurie is building.</ins><span class="comment-anchor"><span class="comment-marker" data-comment="16">16</span></span>
+    </p>
+
+  </div>
+
+  <div class="sidebar" id="sidebar-inline">
+
+    <div class="para-divider">Paragraph 1</div>
+
+    <div class="comment-card" data-comment="1">
+      <div class="card-header"><span class="card-num">1</span> Opening restructure</div>
+      <span class="tag tag-skill">Cover Letter Skill</span> Don't start with "I."
+      <span class="tag tag-strunk">Rule 13</span> "Naturally" is filler — silos don't need the qualifier. Restructured as a noun-phrase lead for a more assertive opening.
+    </div>
+
+    <div class="comment-card" data-comment="2">
+      <div class="card-header"><span class="card-num">2</span> Named all three agencies</div>
+      <span class="tag tag-source">Position Brochure</span> Named the Arts Commission, Grants for the Arts, and the Film Commission instead of vague "three agencies." Shows research and insider knowledge.
+    </div>
+
+    <div class="comment-card" data-comment="3">
+      <div class="card-header"><span class="card-num">3</span> Cut filler, stronger close</div>
+      <span class="tag tag-strunk">Rule 13</span> "Genuine" is needless.
+      <span class="tag tag-strunk">Rule 18</span> "Deeply motivated by it" is a weak ending — "converges" lands at the emphatic position.
+    </div>
+
+    <div class="para-divider">Paragraph 2</div>
+
+    <div class="comment-card" data-comment="4">
+      <div class="card-header"><span class="card-num">4</span> Split DrawBridge sentence</div>
+      <span class="tag tag-strunk">Rule 16</span> Original crammed too many modifiers into one noun phrase. Split into two sentences for readability; the trauma-informed detail gets its own sentence with more weight.
+    </div>
+
+    <div class="comment-card" data-comment="5">
+      <div class="card-header"><span class="card-num">5</span> Added cultural equity + housing system</div>
+      <span class="tag tag-source">Position Brochure + Deck</span> "Cultural equity" is the exact term from both documents — appeared zero times in the original. Reframes DrawBridge as integrating arts into the housing system, demonstrating the cross-sector integration the role demands.
+    </div>
+
+    <div class="comment-card" data-comment="6">
+      <div class="card-header"><span class="card-num">6</span> Cut redundant clause</div>
+      <span class="tag tag-strunk">Rule 13</span> "Connecting the Bay Area's arts community to national and international networks" — the partner list (Pixar, Stripe, BXP, Canadian Consulate, Marriott) already proves this reach.
+    </div>
+
+    <div class="comment-card" data-comment="7">
+      <div class="card-header"><span class="card-num">7</span> Removed final sentence</div>
+      Flagged as an AI writing pattern ("from shelters to the Embarcadero" is a false range). "Rather than distinctive" was unclear. The partner list and two-role description already make the "one system" point.
+    </div>
+
+    <div class="para-divider">Paragraph 3</div>
+
+    <div class="comment-card" data-comment="8">
+      <div class="card-header"><span class="card-num">8</span> Real topic sentence</div>
+      <span class="tag tag-strunk">Rule 9</span> Replaced empty setup ("My background spans the specific areas") with a claim naming three capabilities from the brochure's desirable qualifications: coalition-building, fiscal stewardship, community trust.
+      <span class="tag tag-source">Position Brochure</span> "Earning community trust before redesigning systems" doubles as an equity signal.
+    </div>
+
+    <div class="comment-card" data-comment="9">
+      <div class="card-header"><span class="card-num">9</span> "Change strategy"</div>
+      <span class="tag tag-source">Position Brochure</span> "Change management" is an explicitly named desirable qualification. "Culture strategy" → "change strategy" maps directly to it.
+    </div>
+
+    <div class="comment-card" data-comment="10">
+      <div class="card-header"><span class="card-num">10</span> Varied sentence structure</div>
+      <span class="tag tag-strunk">Rule 14</span> Moved "five years" to the front and restructured from "I supervised/presented/co-led" to "meant supervising/presenting/co-leading" — breaks the monotonous "At [place], I [verb]" pattern.
+    </div>
+
+    <div class="comment-card" data-comment="11">
+      <div class="card-header"><span class="card-num">11</span> Indigenous self-determination</div>
+      <span class="tag tag-source">Equity signal</span> Added "grounded in their self-determination" to center Indigenous agency.
+      <span class="tag tag-strunk">Rule 18</span> "Everything I do" is a weak ending; "design with the community" is emphatic and echoes the brochure's "community-driven" language.
+    </div>
+
+    <div class="para-divider">Paragraph 4</div>
+
+    <div class="comment-card" data-comment="12">
+      <div class="card-header"><span class="card-num">12</span> Crisis data + cultural displacement</div>
+      <span class="tag tag-source">Arts/Culture Deck</span> Opens with the sector crisis (30% org loss). "Cultural displacement" is the exact framing from the deck. Anchors the closing in evidence rather than abstraction.
+    </div>
+
+    <div class="comment-card" data-comment="13">
+      <div class="card-header"><span class="card-num">13</span> Fixed parallel construction</div>
+      <span class="tag tag-strunk">Rule 11</span> Cut "I believe" — assertion stands stronger without it.
+      <span class="tag tag-strunk">Rule 15</span> "Not advocacy...but persuasion" (noun/noun) fixes original noun/gerund mismatch. Absorbs the "already convinced" idea from the removed sentence.
+    </div>
+
+    <div class="comment-card" data-comment="14">
+      <div class="card-header"><span class="card-num">14</span> Economic case + essential infrastructure</div>
+      <span class="tag tag-source">Arts/Culture Deck</span> Deployed the $1.8B and 9:1 ROI data the deck leads with. "Essential infrastructure" is the deck's exact term.
+      <span class="tag tag-strunk">Rule 18</span> "Essential infrastructure" lands at the emphatic end.
+    </div>
+
+    <div class="comment-card" data-comment="15">
+      <div class="card-header"><span class="card-num">15</span> Concrete outcome, not metaphor</div>
+      <span class="tag tag-strunk">Rule 12</span> Cut "genuine curiosity about all three" — vague.
+      <span class="tag tag-strunk">Rule 16</span> "Build those bridges" → "make all three work as one" — concrete, echoes the unification mandate.
+    </div>
+
+    <div class="comment-card" data-comment="16">
+      <div class="card-header"><span class="card-num">16</span> Named Mayor Lurie</div>
+      <span class="tag tag-source">Position Brochure</span> Named the mayor directly. "Would welcome the opportunity" → "welcome the chance" is more direct. "Building" as the final word is active and forward-looking.
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== SIDE-BY-SIDE VIEW ==================== -->
+<div class="view-sidebyside">
+<div class="sbs-layout">
+
+  <div class="sbs-columns">
+
+    <div class="sbs-col sbs-col-original">
+      <div class="col-label col-label-original">Original</div>
+
+      <p><del>I've spent my career integrating</del> systems that <del>have naturally stayed</del> siloed — government, nonprofits, corporate partners, <del>communities.</del> This inaugural role is that <del>same </del>work at city scale. <del>The opportunity to unify three agencies</del> under a single strategy <del>and connect the arts</del> to San Francisco's broader priorities — housing, economic development, neighborhood revitalization — is <del>a genuine convergence of</del> everything I've <del>built, and I'm deeply motivated by it.</del></p>
+
+      <p>San Francisco is home to me. I run DrawBridge Arts — a nearly 40-year-old Bay Area nonprofit <del>that has provided trauma-informed arts programming to</del> 40,000+ children experiencing housing instability across 14 sites. I <del>also </del>curated and launched The Art of San Francisco: a 7,000 square foot gallery and civic gathering space at 2 Embarcadero Center. Through <del>this work</del> I've built partnerships across the city's cultural, corporate, and diplomatic landscape — Pixar, Stripe, BXP, the Canadian Consulate, Marriott<del> — connecting the Bay Area's arts community to national and international networks</del>. <del>I work in this ecosystem every day, from shelters in the neighborhoods to the Embarcadero - and I see this work as a deeply integrated system, rather than distinctive.</del></p>
+
+      <p><del>My background spans the specific areas this role requires.</del> In my first year at DrawBridge, I secured a partnership that more than doubled the organization's resource base and <del>established research partnerships</del> with UC Berkeley and Dominican University <del>to build evidence-based, measurable arts</del> programming. At Scouts Canada, I led the first <del>organization-wide culture</del> strategy across 50,000 members, raised millions<del> in grants and partnerships</del>, and <del>increased</del> engagement 33% year-over-year — <del>with </del>four Commonwealth nations <del>looking to</del> our model. <del>In</del> government — for elected American Indian officials, the Government of Ontario, and Chiefs of Ontario — <del>I supervised</del> 150+ staff<del> over five years, presented</del> fiscal analysis for $500M in budget decisions, and <del>co-led</del> policy reform impacting 60,000 public servants. My <del>long-standing </del>work with tribal nations <del>required a discipline in listening-first, ground-up policy design that</del> I carry <del>into everything I do.</del></p>
+
+      <p><del>The arts sector has spent decades making its case to people who already believe.</del> <del>I believe the real opportunity in this role is</del> making every other sector <del>in San Francisco </del>— tech, healthcare, housing, education — see that the arts<del> solve problems they can't solve alone.</del> <del>Rather than a department that advocates for the arts, this is an opportunity to build the arts as essential to everything else this city is trying to do. </del>That requires someone <del>without allegiances to any one agency, with genuine curiosity about all three, and with</del> the cross-sector fluency to <del>build those bridges. That's</del> the career I've built, and I <del>would </del>welcome the <del>opportunity</del> to discuss how it serves <del>the vision the Mayor's office is advancing.</del></p>
+    </div>
+
+    <div class="sbs-col sbs-col-final">
+      <div class="col-label col-label-final">Final</div>
+
+      <p><ins>Integrating</ins> systems that <ins>stay</ins> siloed — government, nonprofits, corporate partners, <ins>communities — has been the through-line of my career.</ins> This inaugural role is that work at city scale. <ins>Unifying the Arts Commission, Grants for the Arts, and the Film Commission</ins> under a single strategy <ins>— while connecting that new organization</ins> to San Francisco's broader priorities <ins>in</ins> housing, economic development, <ins>and</ins> neighborhood revitalization — is <ins>where</ins> everything I've <ins>built converges.</ins></p>
+
+      <p>San Francisco is home to me. I run DrawBridge Arts — a nearly 40-year-old Bay Area nonprofit <ins>reaching</ins> 40,000+ children experiencing housing instability across 14 sites. <ins>Our work integrates trauma-informed arts programming rooted in cultural equity into the housing system.</ins> I curated and launched The Art of San Francisco: a 7,000 square foot gallery and civic gathering space at 2 Embarcadero Center. Through <ins>both,</ins> I've built partnerships across the city's cultural, corporate, and diplomatic landscape — Pixar, Stripe, BXP, the Canadian Consulate, Marriott.</p>
+
+      <p><ins>Every stage of my career demanded the same discipline: building coalitions across institutional lines, stewarding budgets, and earning community trust before redesigning systems.</ins> In my first year at DrawBridge, I secured a partnership that more than doubled the organization's resource base and <ins>launched research collaborations</ins> with UC Berkeley and Dominican University <ins>for evidence-based</ins> programming. At Scouts Canada, I led the first <ins>change</ins> strategy across 50,000 members, raised millions, and <ins>grew</ins> engagement 33% year-over-year — four Commonwealth nations <ins>adopted</ins> our model. <ins>Five years in</ins> government — for elected American Indian officials, the Government of Ontario, and Chiefs of Ontario — <ins>meant supervising</ins> 150+ staff<ins>, presenting</ins> fiscal analysis for $500M in budget decisions, and <ins>co-leading</ins> policy reform impacting 60,000 public servants. My work with tribal nations <ins>— grounded in their self-determination — instilled a discipline</ins> I carry <ins>everywhere: listen first, design with the community.</ins></p>
+
+      <p><ins>San Francisco has lost more than 30% of its arts organizations since 2019 — cultural displacement on a scale that threatens the city's identity.</ins> <ins>The opportunity is not more advocacy to the already convinced, but persuasion:</ins> making every other sector — tech, healthcare, housing, education — see that the arts<ins>, generating $1.8 billion in economic activity and a 9:1 return on public investment, are essential infrastructure.</ins> That <ins>case </ins>requires someone <ins>with allegiance to no single agency and</ins> the cross-sector fluency to <ins>make all three work as one. That is</ins> the career I've built, and I welcome the <ins>chance</ins> to discuss how it serves <ins>what Mayor Lurie is building.</ins></p>
+    </div>
+
+  </div>
+
+  <div class="sbs-sidebar sidebar" id="sidebar-sbs">
+
+    <div class="para-divider">Paragraph 1</div>
+
+    <div class="comment-card" data-comment="1">
+      <div class="card-header"><span class="card-num">1</span> Opening restructure</div>
+      <span class="tag tag-skill">Cover Letter Skill</span> Don't start with "I."
+      <span class="tag tag-strunk">Rule 13</span> "Naturally" is filler. Noun-phrase lead is more assertive.
+    </div>
+
+    <div class="comment-card" data-comment="2">
+      <div class="card-header"><span class="card-num">2</span> Named all three agencies</div>
+      <span class="tag tag-source">Position Brochure</span> Named the Arts Commission, Grants for the Arts, and the Film Commission instead of vague "three agencies."
+    </div>
+
+    <div class="comment-card" data-comment="3">
+      <div class="card-header"><span class="card-num">3</span> Cut filler, stronger close</div>
+      <span class="tag tag-strunk">Rule 13</span> "Genuine" is needless.
+      <span class="tag tag-strunk">Rule 18</span> "Converges" lands at the emphatic position.
+    </div>
+
+    <div class="para-divider">Paragraph 2</div>
+
+    <div class="comment-card" data-comment="4">
+      <div class="card-header"><span class="card-num">4</span> Split DrawBridge sentence</div>
+      <span class="tag tag-strunk">Rule 16</span> Too many modifiers in one noun phrase. Split for readability.
+    </div>
+
+    <div class="comment-card" data-comment="5">
+      <div class="card-header"><span class="card-num">5</span> Cultural equity + housing system</div>
+      <span class="tag tag-source">Brochure + Deck</span> "Cultural equity" appeared zero times in original. Reframes DrawBridge as cross-sector integration.
+    </div>
+
+    <div class="comment-card" data-comment="6">
+      <div class="card-header"><span class="card-num">6</span> Cut redundant clause</div>
+      <span class="tag tag-strunk">Rule 13</span> Partner list already proves international reach.
+    </div>
+
+    <div class="comment-card" data-comment="7">
+      <div class="card-header"><span class="card-num">7</span> Removed final sentence</div>
+      AI writing pattern flagged. "Rather than distinctive" was unclear.
+    </div>
+
+    <div class="para-divider">Paragraph 3</div>
+
+    <div class="comment-card" data-comment="8">
+      <div class="card-header"><span class="card-num">8</span> Real topic sentence</div>
+      <span class="tag tag-strunk">Rule 9</span> Names three capabilities from desirable qualifications.
+      <span class="tag tag-source">Position Brochure</span> Equity signal built in.
+    </div>
+
+    <div class="comment-card" data-comment="9">
+      <div class="card-header"><span class="card-num">9</span> "Change strategy"</div>
+      <span class="tag tag-source">Position Brochure</span> Maps to "change management" desirable qualification.
+    </div>
+
+    <div class="comment-card" data-comment="10">
+      <div class="card-header"><span class="card-num">10</span> Varied sentence structure</div>
+      <span class="tag tag-strunk">Rule 14</span> Breaks "At [place], I [verb]" monotony.
+    </div>
+
+    <div class="comment-card" data-comment="11">
+      <div class="card-header"><span class="card-num">11</span> Indigenous self-determination</div>
+      <span class="tag tag-source">Equity signal</span> Centers Indigenous agency.
+      <span class="tag tag-strunk">Rule 18</span> "Design with the community" is emphatic.
+    </div>
+
+    <div class="para-divider">Paragraph 4</div>
+
+    <div class="comment-card" data-comment="12">
+      <div class="card-header"><span class="card-num">12</span> Crisis data</div>
+      <span class="tag tag-source">Arts/Culture Deck</span> 30% org loss. "Cultural displacement" is the deck's framing.
+    </div>
+
+    <div class="comment-card" data-comment="13">
+      <div class="card-header"><span class="card-num">13</span> Parallel construction</div>
+      <span class="tag tag-strunk">Rule 11</span> Cut "I believe."
+      <span class="tag tag-strunk">Rule 15</span> "Not advocacy...but persuasion" (noun/noun).
+    </div>
+
+    <div class="comment-card" data-comment="14">
+      <div class="card-header"><span class="card-num">14</span> Economic case</div>
+      <span class="tag tag-source">Arts/Culture Deck</span> $1.8B, 9:1 ROI. "Essential infrastructure" is the deck's term.
+    </div>
+
+    <div class="comment-card" data-comment="15">
+      <div class="card-header"><span class="card-num">15</span> Concrete outcome</div>
+      <span class="tag tag-strunk">Rule 16</span> "Make all three work as one" echoes unification mandate.
+    </div>
+
+    <div class="comment-card" data-comment="16">
+      <div class="card-header"><span class="card-num">16</span> Named Mayor Lurie</div>
+      <span class="tag tag-source">Position Brochure</span> "Building" as final word is active and forward-looking.
+    </div>
+
+  </div>
+
+</div>
+</div>
+
+<!-- ========== STRATEGIC ADDITIONS ========== -->
+<div class="additions-section">
+  <h2>What Was Added from Position Documents</h2>
+  <table>
+    <tr><td>Three-agency consolidation</td><td>Named Arts Commission, Grants for the Arts, Film Commission (P1)</td></tr>
+    <tr><td>Cultural equity</td><td>"Rooted in cultural equity" (P2) · "Earning community trust before redesigning systems" (P3) · "Grounded in their self-determination" (P3)</td></tr>
+    <tr><td>Sector crisis</td><td>"Lost more than 30% of its arts organizations since 2019" (P4)</td></tr>
+    <tr><td>Cultural displacement</td><td>Exact framing from the deck (P4)</td></tr>
+    <tr><td>Economic case</td><td>$1.8 billion economic activity · 9:1 return on public investment (P4)</td></tr>
+    <tr><td>"Essential infrastructure"</td><td>Exact framing from the deck (P4)</td></tr>
+    <tr><td>Change management</td><td>"Change strategy" (P3) · Topic sentence names coalition-building (P3)</td></tr>
+    <tr><td>Mayor Lurie</td><td>Named directly in closing sentence (P4)</td></tr>
+    <tr><td>Cross-sector integration</td><td>DrawBridge reframed as "integrates...into the housing system" (P2)</td></tr>
+  </table>
+</div>
+
+<script>
+  // ===== State =====
+  let userAnnotations = JSON.parse(localStorage.getItem('diffReviewAnnotations') || '[]');
+  let userReplies = JSON.parse(localStorage.getItem('diffReviewReplies') || '{}');
+  let annotationCounter = userAnnotations.length;
+  let pendingSelection = null;
+  let replyTarget = null;
+
+  // ===== View toggle =====
+  const toggleBtns = document.querySelectorAll('.view-toggle button');
+  const viewInline = document.querySelector('.view-inline');
+  const viewSbs = document.querySelector('.view-sidebyside');
+
+  toggleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      toggleBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (btn.dataset.view === 'inline') {
+        viewInline.style.display = 'block';
+        viewSbs.style.display = 'none';
+      } else {
+        viewInline.style.display = 'none';
+        viewSbs.style.display = 'block';
+      }
+    });
+  });
+
+  // ===== Existing comment card + marker highlight =====
+  const markers = document.querySelectorAll('.comment-marker');
+  const allCards = document.querySelectorAll('.comment-card');
+
+  function activate(id) {
+    markers.forEach(m => m.classList.toggle('active', m.dataset.comment === id));
+    document.querySelectorAll('.comment-card, .user-comment-card').forEach(c => {
+      const isActive = c.dataset.comment === id;
+      c.classList.toggle('active', isActive);
+      if (isActive && c.offsetParent !== null) {
+        c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+    document.querySelectorAll('.user-highlight').forEach(h => {
+      h.classList.toggle('active', h.dataset.annotation === id);
+    });
+  }
+
+  markers.forEach(m => m.addEventListener('click', () => activate(m.dataset.comment)));
+  allCards.forEach(c => c.addEventListener('click', () => {
+    const id = c.dataset.comment;
+    activate(id);
+    const marker = document.querySelector(`.comment-marker[data-comment="${id}"]`);
+    if (marker && marker.offsetParent !== null) {
+      marker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }));
+
+  // ===== Helper: create element with text =====
+  function el(tag, className, text) {
+    const e = document.createElement(tag);
+    if (className) e.className = className;
+    if (text) e.textContent = text;
+    return e;
+  }
+
+  // ===== Add reply buttons to existing system comment cards =====
+  allCards.forEach(card => {
+    const id = card.dataset.comment;
+    const thread = el('div', 'reply-thread');
+    thread.id = 'replies-' + id;
+    thread.style.display = 'none';
+    card.appendChild(thread);
+    const btn = el('button', 'reply-btn', 'Reply');
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      replyTarget = id;
+      pendingSelection = null;
+      showPopup(e.clientX, e.clientY, 'Reply to comment #' + id);
+    });
+    card.appendChild(btn);
+    renderReplies(id);
+  });
+
+  // ===== Text selection -> comment =====
+  const docPanes = document.querySelectorAll('.doc-pane, .sbs-col');
+  docPanes.forEach(pane => {
+    pane.addEventListener('mouseup', (e) => {
+      const sel = window.getSelection();
+      if (!sel || sel.isCollapsed || !sel.toString().trim()) return;
+      if (e.target.closest('.comment-marker, .reply-btn, .delete-btn')) return;
+      const text = sel.toString().trim();
+      const range = sel.getRangeAt(0);
+      pendingSelection = { text, range };
+      replyTarget = null;
+      showPopup(e.clientX, e.clientY, text);
+    });
+  });
+
+  // ===== Comment popup =====
+  const popup = document.getElementById('commentPopup');
+  const popupQuote = document.getElementById('popupQuote');
+  const popupText = document.getElementById('popupText');
+
+  function showPopup(x, y, quoteText) {
+    popupQuote.textContent = quoteText.length > 120 ? quoteText.slice(0, 117) + '...' : quoteText;
+    popupText.value = '';
+    popup.style.display = 'block';
+    let left = Math.min(x + 10, window.innerWidth - 320);
+    let top = Math.min(y + 10, window.innerHeight - 200);
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+    popupText.focus();
+  }
+
+  function hidePopup() {
+    popup.style.display = 'none';
+    pendingSelection = null;
+    replyTarget = null;
+  }
+
+  document.getElementById('popupCancel').addEventListener('click', hidePopup);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hidePopup(); });
+
+  document.getElementById('popupSave').addEventListener('click', () => {
+    const comment = popupText.value.trim();
+    if (!comment) return;
+
+    if (replyTarget) {
+      if (!userReplies[replyTarget]) userReplies[replyTarget] = [];
+      userReplies[replyTarget].push({ text: comment, time: new Date().toISOString() });
+      localStorage.setItem('diffReviewReplies', JSON.stringify(userReplies));
+      renderReplies(replyTarget);
+      updateAnnotationCount();
+      hidePopup();
+      return;
+    }
+
+    if (pendingSelection) {
+      annotationCounter++;
+      const id = 'user-' + annotationCounter;
+      const annotation = {
+        id,
+        selectedText: pendingSelection.text,
+        comment,
+        time: new Date().toISOString(),
+        paragraph: findParagraph(pendingSelection.range)
+      };
+
+      try {
+        const span = document.createElement('span');
+        span.className = 'user-highlight';
+        span.dataset.annotation = id;
+        span.addEventListener('click', () => activate(id));
+        pendingSelection.range.surroundContents(span);
+      } catch (e) { /* cross-element selection — save without highlight */ }
+
+      userAnnotations.push(annotation);
+      localStorage.setItem('diffReviewAnnotations', JSON.stringify(userAnnotations));
+      renderUserAnnotation(annotation);
+      updateAnnotationCount();
+      window.getSelection().removeAllRanges();
+      hidePopup();
+    }
+  });
+
+  // ===== Render functions =====
+  function findParagraph(range) {
+    let node = range.startContainer;
+    while (node && node.nodeName !== 'P') node = node.parentNode;
+    if (!node) return 'Unknown';
+    const pane = node.closest('.doc-pane, .sbs-col');
+    if (!pane) return 'Unknown';
+    const paragraphs = pane.querySelectorAll('p');
+    for (let i = 0; i < paragraphs.length; i++) {
+      if (paragraphs[i] === node) return 'Paragraph ' + (i + 1);
+    }
+    return 'Unknown';
+  }
+
+  function renderUserAnnotation(ann) {
+    ['sidebar-inline', 'sidebar-sbs'].forEach(sidebarId => {
+      const sidebar = document.getElementById(sidebarId);
+      if (!sidebar) return;
+
+      const card = document.createElement('div');
+      card.className = 'user-comment-card';
+      card.dataset.comment = ann.id;
+
+      // Header row
+      const header = el('div', 'card-header');
+      const num = el('span', 'card-num', '+');
+      header.appendChild(num);
+      header.appendChild(document.createTextNode(' Your Note '));
+      const delBtn = el('button', 'delete-btn', '\u00d7');
+      delBtn.title = 'Delete';
+      delBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteAnnotation(ann.id); });
+      header.appendChild(delBtn);
+      card.appendChild(header);
+
+      // Quoted text
+      const quote = el('div', 'quoted-text');
+      const truncated = ann.selectedText.length > 80 ? ann.selectedText.slice(0, 77) + '...' : ann.selectedText;
+      quote.textContent = '\u201c' + truncated + '\u201d';
+      card.appendChild(quote);
+
+      // Comment text
+      const commentDiv = el('div', 'comment-text', ann.comment);
+      card.appendChild(commentDiv);
+
+      card.addEventListener('click', () => {
+        activate(ann.id);
+        const hl = document.querySelector('.user-highlight[data-annotation="' + ann.id + '"]');
+        if (hl) hl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      sidebar.appendChild(card);
+    });
+  }
+
+  function renderReplies(commentId) {
+    const replies = userReplies[commentId] || [];
+    document.querySelectorAll('#replies-' + commentId).forEach(thread => {
+      while (thread.firstChild) thread.removeChild(thread.firstChild);
+      if (replies.length === 0) { thread.style.display = 'none'; return; }
+      thread.style.display = '';
+      replies.forEach(r => {
+        const div = el('div', 'reply-item');
+        const time = new Date(r.time).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        const meta = el('span', 'reply-meta', time);
+        div.appendChild(meta);
+        div.appendChild(document.createElement('br'));
+        div.appendChild(document.createTextNode(r.text));
+        thread.appendChild(div);
+      });
+    });
+  }
+
+  function deleteAnnotation(id) {
+    userAnnotations = userAnnotations.filter(a => a.id !== id);
+    localStorage.setItem('diffReviewAnnotations', JSON.stringify(userAnnotations));
+    document.querySelectorAll('.user-comment-card[data-comment="' + id + '"]').forEach(c => c.remove());
+    document.querySelectorAll('.user-highlight[data-annotation="' + id + '"]').forEach(h => {
+      const parent = h.parentNode;
+      while (h.firstChild) parent.insertBefore(h.firstChild, h);
+      parent.removeChild(h);
+    });
+    updateAnnotationCount();
+  }
+
+  function updateAnnotationCount() {
+    const el = document.getElementById('annotationCount');
+    const total = userAnnotations.length + Object.values(userReplies).reduce((s, r) => s + r.length, 0);
+    if (total > 0) {
+      el.textContent = total + ' note' + (total === 1 ? '' : 's');
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
+    }
+  }
+
+  // ===== Download / Export =====
+  document.getElementById('downloadBtn').addEventListener('click', () => {
+    const systemComments = [];
+    document.querySelectorAll('#sidebar-inline .comment-card').forEach(card => {
+      const id = card.dataset.comment;
+      const headerEl = card.querySelector('.card-header');
+      const title = headerEl ? headerEl.textContent.trim() : '';
+      const body = card.textContent.replace(title, '').replace('Reply', '').trim();
+      systemComments.push({
+        type: 'system',
+        id,
+        title,
+        body,
+        replies: userReplies[id] || []
+      });
+    });
+
+    const exportData = {
+      title: 'Cover Letter Review \u2014 Executive Director of Arts & Culture, SF',
+      exportedAt: new Date().toISOString(),
+      stats: { originalWords: 434, finalWords: 400, revisions: 7, reviewRounds: 4 },
+      systemComments,
+      userAnnotations: userAnnotations.map(a => ({
+        ...a,
+        replies: userReplies[a.id] || []
+      }))
+    };
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'diff-review-annotations.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // ===== Copy Final button =====
+  document.getElementById('copyFinalBtn').addEventListener('click', () => {
+    const clone = document.querySelector('.doc-pane').cloneNode(true);
+    clone.querySelectorAll('del, .comment-anchor').forEach(el => el.remove());
+    const text = Array.from(clone.querySelectorAll('p')).map(p => p.textContent.trim()).join('\n\n');
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyFinalBtn');
+      const orig = btn.innerHTML;
+      btn.querySelector('svg').style.display = 'none';
+      const check = document.createTextNode('Copied!');
+      btn.insertBefore(check, btn.firstChild);
+      btn.style.background = '#e6f4ea';
+      btn.style.borderColor = '#137333';
+      btn.style.color = '#137333';
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 2000);
+    });
+  });
+
+  // ===== Restore saved annotations on load =====
+  userAnnotations.forEach(ann => renderUserAnnotation(ann));
+  updateAnnotationCount();
+</script>
+
+</body>
+</html>

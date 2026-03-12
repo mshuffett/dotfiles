@@ -1,0 +1,55 @@
+version: 1
+default:
+  strategy: rpi
+  exceptions:
+    - tiny_single_step_request
+    - direct_info_lookup
+    - pure_translation_or_rewrite
+
+precedence:
+  - execution_substrate
+  - lifecycle
+  - process_scaffolding
+  - guided_feature_flow
+  - utility
+
+lanes:
+  define:
+    default_chain:
+      - feature-dev:feature-dev
+      - writing-plans
+      - rpi
+  build:
+    default_chain:
+      - rpi
+      - swarm
+      - codex-team
+  verify:
+    default_chain:
+      - vibe
+      - post-mortem
+  operate:
+    default_chain:
+      - crank
+      - status
+      - handoff
+
+profiles:
+  single_feature_mvp:
+    chain:
+      - feature-dev:feature-dev
+      - writing-plans
+      - rpi
+      - vibe
+  milestone_mvp:
+    chain:
+      - gsd:discuss-phase
+      - gsd:plan-phase
+      - gsd:execute-phase
+      - gsd:verify-work
+      - rpi
+
+notes:
+  - Keep one active skill per frontmatter name across active roots.
+  - Archive workspaces outside active skill roots.
+  - Use superpowers as process overlay, not execution substrate.

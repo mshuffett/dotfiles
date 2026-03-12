@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Addresses the technical product concern with FAQ guidance",
+      "passed": true,
+      "evidence": "Dedicated section \"On explaining DataPipe in 2 minutes\" addresses the concern directly with FAQ-style guidance: \"almost nothing is actually too complicated to explain in two sentences. The trick is to explain what DataPipe does and what problem it solves -- not how it works under the hood.\" References Stripe and PostHog as examples of technical products with clear pitches."
+    },
+    {
+      "text": "Mentions the virtual attendance option",
+      "passed": true,
+      "evidence": "\"Good news: there's a virtual option. You can attend and present remotely. So that concern doesn't need to block your decision about presenting.\""
+    },
+    {
+      "text": "Encouraging but not pushy about presenting",
+      "passed": true,
+      "evidence": "\"I won't pressure you\" and \"If it's a genuine strategic decision to skip, I respect that\" while still presenting the value: \"2 minutes of exposure to that investor audience is hard to replicate.\" Balanced tone throughout."
+    },
+    {
+      "text": "Still proceeds with onboarding (AskUserQuestion or similar)",
+      "passed": true,
+      "evidence": "Ends with two numbered questions: \"1. Will you be attending in person or virtually?\" and \"2. Where are you landing on presenting?\" -- continuing the onboarding flow despite the uncertainty."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 60.1},
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Handles the hesitant founder scenario very well. Addresses both concerns (technical product, not in SF) directly, provides the virtual option, maintains encouraging-but-respectful tone, and keeps the onboarding moving."
+  }
+}

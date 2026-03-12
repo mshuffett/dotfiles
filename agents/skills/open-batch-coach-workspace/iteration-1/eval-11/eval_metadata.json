@@ -1,0 +1,11 @@
+{
+  "eval_id": 11,
+  "eval_name": "vertebrae-explanation",
+  "prompt": "what are vertebrae? someone mentioned I need them",
+  "assertions": [
+    {"id": "a1", "text": "Explains vertebrae concept by referencing the guide", "type": "behavior"},
+    {"id": "a2", "text": "Provides examples (PostHog or Airbnb from guide)", "type": "behavior"},
+    {"id": "a3", "text": "Offers to workshop vertebrae together", "type": "behavior"},
+    {"id": "a4", "text": "Does not assume founder already knows YC terminology", "type": "quality"}
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "eval_id": 13,
+  "eval_name": "demo-on-slide",
+  "prompt": "should I show a demo of my app on the slide?",
+  "assertions": [
+    {"id": "a1", "text": "References FAQ on apps/websites looking similar at a glance", "type": "behavior"},
+    {"id": "a2", "text": "Mentions YouTube demo video option on second slide", "type": "factual"},
+    {"id": "a3", "text": "Helps decide based on their specific product", "type": "behavior"},
+    {"id": "a4", "text": "Gives a clear recommendation rather than listing pros/cons", "type": "quality"}
+  ]
+}

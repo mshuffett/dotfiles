@@ -266,26 +266,9 @@ The embeddings are stored in `~/.llm.db` and indexed via launchd (`com.michael.e
 
 ## Training Data
 
-Full training examples are in `training-data.json` in the original skill folder at:
-`~/.dotfiles/claude-plugins/productivity/skills/email-reply-style/`
+Full training examples with Michael's actual replies are in [references/training-examples.md](references/training-examples.md).
 
-Format:
-
-```json
-{
-  "to_name": "Person name",
-  "to_email": "email@example.com",
-  "subject": "Re: Subject line",
-  "timestamp": "2026-01-14...",
-  "is_reply": true,
-  "original_message": "The email being replied to",
-  "michael_reply": "Michael's actual reply"
-}
-```
-
-## Real Examples
-
-For full training examples, see [references/training-examples.md](references/training-examples.md).
+Each example includes: `to_name`, `to_email`, `subject`, `timestamp`, `is_reply`, `original_message`, and `michael_reply`.
 
 ## Learned Patterns & Memories
 

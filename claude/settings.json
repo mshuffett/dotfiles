@@ -1,6 +1,7 @@
 {
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1"
   },
   "attribution": {
     "commit": "",
@@ -9,21 +10,11 @@
   "permissions": {
     "defaultMode": "dontAsk"
   },
-  "model": "opus",
   "enabledMcpjsonServers": [
     "tavus"
   ],
   "hooks": {
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.dotfiles/claude/scripts/update-tmux-title.sh"
-          }
-        ]
-      }
-    ],
+    "UserPromptSubmit": [],
     "Stop": [
       {
         "hooks": [
@@ -77,7 +68,8 @@
           }
         ]
       }
-    ]
+    ],
+    "PermissionRequest": []
   },
   "statusLine": {
     "type": "command",
@@ -106,7 +98,18 @@
     "notion-workspace-plugin@notion-plugin-marketplace": true,
     "claude-md-management@claude-plugins-official": true,
     "ralph-loop@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "tmux-titles@michaels-world": true,
+    "open-batch-coach@openbatch-skills": true,
+    "agentops@agentops-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "agentops-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "boshu2/agentops"
+      }
+    }
   },
   "alwaysThinkingEnabled": true,
   "skipDangerousModePermissionPrompt": true,

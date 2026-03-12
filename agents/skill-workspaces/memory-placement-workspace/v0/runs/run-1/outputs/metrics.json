@@ -1,0 +1,21 @@
+{
+  "tool_calls": {
+    "Read": 2,
+    "Write": 4,
+    "Bash": 1,
+    "Edit": 0,
+    "Glob": 0,
+    "Grep": 0
+  },
+  "total_tool_calls": 7,
+  "total_steps": 6,
+  "files_created": [
+    "eval1-output.md",
+    "transcript-eval1.md",
+    "user_notes.md",
+    "metrics.json"
+  ],
+  "errors_encountered": 0,
+  "output_chars": 8804,
+  "transcript_chars": 5412
+}

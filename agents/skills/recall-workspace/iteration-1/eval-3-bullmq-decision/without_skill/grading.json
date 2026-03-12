@@ -1,0 +1,9 @@
+{
+  "assertions": [
+    {
+      "text": "Without-skill response acknowledges it cannot access historical conversation context",
+      "passed": true,
+      "evidence": "Response explicitly says: 'I don't have any record of that decision in the current context' and 'Sorry I can't give you the actual answer — I don't have access to that context right now.' Correctly identifies the gap and suggests alternative approaches (git log, ADRs, daily notes)."
+    }
+  ]
+}

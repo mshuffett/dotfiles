@@ -1,0 +1,11 @@
+{
+  "eval_id": 15,
+  "eval_name": "too-technical-pitch",
+  "prompt": "I think my pitch needs to be more technical because investors are technical",
+  "assertions": [
+    {"id": "a1", "text": "Pushes back on the assumption respectfully", "type": "behavior"},
+    {"id": "a2", "text": "References the guide on plain English", "type": "behavior"},
+    {"id": "a3", "text": "Explains why clarity wins over technical depth at demo day", "type": "quality"},
+    {"id": "a4", "text": "Does NOT just agree with the founder's premise", "type": "quality"}
+  ]
+}

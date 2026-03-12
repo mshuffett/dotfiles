@@ -1,0 +1,15 @@
+{
+  "eval_id": 2,
+  "eval_name": "react-component-no-trigger",
+  "prompt": "what's the best way to structure this React component? I'm thinking about using a compound component pattern with context",
+  "assertions": [
+    {
+      "text": "With-skill response does NOT dispatch a recall search (this is a general knowledge question, recall is unnecessary)",
+      "type": "with_skill_only"
+    },
+    {
+      "text": "Both responses provide useful technical guidance about compound component patterns",
+      "type": "both"
+    }
+  ]
+}

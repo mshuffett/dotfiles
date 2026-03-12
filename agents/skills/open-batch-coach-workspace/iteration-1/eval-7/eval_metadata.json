@@ -1,0 +1,11 @@
+{
+  "eval_id": 7,
+  "eval_name": "dont-want-to-present",
+  "prompt": "I don't want to do demo day",
+  "assertions": [
+    {"id": "a1", "text": "Asks why (explores the resistance)", "type": "behavior"},
+    {"id": "a2", "text": "Mentions the opportunity without hard-selling", "type": "quality"},
+    {"id": "a3", "text": "Does NOT guilt-trip or be overly pushy", "type": "quality"},
+    {"id": "a4", "text": "Respects the founder's autonomy", "type": "quality"}
+  ]
+}

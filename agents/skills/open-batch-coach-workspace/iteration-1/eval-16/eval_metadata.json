@@ -1,0 +1,11 @@
+{
+  "eval_id": 16,
+  "eval_name": "practice-vs-demo-day",
+  "prompt": "what's the difference between practice sessions and demo day?",
+  "assertions": [
+    {"id": "a1", "text": "Explains practice sessions: dates, 1 hour, paired with founders", "type": "factual"},
+    {"id": "a2", "text": "Explains demo day: March 10, 4pm, 100+ investors, 2 min", "type": "factual"},
+    {"id": "a3", "text": "Clearly distinguishes the purpose of each", "type": "quality"},
+    {"id": "a4", "text": "Response is informative but concise", "type": "quality"}
+  ]
+}

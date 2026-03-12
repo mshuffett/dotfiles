@@ -1,11 +1,474 @@
-#!/usr/bin/env bash
-# cq - Claude Quick: Non-interactive Claude Code with Haiku
-# Usage: cq "your prompt here"
+#!/usr/bin/env bun
+/**
+ * cq - Claude Quick: instant questions via a pre-warmed daemon
+ *
+ * Keeps a Claude Code process spawned and ready so questions are answered
+ * without cold-start latency. Uses a Unix socket for communication and
+ * streams responses token-by-token.
+ *
+ * Usage:
+ *   cq "what does git rebase --onto do?"    Send a question
+ *   cq --start                               Start daemon
+ *   cq --stop                                Stop daemon
+ *   cq --status                              Check status
+ *   cq --restart                             Restart (fresh context)
+ *   cq --logs                                Tail daemon logs
+ */
 
-if [ -z "$1" ]; then
-    echo "Usage: cq \"your prompt here\""
-    echo "Runs Claude Code non-interactively with Haiku model"
-    exit 1
-fi
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+  unlinkSync,
+  appendFileSync,
+} from "fs";
+import { homedir } from "os";
+import { join } from "path";
+import { createServer, createConnection, type Socket } from "net";
+import type { Subprocess } from "bun";
 
-claude --dangerously-skip-permissions --model haiku -p "$*"
+// --- Paths ---
+const DAEMON_DIR = join(homedir(), ".claude", "daemon");
+const SOCKET_PATH = join(DAEMON_DIR, "daemon.sock");
+const PID_FILE = join(DAEMON_DIR, "daemon.pid");
+const LOG_FILE = join(DAEMON_DIR, "daemon.log");
+const SESSION_FILE = join(DAEMON_DIR, "session-id");
+
+mkdirSync(DAEMON_DIR, { recursive: true });
+
+// --- Logging ---
+function log(msg: string) {
+  const ts = new Date().toISOString();
+  appendFileSync(LOG_FILE, `[${ts}] ${msg}\n`);
+}
+
+// --- Claude Process Wrapper ---
+// Pre-warmed Claude -p process. Write question + close stdin → read stream-json → exits.
+class WarmClaude {
+  proc: Subprocess<"pipe", "pipe", "pipe">;
+
+  constructor(sessionId: string | null) {
+    const args = [
+      "claude",
+      "-p",
+      "--verbose",
+      "--output-format",
+      "stream-json",
+      "--include-partial-messages",
+      "--dangerously-skip-permissions",
+    ];
+    if (sessionId) {
+      args.push("--resume", sessionId);
+    }
+
+    log(`Spawning: ${args.join(" ")}`);
+    this.proc = Bun.spawn(args, {
+      stdin: "pipe",
+      stdout: "pipe",
+      stderr: "pipe",
+      env: { ...process.env, CLAUDECODE: undefined },
+    });
+    log(`Claude PID: ${this.proc.pid}`);
+  }
+
+  async ask(
+    question: string,
+    onText: (text: string) => void
+  ): Promise<{ sessionId: string | null; cost?: number }> {
+    this.proc.stdin.write(question);
+    this.proc.stdin.end();
+
+    // Drain stderr in background
+    (async () => {
+      const r = this.proc.stderr.getReader();
+      const d = new TextDecoder();
+      const chunks: string[] = [];
+      try {
+        while (true) {
+          const { done, value } = await r.read();
+          if (done) break;
+          chunks.push(d.decode(value, { stream: true }));
+        }
+      } catch {}
+      r.releaseLock();
+      if (chunks.length) log(`  stderr: ${chunks.join("").substring(0, 500)}`);
+    })();
+
+    const reader = this.proc.stdout.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let sessionId: string | null = null;
+    let cost: number | undefined;
+    let textSent = false;
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          try {
+            const event = JSON.parse(line);
+
+            if (event.type === "system" && event.session_id) {
+              sessionId = event.session_id;
+            }
+
+            // Token-level streaming
+            if (
+              event.type === "stream_event" &&
+              event.event?.delta?.type === "text_delta"
+            ) {
+              textSent = true;
+              onText(event.event.delta.text);
+            }
+
+            // Fallback: complete assistant message
+            if (event.type === "assistant" && !textSent && event.message?.content) {
+              for (const block of event.message.content) {
+                if (block.type === "text" && block.text) {
+                  onText(block.text);
+                }
+              }
+            }
+
+            if (event.type === "result") {
+              sessionId = sessionId || event.session_id;
+              cost = event.total_cost_usd;
+            }
+          } catch {
+            // Skip non-JSON lines
+          }
+        }
+      }
+    } finally {
+      reader.releaseLock();
+    }
+
+    const exitCode = await this.proc.exited;
+    log(`  Claude exited: code=${exitCode}`);
+    return { sessionId, cost };
+  }
+
+  kill() {
+    try {
+      this.proc.kill();
+    } catch {}
+  }
+}
+
+// --- Daemon ---
+async function runDaemon() {
+  log("=== Daemon starting ===");
+
+  if (existsSync(SOCKET_PATH)) unlinkSync(SOCKET_PATH);
+  writeFileSync(PID_FILE, String(process.pid));
+
+  let sessionId: string | null = null;
+  if (existsSync(SESSION_FILE)) {
+    sessionId = readFileSync(SESSION_FILE, "utf-8").trim();
+    log(`Resuming session: ${sessionId}`);
+  }
+
+  let warm: WarmClaude | null = new WarmClaude(sessionId);
+  let busy = false;
+
+  async function handleQuestion(socket: Socket, question: string) {
+    if (busy) {
+      socket.write(
+        JSON.stringify({
+          type: "error",
+          content: "Daemon is busy with another question. Try again shortly.",
+        }) + "\n"
+      );
+      socket.end();
+      return;
+    }
+
+    busy = true;
+    log(`Question: ${question.substring(0, 120)}`);
+
+    if (!warm || warm.proc.exitCode !== null) {
+      log("Warm process dead, spawning fresh");
+      warm?.kill();
+      warm = new WarmClaude(sessionId);
+    }
+
+    const currentWarm = warm;
+    warm = null;
+
+    try {
+      const result = await currentWarm.ask(question, (text) => {
+        socket.write(JSON.stringify({ type: "text", content: text }) + "\n");
+      });
+
+      if (result.sessionId) {
+        sessionId = result.sessionId;
+        writeFileSync(SESSION_FILE, sessionId);
+        log(`Session: ${sessionId}`);
+      }
+
+      socket.write(
+        JSON.stringify({ type: "done", cost: result.cost }) + "\n"
+      );
+      log(`Done (cost: $${result.cost?.toFixed(4) ?? "?"})`);
+    } catch (e: any) {
+      log(`Error: ${e.message}`);
+      socket.write(
+        JSON.stringify({ type: "error", content: e.message }) + "\n"
+      );
+      currentWarm.kill();
+    } finally {
+      socket.end();
+      busy = false;
+      warm = new WarmClaude(sessionId);
+    }
+  }
+
+  // Use Node net.createServer for reliable Unix socket transport
+  const server = createServer((socket: Socket) => {
+    log("Client connected");
+    let buf = "";
+
+    socket.on("data", (data: Buffer) => {
+      buf += data.toString();
+      const parts = buf.split("\n");
+      buf = parts.pop() || "";
+
+      for (const part of parts) {
+        if (!part.trim()) continue;
+        try {
+          const msg = JSON.parse(part);
+          if (msg.type === "question" && msg.content) {
+            handleQuestion(socket, msg.content);
+          }
+        } catch {}
+      }
+    });
+
+    socket.on("error", (err) => {
+      log(`Socket error: ${err.message}`);
+    });
+
+    socket.on("close", () => {
+      log("Client disconnected");
+    });
+  });
+
+  server.listen(SOCKET_PATH, () => {
+    log(`Listening on ${SOCKET_PATH}`);
+  });
+
+  function shutdown(signal: string) {
+    log(`Received ${signal}, shutting down`);
+    server.close();
+    warm?.kill();
+    try { unlinkSync(SOCKET_PATH); } catch {}
+    try { unlinkSync(PID_FILE); } catch {}
+    process.exit(0);
+  }
+
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on("SIGINT", () => shutdown("SIGINT"));
+}
+
+// --- Client ---
+async function sendQuestion(question: string) {
+  if (!isDaemonRunning()) {
+    process.stderr.write("Starting daemon...\n");
+    await startDaemon();
+
+    for (let i = 0; i < 100; i++) {
+      if (existsSync(SOCKET_PATH)) break;
+      await Bun.sleep(100);
+    }
+    if (!existsSync(SOCKET_PATH)) {
+      process.stderr.write("Failed to start daemon\n");
+      process.exit(1);
+    }
+  }
+
+  return new Promise<void>((resolve, reject) => {
+    const client = createConnection(SOCKET_PATH, () => {
+      client.write(
+        JSON.stringify({ type: "question", content: question }) + "\n"
+      );
+    });
+
+    let buf = "";
+    client.on("data", (data: Buffer) => {
+      buf += data.toString();
+      const lines = buf.split("\n");
+      buf = lines.pop() || "";
+
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        try {
+          const msg = JSON.parse(line);
+          switch (msg.type) {
+            case "text":
+              process.stdout.write(msg.content);
+              break;
+            case "done":
+              process.stdout.write("\n");
+              client.end();
+              resolve();
+              break;
+            case "error":
+              process.stderr.write(`Error: ${msg.content}\n`);
+              client.end();
+              reject(new Error(msg.content));
+              break;
+          }
+        } catch {}
+      }
+    });
+
+    client.on("end", () => resolve());
+    client.on("error", (err: Error) => {
+      process.stderr.write(`Connection error: ${err.message}\n`);
+      reject(err);
+    });
+  });
+}
+
+// --- Process Management ---
+function isDaemonRunning(): boolean {
+  if (!existsSync(PID_FILE)) return false;
+  const pid = parseInt(readFileSync(PID_FILE, "utf-8").trim());
+  if (isNaN(pid)) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    try { unlinkSync(PID_FILE); } catch {}
+    try { unlinkSync(SOCKET_PATH); } catch {}
+    return false;
+  }
+}
+
+async function startDaemon() {
+  if (isDaemonRunning()) {
+    console.log("Daemon is already running");
+    return;
+  }
+
+  try { unlinkSync(SOCKET_PATH); } catch {}
+  try { unlinkSync(PID_FILE); } catch {}
+
+  const proc = Bun.spawn(["bun", process.argv[1], "--daemon"], {
+    stdout: "ignore",
+    stderr: "ignore",
+    stdin: "ignore",
+  });
+  proc.unref();
+
+  for (let i = 0; i < 30; i++) {
+    if (existsSync(PID_FILE)) break;
+    await Bun.sleep(100);
+  }
+
+  if (existsSync(PID_FILE)) {
+    const pid = readFileSync(PID_FILE, "utf-8").trim();
+    console.log(`Daemon started (PID ${pid})`);
+  } else {
+    console.error("Daemon may have failed to start. Check: cq --logs");
+  }
+}
+
+function stopDaemon() {
+  if (!isDaemonRunning()) {
+    console.log("Daemon is not running");
+    return;
+  }
+
+  const pid = parseInt(readFileSync(PID_FILE, "utf-8").trim());
+  try {
+    process.kill(pid, "SIGTERM");
+    console.log(`Daemon stopped (PID ${pid})`);
+  } catch (e: any) {
+    console.error(`Failed to stop daemon: ${e.message}`);
+  }
+}
+
+function showStatus() {
+  if (isDaemonRunning()) {
+    const pid = readFileSync(PID_FILE, "utf-8").trim();
+    const session = existsSync(SESSION_FILE)
+      ? readFileSync(SESSION_FILE, "utf-8").trim().substring(0, 8) + "..."
+      : "none";
+    console.log(`Daemon:  running (PID ${pid})`);
+    console.log(`Session: ${session}`);
+    console.log(`Socket:  ${SOCKET_PATH}`);
+    console.log(`Logs:    ${LOG_FILE}`);
+  } else {
+    console.log("Daemon: not running");
+    console.log(`Run 'cq --start' or just 'cq "question"' to auto-start`);
+  }
+}
+
+function showHelp() {
+  console.log(`cq - Claude Quick: instant questions via pre-warmed daemon
+
+Usage:
+  cq "your question here"    Send a question (streams answer to stdout)
+  cq --start                 Start the daemon
+  cq --stop                  Stop the daemon
+  cq --status                Show daemon status
+  cq --restart               Restart daemon (fresh conversation context)
+  cq --logs                  Tail daemon logs
+  cq --help                  Show this help
+
+The daemon keeps a Claude Code process pre-warmed so your first token
+arrives without cold-start delay. Conversation context accumulates
+across questions (use --restart to reset).
+
+Examples:
+  cq "explain git rebase --onto"
+  cq "what's the difference between merge and rebase?"
+  cq "write a bash function to find large files"
+  cq --restart   # fresh context for a new topic`);
+}
+
+// --- Main ---
+const args = process.argv.slice(2);
+const cmd = args[0];
+
+if (cmd === "--daemon") {
+  await runDaemon();
+} else if (cmd === "--start") {
+  await startDaemon();
+} else if (cmd === "--stop") {
+  stopDaemon();
+} else if (cmd === "--status") {
+  showStatus();
+} else if (cmd === "--restart") {
+  stopDaemon();
+  for (let i = 0; i < 20; i++) {
+    if (!isDaemonRunning()) break;
+    await Bun.sleep(100);
+  }
+  try { unlinkSync(SESSION_FILE); } catch {}
+  await startDaemon();
+} else if (cmd === "--logs") {
+  const proc = Bun.spawn(["tail", "-f", LOG_FILE], {
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+  await proc.exited;
+} else if (cmd === "--help" || cmd === "-h" || !cmd) {
+  showHelp();
+} else {
+  const question = args.join(" ");
+  try {
+    await sendQuestion(question);
+  } catch {
+    process.exit(1);
+  }
+}

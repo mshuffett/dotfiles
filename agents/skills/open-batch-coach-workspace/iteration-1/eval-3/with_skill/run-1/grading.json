@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Identifies buzzword/jargon problems in the pitch",
+      "passed": true,
+      "evidence": "Explicitly calls it \"buzzword soup\" and enumerates specific offenders: \"'AI-powered,' 'cutting-edge,' 'leverages,' 'revolutionize,' 'seamless,' 'at scale,' 'proprietary technology stack' -- these words sound impressive but communicate nothing.\""
+    },
+    {
+      "text": "References the YC guide on plain English",
+      "passed": true,
+      "evidence": "Multiple direct references: \"The YC pitch guide puts it bluntly: when investors hear 'AI-powered platform revolutionizing enterprise workflows,' no picture forms in their mind.\" Also: \"The pitch guide recommends: explain what it does or what problem it solves\" and \"The guide says it often takes 3-4 rounds to get this right.\""
+    },
+    {
+      "text": "Asks what the company actually does before rewriting",
+      "passed": true,
+      "evidence": "Four specific diagnostic questions: \"What does a customer actually use NexaSync for?\", \"What systems are you connecting, specifically?\", \"What's the before/after?\", \"Do you have any traction?\" All asked before any rewrite attempt."
+    },
+    {
+      "text": "Does NOT write a complete rewrite without understanding the business first",
+      "passed": true,
+      "evidence": "No rewrite is offered. Response ends with \"Let's start with your answers to those questions and we'll workshop it from there.\" Only diagnosis and questions are provided."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 60.3},
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Excellent coaching response. Direct and honest about the buzzword problem, grounds feedback in YC guide principles, and correctly gathers information before attempting to fix. The four numbered problems (buzzword overload, how-not-what, no picture, no traction) are well-structured."
+  }
+}

@@ -15,11 +15,11 @@ When the user marks something as wrong:
 
 ### 1: Wrong project assignment — keyword vs. person
 
-**Correction:** "Chen-Chen → Everything AI, not Demo Day"
+**Correction:** "Chen-Chen → Demo Day, not Everything AI"
 
-**Understanding:** "I assigned based on 'the space' sounding event-related. But Chen-Chen is a recurring contact in the Everything AI context. I used the noun ('space') instead of the person as the stronger project signal."
+**Understanding:** "Chen-Chen is a Demo Day contact and 'the space' is event-related. Both signals point to Demo Day. The person-project association rule is valid — the error was having the wrong association data."
 
-**Fix:** Add processing principle: *"When an item references a person, use their known project association as the primary signal over keywords."* Annotate project list with key contacts.
+**Fix:** Add processing principle: *"When an item references a person, use their known project association as the primary signal over keywords."* Annotate project list with key contacts. Ensure contact associations are based on real data, not hypothetical scenarios.
 
 ### 2: Misreading brainstorming as action
 

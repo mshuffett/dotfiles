@@ -1,0 +1,11 @@
+{
+  "eval_id": 17,
+  "eval_name": "reuse-old-deck",
+  "prompt": "I already have a deck from my last fundraise, can I just use that?",
+  "assertions": [
+    {"id": "a1", "text": "Advises against reusing the old deck", "type": "behavior"},
+    {"id": "a2", "text": "Explains why: different format (1-2 slides, not full deck)", "type": "behavior"},
+    {"id": "a3", "text": "References the guide on starting fresh", "type": "behavior"},
+    {"id": "a4", "text": "Explains that audience and format differ from fundraise", "type": "quality"}
+  ]
+}

@@ -62,8 +62,8 @@ Verb-first task title. Add `📎 See also: [[Note Title]]` if there's a related 
 3. When neither applies, default to Everything AI for technical content.
 
 **Active projects (annotated):**
-- **Everything AI** — Agent orchestration platform. Domain: agents, orchestration, LLMs, prompts, tool use, MCP, Claude Code. Key contacts: Chen-Chen, Raiya, Anar.
-- **Demo Day** — Event planning. Domain: venue, logistics, presentations, audience.
+- **Everything AI** — Agent orchestration platform. Domain: agents, orchestration, LLMs, prompts, tool use, MCP, Claude Code.
+- **Demo Day** — Event planning. Domain: venue, logistics, presentations, audience. Key contacts: Chen-Chen.
 - **Manage Finances** — Financial ops. Domain: subscriptions, billing, taxes, equity, Brex.
 
 ### Triage Report

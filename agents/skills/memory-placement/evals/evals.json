@@ -1,0 +1,68 @@
+{
+  "skill_name": "memory-placement",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "The user says: 'Remember that I always prefer pnpm over npm across all my projects.' Where should this information be stored?",
+      "expected_output": "Routes to ~/.claude/CLAUDE.md (user-level, personal preference, all projects)",
+      "files": [],
+      "expectations": [
+        "Routes to ~/.claude/CLAUDE.md or user-level rules, NOT project CLAUDE.md",
+        "Identifies this as a human instruction (not a Claude learning)",
+        "Identifies this as cross-project (not repo-specific)",
+        "Identifies this as personal preference (not team-shared)",
+        "Does NOT route to auto-memory"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The user says: 'This project uses 2-space indentation for TypeScript files but 4-space for Python.' Where should this information be stored?",
+      "expected_output": "Routes to .claude/rules/ with path-specific frontmatter, or project CLAUDE.md",
+      "files": [],
+      "expectations": [
+        "Routes to project-level storage (not user-level)",
+        "Considers .claude/rules/ with paths: frontmatter for file-type-specific loading",
+        "Identifies this as team-shared (checked into git), not personal",
+        "Does NOT route to auto-memory",
+        "Does NOT route to ~/.claude/CLAUDE.md"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "During debugging, Claude discovered that the project's auth tokens expire after exactly 30 minutes and the refresh endpoint is at /api/auth/refresh. This wasn't documented anywhere. Where should this be stored?",
+      "expected_output": "Routes to auto-memory (~/.claude/projects/<project>/memory/)",
+      "files": [],
+      "expectations": [
+        "Routes to auto-memory, not CLAUDE.md or rules",
+        "Identifies this as a Claude learning/discovery (not a human instruction)",
+        "Suggests a topic file within auto-memory (not just MEMORY.md index)",
+        "Does NOT route to project CLAUDE.md"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "The user says: 'My local database is at postgres://localhost:5432/myapp_dev — don't commit this anywhere shared.' Where should this be stored?",
+      "expected_output": "Routes to ./CLAUDE.local.md (personal, project-specific, gitignored)",
+      "files": [],
+      "expectations": [
+        "Routes to CLAUDE.local.md or similar gitignored location",
+        "Identifies this as personal (not team-shared)",
+        "Identifies this as project-specific (not global)",
+        "Does NOT route to ./CLAUDE.md (would be committed to git)",
+        "Acknowledges the sensitivity / do-not-share constraint"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "The user says: 'All API endpoints in src/api/ must validate input with zod schemas before processing.' Where should this be stored?",
+      "expected_output": "Routes to .claude/rules/ with paths: frontmatter scoped to src/api/",
+      "files": [],
+      "expectations": [
+        "Routes to project-level storage (rules or CLAUDE.md)",
+        "Considers .claude/rules/ with path-scoping to src/api/**",
+        "Identifies this as team-shared (checked into git)",
+        "Does NOT route to auto-memory or personal files"
+      ]
+    }
+  ]
+}

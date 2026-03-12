@@ -1,0 +1,9 @@
+{
+  "assertions": [
+    {
+      "text": "Both responses provide useful technical guidance about compound component patterns",
+      "passed": true,
+      "evidence": "Without-skill response provides Accordion compound component example with createContext, custom hook, useCallback, static property attachment, and performance notes. Comparable quality to with-skill response."
+    }
+  ]
+}

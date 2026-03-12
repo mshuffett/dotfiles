@@ -1,0 +1,744 @@
+{
+  "metadata": {
+    "skill_name": "open-batch-coach",
+    "skill_path": "/Users/michael/.dotfiles/agents/skills/open-batch-coach",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-02-26T22:47:20Z",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 42.1,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Checks founder state before responding",
+          "passed": true,
+          "evidence": "\"I checked your progress and you're starting fresh, so let's begin at the top.\""
+        },
+        {
+          "text": "Gives a brief intro (under 5 sentences) before asking questions",
+          "passed": true,
+          "evidence": "Intro is 3 sentences: greeting, scope statement (\"I'll walk you through everything...\"), and state check (\"I checked your progress...\"). All before the questions section."
+        },
+        {
+          "text": "Uses AskUserQuestion or structured questions to collect onboarding info",
+          "passed": true,
+          "evidence": "Four structured numbered questions: name, company name, in-person vs virtual, and presenting status -- with clear options for the latter two."
+        },
+        {
+          "text": "Does NOT dump the full coaching flow or schedule upfront",
+          "passed": true,
+          "evidence": "Response only introduces itself briefly, asks onboarding questions, and teases the next step: \"we'll get into the real work -- your two-sentence pitch.\" No schedule, timeline, or full coaching flow is dumped."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 10,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 2,
+        "failed": 2,
+        "total": 4,
+        "time_seconds": 51.9,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recognizes this is a good pitch with specific positive feedback",
+          "passed": true,
+          "evidence": "\"This is a solid starting point.\" Identifies three specific strengths: \"First sentence is clear\" (\"anyone can understand that immediately. No jargon, no buzzwords\"), \"You included traction\" (\"The 89% satisfaction stat is concrete and memorable\"), and \"It's actually two sentences\" (with humor: \"You'd be surprised how many founders turn this into five\")."
+        },
+        {
+          "text": "Does NOT tear it apart or rewrite from scratch",
+          "passed": false,
+          "evidence": "Despite calling it a 'solid starting point,' the response identifies 3 substantial critiques ('What needs work' section), offers a complete rewritten version ('Roomie helps college students find compatible roommates. 89% of our matches report being happy...'), asks 3 follow-up questions, and says 'This usually takes 3-4 rounds to get tight.' The tone and volume of critique effectively treats this as a pitch that needs significant rework rather than one that's close to done."
+        },
+        {
+          "text": "Identifies concrete strengths (clear, metric, picture-creating)",
+          "passed": true,
+          "evidence": "Identifies 'clear' (\"First sentence is clear... anyone can understand that immediately\") and 'metric' (\"The 89% satisfaction stat is concrete and memorable\"). Notes the pitch successfully avoids common mistakes (\"failing to include traction\"). Does not call it 'picture-creating' but the assertion's parenthetical appears to be example categories, not a required checklist."
+        },
+        {
+          "text": "Asks if founder wants to lock it in",
+          "passed": false,
+          "evidence": "Does the opposite -- pushes for revision: \"Take a crack at a revision and send it back. This usually takes 3-4 rounds to get tight\" and \"We're not locking anything in until you're happy with it.\" Never offers the option of locking in the current pitch as-is."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 11,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 41.9,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Explains vertebrae concept by referencing the guide",
+          "passed": true,
+          "evidence": "\"Looking at the pitch guide, your vertebrae should answer questions like:\" followed by the guide's key questions. Also: \"Vertebrae are the 3-5 core points you most want investors to remember about StackShip after your pitch.\""
+        },
+        {
+          "text": "Provides examples (PostHog or Airbnb from guide)",
+          "passed": true,
+          "evidence": "Provides the full PostHog example with all 5 vertebrae: what they do, traction (\"HN launch was the all-time most upvoted B2B software launch\"), why this approach wins (open source angle), team credentials, and market (\"8-10x more developers than product people\")."
+        },
+        {
+          "text": "Offers to workshop vertebrae together",
+          "passed": true,
+          "evidence": "\"Want to take a crack at your vertebrae for StackShip?\" followed by 3 specific prompting questions and \"We'll workshop them from there.\""
+        },
+        {
+          "text": "Does not assume founder already knows YC terminology",
+          "passed": true,
+          "evidence": "Opens with \"Great question.\" and explains from first principles: \"Vertebrae are the 3-5 core points...Think of them as the backbone of your entire Demo Day presentation.\" Uses a metaphor (backbone) and builds up understanding before using examples."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 12,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 50.5,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Genuinely supportive without being patronizing",
+          "passed": true,
+          "evidence": "\"Lin, that's normal. Every founder feels this. Here's what actually helps:\" -- validates the feeling, normalizes it, and immediately pivots to practical help. Uses the founder's name (Lin) for personal connection. No condescending language like 'don't worry' or 'I believe in you.'"
+        },
+        {
+          "text": "Points to practice sessions as a resource",
+          "passed": true,
+          "evidence": "\"You have a practice session on March 5. Use it. The single best cure for presentation nerves is having already said the words out loud in front of people. After practice, Demo Day will feel like the second time, not the first.\""
+        },
+        {
+          "text": "Gives practical delivery tips (slow down, short sentences)",
+          "passed": true,
+          "evidence": "Multiple practical tips: \"Say your pitch out loud 10+ times\" (not in your head, standing up, at speaking volume), \"Slow down\" (with explanation from YC guide: \"speak slowly and clearly -- don't try to speak faster to cram in more words\"), \"Record yourself on your phone and watch it back once.\" Does not explicitly mention 'short sentences' but provides several concrete delivery techniques."
+        },
+        {
+          "text": "Does NOT dismiss nerves with generic 'you'll be fine'",
+          "passed": true,
+          "evidence": "Never says 'you'll be fine' or any equivalent. Instead validates the nervousness (\"that's normal\") and provides 4 numbered practical actions plus additional advice about sharing the pitch with another founder. The response is entirely action-oriented rather than reassurance-oriented."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 13,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 44.5,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "References FAQ on apps/websites looking similar at a glance",
+          "passed": true,
+          "evidence": "\"if you're showing off an app or website, you don't need to. At a glance, most apps and websites look the same, and a nice UI screenshot doesn't move the needle with investors.\""
+        },
+        {
+          "text": "Mentions YouTube demo video option on second slide",
+          "passed": true,
+          "evidence": "\"the format allows a second slide with a demo video uploaded to YouTube, as long as your total presentation stays under 2 minutes.\""
+        },
+        {
+          "text": "Helps decide based on their specific product",
+          "passed": true,
+          "evidence": "Tailors advice to FormStack specifically: \"What moves the needle is what FormStack *does*: turning 3-week paper processes into 2-day digital ones.\" Also references their traction: \"50,000 forms for 12 state agencies.\""
+        },
+        {
+          "text": "Gives a clear recommendation rather than listing pros/cons",
+          "passed": true,
+          "evidence": "\"My recommendation: skip the demo on the slide. Use your one slide for the essentials.\""
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 14,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 34.1,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "References FAQ guidance on small markets",
+          "passed": true,
+          "evidence": "\"The YC guide's FAQ is direct about this: if your market is under $1B, consider whether you can expand the scope.\""
+        },
+        {
+          "text": "Suggests ways to expand scope (countries, segments, adjacent)",
+          "passed": true,
+          "evidence": "\"Are there adjacent segments you'd naturally expand into? Pet supplements, pet food, vet telehealth, pet insurance\" and \"If you can credibly frame a larger addressable market \u2014 say, total pet health spending that you'd capture a slice of over time \u2014 then include it with the bottom-up math.\""
+        },
+        {
+          "text": "Does NOT just say 'leave it out'",
+          "passed": true,
+          "evidence": "\"But before you decide to leave it out, let's think about this bottom-up for PetRx.\" The response actively helps the founder explore whether the market is actually bigger before considering leaving it out."
+        },
+        {
+          "text": "Helps think through whether market is actually bigger",
+          "passed": true,
+          "evidence": "Asks three targeted questions: (1) \"How are you calculating $500M?\" (2) \"Are there adjacent segments you'd naturally expand into?\" (3) \"Is pet ownership or pet spending growing fast?\" Also provides the Airbnb bottom-up math example as a model."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 15,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 40.9,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Pushes back on the assumption respectfully",
+          "passed": true,
+          "evidence": "\"I hear you, and I get the instinct \u2014 you know the investors are technical, so you want to speak their language. But this is actually one of the most common traps in pitch prep\""
+        },
+        {
+          "text": "References the guide on plain English",
+          "passed": true,
+          "evidence": "\"the YC guide calls it out directly\" and \"The guide puts it well: your two-sentence description should create a picture in the listener's mind.\""
+        },
+        {
+          "text": "Explains why clarity wins over technical depth at demo day",
+          "passed": true,
+          "evidence": "\"The pitches that land are the ones that are instantly clear, not the ones that flex architecture knowledge.\" Also: \"Demo Day is about getting that meeting\" \u2014 frames the real goal clearly."
+        },
+        {
+          "text": "Does NOT just agree with the founder's premise",
+          "passed": true,
+          "evidence": "Clear, respectful pushback throughout. \"So instead of making the pitch more technical, let's make it more concrete and specific. That's what actually impresses technical people \u2014 specificity, not jargon.\""
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 16,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 34.1,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Explains practice sessions: dates, 1 hour, paired with founders",
+          "passed": true,
+          "evidence": "\"Practice sessions (March 4-6) are 1-hour rehearsal rounds where you get paired with other founders. You present your pitch and give each other feedback.\" Also includes a table with all three dates/times/signup links."
+        },
+        {
+          "text": "Explains demo day: March 10, 4pm, 100+ investors, 2 min",
+          "passed": true,
+          "evidence": "\"Demo Day (March 10, 4:00 PM PT) is the main event. You get 2 minutes in front of 100+ investors at Intercom HQ (or virtually).\""
+        },
+        {
+          "text": "Clearly distinguishes the purpose of each",
+          "passed": true,
+          "evidence": "\"Same pitch, very different audiences and stakes. Practice sessions are for you to get better. Demo Day is for investors to decide if they want to talk to you.\""
+        },
+        {
+          "text": "Response is informative but concise",
+          "passed": true,
+          "evidence": "Well-structured with bold headers, a clear comparison, a summary sentence, and a practical table of practice session dates. No unnecessary padding."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 17,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 36.5,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Advises against reusing the old deck",
+          "passed": true,
+          "evidence": "\"Short answer: no. Start your slide from scratch.\""
+        },
+        {
+          "text": "Explains why: different format (1-2 slides, not full deck)",
+          "passed": true,
+          "evidence": "\"Your fundraise deck was probably 10-15 slides designed for a 30-minute meeting where investors can ask questions. Demo Day is 2 minutes, 1-2 slides, in front of 100+ investors who are each seeing dozens of companies back to back.\""
+        },
+        {
+          "text": "References the guide on starting fresh",
+          "passed": true,
+          "evidence": "\"The YC pitch guide is explicit on this: 'Start from scratch. Don't reuse old deck materials. Reconsider any language you've used in the past to describe your company \u2014 especially if it sounds snappy, catchy, or like a TV commercial.'\""
+        },
+        {
+          "text": "Explains that audience and format differ from fundraise",
+          "passed": true,
+          "evidence": "\"A fundraise deck and a Demo Day slide solve different problems.\" Contrasts the 30-minute meeting format with the 2-minute Demo Day format, and the different audience dynamics (100+ investors seeing dozens of companies)."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 18,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 27.3,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recognizes this as triggering the coaching flow",
+          "passed": true,
+          "evidence": "\"I'm your Demo Day prep coach for Open Batch 001. I'll walk you through everything you need to be ready for March 10th: pitch, slide, logistics, practice sessions.\""
+        },
+        {
+          "text": "Does NOT ask 'what do you mean by open batch?'",
+          "passed": true,
+          "evidence": "No confusion or clarification about the term 'open batch'. Immediately launches into coaching mode."
+        },
+        {
+          "text": "Gives brief intro then launches onboarding",
+          "passed": true,
+          "evidence": "One-paragraph intro (\"I'm your Demo Day prep coach...\") followed immediately by \"Let's start with a few quick questions so I know where you're at\" and four structured onboarding questions."
+        },
+        {
+          "text": "Uses AskUserQuestion or structured questions",
+          "passed": true,
+          "evidence": "Uses numbered structured questions with clear options: (1) name, (2) company name, (3) in-person vs virtual with bullet options, (4) presenting status with Yes/No/Not sure options."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 44.7,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Checks state and identifies pitch as the next incomplete step",
+          "passed": true,
+          "evidence": "Opens with \"You're in good shape on logistics -- RSVP confirmed, presenting in person, and you're registered for the March 5 practice session\" then transitions to \"Next up: your two-sentence pitch.\""
+        },
+        {
+          "text": "Routes to two-sentence pitch workshop",
+          "passed": true,
+          "evidence": "Provides the two-sentence pitch structure (first sentence = what it does, second sentence = why it's awesome), gives Stripe and Airbnb examples, and ends with \"Do you have a draft of your two-sentence pitch, or would you like to build one from scratch?\""
+        },
+        {
+          "text": "Acknowledges completed items briefly without re-explaining them",
+          "passed": true,
+          "evidence": "Completed logistics listed in a single sentence: \"RSVP confirmed, presenting in person, and you're registered for the March 5 practice session.\" No re-explanation of what those steps entail."
+        },
+        {
+          "text": "Response is concise and action-oriented",
+          "passed": true,
+          "evidence": "Response is action-oriented, ending with a clear CTA. While it includes examples (Stripe, Airbnb), these serve the pitch workshop action. The response moves directly from state check to next step with no filler."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 60.3,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Identifies buzzword/jargon problems in the pitch",
+          "passed": true,
+          "evidence": "Explicitly calls it \"buzzword soup\" and enumerates specific offenders: \"'AI-powered,' 'cutting-edge,' 'leverages,' 'revolutionize,' 'seamless,' 'at scale,' 'proprietary technology stack' -- these words sound impressive but communicate nothing.\""
+        },
+        {
+          "text": "References the YC guide on plain English",
+          "passed": true,
+          "evidence": "Multiple direct references: \"The YC pitch guide puts it bluntly: when investors hear 'AI-powered platform revolutionizing enterprise workflows,' no picture forms in their mind.\" Also: \"The pitch guide recommends: explain what it does or what problem it solves\" and \"The guide says it often takes 3-4 rounds to get this right.\""
+        },
+        {
+          "text": "Asks what the company actually does before rewriting",
+          "passed": true,
+          "evidence": "Four specific diagnostic questions: \"What does a customer actually use NexaSync for?\", \"What systems are you connecting, specifically?\", \"What's the before/after?\", \"Do you have any traction?\" All asked before any rewrite attempt."
+        },
+        {
+          "text": "Does NOT write a complete rewrite without understanding the business first",
+          "passed": true,
+          "evidence": "No rewrite is offered. Response ends with \"Let's start with your answers to those questions and we'll workshop it from there.\" Only diagnosis and questions are provided."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 60.1,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Addresses the technical product concern with FAQ guidance",
+          "passed": true,
+          "evidence": "Dedicated section \"On explaining DataPipe in 2 minutes\" addresses the concern directly with FAQ-style guidance: \"almost nothing is actually too complicated to explain in two sentences. The trick is to explain what DataPipe does and what problem it solves -- not how it works under the hood.\" References Stripe and PostHog as examples of technical products with clear pitches."
+        },
+        {
+          "text": "Mentions the virtual attendance option",
+          "passed": true,
+          "evidence": "\"Good news: there's a virtual option. You can attend and present remotely. So that concern doesn't need to block your decision about presenting.\""
+        },
+        {
+          "text": "Encouraging but not pushy about presenting",
+          "passed": true,
+          "evidence": "\"I won't pressure you\" and \"If it's a genuine strategic decision to skip, I respect that\" while still presenting the value: \"2 minutes of exposure to that investor audience is hard to replicate.\" Balanced tone throughout."
+        },
+        {
+          "text": "Still proceeds with onboarding (AskUserQuestion or similar)",
+          "passed": true,
+          "evidence": "Ends with two numbered questions: \"1. Will you be attending in person or virtually?\" and \"2. Where are you landing on presenting?\" -- continuing the onboarding flow despite the uncertainty."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 50.2,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Checks state and identifies remaining steps",
+          "passed": true,
+          "evidence": "Response has explicit \"Done\" and \"Still to do -- three things\" sections, showing clear state awareness. Done items: pitch locked, RSVP, practice session, pitch feedback. Remaining: vertebrae, full pitch script, slide & bio."
+        },
+        {
+          "text": "Routes to vertebrae as the next step",
+          "passed": true,
+          "evidence": "\"My recommendation: Let's start with vertebrae right now. They're the foundation for both the pitch script and the slide, so everything else gets easier once these are locked.\""
+        },
+        {
+          "text": "Lists remaining items (vertebrae, full script, slide, bio)",
+          "passed": true,
+          "evidence": "Three numbered sections: \"1. Vertebrae\", \"2. Full Pitch Script (2 minutes)\", \"3. Slide & Founder Bio\" -- all four items (vertebrae, full script, slide, bio) are covered."
+        },
+        {
+          "text": "Does not re-explain completed steps",
+          "passed": true,
+          "evidence": "Completed items listed as brief bullets (pitch text, RSVP status, practice session date, feedback reminder). No re-explanation of what those steps involved or why they matter."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 6,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.75,
+        "passed": 3,
+        "failed": 1,
+        "total": 4,
+        "time_seconds": 33.1,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Includes date (March 10), time (4pm PT), and location",
+          "passed": true,
+          "evidence": "\"Date: Monday, March 10th, 4:00 PM Pacific\" and \"Location: Intercom HQ, 55 2nd St, 5th Floor, San Francisco (virtual option available)\""
+        },
+        {
+          "text": "Mentions 2 minutes per founder",
+          "passed": true,
+          "evidence": "\"Time per founder: 2 minutes max\""
+        },
+        {
+          "text": "Mentions 1-2 slides and 100+ investors",
+          "passed": true,
+          "evidence": "\"Slides: 1-2 slides, 16:9 aspect ratio\" and \"Audience: 100+ investors have RSVP'd\""
+        },
+        {
+          "text": "Response is concise (not a full coaching dump)",
+          "passed": false,
+          "evidence": "The format answer itself (first 11 lines) is concise and well-structured. However, the response then appends a full onboarding section: \"It looks like this is your first time working with me. I'm your Demo Day prep coach\" followed by 4 onboarding questions. The user asked a specific factual question about the format; the response extends well beyond that into unsolicited coaching/onboarding, making the total response not concise relative to the question asked."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 7,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 47.1,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Asks why (explores the resistance)",
+          "passed": true,
+          "evidence": "Response asks \"what's behind 'I don't want to do it'?\" and presents four specific scenarios of resistance (not ready, not fundraising, not a fit, just don't want to), ending with \"What's driving the hesitation?\""
+        },
+        {
+          "text": "Mentions the opportunity without hard-selling",
+          "passed": true,
+          "evidence": "Frames information neutrally: \"let me make sure you have the full picture so you're making an informed decision\" then lists facts (100+ investors, 2 minutes, purpose). Describes Demo Day as \"a low-cost option on future conversations\" rather than a must-do."
+        },
+        {
+          "text": "Does NOT guilt-trip or be overly pushy",
+          "passed": true,
+          "evidence": "Multiple explicit non-pressure statements: \"That's completely your call\", \"'I just don't want to' -- Also fine. It's your company, your time.\", \"I'm not here to pressure you.\""
+        },
+        {
+          "text": "Respects the founder's autonomy",
+          "passed": true,
+          "evidence": "\"That's completely your call\", \"It's your company, your time\", and \"Also fine\" as a legitimate response to not wanting to present. Positions the conversation as information-gathering, not persuasion."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 8,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 45.9,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Clearly states 1-2 slides max",
+          "passed": true,
+          "evidence": "\"Slides: 1-2 max, not 3.\" and \"Two slides is your ceiling.\" Also notes the second slide can be a YouTube demo video."
+        },
+        {
+          "text": "Clearly states 2 minutes max",
+          "passed": true,
+          "evidence": "\"Time: 2 minutes is a hard cap.\" and \"the organizers will cut you off, which is a worse look than finishing on time.\""
+        },
+        {
+          "text": "Frames constraints positively (clarity, not limitation)",
+          "passed": true,
+          "evidence": "\"If you're feeling like you need a third slide, that's usually a signal there's too much on the existing slides rather than too little space.\" Also: \"Two minutes is plenty of room to introduce yourself, deliver that, cover traction, business model, market, and close with something compelling.\""
+        },
+        {
+          "text": "References the guide on not cramming more words",
+          "passed": true,
+          "evidence": "\"The YC guide says it well -- don't try to cram more in by speaking faster. It doesn't work. Cut content instead.\""
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 9,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "time_seconds": 44.4,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "References FAQ guidance on no traction",
+          "passed": true,
+          "evidence": "\"The pitch guide is explicit about this -- if you haven't launched, leave the traction section out and expand your closing instead.\""
+        },
+        {
+          "text": "Suggests expanding closing section as alternative",
+          "passed": true,
+          "evidence": "\"Take the time you would have spent on traction and put it into a stronger closing. The closing is your last shot to leave investors with something compelling. The pitch guide says to pick ONE of these:\" followed by five specific closing options."
+        },
+        {
+          "text": "Does NOT make up fake traction advice",
+          "passed": true,
+          "evidence": "Explicitly warns against it: \"Don't manufacture metrics. No 'we've talked to 50 potential customers' or 'our TAM is $X billion' shoehorned into the traction slot. Investors hear that constantly and it doesn't land.\""
+        },
+        {
+          "text": "Provides actionable alternatives (unique insight, background, milestone)",
+          "passed": true,
+          "evidence": "Lists five alternatives: unique market understanding, personal experience with the problem, significant previous accomplishment, recent change making it possible now, personal expertise. Also provides milestone framing advice with concrete before/after example: weak ('We've built a working prototype') vs strong ('In 8 weeks we built a working carbon tracking engine...')."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 0.9583,
+        "stddev": 0.1286,
+        "min": 0.5,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 43.8667,
+        "stddev": 8.9093,
+        "min": 27.3,
+        "max": 60.3
+      },
+      "tokens": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.96",
+      "time_seconds": "+43.9",
+      "tokens": "+0"
+    }
+  },
+  "notes": []
+}

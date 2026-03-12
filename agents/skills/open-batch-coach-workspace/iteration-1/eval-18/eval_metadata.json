@@ -1,0 +1,11 @@
+{
+  "eval_id": 18,
+  "eval_name": "minimal-cold-start",
+  "prompt": "open batch",
+  "assertions": [
+    {"id": "a1", "text": "Recognizes this as triggering the coaching flow", "type": "behavior"},
+    {"id": "a2", "text": "Does NOT ask 'what do you mean by open batch?'", "type": "quality"},
+    {"id": "a3", "text": "Gives brief intro then launches onboarding", "type": "behavior"},
+    {"id": "a4", "text": "Uses AskUserQuestion or structured questions", "type": "behavior"}
+  ]
+}

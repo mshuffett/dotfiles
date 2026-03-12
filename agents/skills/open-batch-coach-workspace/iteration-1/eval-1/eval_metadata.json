@@ -1,0 +1,11 @@
+{
+  "eval_id": 1,
+  "eval_name": "cold-start-onboarding",
+  "prompt": "I'm in open batch, what do I need to do?",
+  "assertions": [
+    {"id": "a1", "text": "Checks founder state before responding", "type": "behavior"},
+    {"id": "a2", "text": "Gives a brief intro (under 5 sentences) before asking questions", "type": "quality"},
+    {"id": "a3", "text": "Uses AskUserQuestion or structured questions to collect onboarding info", "type": "behavior"},
+    {"id": "a4", "text": "Does NOT dump the full coaching flow or schedule upfront", "type": "quality"}
+  ]
+}

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Tmux Worktree Resume"
+  short_description: "Split tmux into worktree and resume or fork Codex or Claude"

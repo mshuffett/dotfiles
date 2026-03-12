@@ -1,0 +1,27 @@
+{
+  "expectations": [
+    {
+      "text": "Explains practice sessions: dates, 1 hour, paired with founders",
+      "passed": true,
+      "evidence": "\"Practice sessions (March 4-6) are 1-hour rehearsal rounds where you get paired with other founders. You present your pitch and give each other feedback.\" Also includes a table with all three dates/times/signup links."
+    },
+    {
+      "text": "Explains demo day: March 10, 4pm, 100+ investors, 2 min",
+      "passed": true,
+      "evidence": "\"Demo Day (March 10, 4:00 PM PT) is the main event. You get 2 minutes in front of 100+ investors at Intercom HQ (or virtually).\""
+    },
+    {
+      "text": "Clearly distinguishes the purpose of each",
+      "passed": true,
+      "evidence": "\"Same pitch, very different audiences and stakes. Practice sessions are for you to get better. Demo Day is for investors to decide if they want to talk to you.\""
+    },
+    {
+      "text": "Response is informative but concise",
+      "passed": true,
+      "evidence": "Well-structured with bold headers, a clear comparison, a summary sentence, and a practical table of practice session dates. No unnecessary padding."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 34.1},
+  "eval_feedback": {"suggestions": [], "overall": "Clean, well-structured answer. Includes all key details (dates, times, signup links, format) without being verbose. The summary line is particularly effective."}
+}

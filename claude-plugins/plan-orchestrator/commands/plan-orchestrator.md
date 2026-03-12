@@ -1,5 +1,10 @@
 ---
-description: Collaborative planning with linked documents, status tracking, and gated progression
+description: >
+  Collaborative requirements gathering with gated approvals. Use when the user needs to document
+  what to build before committing to an approach — goals, scope, success criteria, technical
+  constraints. Produces structured markdown docs, NOT execution plans or code. Output feeds into
+  GSD (for epics), feature-dev (for features), or plan mode (for medium tasks). NOT for running
+  agents, swarms, or executing work — this is purely requirements and scope alignment.
 argument-hint: <plan-name or description>
 ---
 

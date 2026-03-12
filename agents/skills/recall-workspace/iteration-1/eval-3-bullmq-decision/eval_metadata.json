@@ -1,0 +1,19 @@
+{
+  "eval_id": 3,
+  "eval_name": "bullmq-decision-recall",
+  "prompt": "do you remember why we decided to use BullMQ instead of a custom solution? I think there was a specific reason but I can't remember",
+  "assertions": [
+    {
+      "text": "With-skill response dispatches an agent-recall search (evidence: mentions searching, dispatching agent, or running agent-recall)",
+      "type": "with_skill_only"
+    },
+    {
+      "text": "Without-skill response acknowledges it cannot access historical conversation context",
+      "type": "without_skill_only"
+    },
+    {
+      "text": "With-skill response cites specific reasoning from prior conversations rather than generic BullMQ advantages",
+      "type": "with_skill_only"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "tool_calls": {
+    "Read": 2,
+    "Write": 3,
+    "Bash": 2,
+    "Edit": 0,
+    "Glob": 0,
+    "Grep": 0
+  },
+  "total_tool_calls": 7,
+  "total_steps": 5,
+  "files_created": [
+    "eval2-decision.md",
+    "eval2-user-notes.md",
+    "eval2-metrics.json"
+  ],
+  "errors_encountered": 0,
+  "transcript_chars": 7741,
+  "output_chars": 19350
+}

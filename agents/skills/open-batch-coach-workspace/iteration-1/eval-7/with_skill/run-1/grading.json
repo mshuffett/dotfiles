@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Asks why (explores the resistance)",
+      "passed": true,
+      "evidence": "Response asks \"what's behind 'I don't want to do it'?\" and presents four specific scenarios of resistance (not ready, not fundraising, not a fit, just don't want to), ending with \"What's driving the hesitation?\""
+    },
+    {
+      "text": "Mentions the opportunity without hard-selling",
+      "passed": true,
+      "evidence": "Frames information neutrally: \"let me make sure you have the full picture so you're making an informed decision\" then lists facts (100+ investors, 2 minutes, purpose). Describes Demo Day as \"a low-cost option on future conversations\" rather than a must-do."
+    },
+    {
+      "text": "Does NOT guilt-trip or be overly pushy",
+      "passed": true,
+      "evidence": "Multiple explicit non-pressure statements: \"That's completely your call\", \"'I just don't want to' -- Also fine. It's your company, your time.\", \"I'm not here to pressure you.\""
+    },
+    {
+      "text": "Respects the founder's autonomy",
+      "passed": true,
+      "evidence": "\"That's completely your call\", \"It's your company, your time\", and \"Also fine\" as a legitimate response to not wanting to present. Positions the conversation as information-gathering, not persuasion."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 47.1},
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Excellent response. Balances respect for autonomy with genuine exploration of the resistance. The four-scenario framework is a strong coaching technique that surfaces the real reason without being pushy."
+  }
+}

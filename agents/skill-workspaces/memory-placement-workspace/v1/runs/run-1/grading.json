@@ -1,0 +1,347 @@
+{
+  "per_eval": {
+    "1": {
+      "prompt": "The user says: 'Remember that I always prefer pnpm over npm across all my projects.' Where should this information be stored?",
+      "expectations": [
+        {
+          "text": "Routes to ~/.claude/CLAUDE.md or user-level rules, NOT project CLAUDE.md",
+          "passed": true,
+          "evidence": "Output states unambiguously: 'Destination: ~/.claude/CLAUDE.md — under the existing Preferences section.' Transcript Step 4 explicitly rules out project CLAUDE.md: 'scope is all projects + personal preference (not team-shared).' The decision tree walk in the output labels project CLAUDE.md 'wrong scope' and personal preference correctly goes to user-level file."
+        },
+        {
+          "text": "Identifies this as a human instruction (not a Claude learning)",
+          "passed": true,
+          "evidence": "Transcript Step 2 states: 'The user said \"Remember that I always prefer...\" — this is a human instruction/preference, not something Claude discovered. → Human branch of the decision tree.' Output echoes this: 'Who is writing this? The HUMAN is instructing a preference. → Human branch.'"
+        },
+        {
+          "text": "Identifies this as cross-project (not repo-specific)",
+          "passed": true,
+          "evidence": "Transcript Step 4: 'The user explicitly stated \"across all my projects.\" → Global scope → ~/.claude/CLAUDE.md, not a project-level file.' Output decision tree walk item 3: 'Scope: all projects or this project? The user explicitly said \"across all my projects.\" → Global scope.'"
+        },
+        {
+          "text": "Identifies this as personal preference (not team-shared)",
+          "passed": true,
+          "evidence": "Transcript Step 5: 'This is the user's personal preference. It should not be in a git-tracked project CLAUDE.md (which is shared with a team). → ~/.claude/CLAUDE.md confirmed.' Output item 4: 'Personal preference or team preference? Personal preference (user-level). → ~/.claude/CLAUDE.md (not a project CLAUDE.md, which is git-tracked and shared with a team).'"
+        },
+        {
+          "text": "Does NOT route to auto-memory",
+          "passed": true,
+          "evidence": "Output 'What NOT to Do' section explicitly states: 'Do NOT store in auto-memory (~/.claude/projects/.../memory/) — that's for Claude's own learnings, not human instructions.' Transcript acceptance checks also confirm: '[x] No auto-memory entry created (user instruction, not Claude discovery).'"
+        }
+      ],
+      "summary": {
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "pass_rate": 1.0
+      },
+      "claims": [
+        {
+          "claim": "The preference is already present in the existing ~/.claude/CLAUDE.md Preferences section",
+          "type": "factual",
+          "verified": true,
+          "evidence": "Transcript Step 6 reports reading ~/.claude/CLAUDE.md and finding 'pnpm, Ultracite linter' in the Preferences section. The CLAUDE.md contents visible in the system context confirm this."
+        },
+        {
+          "claim": "No file was modified — only routing advice was given",
+          "type": "process",
+          "verified": true,
+          "evidence": "Transcript records no Write or Edit calls to CLAUDE.md. The user_notes explicitly states: 'this execution only answered the routing question — it did not modify any files.'"
+        }
+      ],
+      "user_notes_summary": {
+        "uncertainties": ["Preference already exists; grader might expect a recommendation to strengthen the existing terse entry into something more explicit."],
+        "needs_review": ["If grader expects the skill to also perform the actual write (edit CLAUDE.md), this execution only answered the routing question."],
+        "workarounds": []
+      }
+    },
+    "2": {
+      "prompt": "The user says: 'This project uses 2-space indentation for TypeScript files but 4-space for Python.' Where should this information be stored?",
+      "expectations": [
+        {
+          "text": "Routes to project-level storage (not user-level)",
+          "passed": true,
+          "evidence": "Transcript and output both identify project CLAUDE.md (./CLAUDE.md) as the primary destination and ./.claude/rules/indentation.md as the secondary. Output states: 'Human instruction (not Claude discovery) → High miss risk → Needed most sessions when working on TypeScript/Python files → Project-specific convention (not universal across all projects) → Team-shared rule (should be in git, visible to all).' User-level ~/.claude/CLAUDE.md is explicitly rejected as wrong scope."
+        },
+        {
+          "text": "Considers .claude/rules/ with paths: frontmatter for file-type-specific loading",
+          "passed": true,
+          "evidence": "Output 'Secondary Recommendation' section provides the exact frontmatter: 'paths: - \"**/*.ts\" - \"**/*.tsx\" - \"**/*.py\"' with the explanation 'If the project accumulates many style rules, move to path-filtered rules to keep CLAUDE.md lean while maintaining visibility via path filtering.' Transcript Step 2 decision tree also includes: 'Scoped to specific files/paths? YES → .claude/rules/<topic>.md with paths: frontmatter [ALTERNATIVE CANDIDATE]'."
+        },
+        {
+          "text": "Identifies this as team-shared (checked into git), not personal",
+          "passed": true,
+          "evidence": "Output states under 'Why': 'Team-shared rule (should be in git, visible to all).' Transcript Step 4 evaluation table explicitly marks CLAUDE.local.md as 'POOR — This is not personal preference; it's shared team convention.' The decision correctly distinguishes personal from team-shared."
+        },
+        {
+          "text": "Does NOT route to auto-memory",
+          "passed": true,
+          "evidence": "Transcript Step 4 table marks auto-memory as 'WRONG — This is human instruction, not Claude learning.' Output does not mention auto-memory as a destination option. The skill routes human instructions away from auto-memory by design."
+        },
+        {
+          "text": "Does NOT route to ~/.claude/CLAUDE.md",
+          "passed": true,
+          "evidence": "Both transcript and output route to project-level storage (./CLAUDE.md or ./.claude/rules/). The user-level ~/.claude/CLAUDE.md is not mentioned as a candidate at any point — correctly excluded because the indentation rule is project-specific, not universal across all projects."
+        }
+      ],
+      "summary": {
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "pass_rate": 1.0
+      },
+      "claims": [
+        {
+          "claim": "Both ./CLAUDE.md and ./.claude/rules/ are equally valid destinations",
+          "type": "quality",
+          "verified": true,
+          "evidence": "The skill's decision tree legitimately leads to two branches for this case (high miss risk → CLAUDE.md, and path-scoped → rules). The output correctly acknowledges both rather than forcing a single answer, then applies pragmatic tiebreaker logic to recommend CLAUDE.md as primary."
+        },
+        {
+          "claim": "The output recommends starting with CLAUDE.md and refactoring to rules if style guidance expands",
+          "type": "quality",
+          "verified": true,
+          "evidence": "Transcript Step 5 decision logic item 3: 'Optimal approach: Start with ./CLAUDE.md for simplicity; move to ./.claude/rules/ if style rules proliferate.' Output 'Secondary Recommendation' section confirms this pattern."
+        }
+      ],
+      "user_notes_summary": {
+        "uncertainties": ["Two equally valid destinations; tiebreaker (recommend CLAUDE.md for simplicity) is pragmatic but not explicitly mandated by the skill."],
+        "needs_review": ["Verify whether the Puffin monorepo already has a Coding Style section in CLAUDE.md. Check if path-filtered rules already exist in ./.claude/rules/."],
+        "workarounds": []
+      }
+    },
+    "3": {
+      "prompt": "During debugging, Claude discovered that the project's auth tokens expire after exactly 30 minutes and the refresh endpoint is at /api/auth/refresh. This wasn't documented anywhere. Where should this be stored?",
+      "expectations": [
+        {
+          "text": "Routes to auto-memory, not CLAUDE.md or rules",
+          "passed": true,
+          "evidence": "Output states: 'Storage destination: Auto-memory (~/.claude/projects/<project>/memory/).' Transcript Step 3 decision tree terminates immediately at the CLAUDE-is-writing branch: 'The first branch terminates the decision immediately. This is not a human instruction or preference — it is a Claude discovery. The correct destination is auto-memory.' CLAUDE.md, rules, skills, and CLAUDE.local.md are all explicitly rejected in Step 4."
+        },
+        {
+          "text": "Identifies this as a Claude learning/discovery (not a human instruction)",
+          "passed": true,
+          "evidence": "Transcript Step 3 input analysis: 'Actor: Claude (discovered this during debugging).' Output Step 1: 'Claude discovered this fact during a debugging session. It is not a human instruction, preference, or workflow rule — it is a Claude learning (an architecture discovery / debugging note).' Decision tree shows: 'CLAUDE is writing (learned insight, debugging note, architecture discovery) ← MATCHES'."
+        },
+        {
+          "text": "Suggests a topic file within auto-memory (not just MEMORY.md index)",
+          "passed": true,
+          "evidence": "Output specifies 'api-notes.md' as the topic file: 'This information is an integration/API detail (token TTL + refresh endpoint), so it belongs in api-notes.md (or a similar topic file like auth.md), referenced from MEMORY.md.' Transcript Step 3 also specifies the topic-file structure showing api-notes.md with a separate MEMORY.md one-liner reference. The recommendation is to store the full entry in the topic file, with only a summary line in MEMORY.md."
+        },
+        {
+          "text": "Does NOT route to project CLAUDE.md",
+          "passed": true,
+          "evidence": "Transcript Step 4 explicitly states: 'CLAUDE.md (project): Not appropriate — CLAUDE.md is for human-authored rules and guardrails. Also, putting every debugging discovery in CLAUDE.md would bloat the always-loaded context.' Output 'What It Should NOT Be' section: 'Not CLAUDE.md — CLAUDE.md is for human-written universal guardrails, not Claude discoveries.'"
+        }
+      ],
+      "summary": {
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "pass_rate": 1.0
+      },
+      "claims": [
+        {
+          "claim": "A one-liner reference to api-notes.md should be added to MEMORY.md",
+          "type": "quality",
+          "verified": true,
+          "evidence": "Output provides exact MEMORY.md entry: '- Auth token TTL: 30 min, refresh at /api/auth/refresh — see api-notes.md'. This is an appropriate recommendation to make the discovery discoverable at session startup without bloating the index."
+        },
+        {
+          "claim": "1 error was encountered: Write to user_notes.md failed because file already existed",
+          "type": "process",
+          "verified": true,
+          "evidence": "metrics.json records: 'errors_encountered: 1, note: 1 error: Write to user_notes.md failed (file existed, not yet read); resolved by reading first then using Edit append'. This is a process error in the executor, not a routing error — it does not affect the correctness of the routing decision."
+        }
+      ],
+      "user_notes_summary": {
+        "uncertainties": ["The skill's auto-memory path uses <project> as a placeholder; actual path depends on how Claude Code hashes the project directory."],
+        "needs_review": ["Whether auth token behavior is relevant enough to most sessions to warrant a MEMORY.md one-liner vs. topic-file-only storage."],
+        "workarounds": []
+      }
+    },
+    "4": {
+      "prompt": "The user says: 'My local database is at postgres://localhost:5432/myapp_dev — don't commit this anywhere shared.' Where should this information be stored?",
+      "expectations": [
+        {
+          "text": "Routes to CLAUDE.local.md or similar gitignored location",
+          "passed": true,
+          "evidence": "Output states clearly: 'Store in: ./CLAUDE.local.md (project-local, gitignored).' Transcript Step 3 conclusion: 'Conclusion: ./CLAUDE.local.md — project-local, personal, auto-gitignored.' This is the correct destination for personal, project-scoped, sensitive information."
+        },
+        {
+          "text": "Identifies this as personal (not team-shared)",
+          "passed": true,
+          "evidence": "Transcript Step 3 item 3: 'Personal preference, not shared with team? YES. The user explicitly requested no shared commits. A localhost DB URL is inherently personal/environment-specific — no two developers share the same localhost.' Output reasoning item 4: 'Is it personal preference, not shared with team? YES — the user explicitly said \"don't commit this anywhere shared.\"'"
+        },
+        {
+          "text": "Identifies this as project-specific (not global)",
+          "passed": true,
+          "evidence": "Transcript Step 3 item 4: 'This project scope? Yes (it's for the current project's dev environment).' Output 'What NOT to Do' section: 'Do NOT add to ~/.claude/CLAUDE.md — this is personal global config but the DB URL is project-specific.' The routing to ./CLAUDE.local.md (project-local) rather than ~/.claude/CLAUDE.md correctly encodes the project-specific scope."
+        },
+        {
+          "text": "Does NOT route to ./CLAUDE.md (would be committed to git)",
+          "passed": true,
+          "evidence": "Output 'What NOT to Do' states: 'Do NOT add to ./CLAUDE.md — this is checked into git and shared with the team.' Transcript acceptance checks: '[x] CLAUDE.md contains only universal rules/guardrails — this dev URL does not belong there.' The user's explicit constraint is honored."
+        },
+        {
+          "text": "Acknowledges the sensitivity / do-not-share constraint",
+          "passed": true,
+          "evidence": "Transcript Step 3 item 2 elevates the explicit constraint above frequency analysis: 'the key constraint is \"don't commit anywhere shared\"'. Transcript acceptance check: '[x] User's explicit constraint (\"don't commit anywhere shared\") fully honored.' Output Acceptance Checks: '[x] User's explicit constraint (\"don't commit anywhere shared\") honored.' The sensitivity is explicitly cited as a primary routing criterion."
+        }
+      ],
+      "summary": {
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "pass_rate": 1.0
+      },
+      "claims": [
+        {
+          "claim": "CLAUDE.local.md is auto-gitignored",
+          "type": "factual",
+          "verified": true,
+          "evidence": "Output labels it 'project-local, gitignored.' This matches the known Claude Code behavior where CLAUDE.local.md files are excluded from git by default. The skill's storage destinations table describes this correctly."
+        },
+        {
+          "claim": "Rules files may be committed to git and are therefore unsuitable",
+          "type": "factual",
+          "verified": true,
+          "evidence": "Output 'What NOT to Do': 'Do NOT add to any .claude/rules/*.md file — rules may be committed to git.' This is a correct and important distinction — rules files in .claude/ can be checked in, making them unsuitable for sensitive personal config."
+        }
+      ],
+      "user_notes_summary": {
+        "uncertainties": [],
+        "needs_review": [],
+        "workarounds": []
+      }
+    },
+    "5": {
+      "prompt": "The user says: 'All API endpoints in src/api/ must validate input with zod schemas before processing.' Where should this information be stored?",
+      "expectations": [
+        {
+          "text": "Routes to project-level storage (rules or CLAUDE.md)",
+          "passed": true,
+          "evidence": "Output states: './.claude/rules/api-validation.md (project repo, team-shared, path-filtered rule).' The rules file is a project-level location checked into git. Transcript explicitly rejects global/user-level and personal options."
+        },
+        {
+          "text": "Considers .claude/rules/ with path-scoping to src/api/**",
+          "passed": true,
+          "evidence": "Output provides exact frontmatter: 'paths: - \"src/api/**/*.ts\" - \"src/api/**/*.js\"'. Transcript Step 3 cites the skill's decision tree: 'Scoped to specific files/paths? → .claude/rules/<topic>.md with paths: frontmatter (e.g., only load when touching src/api/**/*.ts).' The path-scoping rationale is thoroughly explained: 'Conditional Loading: The paths: frontmatter ensures the rule only loads when Claude edits src/api/**/*.ts files.'"
+        },
+        {
+          "text": "Identifies this as team-shared (checked into git)",
+          "passed": true,
+          "evidence": "Output scope analysis table: 'Team relevance: Team rule (shared with all developers). Personal: No — this is a codebase constraint, not personal preference.' Output 'Why this destination wins' item 2: 'Team Visibility: Checked into git; discoverable by all team members in the project.' Transcript Step 2 decision path: 'Personal preference, not shared with team? → NO. This is a team rule about codebase validation requirements.'"
+        },
+        {
+          "text": "Does NOT route to auto-memory or personal files",
+          "passed": true,
+          "evidence": "Output 'Why Not' table explicitly rejects: auto-memory ('That's for Claude learnings, not human instructions') and CLAUDE.local.md ('Not personal preference; it's a team rule'). Transcript Step 3 selection rationale does not consider auto-memory or CLAUDE.local.md as candidates."
+        }
+      ],
+      "summary": {
+        "passed": 4,
+        "failed": 0,
+        "total": 4,
+        "pass_rate": 1.0
+      },
+      "claims": [
+        {
+          "claim": "This rule is not needed MOST sessions, only when touching src/api/ files",
+          "type": "quality",
+          "verified": true,
+          "evidence": "Transcript Step 2: 'Needed MOST sessions + high miss risk? → NO. This is only relevant when working on API files.' This analysis correctly leads to the rules-with-path-filtering destination rather than CLAUDE.md, making the routing decision sharper than eval 2's dual-path outcome."
+        },
+        {
+          "claim": "The output includes a complete worked example of the rules file content including zod code",
+          "type": "quality",
+          "verified": true,
+          "evidence": "Transcript Step 5 includes a full example with frontmatter, rationale section, pattern steps, and a TypeScript code example using z.object() and safeParse(). This goes beyond what the expectation checks but is high-quality output."
+        }
+      ],
+      "user_notes_summary": {
+        "uncertainties": [],
+        "needs_review": [],
+        "workarounds": []
+      }
+    }
+  },
+  "overall_summary": {
+    "total_expectations": 23,
+    "total_passed": 23,
+    "total_failed": 0,
+    "overall_pass_rate": 1.0,
+    "per_eval_pass_rates": {
+      "1": 1.0,
+      "2": 1.0,
+      "3": 1.0,
+      "4": 1.0,
+      "5": 1.0
+    },
+    "assessment": "All 23 expectations across 5 evals passed. The skill correctly distinguishes human instructions from Claude learnings, personal from team-shared content, global from project scope, and sensitive from safe-to-commit information. Routing decisions are consistent with the decision tree and well-reasoned."
+  },
+  "execution_metrics": {
+    "eval1": {
+      "tool_calls": {"Read": 3, "Write": 4, "Bash": 1, "Edit": 0, "Glob": 0, "Grep": 0},
+      "total_tool_calls": 8,
+      "total_steps": 8,
+      "errors_encountered": 0,
+      "output_chars": 7305,
+      "transcript_chars": 4533
+    },
+    "eval2": {
+      "tool_calls": {"Read": 2, "Write": 3, "Bash": 2, "Edit": 0, "Glob": 0, "Grep": 0},
+      "total_tool_calls": 7,
+      "total_steps": 5,
+      "errors_encountered": 0,
+      "output_chars": 19350,
+      "transcript_chars": 7741
+    },
+    "eval3": {
+      "tool_calls": {"Read": 2, "Write": 2, "Bash": 2, "Edit": 1, "Glob": 0, "Grep": 0},
+      "total_tool_calls": 7,
+      "total_steps": 6,
+      "errors_encountered": 1,
+      "output_chars": 2326,
+      "transcript_chars": 5988,
+      "note": "1 error: Write to user_notes.md failed (file existed, not yet read); resolved by reading first then using Edit append"
+    },
+    "eval4": {
+      "tool_calls": {"Read": 4, "Write": 2, "Bash": 2, "Edit": 2, "Glob": 0, "Grep": 0},
+      "total_tool_calls": 10,
+      "total_steps": 5,
+      "errors_encountered": 0,
+      "output_chars": 1718,
+      "transcript_chars": 4423
+    },
+    "eval5": {
+      "tool_calls": {"Read": 2, "Write": 3, "Bash": 1, "Edit": 0, "Glob": 0, "Grep": 0},
+      "total_tool_calls": 6,
+      "total_steps": 5,
+      "errors_encountered": 0,
+      "output_chars": 19316,
+      "transcript_chars": 5816
+    }
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Eval 1: 'Routes to ~/.claude/CLAUDE.md or user-level rules, NOT project CLAUDE.md'",
+        "reason": "This assertion is satisfied by any output that names the correct file. A stronger assertion would also check that the output identifies the specific section to edit (Preferences) and handles the already-exists case — the executor correctly noted the preference was already present, but no assertion covers that nuance. The current assertion would pass even if the output ignored that the entry already exists."
+      },
+      {
+        "assertion": "Eval 2: No assertion checks the quality of the tiebreaker reasoning",
+        "reason": "Both ./CLAUDE.md and ./.claude/rules/ are valid destinations for eval 2. The expectations only check that rules/ is 'considered' and that auto-memory/global CLAUDE.md are rejected — they don't check that the output provides a clear primary recommendation or a principled tiebreaker. An output that just listed both options without committing would pass all five assertions despite being less useful to the user."
+      },
+      {
+        "assertion": "Eval 3: 'Suggests a topic file within auto-memory (not just MEMORY.md index)'",
+        "reason": "This expectation is satisfied by naming any topic file (api-notes.md). A stronger assertion would verify that the output also recommends adding a MEMORY.md reference/one-liner, since without that the discovery is stored but may not surface at session startup. The executor did include this, but the eval doesn't check for it."
+      },
+      {
+        "assertion": "Eval 5: No assertion distinguishes between routing to CLAUDE.md vs routing to rules/",
+        "reason": "The first expectation 'Routes to project-level storage (rules or CLAUDE.md)' is satisfied by either destination. For this eval the correct answer is clearly rules/ (path-scoped, domain-specific, not needed every session) rather than CLAUDE.md. An output that routed to ./CLAUDE.md would pass all assertions even though that's a weaker choice. Eval 2 correctly has the rules/ consideration as a separate expectation; eval 5 should explicitly check that CLAUDE.md is NOT the primary recommendation given the path-specific scope."
+      }
+    ],
+    "overall": "Assertions are generally well-targeted and discriminating. The main gap is that several assertions check routing category (correct destination) without checking routing precision (correct destination given the specific edge case). Evals 2 and 5 have partial overlap in what they test; adding a negative assertion 'Does NOT route primarily to CLAUDE.md' for eval 5 would make it a sharper test of path-scoped routing. Eval 3 would benefit from an assertion covering the MEMORY.md one-liner recommendation. Otherwise the evals are solid and cover the most important routing axes."
+  }
+}

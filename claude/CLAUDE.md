@@ -74,6 +74,7 @@ Skills are one of the primary methods I have for improving and remembering thing
 - pnpm, Ultracite linter
 - CLI: rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec, atuin, gcal (Google Calendar)
 - Obsidian vault at `~/ws/notes/` (PARA structure) — invoke `para-index` skill before filing notes or deciding where content belongs
+- Vercel: always use the `composeai` organization/scope (not personal `michael-shuffetts-projects`)
 
 **Editing This File**
 

@@ -64,6 +64,29 @@ dli() {
 dlc() {
   docker ps | awk -F, 'BEGIN {FS = "[ \t\n]{2,}"} 1 < NR && NR < 3 {print $7}'
 }
+
+frg() {
+  rg --line-number "$@" | fzf \
+    --delimiter ':' \
+    --preview 'bat --style=numbers --color=always --highlight-line {2} {1}' \
+    --preview-window 'right:60%'
+}
+
+ff() {
+  fd "$@" | sed 's#^\./##' | fzf \
+    --preview 'if [[ -d {} ]]; then eza --tree --level=2 --icons --group-directories-first -- {}; else bat --style=numbers --color=always --line-range :200 -- {}; fi' \
+    --preview-window 'right:60%'
+}
+
+fcd() {
+  local dir
+  dir="$(fd --type d "$@" | sed 's#^\./##' | fzf \
+    --preview 'eza --tree --level=2 --icons --group-directories-first -- {}' \
+    --preview-window 'right:60%')"
+
+  [[ -n "$dir" ]] && cd "$dir"
+}
+
 alias db='docker build .'
 alias qn7='ssh qn7cimaterm01.cloud.corp.dig.com'
 alias pipenv='PIPENV_VENV_IN_PROJECT=1 pipenv'
@@ -73,9 +96,11 @@ if command -v eza &>/dev/null; then
   alias ls='eza --icons --group-directories-first'
   alias ll='eza -lh --icons --git --group-directories-first'
   alias lc='eza --tree --icons'
+  alias lst='eza -l --sort=modified --icons --group-directories-first'
 else
   alias ll='ls -lah'
   alias lc='ls -la'
+  alias lst='ls -lsht'
 fi
 alias sl='serverless'
 alias k='kubectl'
@@ -148,10 +173,15 @@ alias ckw='cd /Users/michael/ws/kode-ws/'
 alias gs='git status --short --branch | sed "s/^## /🌿 /" | sed "s/^M/📝 /" | sed "s/^A/✨ /" | sed "s/^D/🗑️ /" | sed "s/^R/♻️ /" | sed "s/^??/❓ /"'
 
 # Define aliases.
-alias tree='tree -a -I .git'
+if command -v eza &>/dev/null; then
+  alias tree='eza --tree -a --icons --group-directories-first --git-ignore'
+else
+  alias tree='tree -a -I .git'
+fi
 
 # Add flags to existing aliases.
 alias ls="${aliases[ls]:-ls} -A"
+alias lst="${aliases[lst]:-${aliases[ls]:-ls}} -A"
 alias claude="claude --dangerously-skip-permissions"
 alias c="claude --dangerously-skip-permissions"
 alias lg='lazygit'
@@ -160,6 +190,5 @@ alias j='just'
 # Claude Code worktree launcher
 alias cw='claude-worktree'
 alias ...='cd ../..'
-alias ao='agentops --dangerously-skip-permissions'
 alias cf='fresh --dangerously-skip-permissions'
 alias cm='cm --dangerously-skip-permissions'

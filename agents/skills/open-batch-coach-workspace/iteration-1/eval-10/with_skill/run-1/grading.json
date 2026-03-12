@@ -1,0 +1,33 @@
+{
+  "expectations": [
+    {
+      "text": "Recognizes this is a good pitch with specific positive feedback",
+      "passed": true,
+      "evidence": "\"This is a solid starting point.\" Identifies three specific strengths: \"First sentence is clear\" (\"anyone can understand that immediately. No jargon, no buzzwords\"), \"You included traction\" (\"The 89% satisfaction stat is concrete and memorable\"), and \"It's actually two sentences\" (with humor: \"You'd be surprised how many founders turn this into five\")."
+    },
+    {
+      "text": "Does NOT tear it apart or rewrite from scratch",
+      "passed": false,
+      "evidence": "Despite calling it a 'solid starting point,' the response identifies 3 substantial critiques ('What needs work' section), offers a complete rewritten version ('Roomie helps college students find compatible roommates. 89% of our matches report being happy...'), asks 3 follow-up questions, and says 'This usually takes 3-4 rounds to get tight.' The tone and volume of critique effectively treats this as a pitch that needs significant rework rather than one that's close to done."
+    },
+    {
+      "text": "Identifies concrete strengths (clear, metric, picture-creating)",
+      "passed": true,
+      "evidence": "Identifies 'clear' (\"First sentence is clear... anyone can understand that immediately\") and 'metric' (\"The 89% satisfaction stat is concrete and memorable\"). Notes the pitch successfully avoids common mistakes (\"failing to include traction\"). Does not call it 'picture-creating' but the assertion's parenthetical appears to be example categories, not a required checklist."
+    },
+    {
+      "text": "Asks if founder wants to lock it in",
+      "passed": false,
+      "evidence": "Does the opposite -- pushes for revision: \"Take a crack at a revision and send it back. This usually takes 3-4 rounds to get tight\" and \"We're not locking anything in until you're happy with it.\" Never offers the option of locking in the current pitch as-is."
+    }
+  ],
+  "summary": {"passed": 2, "failed": 2, "total": 4, "pass_rate": 0.5},
+  "timing": {"total_duration_seconds": 51.9},
+  "eval_feedback": {
+    "suggestions": [
+      "The eval name is 'good-pitch-feedback' which implies the pitch should be treated as good, but the skill over-critiques it. The skill should have a calibration for when a pitch is already strong enough to lock in vs. when it needs more work.",
+      "Consider whether the eval prompt needs more signal that this is meant to be a near-final pitch (e.g., include the metric and a contrast) to make the 'good pitch' intent clearer to the model."
+    ],
+    "overall": "The response provides good coaching but fails to recognize when a pitch is good enough. It defaults to critique-and-iterate mode when the eval expects a 'this is ready, want to lock it in?' response. This is a meaningful skill gap for coaching -- knowing when to stop iterating is as important as knowing how to improve."
+  }
+}

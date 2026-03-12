@@ -1,0 +1,14 @@
+{
+  "assertions": [
+    {
+      "text": "With-skill response dispatches an agent-recall search",
+      "passed": true,
+      "evidence": "Found the exact decision document: DECISIONS.md D004, dated 2025-01-10, in the rehoboam project. This is specific recall data, not generic knowledge."
+    },
+    {
+      "text": "With-skill response cites specific reasoning from prior conversations rather than generic BullMQ advantages",
+      "passed": true,
+      "evidence": "Response includes: (1) four specific alternatives evaluated, (2) Redis was already in stack, (3) context was redaction pipeline and webhook delivery, (4) pg-boss ruled out due to DB load concerns. All project-specific, not generic."
+    }
+  ]
+}

@@ -93,7 +93,7 @@ Run an explicit interview loop before creating cards:
 
 Produce a requirements draft in the plan, review it with the user, and iterate until sign-off is recorded.
 
-Use `references/requirements-interview-checklist.md`.
+Use `references/requirements-interview-checklist.md` and `references/requirements-interview-prompt.md`.
 
 ### 3) Define the Target
 
@@ -130,6 +130,24 @@ Pre-implementation gate policy:
 Outcomes:
 - FAIL: revise tasks and rerun.
 - PASS/WARN or low-risk waiver: move eligible tasks to `ready_for_impl`.
+
+### 5.5) New Requirements During Execution (Change Control)
+
+When the user introduces new requirements mid-iteration:
+- identify impacted tasks/stages immediately
+- summarize impact on in-flight work (scope, dependencies, tests, timeline risk)
+- ask explicit decision: `apply this iteration` or `defer to next iteration`
+
+If `apply this iteration`:
+- update requirement IDs and traceability
+- reset affected tasks to `specified` (or `draft` if scope changed materially)
+- rerun pre-implementation gate for affected tasks
+
+If `defer to next iteration`:
+- append requirement to backlog/change log with owner and due decision date
+- keep current iteration DAG stable
+
+Use `references/requirements-change-control.md`.
 
 ### 6) DAG Orchestration and Implementation
 
@@ -221,5 +239,7 @@ Use `references/learning-loop.md`.
 - `references/verification-matrix-template.md`
 - `references/testing-policy.md`
 - `references/requirements-interview-checklist.md`
+- `references/requirements-interview-prompt.md`
+- `references/requirements-change-control.md`
 - `references/learning-loop.md`
 - `references/process-change-log-schema.md`

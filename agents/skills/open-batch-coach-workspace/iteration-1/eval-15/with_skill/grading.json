@@ -1,0 +1,27 @@
+{
+  "expectations": [
+    {
+      "text": "Pushes back on the assumption respectfully",
+      "passed": true,
+      "evidence": "\"I hear you, and I get the instinct — you know the investors are technical, so you want to speak their language. But this is actually one of the most common traps in pitch prep\""
+    },
+    {
+      "text": "References the guide on plain English",
+      "passed": true,
+      "evidence": "\"the YC guide calls it out directly\" and \"The guide puts it well: your two-sentence description should create a picture in the listener's mind.\""
+    },
+    {
+      "text": "Explains why clarity wins over technical depth at demo day",
+      "passed": true,
+      "evidence": "\"The pitches that land are the ones that are instantly clear, not the ones that flex architecture knowledge.\" Also: \"Demo Day is about getting that meeting\" — frames the real goal clearly."
+    },
+    {
+      "text": "Does NOT just agree with the founder's premise",
+      "passed": true,
+      "evidence": "Clear, respectful pushback throughout. \"So instead of making the pitch more technical, let's make it more concrete and specific. That's what actually impresses technical people — specificity, not jargon.\""
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 40.9},
+  "eval_feedback": {"suggestions": [], "overall": "Excellent coaching. Uses the Stripe example effectively to show how a technical audience still benefits from clarity. Respectful pushback that reframes rather than dismisses. Ends with a concrete next step."}
+}

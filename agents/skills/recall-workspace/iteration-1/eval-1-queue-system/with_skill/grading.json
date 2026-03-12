@@ -1,0 +1,19 @@
+{
+  "assertions": [
+    {
+      "text": "With-skill response dispatches an agent-recall search",
+      "passed": true,
+      "evidence": "Response contains specific recall results from two different systems (linq pipeline, Everything Agent Firestore queue) with exact file paths, indicating agent-recall was dispatched and returned real historical data"
+    },
+    {
+      "text": "With-skill response includes specific historical context from prior conversations",
+      "passed": true,
+      "evidence": "Found two concrete implementations: (1) apps/api/lib/linq/draft-queue.ts with Drizzle/Postgres, (2) Firestore task queue with specific status enums. Includes direct quotes from prior discussions."
+    },
+    {
+      "text": "With-skill response uses conv scope",
+      "passed": true,
+      "evidence": "Results came from conversation history — referenced specific discussions and file paths from prior sessions"
+    }
+  ]
+}

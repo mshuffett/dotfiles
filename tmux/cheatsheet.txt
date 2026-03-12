@@ -13,10 +13,14 @@
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
 ║ SESSION PERSISTENCE (auto-saves every 15min)                │ Ctrl+a Ctrl+s   Manual save  │ Ctrl+a Ctrl+r   Manual restore                              ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
-║ QUICK ACTIONS (PLUGINS)                     │ Ctrl+a f       tmux-fingers: Hint mode  │ Ctrl+a o        tmux-open: Open selection w/ default app   ║
-║                                             │ Ctrl+a o       Open highlighted text    │ Ctrl+a Ctrl-o   tmux-open: Open selection w/ $EDITOR       ║
-║                                             │ Ctrl+a Shift-s Search highlighted text  │ Ctrl+a Ctrl+f   Unified fuzzy search (everything)          ║
-║                                             │ TAB/Shift-TAB  Multi-select in finders  │                 Search sessions/windows/panes in one list  ║
+║ QUICK ACTIONS (PLUGINS)                     │ TMUX-FINGERS (hint-based copy)           │ TMUX-OPEN (from copy-mode selection)                       ║
+║  Ctrl+a Ctrl+f   Unified fuzzy search       │  Ctrl+a f      Activate finger hints    │  Ctrl+a o       Open selection w/ default app              ║
+║                  (sessions/windows/panes)   │  Ctrl+a J      Jump mode (move cursor)  │  Ctrl+a Ctrl-o  Open selection w/ $EDITOR                  ║
+║  TAB/Shift-TAB   Multi-select in finders    │  [a-z]         Copy hinted text          │  Ctrl+a Shift-s Search highlighted text                    ║
+║                                             │  Shift+[a-z]   Copy w/ shift action     │                                                            ║
+║                                             │  Tab            Toggle multi-select      │                                                            ║
+║                                             │  ?              Toggle help overlay      │                                                            ║
+║                                             │  q / Esc        Exit fingers mode        │                                                            ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
 ║ TMUX PANES (Prefix = Ctrl+a)                │ PANE RESIZING                            │ NVCHAD (Leader = Space)                                     ║
 ╠═════════════════════════════════════════════╪══════════════════════════════════════════╪═════════════════════════════════════════════════════════════╣
@@ -41,7 +45,7 @@
 ║  • Quick window switching: Opt+h/l for previous/next window without prefix (faster than Ctrl+a n/p)                                                   ║
 ║  • Zoom pane for focus: Ctrl+a z (perfect for full-screen coding, then unzoom to see other panes)                                                     ║
 ║  • Statusline indicators: ● = prefix active, ○ = prefix inactive, 🔍 ZOOM = pane is zoomed                                                            ║
-║  • tmux-fingers quick copy: Ctrl+a f shows hints on all paths/URLs/text - type hint letters to copy instantly                                         ║
+║  • tmux-fingers quick copy: Ctrl+a f shows hints on paths/URLs/hashes/IPs - type hint letter to copy, Shift for alt action, Tab for multi-select     ║
 ║  • tmux-open from selection: highlight text, then Ctrl+a o (open) or Ctrl+a Ctrl-o (edit) or Ctrl+a Shift-s (search)                                ║
 ║  • Unified search: Ctrl+a Ctrl+f searches ALL sessions/windows/panes in one list. Type [SESSION]/[WINDOW]/[PANE] to filter by type                 ║
 ║  • Direct finders: Ctrl+a s (sessions), Ctrl+a w (windows), Ctrl+a M (join pane) - jump straight to that category                                 ║

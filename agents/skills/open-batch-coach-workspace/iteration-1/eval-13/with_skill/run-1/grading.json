@@ -1,0 +1,27 @@
+{
+  "expectations": [
+    {
+      "text": "References FAQ on apps/websites looking similar at a glance",
+      "passed": true,
+      "evidence": "\"if you're showing off an app or website, you don't need to. At a glance, most apps and websites look the same, and a nice UI screenshot doesn't move the needle with investors.\""
+    },
+    {
+      "text": "Mentions YouTube demo video option on second slide",
+      "passed": true,
+      "evidence": "\"the format allows a second slide with a demo video uploaded to YouTube, as long as your total presentation stays under 2 minutes.\""
+    },
+    {
+      "text": "Helps decide based on their specific product",
+      "passed": true,
+      "evidence": "Tailors advice to FormStack specifically: \"What moves the needle is what FormStack *does*: turning 3-week paper processes into 2-day digital ones.\" Also references their traction: \"50,000 forms for 12 state agencies.\""
+    },
+    {
+      "text": "Gives a clear recommendation rather than listing pros/cons",
+      "passed": true,
+      "evidence": "\"My recommendation: skip the demo on the slide. Use your one slide for the essentials.\""
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 44.5},
+  "eval_feedback": {"suggestions": [], "overall": "Excellent response. Clear recommendation with specific reasoning, references the FAQ accurately, and personalizes advice to the founder's product."}
+}

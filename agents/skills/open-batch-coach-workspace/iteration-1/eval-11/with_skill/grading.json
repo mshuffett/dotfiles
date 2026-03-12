@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Explains vertebrae concept by referencing the guide",
+      "passed": true,
+      "evidence": "\"Looking at the pitch guide, your vertebrae should answer questions like:\" followed by the guide's key questions. Also: \"Vertebrae are the 3-5 core points you most want investors to remember about StackShip after your pitch.\""
+    },
+    {
+      "text": "Provides examples (PostHog or Airbnb from guide)",
+      "passed": true,
+      "evidence": "Provides the full PostHog example with all 5 vertebrae: what they do, traction (\"HN launch was the all-time most upvoted B2B software launch\"), why this approach wins (open source angle), team credentials, and market (\"8-10x more developers than product people\")."
+    },
+    {
+      "text": "Offers to workshop vertebrae together",
+      "passed": true,
+      "evidence": "\"Want to take a crack at your vertebrae for StackShip?\" followed by 3 specific prompting questions and \"We'll workshop them from there.\""
+    },
+    {
+      "text": "Does not assume founder already knows YC terminology",
+      "passed": true,
+      "evidence": "Opens with \"Great question.\" and explains from first principles: \"Vertebrae are the 3-5 core points...Think of them as the backbone of your entire Demo Day presentation.\" Uses a metaphor (backbone) and builds up understanding before using examples."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 41.9},
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Strong response. Explains the concept clearly without condescension, provides a rich example from the guide, and transitions smoothly into collaborative next steps. Good contextualization of where vertebrae fit in the overall prep process."
+  }
+}

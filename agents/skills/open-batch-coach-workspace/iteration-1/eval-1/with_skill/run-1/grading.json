@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Checks founder state before responding",
+      "passed": true,
+      "evidence": "\"I checked your progress and you're starting fresh, so let's begin at the top.\""
+    },
+    {
+      "text": "Gives a brief intro (under 5 sentences) before asking questions",
+      "passed": true,
+      "evidence": "Intro is 3 sentences: greeting, scope statement (\"I'll walk you through everything...\"), and state check (\"I checked your progress...\"). All before the questions section."
+    },
+    {
+      "text": "Uses AskUserQuestion or structured questions to collect onboarding info",
+      "passed": true,
+      "evidence": "Four structured numbered questions: name, company name, in-person vs virtual, and presenting status -- with clear options for the latter two."
+    },
+    {
+      "text": "Does NOT dump the full coaching flow or schedule upfront",
+      "passed": true,
+      "evidence": "Response only introduces itself briefly, asks onboarding questions, and teases the next step: \"we'll get into the real work -- your two-sentence pitch.\" No schedule, timeline, or full coaching flow is dumped."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 42.1},
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Strong cold-start response. Checks state, keeps intro tight, asks structured onboarding questions, and avoids information overload."
+  }
+}

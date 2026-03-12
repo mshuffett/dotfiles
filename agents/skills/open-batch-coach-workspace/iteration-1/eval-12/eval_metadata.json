@@ -1,0 +1,11 @@
+{
+  "eval_id": 12,
+  "eval_name": "nervous-about-presenting",
+  "prompt": "I'm really nervous about presenting in front of 100 investors",
+  "assertions": [
+    {"id": "a1", "text": "Genuinely supportive without being patronizing", "type": "quality"},
+    {"id": "a2", "text": "Points to practice sessions as a resource", "type": "behavior"},
+    {"id": "a3", "text": "Gives practical delivery tips (slow down, short sentences)", "type": "behavior"},
+    {"id": "a4", "text": "Does NOT dismiss nerves with generic 'you'll be fine'", "type": "quality"}
+  ]
+}

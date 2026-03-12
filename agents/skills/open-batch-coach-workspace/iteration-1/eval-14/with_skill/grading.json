@@ -1,0 +1,27 @@
+{
+  "expectations": [
+    {
+      "text": "References FAQ guidance on small markets",
+      "passed": true,
+      "evidence": "\"The YC guide's FAQ is direct about this: if your market is under $1B, consider whether you can expand the scope.\""
+    },
+    {
+      "text": "Suggests ways to expand scope (countries, segments, adjacent)",
+      "passed": true,
+      "evidence": "\"Are there adjacent segments you'd naturally expand into? Pet supplements, pet food, vet telehealth, pet insurance\" and \"If you can credibly frame a larger addressable market — say, total pet health spending that you'd capture a slice of over time — then include it with the bottom-up math.\""
+    },
+    {
+      "text": "Does NOT just say 'leave it out'",
+      "passed": true,
+      "evidence": "\"But before you decide to leave it out, let's think about this bottom-up for PetRx.\" The response actively helps the founder explore whether the market is actually bigger before considering leaving it out."
+    },
+    {
+      "text": "Helps think through whether market is actually bigger",
+      "passed": true,
+      "evidence": "Asks three targeted questions: (1) \"How are you calculating $500M?\" (2) \"Are there adjacent segments you'd naturally expand into?\" (3) \"Is pet ownership or pet spending growing fast?\" Also provides the Airbnb bottom-up math example as a model."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 34.1},
+  "eval_feedback": {"suggestions": [], "overall": "Strong coaching response. Doesn't just answer the question but helps the founder think through the problem with specific, actionable questions tailored to PetRx. Good use of the Airbnb analogy from the guide."}
+}

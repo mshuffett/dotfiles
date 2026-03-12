@@ -1,0 +1,11 @@
+{
+  "eval_id": 5,
+  "eval_name": "returning-whats-left",
+  "prompt": "ok I've done the pitch and signed up for practice. what else?",
+  "assertions": [
+    {"id": "a1", "text": "Checks state and identifies remaining steps", "type": "behavior"},
+    {"id": "a2", "text": "Routes to vertebrae as the next step", "type": "behavior"},
+    {"id": "a3", "text": "Lists remaining items (vertebrae, full script, slide, bio)", "type": "behavior"},
+    {"id": "a4", "text": "Does not re-explain completed steps", "type": "quality"}
+  ]
+}

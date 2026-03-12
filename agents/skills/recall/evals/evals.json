@@ -1,0 +1,23 @@
+{
+  "skill_name": "recall",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "i need to set up a queue system for processing background jobs. last time we built something similar for the voice pipeline i think — can you check what approach we used?",
+      "expected_output": "Should dispatch a recall search on conv scope for prior queue/pipeline work, synthesize findings, then use that context to inform the current recommendation",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "what's the best way to structure this React component? I'm thinking about using a compound component pattern with context",
+      "expected_output": "Should NOT trigger recall — this is a straightforward technical question answerable from general knowledge. No prior context needed.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "do you remember why we decided to use BullMQ instead of a custom solution? I think there was a specific reason but I can't remember",
+      "expected_output": "Should dispatch a recall search on conv scope triggered by 'do you remember' and the specific decision question. Should synthesize the reasoning from prior conversations.",
+      "files": []
+    }
+  ]
+}

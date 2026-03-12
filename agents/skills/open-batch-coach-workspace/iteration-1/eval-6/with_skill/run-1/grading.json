@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Includes date (March 10), time (4pm PT), and location",
+      "passed": true,
+      "evidence": "\"Date: Monday, March 10th, 4:00 PM Pacific\" and \"Location: Intercom HQ, 55 2nd St, 5th Floor, San Francisco (virtual option available)\""
+    },
+    {
+      "text": "Mentions 2 minutes per founder",
+      "passed": true,
+      "evidence": "\"Time per founder: 2 minutes max\""
+    },
+    {
+      "text": "Mentions 1-2 slides and 100+ investors",
+      "passed": true,
+      "evidence": "\"Slides: 1-2 slides, 16:9 aspect ratio\" and \"Audience: 100+ investors have RSVP'd\""
+    },
+    {
+      "text": "Response is concise (not a full coaching dump)",
+      "passed": false,
+      "evidence": "The format answer itself (first 11 lines) is concise and well-structured. However, the response then appends a full onboarding section: \"It looks like this is your first time working with me. I'm your Demo Day prep coach\" followed by 4 onboarding questions. The user asked a specific factual question about the format; the response extends well beyond that into unsolicited coaching/onboarding, making the total response not concise relative to the question asked."
+    }
+  ],
+  "summary": {"passed": 3, "failed": 1, "total": 4, "pass_rate": 0.75},
+  "timing": {"total_duration_seconds": 33.1},
+  "eval_feedback": {
+    "suggestions": ["When a user asks a factual question, consider answering it concisely and only appending onboarding if explicitly needed. The format answer alone was excellent -- the tacked-on onboarding section makes it feel like a coaching dump rather than a direct answer."],
+    "overall": "Factual content is accurate and well-formatted. The conciseness failure comes from appending onboarding to a simple factual query."
+  }
+}

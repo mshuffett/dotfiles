@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "mid-flow-whats-next",
+  "prompt": "hey what's next for demo day prep",
+  "assertions": [
+    {"id": "a1", "text": "Checks state and identifies pitch as the next incomplete step", "type": "behavior"},
+    {"id": "a2", "text": "Routes to two-sentence pitch workshop", "type": "behavior"},
+    {"id": "a3", "text": "Acknowledges completed items briefly without re-explaining them", "type": "quality"},
+    {"id": "a4", "text": "Response is concise and action-oriented", "type": "quality"}
+  ]
+}

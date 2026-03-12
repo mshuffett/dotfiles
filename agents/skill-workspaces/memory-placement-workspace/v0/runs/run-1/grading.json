@@ -1,0 +1,357 @@
+{
+  "per_eval": {
+    "1": {
+      "eval_id": "1",
+      "prompt": "The user says: 'Remember that I always prefer pnpm over npm across all my projects.' Where should this information be stored?",
+      "expectations": [
+        {
+          "text": "Routes to ~/.claude/CLAUDE.md or user-level rules, NOT project CLAUDE.md",
+          "passed": true,
+          "evidence": "Both transcript and output explicitly state 'Store in: ~/.claude/CLAUDE.md (user-level, Preferences section)'. Transcript Step 3: 'Step 2 — User-level or project-level? The user explicitly said \"across all my projects\" → universal scope. Route: ~/.claude/CLAUDE.md (user-level, not project-level)'"
+        },
+        {
+          "text": "Identifies this as a human instruction (not a Claude learning)",
+          "passed": true,
+          "evidence": "The executor treats this as a user-stated preference rule rather than a Claude discovery. It is classified as an 'active rule, not historical data' and routed through the CLAUDE.md branch (universal rules/guardrails), not the log or memory branch. No language suggesting this is a Claude observation is used."
+        },
+        {
+          "text": "Identifies this as cross-project (not repo-specific)",
+          "passed": true,
+          "evidence": "Transcript Step 3: 'The user explicitly said \"across all my projects\" → universal scope.' Output reasoning: 'Not project-scoped: The user said \"across all my projects\", so project-level CLAUDE.md would require replication across every repo.'"
+        },
+        {
+          "text": "Identifies this as personal preference (not team-shared)",
+          "passed": true,
+          "evidence": "Routed to user-level (~/.claude/CLAUDE.md), which is personal dotfiles. Output explicitly states 'Not a log: This is an active rule, not historical data' and 'Not project-scoped'. The dotfiles CLAUDE.md is personal (not project-checked-in), confirming this is recognized as a personal preference."
+        },
+        {
+          "text": "Does NOT route to auto-memory",
+          "passed": true,
+          "evidence": "The output routes exclusively to ~/.claude/CLAUDE.md. Auto-memory is not mentioned as a candidate at any point in the transcript or output."
+        }
+      ],
+      "summary": {
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "pass_rate": 1.0
+      },
+      "claims": [
+        {
+          "claim": "The pnpm entry already exists in ~/.claude/CLAUDE.md under Preferences as 'pnpm, Ultracite linter'",
+          "type": "factual",
+          "verified": true,
+          "evidence": "Confirmed by the system-reminder context in the conversation which shows the Preferences section containing '- pnpm, Ultracite linter'. The executor also quotes this correctly in the output."
+        },
+        {
+          "claim": "The skill's decision tree does not address the case where information is already partially stored at the target location",
+          "type": "quality",
+          "verified": true,
+          "evidence": "User notes flag this: 'The skill's decision tree stops at \"CLAUDE.md\" without distinguishing between adding a new entry vs. strengthening an existing one.' The executor handled it via inspection, but the skill itself doesn't formalize this step."
+        }
+      ],
+      "user_notes_summary": {
+        "uncertainties": ["Whether the existing 'pnpm, Ultracite linter' entry is considered sufficient or requires strengthening"],
+        "needs_review": ["Whether to edit the existing line in-place vs. adding a new explicit line is a style choice"],
+        "workarounds": []
+      }
+    },
+    "2": {
+      "eval_id": "2",
+      "prompt": "The user says: 'This project uses 2-space indentation for TypeScript files but 4-space for Python.' Where should this information be stored?",
+      "expectations": [
+        {
+          "text": "Routes to project-level storage (not user-level)",
+          "passed": true,
+          "evidence": "Both transcript and output conclude: 'File: ./CLAUDE.md (the project-level file, not global)'. The routing is explicitly not to ~/.claude/CLAUDE.md. Transcript Step 2: 'This belongs in the project-level CLAUDE.md, not the global one.'"
+        },
+        {
+          "text": "Considers .claude/rules/ with paths: frontmatter for file-type-specific loading",
+          "passed": false,
+          "evidence": "Neither the transcript nor the output mentions .claude/rules/ at all. The executor routes directly to ./CLAUDE.md without considering rules/ as a candidate. The skill's decision tree is applied step-by-step but no branch leads to or mentions the .claude/rules/ mechanism. File-type-specific path scoping (paths: frontmatter) is never discussed."
+        },
+        {
+          "text": "Identifies this as team-shared (checked into git), not personal",
+          "passed": true,
+          "evidence": "Transcript reasoning point 6: 'It should be visible to anyone cloning and working on the project'. The decision routes to ./CLAUDE.md which is committed to the project repo, confirming team-shared intent."
+        },
+        {
+          "text": "Does NOT route to auto-memory",
+          "passed": true,
+          "evidence": "Auto-memory is not mentioned in either the transcript or output. The routing goes to ./CLAUDE.md only."
+        },
+        {
+          "text": "Does NOT route to ~/.claude/CLAUDE.md",
+          "passed": true,
+          "evidence": "Transcript Step 2 explicitly rules this out: 'This is NOT universal across all projects the user works on ... This belongs in the project-level CLAUDE.md, not the global one.' Output confirms: 'not ~/.claude/CLAUDE.md (global)' in the decision tree."
+        }
+      ],
+      "summary": {
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "pass_rate": 0.8
+      },
+      "claims": [
+        {
+          "claim": "The skill's decision tree was comprehensive and clearly pointed to ./CLAUDE.md (user notes)",
+          "type": "quality",
+          "verified": false,
+          "evidence": "The skill did not surface .claude/rules/ as a candidate. For file-type-specific conventions (2-space TS, 4-space Python), a rules/ file with paths: frontmatter scoped to *.ts and *.py would be a more precise fit than a monolithic CLAUDE.md entry. The decision tree was sufficient for a CLAUDE.md answer but not comprehensive with respect to the rules/ alternative."
+        },
+        {
+          "claim": "No output file was created (decision embedded in transcript)",
+          "type": "process",
+          "verified": true,
+          "evidence": "The transcript states 'Output Files: None created (this is a decision/reasoning task, not a file creation task)'. The decision is captured in eval2-decision.md which appears to be a formatted output of the reasoning, though it's titled as a decision document."
+        }
+      ],
+      "user_notes_summary": {
+        "uncertainties": [],
+        "needs_review": ["Verify section name 'Coding Style & Naming Conventions' against actual project CLAUDE.md", "Check if .prettierrc or .editorconfig already encodes these rules"],
+        "workarounds": []
+      }
+    },
+    "3": {
+      "eval_id": "3",
+      "prompt": "During debugging, Claude discovered that the project's auth tokens expire after exactly 30 minutes and the refresh endpoint is at /api/auth/refresh. This wasn't documented anywhere. Where should this be stored?",
+      "expectations": [
+        {
+          "text": "Routes to auto-memory, not CLAUDE.md or rules",
+          "passed": false,
+          "evidence": "The primary recommendation is project CLAUDE.md: 'The auth token expiry fact (30-minute limit, refresh at /api/auth/refresh) should be stored in the project's CLAUDE.md under an Auth Token Behavior or Debugging section.' Auto-memory (MEMORY.md) is only mentioned as a supplemental note in the summary table, not as a primary recommendation. The expectation requires routing to auto-memory; the executor does the opposite — routes to CLAUDE.md and demotes auto-memory to a footnote."
+        },
+        {
+          "text": "Identifies this as a Claude learning/discovery (not a human instruction)",
+          "passed": true,
+          "evidence": "The transcript correctly frames this as a Claude discovery: 'Cross-check with escalation ladder: First occurrence → Improve or create the relevant skill. This is a first discovery.' The output header is 'Eval 3 Output: Auth Token Expiry Discovery' and explicitly notes 'discovered during debugging 2026-02-23' in the example content."
+        },
+        {
+          "text": "Suggests a topic file within auto-memory (not just MEMORY.md index)",
+          "passed": false,
+          "evidence": "Auto-memory is mentioned only in the final summary table as 'Project memory (MEMORY.md) | As a supplemental note for cross-session recall.' No specific topic file within auto-memory is suggested. The recommendation does not propose a structured topic file (e.g., auth.md within the memory directory); it treats MEMORY.md as an index-level document and relegates it to tertiary mention."
+        },
+        {
+          "text": "Does NOT route to project CLAUDE.md",
+          "passed": false,
+          "evidence": "Project CLAUDE.md is the primary recommendation: 'Primary: Project CLAUDE.md (Debugging section)'. The output explicitly says 'Store this in the project's CLAUDE.md (Debugging/Auth section) AND as a project-local skill.' The expectation is directly contradicted."
+        }
+      ],
+      "summary": {
+        "passed": 1,
+        "failed": 3,
+        "total": 4,
+        "pass_rate": 0.25
+      },
+      "claims": [
+        {
+          "claim": "High miss-risk justifies escalation to L0 (CLAUDE.md) per the escalation ladder",
+          "type": "process",
+          "verified": false,
+          "evidence": "The executor asserts this but it may reflect a genuine mis-application of the skill's escalation ladder vs. the intended auto-memory routing for Claude-discovered facts. The escalation ladder principle ('promote upward when high-risk or frequently missed') may not override the fundamental distinction between human instructions (CLAUDE.md) and Claude learnings (auto-memory/MEMORY.md). This is a classification error, not just a tiering disagreement."
+        },
+        {
+          "claim": "The discovery-vs-instruction distinction was recognized but overridden by risk reasoning",
+          "type": "quality",
+          "verified": true,
+          "evidence": "The executor correctly notes this is a 'first discovery' and 'not documented anywhere,' but then applies hop-cost promotion logic to escalate it to CLAUDE.md rather than auto-memory. The skill's auto-memory routing for Claude learnings was not applied."
+        }
+      ],
+      "user_notes_summary": {
+        "uncertainties": ["Decision between project CLAUDE.md vs project-local skill is a judgment call", "Without knowing auth work frequency, right tier (L0 vs L1) is hard to determine definitively"],
+        "needs_review": ["Should 30-min expiry be cross-referenced with MEMORY.md?", "If auth section already exists, add there rather than create new"],
+        "workarounds": []
+      }
+    },
+    "4": {
+      "eval_id": "4",
+      "prompt": "The user says: 'My local database is at postgres://localhost:5432/myapp_dev — don't commit this anywhere shared.' Where should this information be stored?",
+      "expectations": [
+        {
+          "text": "Routes to CLAUDE.local.md or similar gitignored location",
+          "passed": true,
+          "evidence": "The executor recommends the project's local .env file (gitignored) as primary, and ~/.claude/projects/.../memory/MEMORY.md as secondary. Both are gitignored/local-only locations. The .env file is explicitly noted as 'gitignored by convention' and 'never committed.' While CLAUDE.local.md is not named specifically, '.env' qualifies as a 'similar gitignored location' satisfying the spirit of this expectation. The expectation uses 'or similar', which covers gitignored credential storage."
+        },
+        {
+          "text": "Identifies this as personal (not team-shared)",
+          "passed": true,
+          "evidence": "Transcript: 'A local dev database URL is not a universal guardrail or rule — it's a machine-specific credential.' Output explicitly states it is 'local to this machine, must be in .gitignore' and routes to gitignored local storage, not any committed/shared location."
+        },
+        {
+          "text": "Identifies this as project-specific (not global)",
+          "passed": true,
+          "evidence": "The executor routes to project .env (not a global file) and project memory (not user-global CLAUDE.md). Transcript Step 3: 'Is it repo-specific? Potentially yes — it's for a specific project's local dev environment.'"
+        },
+        {
+          "text": "Does NOT route to ./CLAUDE.md (would be committed to git)",
+          "passed": true,
+          "evidence": "Output explicitly lists ./CLAUDE.md in the 'NOT appropriate' table: './CLAUDE.md | Committed to project repo — shared.' The transcript also rules it out: 'The normal repo branch (.claude/commands/ or project CLAUDE.md) would commit it to git. The explicit constraint prohibits this.'"
+        },
+        {
+          "text": "Acknowledges the sensitivity / do-not-share constraint",
+          "passed": true,
+          "evidence": "The sensitivity constraint drives the entire routing decision. Output: 'The user explicitly says do not commit this anywhere shared. This rules out any location that is tracked in git or synced across machines.' This is the first and most prominent analysis step."
+        }
+      ],
+      "summary": {
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "pass_rate": 1.0
+      },
+      "claims": [
+        {
+          "claim": "The skill's decision tree does not have an explicit branch for 'local credential that must not be committed'",
+          "type": "quality",
+          "verified": true,
+          "evidence": "User notes confirm this gap: 'The .env recommendation comes from general best practice, not from a direct skill rule. This is a gap in the skill.' The executor had to reason outside the tree to reach the correct answer."
+        },
+        {
+          "claim": "CLAUDE.local.md is never mentioned as a candidate",
+          "type": "factual",
+          "verified": true,
+          "evidence": "The output lists .env and local MEMORY.md as candidates. CLAUDE.local.md (a Claude-context-specific gitignored file) is not mentioned. This is a notable gap — CLAUDE.local.md is specifically designed for personal/gitignored Claude context, which is more directly relevant than .env for Claude-session use."
+        }
+      ],
+      "user_notes_summary": {
+        "uncertainties": ["Skill decision tree has no explicit branch for sensitive credentials", "Unclear whether local MEMORY.md file is gitignored vs just outside the repo"],
+        "needs_review": ["Verify .gitignore includes .env before recommending it", "Skill needs explicit 'sensitive/credential data' branch"],
+        "workarounds": ["Had to reason about git-committed vs local-only outside the formal decision tree branches"]
+      }
+    },
+    "5": {
+      "eval_id": "5",
+      "prompt": "The user says: 'All API endpoints in src/api/ must validate input with zod schemas before processing.' Where should this information be stored?",
+      "expectations": [
+        {
+          "text": "Routes to project-level storage (rules or CLAUDE.md)",
+          "passed": true,
+          "evidence": "Primary recommendation is './.claude/skills/api-zod-validation/SKILL.md' (project-local skill), with ./CLAUDE.md as explicit alternative. Both are project-level, checked-in locations. Transcript Step 4: 'This is project-specific and should NOT go in universal locations. It should be stored project-locally.'"
+        },
+        {
+          "text": "Considers .claude/rules/ with path-scoping to src/api/**",
+          "passed": false,
+          "evidence": "Neither the transcript nor any output file mentions .claude/rules/ at all. The executor considers project-local skills and ./CLAUDE.md, but does not evaluate the .claude/rules/ mechanism with paths: frontmatter for scoping to src/api/**. The trigger-condition analysis (Step 5) discusses when to auto-load but uses the skill description field, not rules/ path-scoping."
+        },
+        {
+          "text": "Identifies this as team-shared (checked into git)",
+          "passed": true,
+          "evidence": "The project-local skill (./.claude/skills/api-zod-validation/SKILL.md) would be committed to the project repo. Output reasoning: 'Should be visible to anyone cloning and working on the project' (from Step 5 trigger analysis). The alternative ./CLAUDE.md is explicitly a committed file."
+        },
+        {
+          "text": "Does NOT route to auto-memory or personal files",
+          "passed": true,
+          "evidence": "Output explicitly rules out '~/.claude/CLAUDE.md (too universal; this is project-specific)' and 'Plugin skills in ~/.dotfiles/ (too universal; not reusable across projects)'. Auto-memory is not mentioned as a candidate anywhere in the transcript or output."
+        }
+      ],
+      "summary": {
+        "passed": 3,
+        "failed": 1,
+        "total": 4,
+        "pass_rate": 0.75
+      },
+      "claims": [
+        {
+          "claim": "The decision tree routes project-specific, context-triggered info to skills rather than .claude/rules/",
+          "type": "process",
+          "verified": true,
+          "evidence": "The skill's decision tree branches to 'Skill (plugin/skills/name/SKILL.md)' when 'auto-loads based on context' is YES. This is what the executor follows. The .claude/rules/ mechanism is not part of the skill's documented decision tree, which explains why it was not considered — but it's a gap in the skill coverage."
+        },
+        {
+          "claim": "eval5-transcript.md is identical to transcript-eval5.md",
+          "type": "factual",
+          "verified": true,
+          "evidence": "Both files contain identical content. The executor saved the transcript to outputs/eval5-transcript.md rather than the run-1/ root, deviating from the naming pattern of other evals. This is a minor organizational inconsistency."
+        }
+      ],
+      "user_notes_summary": {
+        "uncertainties": ["Assumes ./.claude/skills/ auto-loading is supported in the repo environment"],
+        "needs_review": ["Trigger description quality for auto-loading", "Scope of 'all API endpoints' — whether src/api/ is truly the full scope"],
+        "workarounds": []
+      }
+    }
+  },
+  "overall_summary": {
+    "total_expectations": 23,
+    "total_passed": 18,
+    "total_failed": 5,
+    "overall_pass_rate": 0.78,
+    "by_eval": {
+      "eval_1": { "passed": 5, "failed": 0, "pass_rate": 1.0 },
+      "eval_2": { "passed": 4, "failed": 1, "pass_rate": 0.8 },
+      "eval_3": { "passed": 1, "failed": 3, "pass_rate": 0.25 },
+      "eval_4": { "passed": 5, "failed": 0, "pass_rate": 1.0 },
+      "eval_5": { "passed": 3, "failed": 1, "pass_rate": 0.75 }
+    },
+    "key_findings": [
+      "Eval 3 is the worst-performing eval (25% pass rate): the skill fails to distinguish Claude-discovered facts from human instructions, routing a debugging discovery to project CLAUDE.md instead of auto-memory.",
+      "Both eval 2 and eval 5 fail on the same expectation: neither routes to .claude/rules/ with path-scoping. The skill's decision tree does not surface the rules/ mechanism at all — a structural gap.",
+      "Eval 1 and eval 4 are perfect. The user-level vs project-level CLAUDE.md distinction and the sensitivity/do-not-commit constraint are both handled correctly.",
+      "CLAUDE.local.md is never mentioned in eval 4 despite being the canonical Claude-specific gitignored location; .env is recommended instead (reasonable for credentials, but incomplete for Claude context)."
+    ]
+  },
+  "execution_metrics": {
+    "eval_1": {
+      "tool_calls": { "Read": 2, "Write": 4, "Bash": 1, "Edit": 0, "Glob": 0, "Grep": 0 },
+      "total_tool_calls": 7,
+      "total_steps": 6,
+      "errors_encountered": 0,
+      "output_chars": 8804,
+      "transcript_chars": 5412
+    },
+    "eval_2": {
+      "tool_calls": { "Read": 2, "Bash": 2, "Write": 3 },
+      "total_tool_calls": 7,
+      "total_steps": 6,
+      "errors_encountered": 0,
+      "output_chars": 15750,
+      "transcript_chars": 5685
+    },
+    "eval_3": {
+      "tool_calls": { "Read": 2, "Write": 4, "Bash": 2, "Edit": 0, "Glob": 0, "Grep": 0 },
+      "total_tool_calls": 8,
+      "total_steps": 3,
+      "errors_encountered": 0,
+      "output_chars": 10681,
+      "transcript_chars": 3861
+    },
+    "eval_4": {
+      "tool_calls": { "Read": 4, "Write": 1, "Bash": 3, "Edit": 0, "Glob": 1, "Grep": 0 },
+      "total_tool_calls": 9,
+      "total_steps": 4,
+      "errors_encountered": 0,
+      "output_chars": 2586,
+      "transcript_chars": 5403
+    },
+    "eval_5": {
+      "tool_calls": { "Read": 2, "Write": 2, "Bash": 1, "Glob": 1, "Edit": 0, "Grep": 0 },
+      "total_tool_calls": 6,
+      "total_steps": 6,
+      "errors_encountered": 0,
+      "output_chars": 8905,
+      "transcript_chars": 7391
+    }
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Routes to auto-memory, not CLAUDE.md or rules (eval 3)",
+        "reason": "This expectation exposes the most important gap in the v0 skill: it does not model the distinction between human-stated instructions (route to CLAUDE.md) and Claude-discovered facts (route to auto-memory/MEMORY.md). The assertion is well-targeted. However, to make it even harder to satisfy accidentally, consider adding a companion assertion: 'Does NOT misapply the hop-cost/escalation-ladder principle to override the discovery-vs-instruction routing.' The current failure mode is that the executor correctly identifies the discovery type but then overrides it with risk reasoning."
+      },
+      {
+        "assertion": "Considers .claude/rules/ with paths: frontmatter for file-type-specific loading (eval 2 and eval 5)",
+        "reason": "This expectation fails in both eval 2 and eval 5. The v0 skill's decision tree simply does not mention .claude/rules/. The failure is clean and meaningful — the skill has a genuine coverage gap. The assertion is discriminating and worth keeping. Consider whether the v1 skill should add rules/ as a branch between 'project CLAUDE.md' and 'project skill' for file-scoped or path-specific rules."
+      },
+      {
+        "reason": "No assertion in eval 4 checks for CLAUDE.local.md specifically. The executor recommends .env (reasonable for credentials) but never mentions CLAUDE.local.md, which is the Claude-specific gitignored file for personal context. The current expectation 'CLAUDE.local.md or similar' is broad enough to pass with .env, which may be too permissive — an assertion that CLAUDE.local.md is at least considered as a candidate would be more discriminating."
+      },
+      {
+        "reason": "Eval 3 has no assertion checking that the routing does not land on project-local skills either. The executor recommends project CLAUDE.md AND a project skill as co-primary recommendations. Both are wrong per the expectations. A 'Does NOT route to project-local skill as primary' assertion would catch this additional error."
+      },
+      {
+        "reason": "No eval tests the idempotency behavior: what happens when information is already partially stored at the target location? Eval 1 encountered this (pnpm already existed in Preferences) and handled it well, but no expectation checked for it. This is a high-value edge case to cover in v1 evals."
+      }
+    ],
+    "overall": "The eval suite is well-targeted. The two structural gaps it reveals — missing auto-memory routing for Claude discoveries (eval 3), and missing .claude/rules/ as a routing destination (evals 2 and 5) — are genuine v0 skill deficiencies, not eval noise. The personal/sensitive-data routing (eval 4) passes but exposes a secondary gap around CLAUDE.local.md. Eval 1 provides a clean positive signal. The .claude/rules/ coverage gap appears in two separate evals, suggesting it should be a priority fix in v1."
+  }
+}

@@ -40,7 +40,7 @@
       "files": ["evals/files/real-inbox.json"],
       "expectations": [
         "'Could make the bot for the event through the text api' is NOT classified as Action (modal 'could' = brainstorming)",
-        "'let chen-chen know about the space' IS classified as Action (imperative + person)",
+        "'let chen-chen know about the space' IS classified as Action (imperative + person) and assigned to Demo Day project (Chen-Chen is a Demo Day contact, and 'the space' is event-related)",
         "'Puffin as a journey and character with waycraft' is classified as Reference or Project Seed (ideation, no verb)",
         "'linq is a pretty good business as well' is NOT classified as Action (observation/reference)",
         "'make sure the semantic search or whatever setting is enabled as part of onboarding' is classified as Action (specific task for EAI)",
@@ -60,7 +60,7 @@
         "Item 1 (anthropic-cookbook) is classified as Reference",
         "Item 2 (autogen) is classified as Reference",
         "Item 3 (claude-code-action) is classified as Reference and noted as relevant to Everything AI",
-        "Item 4 ('tell raiya about the autogen thing') is classified as Action with Everything AI project (Raiya is EAI contact)",
+        "Item 4 ('tell raiya about the autogen thing') is classified as Action (imperative + person + specific thing to communicate)",
         "Item 5 ('I wonder if we could use...') is NOT classified as Action — it's ideation/brainstorming (modal language)",
         "Items 1-3 are considered for clustering since they're all developer tools in the AI/agent ecosystem"
       ]

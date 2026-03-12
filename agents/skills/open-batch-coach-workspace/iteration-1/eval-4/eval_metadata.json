@@ -1,0 +1,11 @@
+{
+  "eval_id": 4,
+  "eval_name": "unsure-about-presenting",
+  "prompt": "I'm Alex from DataPipe... not sure I want to present... product is really technical...",
+  "assertions": [
+    {"id": "a1", "text": "Addresses the technical product concern with FAQ guidance", "type": "behavior"},
+    {"id": "a2", "text": "Mentions the virtual attendance option", "type": "behavior"},
+    {"id": "a3", "text": "Encouraging but not pushy about presenting", "type": "quality"},
+    {"id": "a4", "text": "Still proceeds with onboarding (AskUserQuestion or similar)", "type": "behavior"}
+  ]
+}

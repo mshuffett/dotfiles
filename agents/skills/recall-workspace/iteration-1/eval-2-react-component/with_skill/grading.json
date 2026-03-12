@@ -1,0 +1,14 @@
+{
+  "assertions": [
+    {
+      "text": "With-skill response does NOT dispatch a recall search",
+      "passed": true,
+      "evidence": "Response is pure technical guidance about compound components with context. No mention of dispatching recall, searching history, or using agent-recall. Correctly identified this as a general knowledge question."
+    },
+    {
+      "text": "Both responses provide useful technical guidance about compound component patterns",
+      "passed": true,
+      "evidence": "With-skill: Tabs example with typed context, throwing hook, static properties, controlled mode, context splitting advice. Without-skill: Accordion example with same patterns plus useCallback optimization. Both are high-quality."
+    }
+  ]
+}

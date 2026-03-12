@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Clearly states 1-2 slides max",
+      "passed": true,
+      "evidence": "\"Slides: 1-2 max, not 3.\" and \"Two slides is your ceiling.\" Also notes the second slide can be a YouTube demo video."
+    },
+    {
+      "text": "Clearly states 2 minutes max",
+      "passed": true,
+      "evidence": "\"Time: 2 minutes is a hard cap.\" and \"the organizers will cut you off, which is a worse look than finishing on time.\""
+    },
+    {
+      "text": "Frames constraints positively (clarity, not limitation)",
+      "passed": true,
+      "evidence": "\"If you're feeling like you need a third slide, that's usually a signal there's too much on the existing slides rather than too little space.\" Also: \"Two minutes is plenty of room to introduce yourself, deliver that, cover traction, business model, market, and close with something compelling.\""
+    },
+    {
+      "text": "References the guide on not cramming more words",
+      "passed": true,
+      "evidence": "\"The YC guide says it well -- don't try to cram more in by speaking faster. It doesn't work. Cut content instead.\""
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 45.9},
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Clean, direct answers with good framing. Opens with 'no and no' which is honest, then explains the reasoning. Offers practical help ('What's the content you're worried about fitting in?') rather than just stating the rules."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "eval_id": 6,
+  "eval_name": "format-question",
+  "prompt": "what's the format for demo day?",
+  "assertions": [
+    {"id": "a1", "text": "Includes date (March 10), time (4pm PT), and location", "type": "factual"},
+    {"id": "a2", "text": "Mentions 2 minutes per founder", "type": "factual"},
+    {"id": "a3", "text": "Mentions 1-2 slides and 100+ investors", "type": "factual"},
+    {"id": "a4", "text": "Response is concise (not a full coaching dump)", "type": "quality"}
+  ]
+}

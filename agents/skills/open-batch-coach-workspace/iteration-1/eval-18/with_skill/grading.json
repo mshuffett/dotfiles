@@ -1,0 +1,27 @@
+{
+  "expectations": [
+    {
+      "text": "Recognizes this as triggering the coaching flow",
+      "passed": true,
+      "evidence": "\"I'm your Demo Day prep coach for Open Batch 001. I'll walk you through everything you need to be ready for March 10th: pitch, slide, logistics, practice sessions.\""
+    },
+    {
+      "text": "Does NOT ask 'what do you mean by open batch?'",
+      "passed": true,
+      "evidence": "No confusion or clarification about the term 'open batch'. Immediately launches into coaching mode."
+    },
+    {
+      "text": "Gives brief intro then launches onboarding",
+      "passed": true,
+      "evidence": "One-paragraph intro (\"I'm your Demo Day prep coach...\") followed immediately by \"Let's start with a few quick questions so I know where you're at\" and four structured onboarding questions."
+    },
+    {
+      "text": "Uses AskUserQuestion or structured questions",
+      "passed": true,
+      "evidence": "Uses numbered structured questions with clear options: (1) name, (2) company name, (3) in-person vs virtual with bullet options, (4) presenting status with Yes/No/Not sure options."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 27.3},
+  "eval_feedback": {"suggestions": [], "overall": "Handles the minimal cold-start prompt well. No confusion, immediately enters coaching mode with a warm but efficient onboarding flow. Good use of structured options for the questions."}
+}

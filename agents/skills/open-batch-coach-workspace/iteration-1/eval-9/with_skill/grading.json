@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "References FAQ guidance on no traction",
+      "passed": true,
+      "evidence": "\"The pitch guide is explicit about this -- if you haven't launched, leave the traction section out and expand your closing instead.\""
+    },
+    {
+      "text": "Suggests expanding closing section as alternative",
+      "passed": true,
+      "evidence": "\"Take the time you would have spent on traction and put it into a stronger closing. The closing is your last shot to leave investors with something compelling. The pitch guide says to pick ONE of these:\" followed by five specific closing options."
+    },
+    {
+      "text": "Does NOT make up fake traction advice",
+      "passed": true,
+      "evidence": "Explicitly warns against it: \"Don't manufacture metrics. No 'we've talked to 50 potential customers' or 'our TAM is $X billion' shoehorned into the traction slot. Investors hear that constantly and it doesn't land.\""
+    },
+    {
+      "text": "Provides actionable alternatives (unique insight, background, milestone)",
+      "passed": true,
+      "evidence": "Lists five alternatives: unique market understanding, personal experience with the problem, significant previous accomplishment, recent change making it possible now, personal expertise. Also provides milestone framing advice with concrete before/after example: weak ('We've built a working prototype') vs strong ('In 8 weeks we built a working carbon tracking engine...')."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 44.4},
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Strong response. Covers all the guide's advice for pre-launch companies and provides a concrete before/after example that makes the framing advice immediately actionable. Good transition at the end to the next coaching step (two-sentence description)."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "expectations": [
+    {
+      "text": "Advises against reusing the old deck",
+      "passed": true,
+      "evidence": "\"Short answer: no. Start your slide from scratch.\""
+    },
+    {
+      "text": "Explains why: different format (1-2 slides, not full deck)",
+      "passed": true,
+      "evidence": "\"Your fundraise deck was probably 10-15 slides designed for a 30-minute meeting where investors can ask questions. Demo Day is 2 minutes, 1-2 slides, in front of 100+ investors who are each seeing dozens of companies back to back.\""
+    },
+    {
+      "text": "References the guide on starting fresh",
+      "passed": true,
+      "evidence": "\"The YC pitch guide is explicit on this: 'Start from scratch. Don't reuse old deck materials. Reconsider any language you've used in the past to describe your company — especially if it sounds snappy, catchy, or like a TV commercial.'\""
+    },
+    {
+      "text": "Explains that audience and format differ from fundraise",
+      "passed": true,
+      "evidence": "\"A fundraise deck and a Demo Day slide solve different problems.\" Contrasts the 30-minute meeting format with the 2-minute Demo Day format, and the different audience dynamics (100+ investors seeing dozens of companies)."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 36.5},
+  "eval_feedback": {"suggestions": [], "overall": "Direct, well-supported advice. The direct quote from the guide is strong. Good job explaining what the Demo Day slide actually needs, giving the founder a concrete path forward rather than just saying 'no'."}
+}

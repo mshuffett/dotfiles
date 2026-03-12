@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Launch Claude CLI with The Alchemist coaching prompt as system prompt
+# Usage: coach [optional initial message]
+
+set -euo pipefail
+
+PROMPT_FILE="$HOME/ws/notes/3-Resources/Prompts/The Alchemist - Ultimate Coaching Prompt.md"
+
+if [[ ! -f "$PROMPT_FILE" ]]; then
+  echo "Error: Alchemist prompt not found at $PROMPT_FILE" >&2
+  exit 1
+fi
+
+SYSTEM_PROMPT=$(cat "$PROMPT_FILE")
+
+exec claude --system-prompt "$SYSTEM_PROMPT" "$@"

@@ -1,0 +1,393 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage:
+  wts <name> [options]
+
+Creates (or reuses) a sibling git worktree and starts/resumes an agent session
+inside a new tmux split pane.
+
+Options:
+  --agent <auto|codex|claude>  Agent launcher to use (default: auto)
+  --mode <resume|fork|new>     Session mode (default: resume)
+  --branch <branch>            Git branch name (default: <name>)
+  --base <branch>              Base branch for new branches (default: current main branch)
+  --orientation <h|v>          Split horizontally or vertically (default: h)
+  --no-create                  Fail if worktree does not already exist
+  --copy-env                   Copy .env* files from main repo into the worktree
+  --dry-run                    Print actions without running
+  --command <cmd>              Override launch command (for testing)
+  --no-select                  Keep focus on original pane after splitting
+  -h, --help                   Show help
+
+Examples:
+  wts feature/auth
+  wts issue-123 --mode fork --orientation v
+  wts test --dry-run
+EOF
+}
+
+quote_cmd() {
+  local out=""
+  local arg
+  for arg in "$@"; do
+    local q
+    printf -v q '%q' "$arg"
+    out+="${q} "
+  done
+  printf '%s' "${out% }"
+}
+
+resolve_main_repo() {
+  local toplevel common_dir
+  toplevel="$(git rev-parse --show-toplevel)"
+  common_dir="$(git rev-parse --git-common-dir)"
+
+  if [[ "$common_dir" == ".git" ]]; then
+    printf '%s\n' "$toplevel"
+    return
+  fi
+
+  if [[ "$common_dir" == */.git/worktrees/* ]]; then
+    printf '%s\n' "${common_dir%/.git/worktrees/*}"
+    return
+  fi
+
+  if [[ "$common_dir" == */.git ]]; then
+    printf '%s\n' "${common_dir%/.git}"
+    return
+  fi
+
+  printf '%s\n' "$toplevel"
+}
+
+copy_env_files() {
+  local src="$1"
+  local dest="$2"
+  local copied=0
+
+  shopt -s nullglob
+  local file
+  for file in "$src"/.env*; do
+    if [[ -f "$file" ]]; then
+      cp "$file" "$dest"/
+      copied=$((copied + 1))
+    fi
+  done
+  shopt -u nullglob
+
+  local dir
+  for dir in apps packages; do
+    if [[ ! -d "$src/$dir" ]]; then
+      continue
+    fi
+    while IFS= read -r file; do
+      local rel target
+      rel="${file#"$src"/}"
+      target="$dest/$rel"
+      mkdir -p "$(dirname "$target")"
+      cp "$file" "$target"
+      copied=$((copied + 1))
+    done < <(find "$src/$dir" -maxdepth 2 -type f -name '.env*' 2>/dev/null)
+  done
+
+  printf '%s\n' "$copied"
+}
+
+detect_agent() {
+  if [[ -n "${CLAUDE_SESSION_ID:-}" ]]; then
+    printf 'claude\n'
+    return
+  fi
+
+  if [[ -n "${CODEX_THREAD_ID:-}" || -n "${CODEX_SESSION_ID:-}" || -n "${CODEX_CI:-}" ]]; then
+    printf 'codex\n'
+    return
+  fi
+
+  if [[ -n "${TMUX_PANE:-}" ]]; then
+    local pane_pid pane_cmd
+    pane_pid="$(tmux display-message -p -t "$TMUX_PANE" '#{pane_pid}' 2>/dev/null || true)"
+    if [[ -n "$pane_pid" ]]; then
+      pane_cmd="$(ps -o command= -p "$pane_pid" 2>/dev/null || true)"
+      if [[ "$pane_cmd" == *"claude"* ]]; then
+        printf 'claude\n'
+        return
+      fi
+      if [[ "$pane_cmd" == *"codex"* ]]; then
+        printf 'codex\n'
+        return
+      fi
+    fi
+  fi
+
+  if command -v codex >/dev/null 2>&1; then
+    printf 'codex\n'
+    return
+  fi
+  if command -v claude >/dev/null 2>&1; then
+    printf 'claude\n'
+    return
+  fi
+
+  printf 'unknown\n'
+}
+
+main() {
+  local name=""
+  local agent="auto"
+  local mode="resume"
+  local branch=""
+  local base_branch=""
+  local orientation="h"
+  local no_create=0
+  local copy_env=0
+  local dry_run=0
+  local command_override=""
+  local no_select=0
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --agent)
+        agent="${2:-}"
+        shift 2
+        ;;
+      --mode)
+        mode="${2:-}"
+        shift 2
+        ;;
+      --branch)
+        branch="${2:-}"
+        shift 2
+        ;;
+      --base)
+        base_branch="${2:-}"
+        shift 2
+        ;;
+      --orientation)
+        orientation="${2:-}"
+        shift 2
+        ;;
+      --no-create)
+        no_create=1
+        shift
+        ;;
+      --copy-env)
+        copy_env=1
+        shift
+        ;;
+      --dry-run)
+        dry_run=1
+        shift
+        ;;
+      --command)
+        command_override="${2:-}"
+        shift 2
+        ;;
+      --no-select)
+        no_select=1
+        shift
+        ;;
+      -h|--help)
+        usage
+        exit 0
+        ;;
+      -*)
+        echo "Unknown option: $1" >&2
+        usage
+        exit 1
+        ;;
+      *)
+        if [[ -z "$name" ]]; then
+          name="$1"
+        else
+          echo "Unexpected argument: $1" >&2
+          usage
+          exit 1
+        fi
+        shift
+        ;;
+    esac
+  done
+
+  if [[ -z "$name" ]]; then
+    usage
+    exit 1
+  fi
+
+  if [[ -z "${TMUX:-}" || -z "${TMUX_PANE:-}" ]]; then
+    echo "Error: must run inside tmux (TMUX and TMUX_PANE required)." >&2
+    exit 1
+  fi
+
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Error: not inside a git repository." >&2
+    exit 1
+  fi
+
+  case "$mode" in
+    resume|fork|new) ;;
+    *)
+      echo "Error: --mode must be one of resume|fork|new." >&2
+      exit 1
+      ;;
+  esac
+
+  case "$orientation" in
+    h|v) ;;
+    *)
+      echo "Error: --orientation must be h or v." >&2
+      exit 1
+      ;;
+  esac
+
+  case "$agent" in
+    auto|codex|claude) ;;
+    *)
+      echo "Error: --agent must be auto|codex|claude." >&2
+      exit 1
+      ;;
+  esac
+
+  local main_repo repo_name worktrees_root dir_name worktree_path
+  main_repo="$(resolve_main_repo)"
+  repo_name="$(basename "$main_repo")"
+  worktrees_root="$(dirname "$main_repo")/${repo_name}.worktrees"
+  dir_name="${name//\//-}"
+  worktree_path="$worktrees_root/$dir_name"
+
+  mkdir -p "$worktrees_root"
+
+  local created=0
+  if [[ ! -d "$worktree_path" ]]; then
+    if [[ "$no_create" -eq 1 ]]; then
+      echo "Error: worktree does not exist: $worktree_path" >&2
+      exit 1
+    fi
+
+    local branch_name
+    branch_name="${branch:-$name}"
+    if [[ -z "$base_branch" ]]; then
+      base_branch="$(git -C "$main_repo" symbolic-ref --quiet --short HEAD || true)"
+      if [[ -z "$base_branch" ]]; then
+        echo "Error: unable to determine base branch (detached HEAD)." >&2
+        exit 1
+      fi
+    fi
+
+    if [[ "$dry_run" -eq 1 ]]; then
+      if git -C "$main_repo" show-ref --verify --quiet "refs/heads/$branch_name"; then
+        echo "Dry run: would create worktree from existing branch '$branch_name'"
+      else
+        echo "Dry run: would create branch '$branch_name' from '$base_branch'"
+      fi
+    else
+      if git -C "$main_repo" show-ref --verify --quiet "refs/heads/$branch_name"; then
+        echo "Using existing branch '$branch_name' for new worktree..."
+        git -C "$main_repo" worktree add "$worktree_path" "$branch_name"
+      else
+        echo "Creating branch '$branch_name' from '$base_branch'..."
+        git -C "$main_repo" worktree add "$worktree_path" -b "$branch_name" "$base_branch"
+      fi
+      created=1
+    fi
+  fi
+
+  if [[ "$copy_env" -eq 1 && "$created" -eq 1 ]]; then
+    local copied_count
+    copied_count="$(copy_env_files "$main_repo" "$worktree_path")"
+    echo "Copied $copied_count env file(s)."
+  fi
+
+  local resolved_agent
+  if [[ "$agent" == "auto" ]]; then
+    resolved_agent="$(detect_agent)"
+  else
+    resolved_agent="$agent"
+  fi
+
+  if [[ "$resolved_agent" == "unknown" ]]; then
+    echo "Error: could not detect agent and neither codex nor claude is available." >&2
+    exit 1
+  fi
+
+  local launch_command
+  if [[ -n "$command_override" ]]; then
+    launch_command="$command_override"
+  else
+    local cmd=()
+    if [[ "$resolved_agent" == "codex" ]]; then
+      case "$mode" in
+        resume)
+          if [[ -n "${CODEX_THREAD_ID:-}" ]]; then
+            cmd=(codex resume "$CODEX_THREAD_ID" -C "$worktree_path")
+          else
+            cmd=(codex resume --last -C "$worktree_path")
+          fi
+          ;;
+        fork)
+          if [[ -n "${CODEX_THREAD_ID:-}" ]]; then
+            cmd=(codex fork "$CODEX_THREAD_ID" -C "$worktree_path")
+          else
+            cmd=(codex fork --last -C "$worktree_path")
+          fi
+          ;;
+        new)
+          cmd=(codex -C "$worktree_path")
+          ;;
+      esac
+    else
+      case "$mode" in
+        resume)
+          if [[ -n "${CLAUDE_SESSION_ID:-}" ]]; then
+            cmd=(claude -r "$CLAUDE_SESSION_ID")
+          else
+            cmd=(claude -c)
+          fi
+          ;;
+        fork)
+          if [[ -n "${CLAUDE_SESSION_ID:-}" ]]; then
+            cmd=(claude -r "$CLAUDE_SESSION_ID" --fork-session)
+          else
+            cmd=(claude -c --fork-session)
+          fi
+          ;;
+        new)
+          cmd=(claude)
+          ;;
+      esac
+    fi
+    launch_command="$(quote_cmd "${cmd[@]}")"
+  fi
+
+  local split_flag="-h"
+  if [[ "$orientation" == "v" ]]; then
+    split_flag="-v"
+  fi
+
+  echo "Main repo:      $main_repo"
+  echo "Worktree path:  $worktree_path"
+  echo "Agent:          $resolved_agent"
+  echo "Mode:           $mode"
+  echo "Launch command: $launch_command"
+
+  local original_pane new_pane
+  original_pane="$TMUX_PANE"
+
+  if [[ "$dry_run" -eq 1 ]]; then
+    echo "Dry run: tmux split-window $split_flag -t \"$original_pane\" -c \"$worktree_path\" \"$launch_command\""
+    exit 0
+  fi
+
+  tmux split-window "$split_flag" -t "$original_pane" -c "$worktree_path" "$launch_command"
+  new_pane="$(tmux list-panes -F '#{pane_id}' | tail -n 1)"
+  if [[ "$no_select" -eq 0 ]]; then
+    tmux select-pane -t "$new_pane"
+  fi
+
+  echo "Opened pane $new_pane in $worktree_path"
+}
+
+main "$@"

@@ -1,0 +1,11 @@
+{
+  "eval_id": 10,
+  "eval_name": "good-pitch-feedback",
+  "prompt": "Here's my pitch: 'Roomie helps college students find compatible roommates...' What do you think?",
+  "assertions": [
+    {"id": "a1", "text": "Recognizes this is a good pitch with specific positive feedback", "type": "behavior"},
+    {"id": "a2", "text": "Does NOT tear it apart or rewrite from scratch", "type": "quality"},
+    {"id": "a3", "text": "Identifies concrete strengths (clear, metric, picture-creating)", "type": "quality"},
+    {"id": "a4", "text": "Asks if founder wants to lock it in", "type": "behavior"}
+  ]
+}

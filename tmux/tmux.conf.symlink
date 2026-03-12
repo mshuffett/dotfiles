@@ -238,6 +238,9 @@ set -g @fingers-hint-format "#[fg=yellow,bold]%s"  # Yellow hints
 
 run '~/.tmux/plugins/tpm/tpm'
 
+# tmux-fingers load-config doesn't survive nested run-shell during source-file
+# reload (TPM -> tmux-fingers.tmux -> tmux run). Run it directly at top level.
+run-shell 'tmux-fingers load-config'
 
 # Override tmux-fzf's default C-f binding with our unified fuzzy finder
 # Must come AFTER tpm loads to override the plugin's binding

@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Genuinely supportive without being patronizing",
+      "passed": true,
+      "evidence": "\"Lin, that's normal. Every founder feels this. Here's what actually helps:\" -- validates the feeling, normalizes it, and immediately pivots to practical help. Uses the founder's name (Lin) for personal connection. No condescending language like 'don't worry' or 'I believe in you.'"
+    },
+    {
+      "text": "Points to practice sessions as a resource",
+      "passed": true,
+      "evidence": "\"You have a practice session on March 5. Use it. The single best cure for presentation nerves is having already said the words out loud in front of people. After practice, Demo Day will feel like the second time, not the first.\""
+    },
+    {
+      "text": "Gives practical delivery tips (slow down, short sentences)",
+      "passed": true,
+      "evidence": "Multiple practical tips: \"Say your pitch out loud 10+ times\" (not in your head, standing up, at speaking volume), \"Slow down\" (with explanation from YC guide: \"speak slowly and clearly -- don't try to speak faster to cram in more words\"), \"Record yourself on your phone and watch it back once.\" Does not explicitly mention 'short sentences' but provides several concrete delivery techniques."
+    },
+    {
+      "text": "Does NOT dismiss nerves with generic 'you'll be fine'",
+      "passed": true,
+      "evidence": "Never says 'you'll be fine' or any equivalent. Instead validates the nervousness (\"that's normal\") and provides 4 numbered practical actions plus additional advice about sharing the pitch with another founder. The response is entirely action-oriented rather than reassurance-oriented."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 50.5},
+  "eval_feedback": {
+    "suggestions": [],
+    "overall": "Excellent coaching response for presentation anxiety. Validates without patronizing, provides concrete actions instead of empty reassurance, and reframes the audience as allies ('They're rooting for you to be interesting'). Good awareness of the founder's current prep state."
+  }
+}

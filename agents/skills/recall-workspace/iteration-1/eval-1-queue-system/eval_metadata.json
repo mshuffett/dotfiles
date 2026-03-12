@@ -1,0 +1,19 @@
+{
+  "eval_id": 1,
+  "eval_name": "queue-system-with-history",
+  "prompt": "i need to set up a queue system for processing background jobs. last time we built something similar for the voice pipeline i think — can you check what approach we used?",
+  "assertions": [
+    {
+      "text": "With-skill response dispatches an agent-recall search (evidence: mentions searching, dispatching agent, or running agent-recall)",
+      "type": "with_skill_only"
+    },
+    {
+      "text": "With-skill response includes specific historical context from prior conversations (not generic queue advice)",
+      "type": "with_skill_only"
+    },
+    {
+      "text": "With-skill response uses conv scope (searching conversation history, not notes or atoms)",
+      "type": "with_skill_only"
+    }
+  ]
+}

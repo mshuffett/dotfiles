@@ -1,10 +1,12 @@
 ---
 name: agent-teams
 description: >
-  Use when creating, coordinating, or managing Claude Code agent teams. Covers setup decisions
-  (teams vs subagents), prerequisites, model config, tool schemas (Teammate/SendMessage/Task*),
-  role detection, teammate workflow, critical gotchas, keyboard shortcuts, troubleshooting,
-  and known limitations.
+  The canonical guide for Claude Code agent swarms (TeamCreate-based multi-agent coordination).
+  Use when the user says "swarm", "agent team", "orchestrate agents", or when 3+ independent
+  tasks should run in parallel with inter-agent messaging and coordination. Covers the full
+  swarm lifecycle: planning tasks, spawning teammates, inter-agent communication via SendMessage,
+  monitoring, verification, and cleanup. NOT for fire-and-forget subagents (use
+  superpowers:dispatching-parallel-agents instead) or document planning (use plan-orchestrator).
 allowed_tools: Teammate(*), SendMessage(*), Task(*), Bash(tmux:*)
 ---
 

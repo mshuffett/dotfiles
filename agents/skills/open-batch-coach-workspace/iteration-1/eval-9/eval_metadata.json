@@ -1,0 +1,11 @@
+{
+  "eval_id": 9,
+  "eval_name": "no-traction-pre-launch",
+  "prompt": "I don't have any traction yet, we're pre-launch. How do I handle traction?",
+  "assertions": [
+    {"id": "a1", "text": "References FAQ guidance on no traction", "type": "behavior"},
+    {"id": "a2", "text": "Suggests expanding closing section as alternative", "type": "behavior"},
+    {"id": "a3", "text": "Does NOT make up fake traction advice", "type": "quality"},
+    {"id": "a4", "text": "Provides actionable alternatives (unique insight, background, milestone)", "type": "behavior"}
+  ]
+}

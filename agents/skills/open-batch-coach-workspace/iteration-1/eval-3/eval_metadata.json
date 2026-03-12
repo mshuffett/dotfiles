@@ -1,0 +1,11 @@
+{
+  "eval_id": 3,
+  "eval_name": "buzzword-pitch-coaching",
+  "prompt": "I need help with my demo day pitch. My company is called NexaSync and here's what I have: 'NexaSync is an AI-powered enterprise platform...'",
+  "assertions": [
+    {"id": "a1", "text": "Identifies buzzword/jargon problems in the pitch", "type": "behavior"},
+    {"id": "a2", "text": "References the YC guide on plain English", "type": "behavior"},
+    {"id": "a3", "text": "Asks what the company actually does before rewriting", "type": "behavior"},
+    {"id": "a4", "text": "Does NOT write a complete rewrite without understanding the business first", "type": "quality"}
+  ]
+}

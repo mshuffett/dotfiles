@@ -1,0 +1,11 @@
+{
+  "eval_id": 14,
+  "eval_name": "small-market-question",
+  "prompt": "My market is only about $500M, is that too small to mention?",
+  "assertions": [
+    {"id": "a1", "text": "References FAQ guidance on small markets", "type": "behavior"},
+    {"id": "a2", "text": "Suggests ways to expand scope (countries, segments, adjacent)", "type": "behavior"},
+    {"id": "a3", "text": "Does NOT just say 'leave it out'", "type": "quality"},
+    {"id": "a4", "text": "Helps think through whether market is actually bigger", "type": "behavior"}
+  ]
+}

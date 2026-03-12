@@ -81,6 +81,13 @@ Full reference (providers, flags, input-image limits, sizes): `references/genera
 ## Prompt augmentation
 Reformat user prompts into a structured, production-oriented spec. Only make implicit details explicit; do not invent new requirements.
 
+**Do not use `--no-augment` unless the user explicitly asks for raw passthrough.**
+Augmentation consistently improves output quality — even when your prompt is already
+detailed. Long, unstructured prompts actually *hurt* results because the model has to
+parse competing directives. Augmentation compresses and labels the intent so the model
+focuses on the right things. Skipping it to "save time" or because "the prompt is
+detailed enough" is a false economy that produces worse images.
+
 ## Use-case taxonomy (exact slugs)
 Classify each request into one of these buckets and keep the slug consistent across prompts and references.
 

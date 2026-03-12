@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Checks state and identifies pitch as the next incomplete step",
+      "passed": true,
+      "evidence": "Opens with \"You're in good shape on logistics -- RSVP confirmed, presenting in person, and you're registered for the March 5 practice session\" then transitions to \"Next up: your two-sentence pitch.\""
+    },
+    {
+      "text": "Routes to two-sentence pitch workshop",
+      "passed": true,
+      "evidence": "Provides the two-sentence pitch structure (first sentence = what it does, second sentence = why it's awesome), gives Stripe and Airbnb examples, and ends with \"Do you have a draft of your two-sentence pitch, or would you like to build one from scratch?\""
+    },
+    {
+      "text": "Acknowledges completed items briefly without re-explaining them",
+      "passed": true,
+      "evidence": "Completed logistics listed in a single sentence: \"RSVP confirmed, presenting in person, and you're registered for the March 5 practice session.\" No re-explanation of what those steps entail."
+    },
+    {
+      "text": "Response is concise and action-oriented",
+      "passed": true,
+      "evidence": "Response is action-oriented, ending with a clear CTA. While it includes examples (Stripe, Airbnb), these serve the pitch workshop action. The response moves directly from state check to next step with no filler."
+    }
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.0},
+  "timing": {"total_duration_seconds": 44.7},
+  "eval_feedback": {
+    "suggestions": ["The examples add length but are pedagogically valuable. Could consider making them optional or shorter if conciseness is prioritized."],
+    "overall": "Solid mid-flow routing. Correctly identifies pitch as next step, provides actionable workshop entry, and keeps completed items brief."
+  }
+}

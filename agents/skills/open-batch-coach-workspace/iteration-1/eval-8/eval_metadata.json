@@ -1,0 +1,11 @@
+{
+  "eval_id": 8,
+  "eval_name": "too-many-slides-over-time",
+  "prompt": "can I use 3 slides? and can I go over 2 minutes?",
+  "assertions": [
+    {"id": "a1", "text": "Clearly states 1-2 slides max", "type": "factual"},
+    {"id": "a2", "text": "Clearly states 2 minutes max", "type": "factual"},
+    {"id": "a3", "text": "Frames constraints positively (clarity, not limitation)", "type": "quality"},
+    {"id": "a4", "text": "References the guide on not cramming more words", "type": "behavior"}
+  ]
+}
