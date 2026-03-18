@@ -1,6 +1,6 @@
 ---
 name: inbox-triage
-description: Process raw Todoist inbox items into a structured knowledge system using GTD (actions → Todoist) and PARA (reference → Obsidian). Use this skill whenever the user says "process my inbox", "triage my todoist", "clean up inbox items", "file these captures", or has a batch of raw items (voice notes, links, ideas) that need classifying and filing. Also use when the user mentions inbox zero, PARA filing, or batch-processing captures into Obsidian notes — even if they don't explicitly say "triage".
+description: DEPRECATED — use adaptive-triage instead. This skill has been replaced by adaptive-triage which provides interactive confirm/correct triage with preference learning. Invoke adaptive-triage for any triage, inbox processing, or item classification tasks.
 ---
 
 # Inbox Triage
