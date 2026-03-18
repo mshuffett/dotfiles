@@ -97,3 +97,28 @@ Ran spec-document-reviewer subagent. Key issues found and fixed:
 
 9. **Skill location** — Added section: skill at `agents/skills/adaptive-triage/SKILL.md`,
    retires inbox-triage, data in `projects/adaptive-triage/`.
+
+### Implementation (2026-03-17)
+
+Built and committed all components:
+
+1. `projects/adaptive-triage/triage-sessions/` — session log directory (empty)
+2. `projects/adaptive-triage/learned-rules.md` — empty rules file
+3. `agents/skills/adaptive-triage/references/note-templates.md` — Obsidian note template
+4. `agents/skills/adaptive-triage/references/base-heuristics.md` — cold-start classification logic
+5. `agents/skills/adaptive-triage/SKILL.md` — the skill (238 lines)
+6. `agents/skills/inbox-triage/SKILL.md` — deprecated, redirects to adaptive-triage
+
+### Smoke Test (2026-03-17)
+
+Verified all CLI infrastructure works:
+- `td inbox` — 79 items available
+- `td today` — 42 items (including overdue)
+- `td comment list id:<id>` — works (returns comments or "No comments")
+- `td project list` — returns project names with IDs
+- `ls ~/ws/notes/{1-Projects,2-Areas,3-Resources}/` — vault structure accessible
+
+**Ready for first real triage session.** The skill should be invocable via
+`/triage` or natural language. First session will be cold-start (no rules, no
+examples) using base heuristics only. Expect imperfect results — the corrections
+from session 1 seed the learning loop.
