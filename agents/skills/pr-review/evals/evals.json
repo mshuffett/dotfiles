@@ -1,0 +1,67 @@
+{
+  "skill_name": "pr-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review this PR. The repo is a Next.js TypeScript app and I've already checked out the feature branch. The PR adds a user profile page with an edit form and a new API route.",
+      "expected_output": "Should detect XSS vulnerability, SQL injection, missing null checks, missing auth. Should identify zero e2e test coverage for the new UI component. Should write unit tests for the API route and component, plus e2e tests with screenshots of the profile page. Should fix all bugs and generate a comprehensive report at ./pr-review-report.md.",
+      "files": [],
+      "expectations": [
+        "The report identifies the XSS vulnerability in UserProfile component",
+        "The report identifies the SQL injection in the API route",
+        "The report identifies missing authentication on the API route",
+        "The report identifies missing null check on optional data",
+        "New unit tests were created for the UserProfile component",
+        "New unit tests were created for the API route",
+        "E2E tests were created or attempted for the user profile page",
+        "Screenshots were captured (or attempted) for the UI flow",
+        "The XSS vulnerability was fixed in the source code",
+        "The SQL injection was fixed in the source code",
+        "A pr-review-report.md file was generated with all required sections",
+        "Test coverage numbers are included in the report for changed files",
+        "A git commit was created with the fixes and new tests",
+        "The report correctly identifies which user flows were affected"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Run a full review on this checked-out PR. It's a Python FastAPI backend with a Jinja2 template for order confirmations. The PR adds an orders endpoint and order model.",
+      "expected_output": "Should detect SQL injection, missing input validation, missing auth decorator, mutable default argument, and missing hash with eq. Should identify the Jinja2 template as a UI change requiring visual verification. Should write pytest tests and attempt e2e testing of the template. Should fix all bugs and generate the report.",
+      "files": [],
+      "expectations": [
+        "The report identifies the SQL injection in the orders endpoint",
+        "The report identifies missing input validation (negative amounts)",
+        "The report identifies the missing authentication decorator",
+        "The report identifies the mutable default argument bug",
+        "The report identifies missing __hash__ when __eq__ is defined",
+        "New pytest tests were created for the orders endpoint",
+        "New pytest tests were created for the Order model",
+        "The Jinja2 template was identified as a UI change requiring visual verification",
+        "E2E or visual testing was attempted for the order confirmation template",
+        "The SQL injection was fixed in the source code",
+        "The mutable default argument was fixed",
+        "A pr-review-report.md file was generated with all required sections",
+        "A git commit was created with the fixes and new tests"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review this PR. It's a Python utility library and the PR adds a caching module. There are no UI components or frontend code in this repo.",
+      "expected_output": "Should detect the race condition, negative TTL handling, and bare except clause. Should correctly determine that NO e2e/UI testing is needed since there are no UI changes. Should write unit tests for the cache module. Should fix bugs and generate the report with 'No UI testing needed' noted.",
+      "files": [],
+      "expectations": [
+        "The report identifies the race condition in cache invalidation",
+        "The report identifies the negative TTL edge case",
+        "The report identifies the bare except clause",
+        "New pytest tests were created for the cache module",
+        "The report correctly states that no UI/e2e testing is needed",
+        "No e2e tests were created (since there is no UI)",
+        "The bare except clause was fixed to catch specific exceptions",
+        "The negative TTL handling was fixed",
+        "A pr-review-report.md file was generated with all required sections",
+        "A git commit was created with the fixes and new tests",
+        "The report does NOT mention missing UI testing as a gap"
+      ]
+    }
+  ]
+}

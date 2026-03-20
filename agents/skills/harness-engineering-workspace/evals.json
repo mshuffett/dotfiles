@@ -1,0 +1,51 @@
+{
+  "skill_name": "harness-engineering",
+  "evals": [
+    {
+      "id": 1,
+      "name": "greenfield-setup",
+      "prompt": "I just started a new Next.js + Prisma project for a SaaS billing app. It's in ~/ws/billing-app. I want to set it up so Claude Code and Codex can work on it effectively. What files should I create and what should go in them? The repo is empty except for the Next.js scaffold.",
+      "expected_output": "Should recommend creating CLAUDE.md/AGENTS.md as a concise map (~100 lines), an ARCHITECTURE.md, a structured docs/ directory with design-docs, exec-plans, product-specs, and references subdirectories. Should mention tiered context (hot/warm/cold), linter setup, and the principle of keeping the root file short with pointers to deeper docs. Should NOT produce a monolithic instruction file.",
+      "assertions": [
+        {"id": "a1", "text": "Recommends a concise root CLAUDE.md or AGENTS.md (~100 lines, map not manual)", "type": "semantic"},
+        {"id": "a2", "text": "Recommends creating a structured docs/ directory with subdirectories (design-docs, exec-plans, product-specs, or references)", "type": "semantic"},
+        {"id": "a3", "text": "Mentions ARCHITECTURE.md or equivalent top-level architecture doc", "type": "semantic"},
+        {"id": "a4", "text": "Recommends linter/formatter setup as mechanical enforcement", "type": "semantic"},
+        {"id": "a5", "text": "Mentions tiered context or progressive disclosure concept", "type": "semantic"},
+        {"id": "a6", "text": "Does NOT produce a single monolithic 500+ line instruction file", "type": "semantic"},
+        {"id": "a7", "text": "Includes concrete file contents or templates, not just advice", "type": "semantic"}
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "diagnose-struggling-agent",
+      "prompt": "My CLAUDE.md is about 400 lines long and covers everything — code style, API conventions, database patterns, testing rules, deployment, naming conventions, git workflow. But Claude Code keeps ignoring rules and producing inconsistent output. The bigger the file gets, the worse the results are. What's going wrong and how do I fix it?",
+      "expected_output": "Should diagnose the monolithic file problem (context crowding, non-guidance when everything is important, hard to verify, rots fast). Should recommend extracting to tiered structure: slim root file as map, subdirectory CLAUDE.md files, linter rules for anything enforceable, docs/ directory for depth. Should mention the 40% context utilization sweet spot. Should give a concrete extraction plan.",
+      "assertions": [
+        {"id": "b1", "text": "Identifies the monolithic instruction file as the core problem", "type": "semantic"},
+        {"id": "b2", "text": "Explains WHY large files degrade performance (context crowding, 40% rule, or similar concept)", "type": "semantic"},
+        {"id": "b3", "text": "Recommends extracting to a short root file with pointers to deeper docs", "type": "semantic"},
+        {"id": "b4", "text": "Recommends converting documentable rules to linter/formatter config", "type": "semantic"},
+        {"id": "b5", "text": "Suggests subdirectory CLAUDE.md files for module-specific conventions", "type": "semantic"},
+        {"id": "b6", "text": "Provides a concrete extraction plan or before/after example", "type": "semantic"}
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "entropy-management",
+      "prompt": "We've been using Claude Code heavily for 3 months and the codebase is getting messy. Agents keep reimplementing utilities that already exist, documentation is drifting from the actual code, and we're seeing inconsistent patterns across modules. We tried having an engineer do a cleanup day every Friday but it's not scaling. What should we do?",
+      "expected_output": "Should recognize the entropy/garbage collection problem. Should recommend encoding 'golden principles' into the repo, setting up recurring entropy agents (doc-gardening, deduplication, pattern enforcement, quality scoring), running linters on every commit, and treating technical debt like a high-interest loan paid down continuously. Should reference the OpenAI experience of Friday cleanups not scaling.",
+      "assertions": [
+        {"id": "c1", "text": "Identifies this as entropy/drift in agent-generated code", "type": "semantic"},
+        {"id": "c2", "text": "Recommends automated recurring cleanup agents rather than manual human cleanup", "type": "semantic"},
+        {"id": "c3", "text": "Mentions specific entropy agent types (doc-gardening, deduplication, pattern enforcement, or quality scoring)", "type": "semantic"},
+        {"id": "c4", "text": "Recommends encoding 'golden principles' or mechanical rules to prevent drift", "type": "semantic"},
+        {"id": "c5", "text": "Addresses the documentation-code divergence specifically", "type": "semantic"},
+        {"id": "c6", "text": "Suggests continuous small increments over periodic big cleanups", "type": "semantic"}
+      ],
+      "files": []
+    }
+  ]
+}

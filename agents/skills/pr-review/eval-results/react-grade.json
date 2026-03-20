@@ -1,0 +1,24 @@
+{
+  "repo": "mshuffett/pr-review-test-react",
+  "checks": {
+    "report_exists": true,
+    "screenshot_count": 7,
+    "gif_recorded": true,
+    "commit_made": true,
+    "pr_comment_posted": true,
+    "bugs_found": [
+      "XSS via unsafe HTML rendering (dangerouslySetInnerHTML)",
+      "Sensitive data logging (console.log of user PII)",
+      "No error handling on API call (.then without .catch)",
+      "No input validation (empty fields accepted)",
+      "No res.ok check before parsing response JSON",
+      "Missing a11y (labels not associated with inputs, no aria attributes)",
+      "Email input uses type=text instead of type=email"
+    ],
+    "tests_written": 28,
+    "report_has_badges": true,
+    "report_has_caution_block": true,
+    "report_has_code_links": true,
+    "report_has_hero_gif": true
+  }
+}

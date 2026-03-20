@@ -1,0 +1,139 @@
+# Triage Review — 2026-03-17
+# 100 items (79 inbox, 21 today/overdue)
+#
+# FORMAT:  #: decision | destination | item text
+# DECISIONS: Action, Quick, Seed, Reference, Delete, Clarify, Skip
+#
+# To correct: change the decision and/or destination on any line.
+# To accept all: save and quit without changes.
+# Lines starting with # are ignored.
+#
+# When done, save and quit. I'll diff against the original and execute.
+
+# ── NEEDS YOUR INPUT ─────────────────────────────────────────────────
+# These are too vague — please fill in a decision.
+
+32: Clarify |  | Obi @ open batch
+46: Clarify |  | glow stack peptides
+52: Clarify |  | invited influencers...
+
+# ── DELETE — Stale / Duplicates ──────────────────────────────────────
+
+9: Delete |  | i guess the chair at the office is just an aeron with different back rest and also size 2...
+16: Delete |  | let people register day of with qr code to Open Batch AI
+19: Delete |  | verify the qr code day of login flow for people who haven't signed in yet
+20: Delete |  | nice to have: either auto create the lanyards with the stylized images...
+23: Delete |  | dress rehearsal
+27: Delete |  | verify day-of arrival time
+30: Delete |  | add the zoom webinar link to the demo day event page
+40: Delete |  | Google Search shawn ryan tim ferriss
+53: Delete |  | Debrief / Retro on Open Batch [DUPLICATE of #49]
+75: Delete |  | Remind me to follow up with Benny [DUPLICATE of #98]
+91: Delete |  | Check Review After Batch folder [DUPLICATE of #83]
+
+# ── REVIEW — Actions (need your call on relevance) ──────────────────
+
+6: Action | Post Demo Day Videos | come up with logo for the batch
+14: Action | Post Demo Day Videos | get tasks on here updated [desc: Notion Alumni Demo Day Working Doc link]
+15: Action | Demo Day | right now open batch lets you click sign in even if you don't have an account [BUG]
+31: Action | Post Demo Day Videos | decide if i need help from people like yuliya or others like evelisa
+35: Action | Post Demo Day Videos | update my profile and company info on open batch
+43: Action | Someday / Later | Join AMMA at Burning Man 2026
+48: Action | Post Demo Day Videos | send out updated volunteer names to chen-chen
+55: Action | Ship Everything AI Experiment | i probably need to be posting more about everything ai... [p1, overlaps #74]
+56: Action | Post Demo Day Videos | Follow up from event
+60: Action | Post Demo Day Videos | Follow up on open batch tasks [desc: Google Doc link]
+62: Action | Someday / Later | Get rid of phone and such [p1, desc: "Structural issue"]
+74: Action | Ship Everything AI Experiment | on the everything ai front i should at the very least do some kind of post... [p1, overlaps #55]
+77: Action | People | On the John front probably there should be an additional patent for the audio clip thing [p1]
+84: Action | Manage Personal Financial Runway | i think i may need to verify whether i have enough money to pay for stuff... [already in project]
+93: Action | A/Admin 💼 | Revisit whether I can add some stuff to Compose [already in project]
+97: Action | 📆 Daily Briefing | check palmer square website
+
+# ── REVIEW — Seeds / Reference (need your call on filing) ───────────
+
+1: Reference | 🏢 Space at Embarcadero | probably working out of the gallery could be the best
+8: Reference | 2-Areas/Coaching | Had issue in morning I need the hard stop in morning
+12: Seed | 2-Areas/Fundraise | Consider applying to hf0 again
+24: Seed | Post Demo Day Videos | probably we could improve the software for demo day [desc: YC prep tactics link]
+29: Seed | Post Demo Day Videos | possibly have the demo day website have more of a list view on the desktop
+38: Seed | People | consider working with the one dude from palmer who is the nerdy guy building same thing
+89: Seed | 2-Areas/Agents | A bunch of angles for audio model work [desc: RL on top of SFT + verticalization]
+
+# ── LOOKS GOOD — Actions (Urgent / High Priority) ───────────────────
+
+67: Action | Michelle | SEND Michelle Fidelity 1099s [due Mar 17]
+79: Action | Post Demo Day Videos | Review and test investor page redesign PR #5 on Vercel preview [p1]
+10: Action | Ship Everything AI Experiment | Create ralph-api ALB + ECS service on new AWS account [p2, blocked on AWS support case]
+45: Action | Hire Sr Engineer | Check AgentOps PR #71 and DM maintainer about potential hiring fit [p2]
+78: Action | A/Admin 💼 | Review Compose AI website redesign explorations (24 designs) [p2, has Vercel preview + PR]
+99: Action | Manage Personal Financial Runway | Transfer 18K to WF to cover Mar payments
+86: Action | Manage Personal Financial Runway | Transfer 5k to Compose by 03/12 [desc: sent to wrong WF acct]
+87: Action | Manage Personal Financial Runway | I have a 4k shortfall on current bills and also need upcoming payments
+25: Action | Ship Everything AI Experiment | this landing page is kind of sick [p1, desc: storybook bloom URL — deploy it]
+80: Action | Manage Personal Financial Runway | Check tax refund tracking please call them when you have a chance...
+
+# ── LOOKS GOOD — Actions (Standard) ─────────────────────────────────
+
+2: Action | People | Find the person I bought the herman miller from and see if they can exchange it
+21: Action | Ship Everything AI Experiment | Finish agent platform plan (plans/agent-platform/)
+22: Action | Ship Everything AI Experiment | replace landing page of geteverything.ai with the bloom landing page from storybook
+47: Action | Ship Everything AI Experiment | see if i can run some ralph loops on everything ai
+49: Action | Post Demo Day Videos | Do a brief retro on batch
+50: Action | Post Demo Day Videos | Send emails to investors with reminders of website and potentially recap videos or slides
+64: Action | Post Demo Day Videos | Send a survey out to batch…
+81: Action | Ship Waycraft Experiment | Ping Pamela Kryskow (Waycraft)
+83: Action | A/Admin 💼 | Review "Review After Batch" project and Ideas Backlog [desc: 51+28 items triaged Feb 1]
+90: Action | Hire Sr Engineer | Review potential hires list
+92: Action | People | get dinner with jesper (energy guy from shack — on text)
+95: Action | Hire Sr Engineer | message evan about interviews
+96: Action | Manage Personal Financial Runway | look into why gemini cost extra money
+98: Action | People | Follow up with benny
+
+# ── LOOKS GOOD — Quick ──────────────────────────────────────────────
+
+82: Quick | A/Admin 💼 | REMOVE the WeFunder banner on Compose AI [unblocked post-demo-day]
+100: Quick | 📆 Daily Briefing | cancel shadow pc on mshuffett
+
+# ── LOOKS GOOD — Seeds → Obsidian ───────────────────────────────────
+
+3: Seed | 2-Areas/Everything AI Strategy | Extend my router so that for a given agent there's an expected cost and EV
+5: Seed | 3-Resources/Project Seeds | Either doing a Rollup where everyone uses AI or a launchpad
+11: Seed | 2-Areas/Everything AI Strategy | a lot of people need these agents spun up like openclaw type agents...
+13: Seed | 2-Areas/Fundraise | Could we get all the investors in a discord server or something
+17: Seed | 2-Areas/Everything AI Strategy | one interesting idea is to have eai agents able to run anywhere like claude code
+18: Seed | 2-Areas/Everything AI Strategy | one other idea is basically to have passkeys required for certain types of approvals
+26: Seed | 3-Resources/Project Seeds | Do AI recruiting… obvious business model, make money quickly
+33: Seed | 2-Areas/Everything AI Strategy | nice to have: see which investors have checked in or logged into website real-time
+57: Seed | 2-Areas/Everything AI Strategy | Possibly doing more open source or releasing EAI have a theory of change
+58: Seed | 2-Areas/Everything AI Strategy | if we do something like that repo that openai did for managing agents with linear integration
+59: Seed | 2-Areas/Growth | idea for content: take andrei's fan out strategies and show how the tool does them
+63: Seed | 3-Resources/Project Seeds | One idea is I build like the AI for pms with some PM
+65: Seed | 2-Areas/Everything AI Strategy | if you could kind of just monitor the open source advancements and deliver best setup
+66: Seed | 2-Areas/Everything AI Strategy | having something like a toggle-able dom replay would be quite strong
+68: Seed | 3-Resources/Project Seeds | do i do recruiting for companies or what...
+70: Seed | 2-Areas/Growth | one strategy: social media sniping specific targets like andrei karpathi...
+72: Seed | 2-Areas/Growth | I think I could do a mega post about open batch and everything AI
+73: Seed | 2-Areas/Growth | One idea is I could make an email bot to correspond with the VCs [desc: chat with Jeremy]
+85: Seed | 2-Areas/Fundraise | could do a fund for yc companies -- orangecollective seemed good for that
+
+# ── LOOKS GOOD — Reference → Obsidian ───────────────────────────────
+
+4: Reference | 2-Areas/Agents | i think both agent messaging systems basically work now but need a bit more work
+7: Reference | 2-Areas/Everything AI Strategy | Demo day [desc: retrospective re: batch founders not prepared enough]
+28: Reference | 2-Areas/Agents | GitHub - AndyMik90/Auto-Claude: Autonomous multi-session AI coding
+34: Reference | 2-Areas/Everything AI Strategy | that thing where each accelerator company takes a small amount of equity in each other
+36: Reference | 2-Areas/Growth | some good ideas for compose: Friday - The AI Assistant for Gmail
+37: Reference | 2-Areas/Growth | tella has a lot of good content led growth strategy
+39: Reference | 2-Areas/Everything AI Strategy | once i have the video and investors the next step is working product + evals + hiring [p1]
+41: Reference | 2-Areas/Agents | Openclaw prompts [desc: YouTube "25 ADVANCED Use Cases For OpenClaw"]
+42: Reference | 2-Areas/Hiring | 20k / mo was what devin was paying for devin
+44: Reference | 2-Areas/Coaching | i think i'm realizing having a hard deadline with a very clear singular goal...
+51: Reference | 2-Areas/Everything AI Strategy | i think i didn't like inform people enough about the website...
+54: Reference | 2-Areas/Agents | symphony is very similar to what i made [desc: GitHub openai/symphony]
+61: Reference | 2-Areas/Coaching | Two big cognitive errors with easy fixes [desc: lazy computation + system effects]
+69: Reference | 2-Areas/Growth | apparently people get around the chrome extension approval process by embedding iframe...
+71: Reference | 2-Areas/Networking | I think I need to impress technical people and be more deliberate like with Tim or Andrei
+76: Reference | 2-Areas/Everything AI Strategy | what's the everything ai product i want to use every day?
+88: Reference | People | john lovefrom notes on fathom [desc: voice mastering, audio tech, spatial audio ideas]
+94: Reference | 2-Areas/Everything AI Strategy | Ship to user more incrementally it's how you test and get PMF

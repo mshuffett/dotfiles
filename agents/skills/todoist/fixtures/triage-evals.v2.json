@@ -1,0 +1,167 @@
+{
+  "version": "2.0.0",
+  "createdAt": "2026-03-17T00:00:00.000Z",
+  "updatedAt": "2026-03-17T00:00:00.000Z",
+  "cases": [
+    {
+      "id": "v2-001-quick-approval",
+      "track": "behavior",
+      "task": {
+        "id": "v2-001",
+        "content": "APPROVE SOP - Group Transfers & New Member Requests",
+        "description": "Approval gate for an existing SOP.",
+        "project_name": "Inbox",
+        "labels": [
+          "approval"
+        ],
+        "comment_count": 0
+      },
+      "available_context": {
+        "comments": [],
+        "notes": []
+      },
+      "gold": {
+        "bucket": "clear_action",
+        "confidence_min": 85,
+        "next_step": "Review the SOP and approve or reject it.",
+        "reason": "This is a direct, bounded approval task."
+      },
+      "acceptable_alternatives": []
+    },
+    {
+      "id": "v2-002-vague-meta-task",
+      "track": "calibration",
+      "task": {
+        "id": "v2-002",
+        "content": "Clear Todoist and email",
+        "description": "",
+        "project_name": "Inbox",
+        "labels": [],
+        "comment_count": 0
+      },
+      "available_context": {
+        "comments": [],
+        "notes": []
+      },
+      "gold": {
+        "bucket": "needs_user_judgment",
+        "confidence_max": 70,
+        "next_step": "Ask whether this should become a scheduled review block, be broken apart, or be closed.",
+        "reason": "The task is shorthand and the right treatment depends on intent."
+      },
+      "acceptable_alternatives": [
+        {
+          "bucket": "convert_to_project_or_note",
+          "reason": "Acceptable if the recommendation is to convert it into a better operational artifact."
+        }
+      ]
+    },
+    {
+      "id": "v2-003-comment-thread-decision",
+      "track": "calibration",
+      "task": {
+        "id": "v2-003",
+        "content": "Cancel Fifth Force / Sumnotes",
+        "description": "",
+        "project_name": "Admin",
+        "labels": [
+          "finance"
+        ],
+        "comment_count": 1
+      },
+      "available_context": {
+        "comments": [
+          "Fifth Force is Sumnotes - would you still like to cancel? Y/N"
+        ],
+        "notes": []
+      },
+      "gold": {
+        "bucket": "needs_user_judgment",
+        "confidence_max": 80,
+        "next_step": "Ask Michael whether to cancel Sumnotes or close the task.",
+        "reason": "The deciding fact is present, but the choice belongs to Michael."
+      },
+      "acceptable_alternatives": []
+    },
+    {
+      "id": "v2-004-idea-fragment",
+      "track": "behavior",
+      "task": {
+        "id": "v2-004",
+        "content": "AI should refuse hidden assumptions in product planning",
+        "description": "Feels more like a principle than a task.",
+        "project_name": "Inbox",
+        "labels": [],
+        "comment_count": 0
+      },
+      "available_context": {
+        "comments": [],
+        "notes": []
+      },
+      "gold": {
+        "bucket": "convert_to_project_or_note",
+        "confidence_min": 85,
+        "next_step": "Recommend filing it as a reusable note with a proposed title, then closing the task.",
+        "reason": "This is durable knowledge, not actionable Todoist work."
+      },
+      "acceptable_alternatives": []
+    },
+    {
+      "id": "v2-005-active-deliverable",
+      "track": "behavior",
+      "task": {
+        "id": "v2-005",
+        "content": "Draft investor follow-up email for Udit",
+        "description": "Need a concrete draft before Friday.",
+        "project_name": "Fundraising",
+        "labels": [
+          "fundraising"
+        ],
+        "comment_count": 1
+      },
+      "available_context": {
+        "comments": [
+          "Need a draft, not just bullet points."
+        ],
+        "notes": []
+      },
+      "gold": {
+        "bucket": "clear_action",
+        "confidence_min": 90,
+        "next_step": "Draft the investor follow-up email with a concrete ask.",
+        "reason": "This is an active project deliverable with clarified scope."
+      },
+      "acceptable_alternatives": []
+    },
+    {
+      "id": "v2-006-old-stale-review",
+      "track": "calibration",
+      "task": {
+        "id": "v2-006",
+        "content": "Review remaining batch items and set up periodic review",
+        "description": "",
+        "project_name": "Inbox",
+        "labels": [],
+        "comment_count": 0
+      },
+      "available_context": {
+        "comments": [],
+        "notes": [
+          "Task is over 6 weeks old with no follow-up activity."
+        ]
+      },
+      "gold": {
+        "bucket": "probably_stale_or_close",
+        "confidence_min": 70,
+        "next_step": "Recommend checking relevance and closing if it no longer reflects the current operating cadence.",
+        "reason": "Old review-meta tasks without recent activity are often stale."
+      },
+      "acceptable_alternatives": [
+        {
+          "bucket": "needs_user_judgment",
+          "reason": "Acceptable if framed as a relevance check with concrete closure criteria."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "repo": "mshuffett/pr-review-test-hard",
+  "checks": {
+    "report_exists": true,
+    "screenshot_count": 8,
+    "gif_recorded": true,
+    "commit_made": true,
+    "pr_comment_posted": true,
+    "env_file_created": true,
+    "handled_api_error": true,
+    "bugs_found": [
+      "StatsCard: value! non-null assertions crash when value is undefined",
+      "StatsCard: wrong percentage change formula — divides by value instead of previousValue",
+      "StatsCard: no guard for zero or undefined previousValue (division by zero)",
+      "Dashboard: Math.max(...[]) returns -Infinity, division produces NaN chart heights",
+      "Dashboard: no loading state — renders chart immediately with null data",
+      "Dashboard: no error handling for failed API fetch",
+      "api-client: API_BASE_URL not available in browser — missing NEXT_PUBLIC_ prefix"
+    ],
+    "tests_written": 21
+  }
+}

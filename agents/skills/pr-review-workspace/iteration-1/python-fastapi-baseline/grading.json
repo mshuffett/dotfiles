@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "text": "The report identifies the SQL injection in the orders endpoint",
+      "passed": true,
+      "evidence": "Report section 'Critical Issues' item #1: 'SQL Injection in /search/by-status (CRITICAL -- Security)' with exact code quote: 'query = f\"SELECT * FROM orders WHERE status = '{status_filter}'\"'. Also in pr-review-report.md in repo: issue #1 severity critical."
+    },
+    {
+      "text": "The report identifies missing input validation (negative amounts)",
+      "passed": true,
+      "evidence": "Report section 'Bugs' item #5: 'No Input Validation on amount (BUG -- Business Logic)' states 'create_order accepted any float for amount, including negative values'. Fix added HTTP 422 rejection and model-level ValueError."
+    },
+    {
+      "text": "The report identifies the missing authentication decorator",
+      "passed": true,
+      "evidence": "Report 'Issues Flagged (Need Human Decision)' item #1: 'No authentication on any order endpoint — any caller can create/list/cancel orders'. Also mentioned in 'Remaining Risks': 'No authentication: All order endpoints are publicly accessible.' The original code had a comment '# BUG: No authentication' which was identified. It was flagged for human decision rather than auto-fixed, which is reasonable."
+    },
+    {
+      "text": "The report identifies the mutable default argument bug",
+      "passed": true,
+      "evidence": "Report section 'Bugs' item #2: 'Mutable Default Argument in Order.__init__ (BUG -- Correctness)' with before/after: 'items: list[str] = []' -> 'items: list[str] | None = None'. Diff confirms fix in src/models/order.py."
+    },
+    {
+      "text": "The report identifies missing __hash__ when __eq__ is defined",
+      "passed": true,
+      "evidence": "Report section 'Bugs' item #3: '__eq__ Without __hash__ (BUG -- Correctness)' states 'Defining __eq__ without __hash__ makes Order implicitly unhashable'. Fix added '__hash__' returning 'hash(self.order_id)'. Confirmed in diff."
+    },
+    {
+      "text": "New pytest tests were created for the orders endpoint",
+      "passed": true,
+      "evidence": "tests/test_orders_api.py created with 12 integration tests across TestCreateOrder (4), TestListOrders (5), TestGetOrder (2), TestCancelOrder (3), TestSearchByStatus (2). Also outputs/test_orders.py contains endpoint tests. Confirmed in git diff: 'tests/test_orders_api.py | 174 ++++++++++++++++++++++++++++++++'"
+    },
+    {
+      "text": "New pytest tests were created for the Order model",
+      "passed": true,
+      "evidence": "tests/test_order_model.py created with 14 unit tests across TestOrderInit (5), TestOrderEquality (5), TestOrderRepr (1), TestOrderToDict (3). Confirmed in git diff: 'tests/test_order_model.py | 130 ++++++++++++++++++++++++++++++++++'"
+    },
+    {
+      "text": "The Jinja2 template was identified as a UI change requiring visual verification",
+      "passed": true,
+      "evidence": "Report section 'UI / E2E Verification' explicitly identifies 'order_confirmation.html (Jinja2 template)' as a changed component. Section 'User Flows NOT Tested' flags 'order_confirmation.html (visual layout)' noting 'No Playwright/Selenium/browser available; CSS layout, responsive behavior, and font rendering not visually verified'. Report item #10 also discusses the template as disconnected dead code."
+    },
+    {
+      "text": "E2E or visual testing was attempted for the order confirmation template",
+      "passed": true,
+      "evidence": "tests/test_order_confirmation_template.py created with 13 tests that render the Jinja2 template directly and verify content, XSS escaping, edge cases, and HTML structure. Commit message: 'Added 13 e2e/UI tests (test_order_confirmation_template.py) - XSS escaping verification for customer_name, email, item names - Template rendering with edge cases'. Tests were not executed (dependencies not installed) but were written and committed."
+    },
+    {
+      "text": "The SQL injection was fixed in the source code",
+      "passed": true,
+      "evidence": "Git diff shows src/routes/orders.py changed from 'query = f\"SELECT * FROM orders WHERE status = '{status_filter}'\"' and 'cursor.execute(query)' to 'query = \"SELECT * FROM orders WHERE status = ?\"' and 'cursor.execute(query, (status_filter,))'. Also wrapped in try/finally for connection cleanup."
+    },
+    {
+      "text": "The mutable default argument was fixed",
+      "passed": true,
+      "evidence": "Git diff shows src/models/order.py changed from 'items: list[str] = []' to 'items: list[str] | None = None' and 'self.items = items' to 'self.items = items if items is not None else []'. Test test_mutable_default_not_shared verifies the fix."
+    },
+    {
+      "text": "A pr-review-report.md file was generated with all required sections",
+      "passed": true,
+      "evidence": "pr-review-report.md exists both in outputs/ and committed to the repo. Contains sections: Executive Summary, Issues Found & Fixed (table with 7 issues), Issues Flagged (4 items), Test Coverage (per-file table), Tests Written (3 test files with counts), UI / E2E Verification (user flows tested and not tested), Remaining Risks, Appendix: Commands Run. The outputs/ version has sections: Summary, Critical Issues, Bugs, Code Quality Issues, Test Coverage, Files Modified, Verdict."
+    },
+    {
+      "text": "A git commit was created with the fixes and new tests",
+      "passed": true,
+      "evidence": "Git log shows commit 48fd749 'chore(pr-review): auto-fix issues, add missing tests, and generate review report' with 6 files changed, 639 insertions(+), 27 deletions(-). Files: pr-review-report.md, src/models/order.py, src/routes/orders.py, tests/test_order_confirmation_template.py, tests/test_order_model.py, tests/test_orders_api.py."
+    }
+  ],
+  "summary": {
+    "passed": 13,
+    "failed": 0,
+    "total": 13,
+    "pass_rate": 1.0
+  }
+}

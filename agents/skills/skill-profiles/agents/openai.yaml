@@ -1,0 +1,4 @@
+interface:
+  display_name: "Skill Profiles"
+  short_description: "Switch runtime-specific skill sets"
+  default_prompt: "Use $skill-profiles to inspect or switch Codex and Claude skill profiles."

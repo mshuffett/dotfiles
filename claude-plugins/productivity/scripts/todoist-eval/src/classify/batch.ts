@@ -3,7 +3,6 @@ import { anthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import {
   TaskClassificationSchema,
-  BatchClassificationResultSchema,
   type TaskClassification,
   type BatchClassificationResult,
 } from "../schemas/classification.js";
@@ -23,12 +22,10 @@ interface CommentWithAttachment {
 function formatComment(comment: CommentWithAttachment): string {
   const parts: string[] = [];
 
-  // Add text content if present
   if (comment.content?.trim()) {
     parts.push(comment.content.trim());
   }
 
-  // Add attachment info if present
   if (comment.attachment) {
     const att = comment.attachment;
     if (att.resource_type === "image") {
@@ -38,7 +35,6 @@ function formatComment(comment: CommentWithAttachment): string {
     }
   }
 
-  // If comment has neither content nor attachment info, note it
   if (parts.length === 0) {
     return "[Empty comment]";
   }
@@ -49,7 +45,7 @@ function formatComment(comment: CommentWithAttachment): string {
 function formatTaskForClassification(task: TodoistTask, index: number): string {
   const dueStr = task.due?.string || task.due?.date || "No due date";
   const labelsStr = task.labels.length > 0 ? task.labels.join(", ") : "None";
-  const priorityStr = `P${5 - task.priority}`; // Todoist priority is inverted (4 = highest)
+  const priorityStr = `P${5 - task.priority}`;
   const descStr = task.description?.trim() || "None";
 
   let comments = "";
@@ -71,9 +67,6 @@ ${comments ? `- **Comments**:\n${comments}` : ""}
 `.trim();
 }
 
-/**
- * Classify a batch of tasks using generateObject
- */
 export async function classifyTasksBatch(
   tasks: TodoistTask[]
 ): Promise<BatchClassificationResult> {
@@ -83,11 +76,10 @@ export async function classifyTasksBatch(
     .map((task, i) => formatTaskForClassification(task, i))
     .join("\n\n---\n\n");
 
-  const userPrompt = `Classify the following ${tasks.length} tasks. Return a classification for each task with its taskId.
+  const userPrompt = `Triage the following ${tasks.length} tasks. Return one classification per task with its taskId.
 
 ${taskSummary}`;
 
-  // Create a schema that includes taskIds for validation
   const ClassificationWithIdSchema = TaskClassificationSchema.extend({
     taskId: z.string(),
   });
@@ -103,37 +95,28 @@ ${taskSummary}`;
     prompt: userPrompt,
   });
 
-  // Compute summary statistics
   const classifications = object.classifications;
-  const byAction: Record<string, number> = {};
-  const byQuadrant: Record<string, number> = {};
+  const byBucket: Record<string, number> = {};
   let totalConfidence = 0;
   let lowConfidenceCount = 0;
 
   for (const c of classifications) {
-    byAction[c.action] = (byAction[c.action] || 0) + 1;
-    byQuadrant[c.quadrant] = (byQuadrant[c.quadrant] || 0) + 1;
+    byBucket[c.bucket] = (byBucket[c.bucket] || 0) + 1;
     totalConfidence += c.confidence;
-    if (c.confidence < 70) {
-      lowConfidenceCount++;
-    }
+    if (c.confidence < 70) lowConfidenceCount++;
   }
 
   return {
     classifications,
     summary: {
       total: classifications.length,
-      byAction,
-      byQuadrant,
+      byBucket,
       avgConfidence: totalConfidence / classifications.length,
       lowConfidenceCount,
     },
   };
 }
 
-/**
- * Classify a single task (useful for testing)
- */
 export async function classifySingleTask(
   task: TodoistTask
 ): Promise<TaskClassification> {

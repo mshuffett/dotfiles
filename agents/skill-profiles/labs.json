@@ -1,0 +1,18 @@
+{
+  "description": "Experiment-heavy profile for advanced automation, media, and niche workflow work.",
+  "extends": ["daily"],
+  "include": [
+    "agent-teams",
+    "develop-web-game",
+    "domain-research",
+    "imagegen",
+    "pi-agent-rust",
+    "playwright-interactive",
+    "prompt-self-improvement",
+    "provider-research",
+    "ralph-orchestrator",
+    "screen-recording",
+    "slides",
+    "teleport"
+  ]
+}

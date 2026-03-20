@@ -36,17 +36,26 @@ Gather full context before classifying anything.
    - `td today` — today + overdue items
    - Deduplicate items appearing in both (match by task ID)
 
-2. **Fetch comments** for EVERY item (not just ambiguous ones):
+2. **Fetch descriptions** for EVERY item:
+   - `td task view id:<task_id>` for each item
+   - The `td inbox` / `td today` output only shows the title — descriptions are
+     a separate field that often contains links, context, and details that
+     completely change classification (e.g., a vague title like "Openclaw prompts"
+     has a YouTube link in the description → Reference, not Clarify)
+   - Batch these efficiently but do NOT skip this step
+
+3. **Fetch comments** for EVERY item (not just ambiguous ones):
    - `td comment list id:<task_id>` for each item
    - Comments often contain critical context — links, descriptions, attachments
+   - Some items have "See comment" as description — comments ARE the context
 
-3. **Load vault structure**:
+4. **Load vault structure**:
    - `ls ~/ws/notes/1-Projects/ ~/ws/notes/2-Areas/ ~/ws/notes/3-Resources/`
    - This gives filing context for the entire session
 
-4. **Load learned rules** from `~/.dotfiles/projects/adaptive-triage/learned-rules.md`
+5. **Load learned rules** from `~/.dotfiles/projects/adaptive-triage/learned-rules.md`
 
-5. **Load recent corrections** from the last 3 session files in
+6. **Load recent corrections** from the last 3 session files in
    `~/.dotfiles/projects/adaptive-triage/triage-sessions/` (if any exist).
    These serve as few-shot examples of the user's preferences.
 
@@ -226,8 +235,12 @@ Add these as rules? [y]es / [e]dit / [n]o
 
 ## Key Reminders
 
-- **Comments are mandatory enrichment.** Check `td comment list` on EVERY item
-  before classifying. This is the #1 source of missing context.
+- **Descriptions are mandatory enrichment.** Run `td task view id:<id>` on EVERY
+  item before classifying. The inbox/today list only shows titles — descriptions
+  frequently contain links, details, and context that completely change the
+  classification. This is the #1 source of misclassification.
+- **Comments are also mandatory.** Check `td comment list` on EVERY item.
+  Some items use "See comment" as their description — the comment IS the context.
 - **Preserve raw text.** Obsidian notes include full original item text +
   description + comments. Don't summarize the user's own words.
 - **Voice captures default to Reference/Seed.** Only classify as Action when

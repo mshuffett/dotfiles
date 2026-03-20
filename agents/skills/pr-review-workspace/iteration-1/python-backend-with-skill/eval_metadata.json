@@ -1,0 +1,18 @@
+{
+  "eval_id": 3,
+  "eval_name": "python-backend-with-skill",
+  "prompt": "Review this PR. It's a Python utility library and the PR adds a caching module. There are no UI components or frontend code in this repo.",
+  "assertions": [
+    "The report identifies the race condition in cache invalidation",
+    "The report identifies the negative TTL edge case",
+    "The report identifies the bare except clause",
+    "New pytest tests were created for the cache module",
+    "The report correctly states that no UI/e2e testing is needed",
+    "No e2e tests were created (since there is no UI)",
+    "The bare except clause was fixed to catch specific exceptions",
+    "The negative TTL handling was fixed",
+    "A pr-review-report.md file was generated with all required sections",
+    "A git commit was created with the fixes and new tests",
+    "The report does NOT mention missing UI testing as a gap"
+  ]
+}

@@ -2,14 +2,12 @@ import type { TodoistTask } from "../schemas/task.js";
 import type { TaskClassification } from "../schemas/classification.js";
 import type { Judgment } from "../schemas/judgment.js";
 
-const ACTION_ICONS: Record<string, string> = {
-  Notion: "📋",
-  Quick: "⚡",
-  Clarify: "💭",
-  Obsidian: "📝",
-  Complete: "✅",
-  Delete: "🗑️",
-  Consolidate: "🔗",
+const BUCKET_ICONS: Record<string, string> = {
+  clear_action: "✅",
+  needs_context: "🔎",
+  needs_user_judgment: "❓",
+  probably_stale_or_close: "🧹",
+  convert_to_project_or_note: "📝",
 };
 
 const VERDICT_ICONS: Record<string, string> = {
@@ -32,9 +30,6 @@ interface ReportOptions {
   includeJudgments?: boolean;
 }
 
-/**
- * Generate a batch review report in markdown format
- */
 export function generateBatchReport(
   results: ReportTask[],
   options: ReportOptions = {}
@@ -48,22 +43,13 @@ export function generateBatchReport(
 
 ## Legend
 
-| Quadrant | Meaning |
-|----------|---------|
-| Q1 | Urgent + Important (Do) |
-| Q2 | Not Urgent + Important (Schedule) |
-| Q3 | Urgent + Not Important (Quick) |
-| Q4 | Not Urgent + Not Important (Eliminate) |
-
-| Icon | Action |
+| Icon | Bucket |
 |------|--------|
-| 📋 | Notion - Create Action Item |
-| ⚡ | Quick - Do now (< 5 min) |
-| 💭 | Clarify - Need input |
-| 📝 | Obsidian - File as knowledge |
-| ✅ | Complete - Mark done |
-| 🗑️ | Delete - Remove |
-| 🔗 | Consolidate - Merge |
+| ✅ | clear_action |
+| 🔎 | needs_context |
+| ❓ | needs_user_judgment |
+| 🧹 | probably_stale_or_close |
+| 📝 | convert_to_project_or_note |
 
 ---
 
@@ -72,7 +58,7 @@ export function generateBatchReport(
 `;
 
   for (const r of results) {
-    const icon = ACTION_ICONS[r.predicted.action] || "❓";
+    const icon = BUCKET_ICONS[r.predicted.bucket] || "❓";
     const confidenceBar = getConfidenceBar(r.predicted.confidence);
 
     report += `### ${r.index}. ${r.task.content}
@@ -82,14 +68,15 @@ export function generateBatchReport(
 **Due**: ${r.task.due?.string || "No due date"}
 `;
 
-    // Add comments if present
     if (r.task.comments && r.task.comments.length > 0) {
       report += `**Comments**:\n`;
       for (const comment of r.task.comments) {
-        const c = comment as { content?: string; attachment?: { file_name?: string; resource_type?: string } };
+        const c = comment as {
+          content?: string;
+          attachment?: { file_name?: string; resource_type?: string };
+        };
         const parts: string[] = [];
         if (c.content?.trim()) {
-          // Truncate long comments
           const content = c.content.trim();
           parts.push(content.length > 200 ? content.slice(0, 200) + "..." : content);
         }
@@ -107,39 +94,52 @@ export function generateBatchReport(
       report += "\n";
     }
 
-    report += `**Predicted**: ${r.predicted.quadrant} / ${icon} ${r.predicted.action} (${r.predicted.confidence}% ${confidenceBar})
+    report += `**Predicted**: ${icon} ${r.predicted.bucket} (${r.predicted.confidence}% ${confidenceBar})
 **Reasoning**: ${r.predicted.reasoning}
 `;
 
-    // Add action-specific details
-    if (r.predicted.nextAction) {
-      report += `**Next Action**: ${r.predicted.nextAction}\n`;
+    if (r.predicted.recommendedNextStep) {
+      report += `**Recommended Next Step**: ${r.predicted.recommendedNextStep}\n`;
     }
-    if (r.predicted.notionPriority) {
-      report += `**Priority**: ${r.predicted.notionPriority}\n`;
+    if (r.predicted.userQuestion) {
+      report += `**Question**: ${r.predicted.userQuestion}\n`;
     }
-    if (r.predicted.obsidianFolder) {
-      report += `**Folder**: ${r.predicted.obsidianFolder}\n`;
+    if (r.predicted.destination) {
+      report += `**Destination**: ${r.predicted.destination}\n`;
     }
-    if (r.predicted.clarifyQuestion) {
-      report += `**Question**: ${r.predicted.clarifyQuestion}\n`;
+    if (r.predicted.proposedTitle) {
+      report += `**Proposed Title**: ${r.predicted.proposedTitle}\n`;
+    }
+    if (r.predicted.closeReason) {
+      report += `**Close Reason**: ${r.predicted.closeReason}\n`;
+    }
+    if (r.predicted.missingContext.length > 0) {
+      report += `**Missing Context**:\n`;
+      for (const item of r.predicted.missingContext) {
+        report += `- ${item}\n`;
+      }
+    }
+    if (r.predicted.evidenceUsed.length > 0) {
+      report += `**Evidence Used**:\n`;
+      for (const item of r.predicted.evidenceUsed) {
+        report += `- ${item}\n`;
+      }
     }
 
-    // Add expected if available
     if (r.expected) {
-      const expectedIcon = ACTION_ICONS[r.expected.action] || "❓";
-      const match =
-        r.predicted.quadrant === r.expected.quadrant &&
-        r.predicted.action === r.expected.action;
+      const expectedIcon = BUCKET_ICONS[r.expected.bucket] || "❓";
+      const match = r.predicted.bucket === r.expected.bucket;
       report += `
-**Expected**: ${r.expected.quadrant} / ${expectedIcon} ${r.expected.action} ${match ? "✅" : "❌"}
+**Expected**: ${expectedIcon} ${r.expected.bucket} ${match ? "✅" : "❌"}
 `;
+      if (r.expected.recommendedNextStep) {
+        report += `**Expected Next Step**: ${r.expected.recommendedNextStep}\n`;
+      }
       if (r.criteria) {
         report += `**Criteria**: ${r.criteria}\n`;
       }
     }
 
-    // Add judgment if available
     if (includeJudgments && r.judgment) {
       const verdictIcon = VERDICT_ICONS[r.judgment.verdict] || "❓";
       report += `
@@ -157,10 +157,8 @@ export function generateBatchReport(
 `;
   }
 
-  // Summary statistics
   report += generateSummarySection(results);
 
-  // Corrections template
   if (includeCorrectionsTemplate) {
     report += generateCorrectionsTemplate(results);
   }
@@ -175,8 +173,7 @@ function getConfidenceBar(confidence: number): string {
 }
 
 function generateSummarySection(results: ReportTask[]): string {
-  const byAction: Record<string, number> = {};
-  const byQuadrant: Record<string, number> = {};
+  const byBucket: Record<string, number> = {};
   let totalConfidence = 0;
   let lowConfidence = 0;
   let correct = 0;
@@ -184,9 +181,7 @@ function generateSummarySection(results: ReportTask[]): string {
   let judged = 0;
 
   for (const r of results) {
-    byAction[r.predicted.action] = (byAction[r.predicted.action] || 0) + 1;
-    byQuadrant[r.predicted.quadrant] =
-      (byQuadrant[r.predicted.quadrant] || 0) + 1;
+    byBucket[r.predicted.bucket] = (byBucket[r.predicted.bucket] || 0) + 1;
     totalConfidence += r.predicted.confidence;
     if (r.predicted.confidence < 70) lowConfidence++;
 
@@ -213,27 +208,20 @@ function generateSummarySection(results: ReportTask[]): string {
   }
 
   summary += `
-### By Action
+### By Bucket
 `;
-  for (const [action, count] of Object.entries(byAction).sort(
+
+  for (const [bucket, count] of Object.entries(byBucket).sort(
     (a, b) => b[1] - a[1]
   )) {
-    const icon = ACTION_ICONS[action] || "";
-    summary += `- ${icon} ${action}: ${count}\n`;
-  }
-
-  summary += `
-### By Quadrant
-`;
-  for (const [q, count] of Object.entries(byQuadrant).sort()) {
-    summary += `- ${q}: ${count}\n`;
+    const icon = BUCKET_ICONS[bucket] || "";
+    summary += `- ${icon} ${bucket}: ${count}\n`;
   }
 
   return summary + "\n";
 }
 
 function generateCorrectionsTemplate(results: ReportTask[]): string {
-  // Find tasks that need correction (low confidence, incorrect judgment, or no expected)
   const needsReview = results.filter(
     (r) =>
       r.predicted.confidence < 70 ||
@@ -260,13 +248,18 @@ corrections:
 `;
 
   for (const r of needsReview.slice(0, 5)) {
-    // Show first 5 as examples
+    const nextStep =
+      r.expected?.recommendedNextStep ||
+      r.predicted.recommendedNextStep ||
+      "Explain the concrete next step";
+
     template += `  # ${r.task.content.slice(0, 50)}${r.task.content.length > 50 ? "..." : ""}
   - taskId: "${r.task.id}"
     expected:
-      quadrant: "${r.expected?.quadrant || r.predicted.quadrant}"
-      action: "${r.expected?.action || r.predicted.action}"
-    criteria: "Explain why this classification is correct"
+      bucket: "${r.expected?.bucket || r.predicted.bucket}"
+      confidence: ${r.expected?.confidence || r.predicted.confidence}
+      recommendedNextStep: "${nextStep.replace(/"/g, '\\"')}"
+    criteria: "Explain why this bucket and calibration are correct"
 
 `;
   }
@@ -278,7 +271,7 @@ corrections:
 `;
 
   for (const r of needsReview) {
-    const icon = ACTION_ICONS[r.predicted.action] || "";
+    const icon = BUCKET_ICONS[r.predicted.bucket] || "";
     const reason =
       r.judgment?.verdict === "incorrect"
         ? "Judge: incorrect"
@@ -288,15 +281,12 @@ corrections:
             ? `Low confidence (${r.predicted.confidence}%)`
             : "No expected classification";
 
-    template += `- [ ] **${r.task.content.slice(0, 60)}** - ${icon} ${r.predicted.action} - ${reason}\n`;
+    template += `- [ ] **${r.task.content.slice(0, 60)}** - ${icon} ${r.predicted.bucket} - ${reason}\n`;
   }
 
   return template;
 }
 
-/**
- * Generate a simple classification-only report (no judge)
- */
 export function generateClassificationReport(
   tasks: TodoistTask[],
   classifications: TaskClassification[]

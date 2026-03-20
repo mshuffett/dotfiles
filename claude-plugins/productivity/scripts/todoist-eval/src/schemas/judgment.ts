@@ -8,16 +8,19 @@ export const VerdictSchema = z.enum([
 
 export const JudgmentSchema = z.object({
   taskId: z.string(),
-  verdict: VerdictSchema.describe(
-    "Overall verdict on classification correctness"
-  ),
+  verdict: VerdictSchema.describe("Overall verdict on triage correctness"),
   score: z.number().min(0).max(100).describe("Numeric score 0-100"),
   reasoning: z.string().describe("Detailed explanation of the judgment"),
   criteriaAlignment: z
     .string()
     .describe("How well the classification matched the provided criteria"),
-  quadrantCorrect: z.boolean().describe("Was the Eisenhower quadrant correct?"),
-  actionCorrect: z.boolean().describe("Was the action category correct?"),
+  bucketCorrect: z.boolean().describe("Was the primary bucket correct?"),
+  calibrationCorrect: z
+    .boolean()
+    .describe("Was the confidence and uncertainty handling appropriate?"),
+  nextStepAppropriate: z
+    .boolean()
+    .describe("Was the recommended next step specific and appropriate?"),
   suggestions: z
     .string()
     .nullable()
@@ -33,8 +36,9 @@ export const BatchJudgmentResultSchema = z.object({
     partiallyCorrect: z.number(),
     incorrect: z.number(),
     avgScore: z.number(),
-    quadrantAccuracy: z.number().describe("% of correct quadrant predictions"),
-    actionAccuracy: z.number().describe("% of correct action predictions"),
+    bucketAccuracy: z.number(),
+    calibrationAccuracy: z.number(),
+    nextStepAccuracy: z.number(),
   }),
 });
 

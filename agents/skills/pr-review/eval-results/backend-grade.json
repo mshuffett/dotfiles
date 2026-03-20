@@ -1,0 +1,19 @@
+{
+  "repo": "mshuffett/pr-review-test-backend",
+  "checks": {
+    "report_exists": true,
+    "screenshot_count": 0,
+    "gif_recorded": false,
+    "commit_made": true,
+    "pr_comment_posted": true,
+    "correctly_skipped_ui": true,
+    "bugs_found": [
+      "Race condition: bucket lookup outside lock in allow() — concurrent threads could exceed rate limit or create duplicate entries",
+      "time.time() instead of time.monotonic() — clock can jump backward during NTP sync, breaking window calculations",
+      "Bare except: in reset() — catches KeyboardInterrupt/SystemExit, masking fatal errors",
+      "Off-by-one: first request always allowed even when max_requests=0 — bucket initialized with count=1 and returned True without checking limit",
+      "Unused import: field from dataclasses never used"
+    ],
+    "tests_written": 17
+  }
+}

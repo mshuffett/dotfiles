@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "text": "The report identifies the SQL injection in the orders endpoint",
+      "passed": true,
+      "evidence": "Issue #1 in report: \"critical | src/routes/orders.py | 70 | SQL injection: status_filter interpolated directly into SQL via f-string | Fixed — parameterized query with ? placeholder\""
+    },
+    {
+      "text": "The report identifies missing input validation (negative amounts)",
+      "passed": true,
+      "evidence": "Issue #4 in report: \"medium | src/routes/orders.py | 22-38 | No input validation on amount: negative order amounts accepted | Fixed — added HTTP 422 rejection + model-level ValueError\""
+    },
+    {
+      "text": "The report identifies the missing authentication decorator",
+      "passed": true,
+      "evidence": "Flagged issue #1 in report: \"No authentication on any order endpoint — any caller can create/list/cancel orders\" with note \"Requires architectural decision: middleware auth, API key, or OAuth depends on deployment context\""
+    },
+    {
+      "text": "The report identifies the mutable default argument bug",
+      "passed": true,
+      "evidence": "Issue #2 in report: \"high | src/models/order.py | 23 | Mutable default argument: items: list[str] = [] shared across all instances | Fixed — default changed to None, assigned [] in body\""
+    },
+    {
+      "text": "The report identifies missing __hash__ when __eq__ is defined",
+      "passed": true,
+      "evidence": "Issue #3 in report: \"medium | src/models/order.py | 34-39 | Missing __hash__: __eq__ defined without __hash__, making Orders unhashable | Fixed — added __hash__ based on order_id\""
+    },
+    {
+      "text": "New pytest tests were created for the orders endpoint",
+      "passed": true,
+      "evidence": "File outputs/test_orders_api.py contains 12 integration tests across TestCreateOrder (4 tests), TestListOrders (5 tests), TestGetOrder (2 tests), TestCancelOrder (3 tests), and TestSearchByStatus (2 tests) — all targeting /api/orders/ endpoints."
+    },
+    {
+      "text": "New pytest tests were created for the Order model",
+      "passed": true,
+      "evidence": "File outputs/test_order_model.py contains 14 unit tests across TestOrderInit (5 tests), TestOrderEquality (5 tests), TestOrderRepr (1 test), and TestOrderToDict (3 tests) — testing construction, defaults, mutable default fix, negative amount, equality, hashability, repr, and to_dict."
+    },
+    {
+      "text": "The Jinja2 template was identified as a UI change requiring visual verification",
+      "passed": true,
+      "evidence": "Report section 'UI / E2E Verification' explicitly identifies the template: \"Changed Component: src/templates/order_confirmation.html (Jinja2 template)\" and 'User Flows NOT Tested' notes: \"order_confirmation.html (visual layout) | No Playwright/Selenium/browser available; CSS layout, responsive behavior, and font rendering not visually verified\""
+    },
+    {
+      "text": "E2E or visual testing was attempted for the order confirmation template",
+      "passed": true,
+      "evidence": "File outputs/test_order_confirmation_template.py contains 13 tests labeled as 'E2E / UI verification tests' that render the Jinja2 template with FileSystemLoader and autoescape, verifying data fields, XSS escaping, edge cases, and HTML structure. Report acknowledges browser-based screenshots were not captured but template was 'verified via direct rendering assertions instead of browser-based screenshots.'"
+    },
+    {
+      "text": "The SQL injection was fixed in the source code",
+      "passed": true,
+      "evidence": "In outputs/orders.py.fixed line 64: query = \"SELECT * FROM orders WHERE status = ?\" with line 65: cursor.execute(query, (status_filter,)) — parameterized query replacing f-string interpolation. Git log confirms commit 48fd749 'chore(pr-review): auto-fix issues, add missing tests, and generate review report'."
+    },
+    {
+      "text": "The mutable default argument was fixed",
+      "passed": true,
+      "evidence": "In outputs/order.py.fixed line 22: 'items: list[str] | None = None' with line 31: 'self.items = items if items is not None else []' — default changed from [] to None with body assignment, preventing shared mutable default."
+    },
+    {
+      "text": "A pr-review-report.md file was generated with all required sections",
+      "passed": true,
+      "evidence": "File outputs/pr-review-report.md exists with sections: Executive Summary, Issues Found & Fixed (table with 7 issues), Issues Flagged (4 items), Test Coverage (per-file table + overall delta), Tests Written (3 test files), UI / E2E Verification (user flows tested and not tested), Remaining Risks (5 items), Appendix: Commands Run."
+    },
+    {
+      "text": "A git commit was created with the fixes and new tests",
+      "passed": true,
+      "evidence": "Git log at /tmp/pr-review-evals/python-fastapi-app/ shows commit 48fd749 'chore(pr-review): auto-fix issues, add missing tests, and generate review report' on top of the PR branch commit eeedca6."
+    }
+  ],
+  "summary": {
+    "passed": 13,
+    "failed": 0,
+    "total": 13,
+    "pass_rate": 1.0
+  }
+}

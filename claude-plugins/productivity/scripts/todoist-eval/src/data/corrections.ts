@@ -1,19 +1,18 @@
 import { z } from "zod";
 import YAML from "yaml";
 import {
-  EisenhowerQuadrantSchema,
-  ActionCategorySchema,
+  DecisionBucketSchema,
   type TaskClassification,
 } from "../schemas/classification.js";
 import type { Dataset } from "./dataset.js";
 import { updateExample, addExample } from "./dataset.js";
 
-// Schema for correction in review document
 export const CorrectionInputSchema = z.object({
   taskId: z.string(),
   expected: z.object({
-    quadrant: EisenhowerQuadrantSchema,
-    action: ActionCategorySchema,
+    bucket: DecisionBucketSchema,
+    confidence: z.number().min(0).max(100).optional(),
+    recommendedNextStep: z.string().optional(),
   }),
   criteria: z.string(),
   notes: z.string().optional(),
@@ -21,14 +20,9 @@ export const CorrectionInputSchema = z.object({
 
 export type CorrectionInput = z.infer<typeof CorrectionInputSchema>;
 
-/**
- * Parse corrections from a review markdown document
- * Looks for YAML block with corrections array
- */
 export function parseCorrectionsFromReview(
   reviewContent: string
 ): CorrectionInput[] {
-  // Look for YAML blocks with corrections
   const yamlBlockRegex = /```ya?ml\s*([\s\S]*?)```/g;
   const corrections: CorrectionInput[] = [];
 
@@ -50,16 +44,13 @@ export function parseCorrectionsFromReview(
         }
       }
     } catch {
-      // Not valid YAML or no corrections key, skip
+      // Skip invalid YAML blocks
     }
   }
 
   return corrections;
 }
 
-/**
- * Apply corrections to dataset
- */
 export function applyCorrectionsToDataset(
   dataset: Dataset,
   corrections: CorrectionInput[],
@@ -75,29 +66,29 @@ export function applyCorrectionsToDataset(
       continue;
     }
 
-    // Build expected classification from correction
     const expected: TaskClassification = {
       taskId: correction.taskId,
-      quadrant: correction.expected.quadrant,
-      action: correction.expected.action,
+      bucket: correction.expected.bucket,
       reasoning: correction.criteria,
-      confidence: 100, // Manual correction = 100% confidence
+      confidence: correction.expected.confidence ?? taskData.predicted.confidence,
+      recommendedNextStep:
+        correction.expected.recommendedNextStep ??
+        taskData.predicted.recommendedNextStep,
+      missingContext: [],
+      evidenceUsed: [],
     };
 
-    // Check if example already exists
     const existingIndex = updated.examples.findIndex(
       (e) => e.task.id === correction.taskId
     );
 
     if (existingIndex >= 0) {
-      // Update existing
       updated = updateExample(updated, correction.taskId, {
         expected,
         criteria: correction.criteria,
         notes: correction.notes,
       });
     } else {
-      // Add new
       updated = addExample(
         updated,
         taskData.task,
@@ -112,62 +103,42 @@ export function applyCorrectionsToDataset(
   return updated;
 }
 
-/**
- * Analyze corrections to find patterns
- */
 export function analyzeCorrections(
   corrections: CorrectionInput[],
   predictions: Map<string, TaskClassification>
 ): string {
-  const patterns: Record<string, number> = {};
-  const quadrantMisses: Record<string, number> = {};
-  const actionMisses: Record<string, number> = {};
+  const bucketTransitions: Record<string, number> = {};
+  const bucketMisses: Record<string, number> = {};
 
   for (const correction of corrections) {
     const predicted = predictions.get(correction.taskId);
     if (!predicted) continue;
 
-    // Track action transitions
-    const actionKey = `${predicted.action} → ${correction.expected.action}`;
-    patterns[actionKey] = (patterns[actionKey] || 0) + 1;
+    const bucketKey = `${predicted.bucket} → ${correction.expected.bucket}`;
+    bucketTransitions[bucketKey] = (bucketTransitions[bucketKey] || 0) + 1;
 
-    // Track quadrant transitions
-    if (predicted.quadrant !== correction.expected.quadrant) {
-      const qKey = `${predicted.quadrant} → ${correction.expected.quadrant}`;
-      quadrantMisses[qKey] = (quadrantMisses[qKey] || 0) + 1;
-    }
-
-    // Track action misses
-    if (predicted.action !== correction.expected.action) {
-      actionMisses[predicted.action] = (actionMisses[predicted.action] || 0) + 1;
+    if (predicted.bucket !== correction.expected.bucket) {
+      bucketMisses[predicted.bucket] = (bucketMisses[predicted.bucket] || 0) + 1;
     }
   }
 
   let analysis = `## Correction Pattern Analysis
 
-### Action Transitions (${corrections.length} corrections)
+### Bucket Transitions (${corrections.length} corrections)
 `;
 
-  const sortedPatterns = Object.entries(patterns).sort((a, b) => b[1] - a[1]);
-  for (const [pattern, count] of sortedPatterns) {
+  for (const [pattern, count] of Object.entries(bucketTransitions).sort(
+    (a, b) => b[1] - a[1]
+  )) {
     analysis += `- **${pattern}**: ${count} occurrences\n`;
   }
 
-  if (Object.keys(quadrantMisses).length > 0) {
-    analysis += `\n### Quadrant Misses\n`;
-    for (const [pattern, count] of Object.entries(quadrantMisses).sort(
+  if (Object.keys(bucketMisses).length > 0) {
+    analysis += `\n### Buckets Most Often Wrong\n`;
+    for (const [bucket, count] of Object.entries(bucketMisses).sort(
       (a, b) => b[1] - a[1]
     )) {
-      analysis += `- ${pattern}: ${count}\n`;
-    }
-  }
-
-  if (Object.keys(actionMisses).length > 0) {
-    analysis += `\n### Action Categories Most Often Wrong\n`;
-    for (const [action, count] of Object.entries(actionMisses).sort(
-      (a, b) => b[1] - a[1]
-    )) {
-      analysis += `- ${action}: ${count} mistakes\n`;
+      analysis += `- ${bucket}: ${count} mistakes\n`;
     }
   }
 
@@ -176,9 +147,9 @@ export function analyzeCorrections(
 Based on these patterns, consider adding rules for:
 `;
 
-  // Generate suggestions based on most common mistakes
-  const topMistakes = sortedPatterns.slice(0, 3);
-  for (const [pattern] of topMistakes) {
+  for (const [pattern] of Object.entries(bucketTransitions)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)) {
     const [from, to] = pattern.split(" → ");
     if (from !== to) {
       analysis += `- When to use **${to}** instead of **${from}**\n`;

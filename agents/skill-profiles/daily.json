@@ -1,0 +1,21 @@
+{
+  "description": "Lower-conflict daily default: broad utility and coordination skills without the more niche labs surface.",
+  "extends": ["full"],
+  "exclude": [
+    "agent-teams",
+    "develop-web-game",
+    "domain-research",
+    "imagegen",
+    "notion-knowledge-capture",
+    "pi-agent-rust",
+    "playwright-interactive",
+    "prompt-self-improvement",
+    "prose-diff-review",
+    "provider-research",
+    "ralph-orchestrator",
+    "screen-recording",
+    "slides",
+    "teleport",
+    "writing-iteration-loop"
+  ]
+}

@@ -3,7 +3,6 @@ import { anthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import {
   JudgmentSchema,
-  BatchJudgmentResultSchema,
   type Judgment,
   type BatchJudgmentResult,
 } from "../schemas/judgment.js";
@@ -32,18 +31,21 @@ function formatJudgeCase(input: JudgeInput, index: number): string {
 - **Description**: ${task.description || "None"}
 
 ### Classifier Prediction
-- **Quadrant**: ${predicted.quadrant}
-- **Action**: ${predicted.action}
+- **Bucket**: ${predicted.bucket}
 - **Confidence**: ${predicted.confidence}%
 - **Reasoning**: ${predicted.reasoning}
-${predicted.nextAction ? `- **Next Action**: ${predicted.nextAction}` : ""}
-${predicted.notionPriority ? `- **Notion Priority**: ${predicted.notionPriority}` : ""}
-${predicted.obsidianFolder ? `- **Obsidian Folder**: ${predicted.obsidianFolder}` : ""}
-${predicted.clarifyQuestion ? `- **Clarify Question**: ${predicted.clarifyQuestion}` : ""}
+- **Recommended Next Step**: ${predicted.recommendedNextStep || "None"}
+${predicted.missingContext.length > 0 ? `- **Missing Context**: ${predicted.missingContext.join("; ")}` : ""}
+${predicted.evidenceUsed.length > 0 ? `- **Evidence Used**: ${predicted.evidenceUsed.join("; ")}` : ""}
+${predicted.userQuestion ? `- **User Question**: ${predicted.userQuestion}` : ""}
+${predicted.destination ? `- **Destination**: ${predicted.destination}` : ""}
+${predicted.proposedTitle ? `- **Proposed Title**: ${predicted.proposedTitle}` : ""}
+${predicted.closeReason ? `- **Close Reason**: ${predicted.closeReason}` : ""}
 
 ### Expected Classification
-- **Quadrant**: ${expected.quadrant}
-- **Action**: ${expected.action}
+- **Bucket**: ${expected.bucket}
+- **Confidence**: ${expected.confidence}%
+${expected.recommendedNextStep ? `- **Recommended Next Step**: ${expected.recommendedNextStep}` : ""}
 
 ### Criteria (from Michael)
 ${criteria}
@@ -53,9 +55,6 @@ Evaluate whether the prediction is correct, partially_correct, or incorrect.
 `.trim();
 }
 
-/**
- * Judge a batch of classifications using Opus
- */
 export async function judgeClassificationsBatch(
   inputs: JudgeInput[]
 ): Promise<BatchJudgmentResult> {
@@ -65,11 +64,11 @@ export async function judgeClassificationsBatch(
     .map((input, i) => formatJudgeCase(input, i))
     .join("\n\n===\n\n");
 
-  const userPrompt = `Evaluate the following ${inputs.length} task classifications:
+  const userPrompt = `Evaluate the following ${inputs.length} task triage classifications:
 
 ${casesSummary}
 
-For each case, provide a judgment with verdict, score, reasoning, and criteria alignment.`;
+For each case, provide a judgment with verdict, score, reasoning, criteria alignment, bucket correctness, calibration correctness, and next step quality.`;
 
   const BatchJudgmentSchema = z.object({
     judgments: z.array(
@@ -86,14 +85,14 @@ For each case, provide a judgment with verdict, score, reasoning, and criteria a
     prompt: userPrompt,
   });
 
-  // Compute summary statistics
   const judgments = object.judgments;
   let correct = 0;
   let partiallyCorrect = 0;
   let incorrect = 0;
   let totalScore = 0;
-  let quadrantCorrect = 0;
-  let actionCorrect = 0;
+  let bucketCorrect = 0;
+  let calibrationCorrect = 0;
+  let nextStepAppropriate = 0;
 
   for (const j of judgments) {
     totalScore += j.score;
@@ -101,8 +100,9 @@ For each case, provide a judgment with verdict, score, reasoning, and criteria a
     else if (j.verdict === "partially_correct") partiallyCorrect++;
     else incorrect++;
 
-    if (j.quadrantCorrect) quadrantCorrect++;
-    if (j.actionCorrect) actionCorrect++;
+    if (j.bucketCorrect) bucketCorrect++;
+    if (j.calibrationCorrect) calibrationCorrect++;
+    if (j.nextStepAppropriate) nextStepAppropriate++;
   }
 
   const total = judgments.length;
@@ -115,15 +115,13 @@ For each case, provide a judgment with verdict, score, reasoning, and criteria a
       partiallyCorrect,
       incorrect,
       avgScore: totalScore / total,
-      quadrantAccuracy: (quadrantCorrect / total) * 100,
-      actionAccuracy: (actionCorrect / total) * 100,
+      bucketAccuracy: (bucketCorrect / total) * 100,
+      calibrationAccuracy: (calibrationCorrect / total) * 100,
+      nextStepAccuracy: (nextStepAppropriate / total) * 100,
     },
   };
 }
 
-/**
- * Judge a single classification
- */
 export async function judgeSingleClassification(
   input: JudgeInput
 ): Promise<Judgment> {

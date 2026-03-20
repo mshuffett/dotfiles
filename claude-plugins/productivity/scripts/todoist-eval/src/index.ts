@@ -288,8 +288,8 @@ program
       if (result.metrics.accuracy) {
         console.log(
           `  Accuracy: ${(result.metrics.accuracy.overall * 100).toFixed(1)}% ` +
-          `(Q: ${(result.metrics.accuracy.quadrant * 100).toFixed(1)}%, ` +
-          `A: ${(result.metrics.accuracy.action * 100).toFixed(1)}%)`
+          `(bucket: ${(result.metrics.accuracy.bucket * 100).toFixed(1)}%, ` +
+          `calibration: ${(result.metrics.accuracy.calibration * 100).toFixed(1)}%)`
         );
       }
 
@@ -326,9 +326,9 @@ program
     console.log(`  Examples: ${dataset.metadata.totalExamples}`);
 
     if (dataset.metadata.totalExamples > 0) {
-      console.log("\n" + chalk.bold("By Action:"));
-      for (const [action, count] of Object.entries(dataset.metadata.byAction)) {
-        console.log(`  ${action}: ${count}`);
+      console.log("\n" + chalk.bold("By Bucket:"));
+      for (const [bucket, count] of Object.entries(dataset.metadata.byBucket)) {
+        console.log(`  ${bucket}: ${count}`);
       }
 
       console.log("\n" + chalk.bold("By Source:"));

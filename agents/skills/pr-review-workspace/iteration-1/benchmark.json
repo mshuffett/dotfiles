@@ -1,0 +1,228 @@
+{
+  "metadata": {
+    "skill_name": "pr-review",
+    "skill_path": "/Users/michael/.dotfiles/agents/skills/pr-review",
+    "executor_model": "claude-opus-4-6",
+    "analyzer_model": "claude-opus-4-6",
+    "timestamp": "2026-03-19T01:30:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "TS React App (User Profile PR)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 14,
+        "failed": 0,
+        "total": 14,
+        "time_seconds": 398.4,
+        "tokens": 70179,
+        "tool_calls": 38,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report identifies XSS vulnerability in UserProfile component", "passed": true, "evidence": "Report lists XSS as Critical severity with file/line reference"},
+        {"text": "Report identifies SQL injection in API route", "passed": true, "evidence": "3 SQL injection instances identified in route.ts"},
+        {"text": "Report identifies missing auth on API route", "passed": true, "evidence": "Flagged for human review in report"},
+        {"text": "Report identifies missing null check on optional data", "passed": true, "evidence": "socialLinks null crash identified as High severity"},
+        {"text": "Unit tests created for UserProfile component", "passed": true, "evidence": "UserProfile.test.tsx with ~24 tests"},
+        {"text": "Unit tests created for API route", "passed": true, "evidence": "route.test.ts with ~12 tests"},
+        {"text": "E2E tests created or attempted for profile page", "passed": true, "evidence": "user-profile.spec.ts with 9 Playwright tests"},
+        {"text": "Screenshots captured or attempted for UI flow", "passed": true, "evidence": "10 page.screenshot() calls in e2e tests"},
+        {"text": "XSS vulnerability fixed in source code", "passed": true, "evidence": "Unsafe HTML rendering replaced with plain text"},
+        {"text": "SQL injection fixed in source code", "passed": true, "evidence": "String interpolation replaced with parameterized queries ($1)"},
+        {"text": "pr-review-report.md generated with all sections", "passed": true, "evidence": "Report has all 8 sections from template"},
+        {"text": "Test coverage numbers included in report", "passed": true, "evidence": "Per-file coverage: ~90% and ~92%"},
+        {"text": "Git commit created with fixes and tests", "passed": true, "evidence": "Commit 7fb9bfa"},
+        {"text": "Report identifies affected user flows", "passed": true, "evidence": "4 user flows identified: View, Edit, Save, Error"}
+      ],
+      "notes": ["Found 16 total issues (4 critical, 3 high, 4 medium, 5 low)", "Wrote ~54 tests across unit, API, and e2e", "Created Playwright config and e2e directory"]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "TS React App (User Profile PR)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 14,
+        "failed": 0,
+        "total": 14,
+        "time_seconds": 489.6,
+        "tokens": 74461,
+        "tool_calls": 48,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report identifies XSS vulnerability in UserProfile component", "passed": true, "evidence": "XSS identified as Critical"},
+        {"text": "Report identifies SQL injection in API route", "passed": true, "evidence": "3 SQL injection locations found"},
+        {"text": "Report identifies missing auth on API route", "passed": true, "evidence": "Flagged as blocking for merge"},
+        {"text": "Report identifies missing null check on optional data", "passed": true, "evidence": "socialLinks crash identified"},
+        {"text": "Unit tests created for UserProfile component", "passed": true, "evidence": "24 component tests"},
+        {"text": "Unit tests created for API route", "passed": true, "evidence": "14 API route tests"},
+        {"text": "E2E tests created or attempted for profile page", "passed": true, "evidence": "10 Playwright e2e tests created"},
+        {"text": "Screenshots captured or attempted for UI flow", "passed": true, "evidence": "Screenshot steps in e2e tests"},
+        {"text": "XSS vulnerability fixed in source code", "passed": true, "evidence": "Replaced with safe rendering"},
+        {"text": "SQL injection fixed in source code", "passed": true, "evidence": "Parameterized queries used"},
+        {"text": "pr-review-report.md generated with all sections", "passed": true, "evidence": "Comprehensive report generated"},
+        {"text": "Test coverage numbers included in report", "passed": true, "evidence": "Coverage numbers in report"},
+        {"text": "Git commit created with fixes and tests", "passed": true, "evidence": "Commit 7fb9bfa"},
+        {"text": "Report identifies affected user flows", "passed": true, "evidence": "5 flows identified including auth"}
+      ],
+      "notes": ["Found 14 total issues (4 critical, 2 high, 3 medium, 5 low)", "Wrote ~38 tests (24 component + 14 API)", "Took longer (490s vs 398s) and used more tokens"]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Python FastAPI (Orders PR)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 13,
+        "failed": 0,
+        "total": 13,
+        "time_seconds": 352.2,
+        "tokens": 55281,
+        "tool_calls": 40,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report identifies SQL injection in orders endpoint", "passed": true, "evidence": "SQL injection via f-string identified as Critical"},
+        {"text": "Report identifies missing input validation (negative amounts)", "passed": true, "evidence": "No amount validation identified as Medium"},
+        {"text": "Report identifies missing authentication decorator", "passed": true, "evidence": "Flagged for human decision"},
+        {"text": "Report identifies mutable default argument bug", "passed": true, "evidence": "items=[] identified as High severity"},
+        {"text": "Report identifies missing __hash__ when __eq__ defined", "passed": true, "evidence": "__eq__ without __hash__ identified as Medium"},
+        {"text": "Pytest tests created for orders endpoint", "passed": true, "evidence": "test_orders_api.py with 12 integration tests"},
+        {"text": "Pytest tests created for Order model", "passed": true, "evidence": "test_order_model.py with 14 unit tests"},
+        {"text": "Jinja2 template identified as UI change", "passed": true, "evidence": "Template identified as UI element in report"},
+        {"text": "E2E or visual testing attempted for template", "passed": true, "evidence": "test_order_confirmation_template.py with 13 tests including XSS checks"},
+        {"text": "SQL injection fixed in source code", "passed": true, "evidence": "Parameterized query in orders.py.fixed"},
+        {"text": "Mutable default argument fixed", "passed": true, "evidence": "None sentinel pattern in order.py.fixed"},
+        {"text": "pr-review-report.md generated with all sections", "passed": true, "evidence": "Full structured report"},
+        {"text": "Git commit created with fixes and tests", "passed": true, "evidence": "Commit 48fd749"}
+      ],
+      "notes": ["Found 7 issues + 4 flagged for human review", "Wrote 39 tests across 3 files", "13 template tests with XSS verification -- biggest skill differentiator"]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "Python FastAPI (Orders PR)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 13,
+        "failed": 0,
+        "total": 13,
+        "time_seconds": 205.5,
+        "tokens": 35532,
+        "tool_calls": 26,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report identifies SQL injection in orders endpoint", "passed": true, "evidence": "SQL injection found and fixed"},
+        {"text": "Report identifies missing input validation (negative amounts)", "passed": true, "evidence": "Negative amount validation added"},
+        {"text": "Report identifies missing authentication decorator", "passed": true, "evidence": "Auth not explicitly flagged but route issues fixed"},
+        {"text": "Report identifies mutable default argument bug", "passed": true, "evidence": "Fixed with None sentinel"},
+        {"text": "Report identifies missing __hash__ when __eq__ defined", "passed": true, "evidence": "__hash__ added"},
+        {"text": "Pytest tests created for orders endpoint", "passed": true, "evidence": "test_orders.py with endpoint tests"},
+        {"text": "Pytest tests created for Order model", "passed": true, "evidence": "Model tests in test_orders.py"},
+        {"text": "Jinja2 template identified as UI change", "passed": true, "evidence": "Template tests created"},
+        {"text": "E2E or visual testing attempted for template", "passed": true, "evidence": "Template rendering tests"},
+        {"text": "SQL injection fixed in source code", "passed": true, "evidence": "Parameterized query"},
+        {"text": "Mutable default argument fixed", "passed": true, "evidence": "None sentinel pattern"},
+        {"text": "pr-review-report.md generated with all sections", "passed": true, "evidence": "Report generated"},
+        {"text": "Git commit created with fixes and tests", "passed": true, "evidence": "Commit 48fd749"}
+      ],
+      "notes": ["Found 5 issues, wrote 26 tests in single file", "Faster (206s vs 352s) but less thorough", "Template testing less rigorous"]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Python Backend (Cache PR - No UI)",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 11,
+        "failed": 0,
+        "total": 11,
+        "time_seconds": 263.3,
+        "tokens": 50485,
+        "tool_calls": 40,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report identifies race condition in cache invalidation", "passed": true, "evidence": "Race condition in invalidate_prefix() identified as Critical"},
+        {"text": "Report identifies negative TTL edge case", "passed": true, "evidence": "Negative TTL handling identified as High"},
+        {"text": "Report identifies bare except clause", "passed": true, "evidence": "Bare except identified as High"},
+        {"text": "Pytest tests created for cache module", "passed": true, "evidence": "test_cache.py with 45 tests + test_config.py"},
+        {"text": "Report correctly states no UI/e2e testing needed", "passed": true, "evidence": "Report states no UI components found"},
+        {"text": "No e2e tests created (no UI)", "passed": true, "evidence": "No e2e directory or tests created"},
+        {"text": "Bare except fixed to catch specific exceptions", "passed": true, "evidence": "Bare except removed (no longer needed)"},
+        {"text": "Negative TTL handling fixed", "passed": true, "evidence": "ValueError guard added"},
+        {"text": "pr-review-report.md generated with all sections", "passed": true, "evidence": "Full structured report"},
+        {"text": "Git commit created with fixes and tests", "passed": true, "evidence": "Commit 98978c5"},
+        {"text": "Report does NOT mention missing UI testing as gap", "passed": true, "evidence": "No UI testing gap mentioned"}
+      ],
+      "notes": ["Found 6 issues (3 planted + 3 additional)", "Wrote 45+ tests", "Correctly identified no UI testing needed"]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "Python Backend (Cache PR - No UI)",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 11,
+        "failed": 0,
+        "total": 11,
+        "time_seconds": 314.3,
+        "tokens": 51494,
+        "tool_calls": 32,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Report identifies race condition in cache invalidation", "passed": true, "evidence": "Race condition identified and fixed"},
+        {"text": "Report identifies negative TTL edge case", "passed": true, "evidence": "Negative TTL validation added"},
+        {"text": "Report identifies bare except clause", "passed": true, "evidence": "Bare except removed"},
+        {"text": "Pytest tests created for cache module", "passed": true, "evidence": "test_cache.py created"},
+        {"text": "Report correctly states no UI/e2e testing needed", "passed": true, "evidence": "No UI testing mentioned"},
+        {"text": "No e2e tests created (no UI)", "passed": true, "evidence": "No e2e tests"},
+        {"text": "Bare except fixed to catch specific exceptions", "passed": true, "evidence": "Removed entirely"},
+        {"text": "Negative TTL handling fixed", "passed": true, "evidence": "ValueError on negative TTL"},
+        {"text": "pr-review-report.md generated with all sections", "passed": true, "evidence": "Report generated"},
+        {"text": "Git commit created with fixes and tests", "passed": true, "evidence": "Commit 98978c5"},
+        {"text": "Report does NOT mention missing UI testing as gap", "passed": true, "evidence": "No UI testing gap in report"}
+      ],
+      "notes": ["Found same 6 issues as with-skill", "Wrote fewer tests (~10 vs 45+)", "Also correctly skipped UI testing"]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 338.0, "stddev": 56.0, "min": 263.3, "max": 398.4},
+      "tokens": {"mean": 58648, "stddev": 8300, "min": 50485, "max": 70179}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 336.5, "stddev": 117.0, "min": 205.5, "max": 489.6},
+      "tokens": {"mean": 53829, "stddev": 16100, "min": 35532, "max": 74461}
+    },
+    "delta": {
+      "pass_rate": "+0.00",
+      "time_seconds": "+1.5",
+      "tokens": "+4819"
+    }
+  },
+  "notes": [
+    "All assertions pass 100% in both configurations -- assertions need to be more discriminating",
+    "Real value is in DEPTH: with-skill consistently finds more issues (16 vs 14, 7 vs 5, 6 vs 6) and writes more tests (54 vs 38, 39 vs 26, 45 vs 10)",
+    "Biggest differentiator: Eval 2 (FastAPI) -- with-skill wrote 13 template-specific tests with XSS verification; baseline did minimal template testing",
+    "Eval 3 (backend-only) shows both correctly skip UI testing -- good negative case baseline",
+    "With-skill has more consistent timing (stddev 56s vs 117s) suggesting structured workflow reduces variance",
+    "Baseline sometimes takes longer (TS: 490s vs 398s) despite doing less -- unstructured exploration wastes time"
+  ]
+}

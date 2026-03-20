@@ -1,0 +1,65 @@
+{
+  "expectations": [
+    {
+      "text": "The report identifies the race condition in cache invalidation",
+      "passed": true,
+      "evidence": "Report Issue #1 (critical): 'Race condition in invalidate_prefix(): Dict iteration happened outside the lock, then deletions inside it. Another thread could mutate _store during iteration (RuntimeError) or add matching keys that would be missed.' (pr-review-report.md lines 17)"
+    },
+    {
+      "text": "The report identifies the negative TTL edge case",
+      "passed": true,
+      "evidence": "Report Issue #3 (high): 'No negative TTL validation: Passing ttl=-1 created entries with undefined expiration behavior (immediately expired since elapsed > -1 is always true, but confusing and unvalidated).' (pr-review-report.md line 19)"
+    },
+    {
+      "text": "The report identifies the bare except clause",
+      "passed": true,
+      "evidence": "Report Issue #2 (high): 'Bare except: clause: Caught KeyboardInterrupt, SystemExit, and all BaseException subclasses. Only KeyError was the expected failure.' (pr-review-report.md line 18)"
+    },
+    {
+      "text": "New pytest tests were created for the cache module",
+      "passed": true,
+      "evidence": "tests/test_cache.py exists in the repo commit (98978c5) with 38+ test methods covering CacheEntry, Cache, make_cache_key, and CacheConfig integration. tests/test_config.py also added with config-specific tests. Commit stat shows 321 insertions in test_cache.py and 97 in test_config.py."
+    },
+    {
+      "text": "The report correctly states that no UI/e2e testing is needed",
+      "passed": true,
+      "evidence": "Report 'UI / E2E Verification' section: 'No UI components exist in this repository. The project is a pure Python backend service (sqlalchemy, pydantic, httpx dependencies with no web framework serving HTML/templates). No .tsx, .jsx, .vue, .svelte, .css, .html, or template files are present. E2E/UI testing is not applicable.' (pr-review-report.md lines 60-61)"
+    },
+    {
+      "text": "No e2e tests were created (since there is no UI)",
+      "passed": true,
+      "evidence": "The repo tests/ directory contains only: __init__.py, conftest.py, test_cache.py, test_config.py, test_database.py. No e2e test files exist. The report explicitly states 'E2E/UI testing is not applicable' and no e2e commands were run."
+    },
+    {
+      "text": "The bare except clause was fixed to catch specific exceptions",
+      "passed": true,
+      "evidence": "The git diff shows the bare 'except:' (line 111 in original) was removed entirely. The fix moved iteration inside the lock so KeyError is no longer possible, eliminating the need for any try/except. git show HEAD:src/cache.py confirms no bare except remains. The fixed invalidate_prefix() simply does 'del self._store[key]' inside the lock without try/except."
+    },
+    {
+      "text": "The negative TTL handling was fixed",
+      "passed": true,
+      "evidence": "cache-fixed.py (and repo src/cache.py) shows CacheEntry.__init__ now raises ValueError: 'if ttl < 0: raise ValueError(f\"TTL must be non-negative, got {ttl}\")' (lines 19-20). Cache.__init__ also validates: 'if default_ttl < 0: raise ValueError(...)' (lines 47-48). Tests confirm: test_negative_ttl_raises_value_error and test_set_with_negative_ttl_raises."
+    },
+    {
+      "text": "A pr-review-report.md file was generated with all required sections",
+      "passed": true,
+      "evidence": "pr-review-report.md exists in repo and outputs/. Contains all required sections: Executive Summary, Issues Found & Fixed (table with 6 issues), Issues Flagged, Test Coverage (with coverage table), Tests Written, UI / E2E Verification, Remaining Risks, Appendix: Commands Run."
+    },
+    {
+      "text": "A git commit was created with the fixes and new tests",
+      "passed": true,
+      "evidence": "git log shows commit 98978c5: 'chore(pr-review): auto-fix issues, add missing tests, and generate review report' with 5 files changed, 547 insertions(+), 37 deletions(-). Files: pr-review-report.md, src/cache.py, tests/conftest.py, tests/test_cache.py, tests/test_config.py."
+    },
+    {
+      "text": "The report does NOT mention missing UI testing as a gap",
+      "passed": true,
+      "evidence": "The report's 'User Flows NOT Tested' table says: '-- | No UI components in this repository; backend-only Python service'. The 'Remaining Risks' section lists 4 items, none of which mention UI testing as a gap. The report correctly identifies the repo as a 'pure Python backend service' with no UI."
+    }
+  ],
+  "summary": {
+    "passed": 11,
+    "failed": 0,
+    "total": 11,
+    "pass_rate": 1.0
+  }
+}

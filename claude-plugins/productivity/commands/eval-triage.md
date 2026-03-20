@@ -19,6 +19,14 @@ This command helps calibrate the triage classifier by:
 4. Reviewing results and adding corrections with criteria
 5. Feeding corrections back to improve the dataset
 
+The live skill surface is the consolidated `todoist` skill:
+
+- `~/.dotfiles/agents/skills/todoist/SKILL.md`
+- `~/.dotfiles/agents/skills/todoist/references/triage-policy.md`
+- `~/.dotfiles/agents/skills/todoist/references/context-recovery.md`
+- `~/.dotfiles/agents/skills/todoist/references/preference-memory.md`
+- `~/.dotfiles/agents/skills/todoist/references/evals.md`
+
 ## Quick Start
 
 ```bash
@@ -62,9 +70,10 @@ In the review document, add corrections using this YAML format:
 corrections:
   - taskId: "8564373812"
     expected:
-      quadrant: "Q3"
-      action: "Quick"
-    criteria: "APPROVE prefix means quick decision (<5 min), not a tracked action item"
+      bucket: "clear_action"
+      confidence: 92
+      recommendedNextStep: "Review the linked SOP and approve or reject it."
+    criteria: "APPROVE prefix means a bounded decision gate, so this should be handled as a direct clear action rather than an ambiguous tracked item."
 ```
 
 The `criteria` field is critical - it tells the judge WHY this classification is correct, which helps calibrate future evaluations.
@@ -76,9 +85,19 @@ The `criteria` field is critical - it tells the judge WHY this classification is
 
 ## Dataset Location
 
-Golden dataset with criteria is managed by the TypeScript module:
+Legacy golden dataset with criteria is managed by the TypeScript module:
 ```
 ~/.dotfiles/claude-plugins/productivity/scripts/todoist-eval/src/data/dataset.ts
+```
+
+Legacy dataset file:
+```
+~/.dotfiles/agents/skills/todoist/fixtures/eval-dataset.json
+```
+
+Richer copilot/calibration eval cases:
+```
+~/.dotfiles/agents/skills/todoist/fixtures/triage-evals.v2.json
 ```
 
 ## Workflow Loop
@@ -97,6 +116,7 @@ Each iteration improves:
 ## Integration with /triage-todoist
 
 Once the classifier is calibrated, the learnings can be applied to:
-- `~/.dotfiles/claude/skills/todoist-triage/SKILL.md` - Update classification rules
-- `agents/todoist-triage-classifier.md` - Update agent prompt
-- `commands/triage-todoist.md` - Update workflow
+- `~/.dotfiles/agents/skills/todoist/SKILL.md` - Update routing and guardrails
+- `~/.dotfiles/agents/skills/todoist/references/triage-policy.md` - Update decision policy
+- `~/.dotfiles/agents/skills/todoist/references/context-recovery.md` - Update retrieval behavior
+- `~/.dotfiles/agents/skills/todoist/references/preference-memory.md` - Promote durable rules

@@ -1,0 +1,20 @@
+{
+  "eval_id": 2,
+  "eval_name": "python-fastapi-baseline",
+  "prompt": "Run a full review on this checked-out PR. It's a Python FastAPI backend with a Jinja2 template for order confirmations. The PR adds an orders endpoint and order model.",
+  "assertions": [
+    "The report identifies the SQL injection in the orders endpoint",
+    "The report identifies missing input validation (negative amounts)",
+    "The report identifies the missing authentication decorator",
+    "The report identifies the mutable default argument bug",
+    "The report identifies missing __hash__ when __eq__ is defined",
+    "New pytest tests were created for the orders endpoint",
+    "New pytest tests were created for the Order model",
+    "The Jinja2 template was identified as a UI change requiring visual verification",
+    "E2E or visual testing was attempted for the order confirmation template",
+    "The SQL injection was fixed in the source code",
+    "The mutable default argument was fixed",
+    "A pr-review-report.md file was generated with all required sections",
+    "A git commit was created with the fixes and new tests"
+  ]
+}

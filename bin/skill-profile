@@ -1,0 +1,3 @@
+#!/bin/bash
+set -euo pipefail
+exec bun /Users/michael/.dotfiles/bin/skill-profile.ts "$@"

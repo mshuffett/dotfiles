@@ -384,7 +384,7 @@ fi
 # >>> codex-cli defaults (added by assistant) >>>
 # Ensure Codex CLI uses web search and bypasses approvals + sandbox (DANGEROUS)
 if command -v codex >/dev/null 2>&1; then
-  alias codex='command codex --search --dangerously-bypass-approvals-and-sandbox'
+  alias codex='command codex --dangerously-bypass-approvals-and-sandbox'
 fi
 # <<< codex-cli defaults (added by assistant) <<<
 

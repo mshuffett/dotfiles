@@ -1,0 +1,19 @@
+{
+  "repo": "mshuffett/pr-review-test-fastapi",
+  "checks": {
+    "report_exists": true,
+    "screenshot_count": 3,
+    "gif_recorded": true,
+    "commit_made": true,
+    "pr_comment_posted": true,
+    "template_identified_as_ui": true,
+    "bugs_found": [
+      "sql_injection",
+      "mutable_default_arguments",
+      "missing_input_validation",
+      "missing_auth",
+      "datetime_without_timezone"
+    ],
+    "tests_written": 17
+  }
+}

@@ -1,0 +1,121 @@
+#!/bin/bash
+set -euo pipefail
+
+REAL_HOME="${HOME}"
+DOTFILES_DIR="${DOTFILES_DIR:-$REAL_HOME/.dotfiles}"
+STATE_FILE="$REAL_HOME/.config/skill-profile/state.json"
+OVERLAY_BASE_DIR="$REAL_HOME/.local/share/skill-profile/claude-homes"
+REAL_CLAUDE_DIR="$REAL_HOME/.claude"
+
+current_profile() {
+  if [[ ! -f "$STATE_FILE" ]] || ! command -v jq >/dev/null 2>&1; then
+    return 0
+  fi
+  jq -r '.runtimes.claude.currentProfile // empty' "$STATE_FILE" 2>/dev/null || true
+}
+
+profile_slug() {
+  local profile="$1"
+  printf '%s' "$profile" | tr -cs 'a-zA-Z0-9._-' '-'
+}
+
+link_children_except_skills() {
+  local src_dir="$1"
+  local dst_dir="$2"
+
+  [[ -d "$src_dir" ]] || return 0
+  mkdir -p "$dst_dir"
+
+  while IFS= read -r child; do
+    local name
+    local dst_path
+    name="$(basename "$child")"
+    [[ "$name" == "skills" ]] && continue
+    dst_path="$dst_dir/$name"
+    if [[ -e "$dst_path" && ! -L "$dst_path" ]]; then
+      continue
+    fi
+    ensure_symlink "$child" "$dst_path"
+  done < <(find "$src_dir" -mindepth 1 -maxdepth 1 -print | sort)
+}
+
+ensure_symlink() {
+  local target="$1"
+  local link_path="$2"
+
+  mkdir -p "$(dirname "$link_path")"
+
+  if [[ -L "$link_path" ]]; then
+    if [[ "$(readlink "$link_path")" == "$target" ]]; then
+      return 0
+    fi
+    rm -f "$link_path"
+  elif [[ -e "$link_path" ]]; then
+    echo "ERROR: $link_path exists and is not a symlink" >&2
+    exit 1
+  fi
+
+  ln -s "$target" "$link_path"
+}
+
+sync_profile_skills() {
+  local profile="$1"
+  local skills_dir="$2"
+
+  mkdir -p "$skills_dir"
+
+  while IFS= read -r existing; do
+    local target
+    target="$(readlink "$existing")"
+    [[ "$target" == "$DOTFILES_DIR/agents/skills/"* ]] || continue
+    rm -f "$existing"
+  done < <(find "$skills_dir" -mindepth 1 -maxdepth 1 -type l -print | sort)
+
+  while IFS= read -r skill; do
+    [[ -n "$skill" ]] || continue
+    ensure_symlink "$DOTFILES_DIR/agents/skills/$skill" "$skills_dir/$skill"
+  done < <("$DOTFILES_DIR/bin/skill-profile" resolve "$profile")
+}
+
+build_overlay() {
+  local profile="$1"
+  local overlay_home="$2"
+  mkdir -p "$overlay_home/.claude/skills"
+
+  if [[ -f "$REAL_HOME/.claude.json" ]]; then
+    ensure_symlink "$REAL_HOME/.claude.json" "$overlay_home/.claude.json"
+  fi
+
+  link_children_except_skills "$REAL_CLAUDE_DIR" "$overlay_home/.claude"
+  sync_profile_skills "$profile" "$overlay_home/.claude/skills"
+}
+
+profile_override=""
+passthrough_args=()
+
+while (($#)); do
+  case "$1" in
+    --skill-profile)
+      shift
+      [[ $# -gt 0 ]] || {
+        echo "ERROR: --skill-profile requires a profile name" >&2
+        exit 1
+      }
+      profile_override="$1"
+      ;;
+    *)
+      passthrough_args+=("$1")
+      ;;
+  esac
+  shift || true
+done
+
+profile="${profile_override:-$(current_profile)}"
+
+if [[ -z "$profile" ]]; then
+  exec claude "${passthrough_args[@]}"
+fi
+
+overlay_home="$OVERLAY_BASE_DIR/$(profile_slug "$profile")"
+build_overlay "$profile" "$overlay_home"
+HOME="$overlay_home" exec claude "${passthrough_args[@]}"

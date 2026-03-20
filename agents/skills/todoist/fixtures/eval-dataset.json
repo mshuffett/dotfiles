@@ -1,0 +1,224 @@
+{
+  "version": "2.0.0",
+  "createdAt": "2026-03-17T00:00:00.000Z",
+  "updatedAt": "2026-03-17T00:00:00.000Z",
+  "examples": [
+    {
+      "task": {
+        "id": "eval-001",
+        "content": "APPROVE SOP - Group Transfers & New Member Requests",
+        "description": "Doc is linked in the task description. This is a quick approval gate, not a long project.",
+        "project_id": "377445380",
+        "project_name": "Inbox",
+        "due": {
+          "date": "2026-03-18",
+          "string": "tomorrow",
+          "datetime": null,
+          "timezone": null,
+          "is_recurring": false
+        },
+        "labels": [
+          "approval"
+        ],
+        "priority": 4,
+        "assignee_id": null,
+        "assigner_id": null,
+        "comment_count": 0,
+        "comments": [],
+        "url": "https://app.todoist.com/app/task/eval-001",
+        "created_at": "2026-03-16T16:00:00Z"
+      },
+      "expected": {
+        "taskId": "eval-001",
+        "bucket": "clear_action",
+        "reasoning": "APPROVE tasks are usually quick decision gates and should not become long tracked work without extra context.",
+        "confidence": 93,
+        "recommendedNextStep": "Review the linked SOP and approve or reject it.",
+        "missingContext": [],
+        "evidenceUsed": [
+          "APPROVE prefix",
+          "near-term due date",
+          "description says this is a quick approval gate"
+        ]
+      },
+      "criteria": "Approval wording plus a near-term due date should bias toward a direct action instead of an ambiguous or long-lived tracked item.",
+      "source": "manual",
+      "addedAt": "2026-03-17T00:00:00.000Z",
+      "notes": "Clear direct-action case."
+    },
+    {
+      "task": {
+        "id": "eval-002",
+        "content": "Clear Todoist and email",
+        "description": "",
+        "project_id": "377445380",
+        "project_name": "Inbox",
+        "due": null,
+        "labels": [],
+        "priority": 2,
+        "assignee_id": null,
+        "assigner_id": null,
+        "comment_count": 0,
+        "comments": [],
+        "url": "https://app.todoist.com/app/task/eval-002",
+        "created_at": "2026-03-01T17:00:00Z"
+      },
+      "expected": {
+        "taskId": "eval-002",
+        "bucket": "needs_user_judgment",
+        "reasoning": "This is shorthand for a review session, not a specific executable next action.",
+        "confidence": 62,
+        "recommendedNextStep": "Ask whether this should become a scheduled review block, be broken into smaller tasks, or be closed as a stale meta-task.",
+        "missingContext": [
+          "whether this is still an active review ritual",
+          "whether Michael wants a scheduled block or a decomposition"
+        ],
+        "evidenceUsed": [
+          "meta-task wording",
+          "no concrete verb beyond broad cleanup"
+        ],
+        "userQuestion": "Do you want this converted into a scheduled review block, broken into smaller tasks, or closed as a stale meta-task?"
+      },
+      "criteria": "Vague cleanup meta-tasks should not receive fake specificity. The correct move is usually to ask or transform the item.",
+      "source": "manual",
+      "addedAt": "2026-03-17T00:00:00.000Z",
+      "notes": "Ambiguity handling case."
+    },
+    {
+      "task": {
+        "id": "eval-003",
+        "content": "Draft investor follow-up email for Udit",
+        "description": "Need a concrete follow-up draft before Friday.",
+        "project_id": "2359994569",
+        "project_name": "1-Projects",
+        "due": {
+          "date": "2026-03-20",
+          "string": "Friday",
+          "datetime": null,
+          "timezone": null,
+          "is_recurring": false
+        },
+        "labels": [
+          "fundraising"
+        ],
+        "priority": 4,
+        "assignee_id": null,
+        "assigner_id": null,
+        "comment_count": 1,
+        "comments": [
+          {
+            "id": "c-eval-003-1",
+            "content": "Need a draft, not just bullet points.",
+            "posted_at": "2026-03-16T20:00:00Z"
+          }
+        ],
+        "url": "https://app.todoist.com/app/task/eval-003",
+        "created_at": "2026-03-16T19:00:00Z"
+      },
+      "expected": {
+        "taskId": "eval-003",
+        "bucket": "clear_action",
+        "reasoning": "This is active project work with a clear deliverable and a real deadline.",
+        "confidence": 95,
+        "recommendedNextStep": "Draft the investor follow-up email and include the concrete ask.",
+        "missingContext": [],
+        "evidenceUsed": [
+          "clear deliverable",
+          "Friday deadline",
+          "comment clarifies draft quality bar"
+        ]
+      },
+      "criteria": "Clear deliverable plus near-term deadline plus comment clarification makes this direct active work, not a context-recovery or judgment case.",
+      "source": "manual",
+      "addedAt": "2026-03-17T00:00:00.000Z"
+    },
+    {
+      "task": {
+        "id": "eval-004",
+        "content": "AI should refuse hidden assumptions in product planning",
+        "description": "Feels more like a principle than a task.",
+        "project_id": "377445380",
+        "project_name": "Inbox",
+        "due": null,
+        "labels": [],
+        "priority": 1,
+        "assignee_id": null,
+        "assigner_id": null,
+        "comment_count": 0,
+        "comments": [],
+        "url": "https://app.todoist.com/app/task/eval-004",
+        "created_at": "2026-03-10T12:00:00Z"
+      },
+      "expected": {
+        "taskId": "eval-004",
+        "bucket": "convert_to_project_or_note",
+        "reasoning": "This is a reusable principle and belongs in notes, not as an open Todoist task.",
+        "confidence": 91,
+        "recommendedNextStep": "Turn this into a note and then close the Todoist item.",
+        "missingContext": [],
+        "evidenceUsed": [
+          "principle-like wording",
+          "description says it feels more like a principle than a task"
+        ],
+        "destination": "2-Areas/Coaching/",
+        "proposedTitle": "Refuse hidden assumptions in product planning"
+      },
+      "criteria": "Principles and enduring guidance should be converted into notes rather than preserved as open task backlog.",
+      "source": "manual",
+      "addedAt": "2026-03-17T00:00:00.000Z"
+    },
+    {
+      "task": {
+        "id": "eval-005",
+        "content": "Cancel Fifth Force / Sumnotes",
+        "description": "Need to confirm whether the active subscription is actually Sumnotes before cancelling.",
+        "project_id": "2331010777",
+        "project_name": "Admin",
+        "due": null,
+        "labels": [
+          "finance"
+        ],
+        "priority": 3,
+        "assignee_id": null,
+        "assigner_id": null,
+        "comment_count": 1,
+        "comments": [
+          {
+            "id": "c-eval-005-1",
+            "content": "Fifth Force is Sumnotes - would you still like to cancel? Y/N",
+            "posted_at": "2026-01-20T19:00:00Z"
+          }
+        ],
+        "url": "https://app.todoist.com/app/task/eval-005",
+        "created_at": "2026-01-20T18:00:00Z"
+      },
+      "expected": {
+        "taskId": "eval-005",
+        "bucket": "needs_user_judgment",
+        "reasoning": "There is a direct unresolved yes/no decision in the comment thread that only Michael can make.",
+        "confidence": 92,
+        "recommendedNextStep": "Ask Michael directly whether to cancel the Sumnotes subscription.",
+        "missingContext": [],
+        "evidenceUsed": [
+          "comment thread contains unresolved Y/N question",
+          "financial/admin context"
+        ],
+        "userQuestion": "Do you want to cancel the Sumnotes subscription? Y/N"
+      },
+      "criteria": "When a comment thread contains an explicit unresolved Y/N decision and the context has already been clarified, it is valid to be highly confident that the right next step is to ask Michael directly for the decision.",
+      "source": "manual",
+      "addedAt": "2026-03-17T00:00:00.000Z"
+    }
+  ],
+  "metadata": {
+    "totalExamples": 5,
+    "byBucket": {
+      "clear_action": 2,
+      "needs_user_judgment": 2,
+      "convert_to_project_or_note": 1
+    },
+    "bySource": {
+      "manual": 5
+    }
+  }
+}

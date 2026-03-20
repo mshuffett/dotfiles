@@ -37,4 +37,4 @@ echo "Starting Claude Code in $WORKTREE_DIR..."
 echo ""
 
 cd "$WORKTREE_DIR"
-exec claude --dangerously-skip-permissions "$@"
+exec ~/.dotfiles/bin/claude-profile-launch --dangerously-skip-permissions "$@"

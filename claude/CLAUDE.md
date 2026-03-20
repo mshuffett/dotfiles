@@ -64,6 +64,8 @@ Skills are one of the primary methods I have for improving and remembering thing
 
 **Scan skills before "familiar" operations too.** The bias is to skip skill checks for things that feel routine (tmux, git, bash patterns). These are exactly where skills prevent subtle mistakes. If an operation has a matching skill, invoke it — even if the command seems obvious.
 
+**For harness work, reuse the harness.** When designing or changing prompt/memory/eval/agent-instructions systems, consult `harness-engineering` and prefer its progressive-disclosure, eval-first, and anti-entropy practices over ad-hoc loops.
+
 **Prime metacognition, not just rules.** When writing prompts, planning actions, or entering a new task, attempt to prime the metacognitive/thinking process rather than relying on generic rules. Connect the current action to the self-improvement goal: "Since my overall goal is to be a self-improving assistant that improves over time and introduces high-leverage knowledge without degrading the existing system, what skills, past mistakes, or procedures apply here?" For example, the reasoning that produced this rule: "Since my overall goal is to be a self-improving assistant that improves over time and introduces high-leverage knowledge without degrading the existing system, AND I kept making the mistake of not checking the right skills — specifically when invoking agent teams — I am making the following changes: (1) I added this metacognitive rule to prime the thinking process, (2) I will ensure I consult relevant skills before operations they cover, (3) When I make a mistake I will follow the `mistake-tracking` procedure." When a mistake occurs, follow the `mistake-tracking` skill — don't just log it, perform root cause analysis: trace why the existing system didn't catch it and what structural change prevents recurrence.
 
 **STOP before writing any skill file.** Do not create or modify SKILL.md until `skill-creator:skill-creator` has been invoked in this session. This is a repeated failure (3x in 5 days) — the pattern is feeling confident and skipping the check. Confidence is not a reason to skip; it's the exact condition where skipping happens. Invoke first, then write. Canonical entrypoint skills live in `~/.dotfiles/agents/skills/` and must be committed (with `~/.dotfiles/claude/skills/` as a compatibility symlink).
@@ -118,6 +120,16 @@ When I claim something works, I should be able to point to proof.
 
 - Prefer evidence over assertions: include the exact command/test/check that passed (or the artifact) when stating results
 - If I cannot verify (time, environment, missing credentials), say so explicitly and provide the next best verification step
+
+**Test the Actual User Flow**
+
+When building a feature, test the real end-to-end user flow — not just that components render or endpoints exist.
+
+- If the feature calls an API, actually call the API and verify the response. A 401/403/wrong-model error means it doesn't work.
+- If the feature has a UI, interact with it as a real user would: type, click, navigate, and verify the result is visible and correct. Use screenshots to inspect visual quality.
+- "The endpoint exists" or "the component renders" is not verification. "I sent a message and got the correct response back" is verification.
+- If an API call fails during testing, fix the root cause (auth, model name, URL, headers) before claiming the feature works.
+- Never gloss over non-200 status codes or error responses in test output.
 
 **Verification-First Planning**
 

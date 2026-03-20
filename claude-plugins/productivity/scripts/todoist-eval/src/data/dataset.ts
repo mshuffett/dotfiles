@@ -6,13 +6,12 @@ import {
   type TaskClassification,
 } from "../schemas/classification.js";
 
-// Labeled example with criteria explaining WHY the classification is correct
 export const LabeledExampleSchema = z.object({
   task: TodoistTaskSchema,
   expected: TaskClassificationSchema,
   criteria: z
     .string()
-    .describe("Why this is correct - what the judge should look for"),
+    .describe("Why this triage decision is correct"),
   source: z.enum(["manual", "approved", "correction"]),
   addedAt: z.string().datetime(),
   notes: z.string().optional(),
@@ -20,7 +19,6 @@ export const LabeledExampleSchema = z.object({
 
 export type LabeledExample = z.infer<typeof LabeledExampleSchema>;
 
-// Full dataset schema
 export const DatasetSchema = z.object({
   version: z.string(),
   createdAt: z.string().datetime(),
@@ -28,22 +26,17 @@ export const DatasetSchema = z.object({
   examples: z.array(LabeledExampleSchema),
   metadata: z.object({
     totalExamples: z.number(),
-    byAction: z.record(z.string(), z.number()),
-    byQuadrant: z.record(z.string(), z.number()),
+    byBucket: z.record(z.string(), z.number()),
     bySource: z.record(z.string(), z.number()),
   }),
 });
 
 export type Dataset = z.infer<typeof DatasetSchema>;
 
-// Default dataset path
 export const DEFAULT_DATASET_PATH =
   process.env.HOME +
-  "/.dotfiles/claude/skills/todoist-triage/fixtures/eval-dataset.json";
+  "/.dotfiles/agents/skills/todoist/fixtures/eval-dataset.json";
 
-/**
- * Load dataset from file
- */
 export function loadDataset(path: string = DEFAULT_DATASET_PATH): Dataset {
   if (!existsSync(path)) {
     return createEmptyDataset();
@@ -54,51 +47,37 @@ export function loadDataset(path: string = DEFAULT_DATASET_PATH): Dataset {
   return DatasetSchema.parse(parsed);
 }
 
-/**
- * Save dataset to file
- */
 export function saveDataset(
   dataset: Dataset,
   path: string = DEFAULT_DATASET_PATH
 ): void {
-  // Update metadata before saving
   const updated = updateMetadata(dataset);
   const content = JSON.stringify(updated, null, 2);
   writeFileSync(path, content, "utf-8");
 }
 
-/**
- * Create an empty dataset
- */
 export function createEmptyDataset(): Dataset {
   const now = new Date().toISOString();
   return {
-    version: "1.0.0",
+    version: "2.0.0",
     createdAt: now,
     updatedAt: now,
     examples: [],
     metadata: {
       totalExamples: 0,
-      byAction: {},
-      byQuadrant: {},
+      byBucket: {},
       bySource: {},
     },
   };
 }
 
-/**
- * Update dataset metadata from examples
- */
 function updateMetadata(dataset: Dataset): Dataset {
-  const byAction: Record<string, number> = {};
-  const byQuadrant: Record<string, number> = {};
+  const byBucket: Record<string, number> = {};
   const bySource: Record<string, number> = {};
 
   for (const example of dataset.examples) {
-    byAction[example.expected.action] =
-      (byAction[example.expected.action] || 0) + 1;
-    byQuadrant[example.expected.quadrant] =
-      (byQuadrant[example.expected.quadrant] || 0) + 1;
+    byBucket[example.expected.bucket] =
+      (byBucket[example.expected.bucket] || 0) + 1;
     bySource[example.source] = (bySource[example.source] || 0) + 1;
   }
 
@@ -107,16 +86,12 @@ function updateMetadata(dataset: Dataset): Dataset {
     updatedAt: new Date().toISOString(),
     metadata: {
       totalExamples: dataset.examples.length,
-      byAction,
-      byQuadrant,
+      byBucket,
       bySource,
     },
   };
 }
 
-/**
- * Add a new example to the dataset
- */
 export function addExample(
   dataset: Dataset,
   task: TodoistTask,
@@ -140,9 +115,6 @@ export function addExample(
   };
 }
 
-/**
- * Find example by task ID
- */
 export function findExampleByTaskId(
   dataset: Dataset,
   taskId: string
@@ -150,9 +122,6 @@ export function findExampleByTaskId(
   return dataset.examples.find((e) => e.task.id === taskId);
 }
 
-/**
- * Update an existing example (e.g., from correction)
- */
 export function updateExample(
   dataset: Dataset,
   taskId: string,
@@ -172,9 +141,6 @@ export function updateExample(
   return { ...dataset, examples };
 }
 
-/**
- * Get examples for evaluation (returns tasks and expected classifications)
- */
 export function getEvalExamples(
   dataset: Dataset
 ): Array<{

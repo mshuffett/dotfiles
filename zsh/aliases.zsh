@@ -182,8 +182,8 @@ fi
 # Add flags to existing aliases.
 alias ls="${aliases[ls]:-ls} -A"
 alias lst="${aliases[lst]:-${aliases[ls]:-ls}} -A"
-alias claude="claude --dangerously-skip-permissions"
-alias c="claude --dangerously-skip-permissions"
+alias claude="command claude --dangerously-skip-permissions"
+alias c="command claude --dangerously-skip-permissions"
 alias lg='lazygit'
 alias j='just'
 

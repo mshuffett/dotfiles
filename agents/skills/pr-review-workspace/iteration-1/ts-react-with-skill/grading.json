@@ -1,0 +1,80 @@
+{
+  "expectations": [
+    {
+      "text": "The report identifies the XSS vulnerability in UserProfile component",
+      "passed": true,
+      "evidence": "Report issue #4: 'XSS vulnerability: user-supplied bio rendered as raw HTML without sanitization' at line 123-125 of UserProfile.tsx. The original code rendered bio as raw HTML (confirmed at line 125 of original file)."
+    },
+    {
+      "text": "The report identifies the SQL injection in the API route",
+      "passed": true,
+      "evidence": "Report issues #1, #2, #3 all identify SQL injection: GET query at lines 26-29 ('userId interpolated directly into SQL query string'), PUT UPDATE at lines 59-63 ('name, email, bio, userId all interpolated into SQL'), and PUT SELECT at lines 67-70. Original route.ts confirms string interpolation in all three locations."
+    },
+    {
+      "text": "The report identifies missing authentication on the API route",
+      "passed": true,
+      "evidence": "Report 'Issues Flagged' table #1: 'No authentication on GET or PUT -- any caller can read/modify any user's profile' at lines 14, 48. Also mentioned in Executive Summary and Remaining Risks section: 'No authentication: The most critical architectural gap.'"
+    },
+    {
+      "text": "The report identifies missing null check on optional data",
+      "passed": true,
+      "evidence": "Report issue #5: 'Null pointer crash: profile.socialLinks.twitter accessed when socialLinks is optional (undefined)' at lines 128-147. Original code accessed profile.socialLinks properties without null guards."
+    },
+    {
+      "text": "New unit tests were created for the UserProfile component",
+      "passed": true,
+      "evidence": "File exists at /tmp/pr-review-evals/ts-react-app/src/components/__tests__/UserProfile.test.tsx (committed in HEAD). Contains 24 tests covering loading, profile display, avatar fallback, social links, XSS safety, error handling, edit mode, form validation, save, and userId encoding."
+    },
+    {
+      "text": "New unit tests were created for the API route",
+      "passed": true,
+      "evidence": "File exists at /tmp/pr-review-evals/ts-react-app/src/app/api/profile/__tests__/route.test.ts (committed in HEAD). Contains 12 tests covering GET (missing userId, not found, success, camelCase mapping, SQL injection prevention) and PUT (missing userId, empty name, whitespace name, invalid email, missing email, malformed JSON, success, trim, default bio, 404 edge case, SQL injection prevention)."
+    },
+    {
+      "text": "E2E tests were created or attempted for the user profile page",
+      "passed": true,
+      "evidence": "File exists at /tmp/pr-review-evals/ts-react-app/e2e/user-profile.spec.ts (committed in HEAD). Contains 9 Playwright tests: profile display, avatar fallback, social links, XSS protection, edit/cancel, validation (empty name, invalid email), save, and error state. Report notes tests 'were written but could not be executed because node_modules are not installed.'"
+    },
+    {
+      "text": "Screenshots were captured (or attempted) for the UI flow",
+      "passed": true,
+      "evidence": "E2E test file includes page.screenshot() calls for 10 screenshots (profile-loading.png, profile-loaded.png, profile-social-links.png, etc.). Report documents these in the UI/E2E Verification section with screenshot tables. The screenshots directory exists but is empty since tests could not run (no node_modules). This counts as 'attempted'."
+    },
+    {
+      "text": "The XSS vulnerability was fixed in the source code",
+      "passed": true,
+      "evidence": "Original UserProfile.tsx line 125 rendered bio as raw HTML. Fixed version at /tmp/pr-review-evals/ts-react-app/src/components/UserProfile.tsx line 218 renders bio as plain text: <p className='mt-3 whitespace-pre-wrap'>{profile.bio}</p> with comment about no raw HTML rendering needed."
+    },
+    {
+      "text": "The SQL injection was fixed in the source code",
+      "passed": true,
+      "evidence": "Original route.ts used string interpolation (e.g., WHERE id = '${userId}'). Fixed version at /tmp/pr-review-evals/ts-react-app/src/app/api/profile/route.ts uses parameterized queries: WHERE id = $1 with [userId] parameter array (lines 35-40), SET name = $1, email = $2, bio = $3 WHERE id = $4 with parameter array (lines 77-82), and re-fetch with WHERE id = $1 (lines 85-90)."
+    },
+    {
+      "text": "A pr-review-report.md file was generated with all required sections",
+      "passed": true,
+      "evidence": "File exists at /tmp/pr-review-evals/ts-react-app/pr-review-report.md (committed in HEAD). Contains sections: Executive Summary, Issues Found & Fixed (table with 16 issues), Issues Flagged, Test Coverage, Tests Written, UI/E2E Verification (with user flows and screenshots tables), Remaining Risks, and Appendix: Commands Run."
+    },
+    {
+      "text": "Test coverage numbers are included in the report for changed files",
+      "passed": true,
+      "evidence": "Report 'Test Coverage' section includes 'Changed Files Coverage' table with per-file coverage: route.ts at ~90% (97 changed lines, 12 unit tests) and UserProfile.tsx at ~92% (219 changed lines, 24 unit tests). Overall PR coverage shows 'Before: 0%', 'After: ~90%', 'Delta: +90%'. Coverage gaps are noted."
+    },
+    {
+      "text": "A git commit was created with the fixes and new tests",
+      "passed": true,
+      "evidence": "git log shows commit 7fb9bfa 'chore(pr-review): auto-fix issues, add missing tests, and generate review report' which changed 7 files: e2e/user-profile.spec.ts, playwright.config.ts, pr-review-report.md, route.test.ts, route.ts, UserProfile.tsx, UserProfile.test.tsx."
+    },
+    {
+      "text": "The report correctly identifies which user flows were affected",
+      "passed": true,
+      "evidence": "Report 'UI/E2E Verification' section identifies 4 user flows: View Profile (loading, avatar, social links), Edit Profile validation (empty name, invalid email, cancel), Save Profile (update name/email, verify exit edit mode), and Error State (API failure). Each flow maps to the changed component (UserProfile.tsx) and the e2e test file. 'User Flows NOT Tested' section correctly identifies authentication flows as untested."
+    }
+  ],
+  "summary": {
+    "passed": 14,
+    "failed": 0,
+    "total": 14,
+    "pass_rate": 1.0
+  }
+}

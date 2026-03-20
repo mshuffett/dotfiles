@@ -35,3 +35,11 @@ Known recurring mistakes from actual log data. Check these before logging a new 
 **Pattern**: Relying on memory for third-party API/library usage instead of fetching current docs.
 
 **Prevention**: Use Context7 or WebFetch for any non-trivial library usage.
+
+## profile.launcher_not_verified
+
+**Pattern**: Treating a runtime/profile install as verified after inspecting files on disk, without launching through the real profile wrapper that the user actually runs.
+
+**Typical trigger**: Per-profile overlays appear correct on disk, but `codex-profile-launch` or `claude-profile-launch` rebuilds the home and silently drops runtime-local state such as plugin caches, install metadata, or auth files.
+
+**Prevention**: Invoke `skill-profiles`, preserve overlay-local state instead of wiping the overlay home, and verify through the actual launcher command (`codex ...` or `claude ...`) rather than direct file inspection alone.

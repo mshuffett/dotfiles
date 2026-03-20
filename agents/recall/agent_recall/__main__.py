@@ -55,6 +55,108 @@ def _iso_from_ts_ms(ts_ms: int) -> str:
     return dt.isoformat().replace("+00:00", "Z")
 
 
+def _parse_ts_ms(value: Any) -> int | None:
+    if isinstance(value, int):
+        return value
+    if not isinstance(value, str):
+        return None
+    try:
+        dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return int(dt.timestamp() * 1000)
+
+
+def _flatten_message_content(value: Any) -> list[str]:
+    parts: list[str] = []
+    if isinstance(value, str):
+        text = value.strip()
+        if text:
+            parts.append(text)
+        return parts
+    if not isinstance(value, list):
+        return parts
+
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        kind = item.get("type")
+        if kind == "text":
+            text = str(item.get("text") or "").strip()
+            if text:
+                parts.append(text)
+            continue
+        if kind == "tool_result":
+            text = str(item.get("content") or "").strip()
+            if text:
+                parts.append(text)
+            continue
+        if kind == "tool_use":
+            name = str(item.get("name") or "").strip()
+            input_data = item.get("input")
+            lines: list[str] = []
+            if name:
+                lines.append(name)
+            if isinstance(input_data, dict):
+                command = str(input_data.get("command") or "").strip()
+                description = str(input_data.get("description") or "").strip()
+                if command:
+                    lines.append(command)
+                if description:
+                    lines.append(description)
+            text = "\n".join(lines).strip()
+            if text:
+                parts.append(text)
+    return parts
+
+
+def _flatten_codex_content(value: Any) -> list[str]:
+    parts: list[str] = []
+    if isinstance(value, str):
+        text = value.strip()
+        if text:
+            parts.append(text)
+        return parts
+    if not isinstance(value, list):
+        return parts
+
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        for key in ("text", "output_text", "input_text"):
+            text = str(item.get(key) or "").strip()
+            if text:
+                parts.append(text)
+                break
+    return parts
+
+
+def _flatten_codex_payload(value: Any) -> list[str]:
+    if not isinstance(value, dict):
+        return []
+
+    kind = str(value.get("type") or "").strip()
+    if kind in {"reasoning", "ghost_snapshot", "token_count"}:
+        return []
+
+    parts: list[str] = []
+    message = str(value.get("message") or "").strip()
+    if message:
+        parts.append(message)
+
+    output = str(value.get("output") or "").strip()
+    if output:
+        parts.append(output)
+
+    arguments = str(value.get("arguments") or "").strip()
+    if arguments and kind == "function_call":
+        parts.append(arguments)
+
+    content = value.get("content")
+    parts.extend(_flatten_codex_content(content))
+    return [part for part in parts if part]
+
+
 def _iter_sources(paths: Iterable[str]) -> list[Path]:
     return [Path(p).expanduser() for p in paths]
 
@@ -183,6 +285,75 @@ def _load_history_jsonl(path: Path) -> list[Record]:
                         source=str(path),
                         source_type="conv",
                         session_id=session_id,
+                    )
+                )
+                continue
+
+            # Claude project/session JSONL schema (observed):
+            # { timestamp(iso), type, message?, toolUseResult?, content?, sessionId?, cwd? }
+            if "timestamp" in obj and ("message" in obj or "toolUseResult" in obj or "content" in obj):
+                ts_ms = _parse_ts_ms(obj.get("timestamp"))
+                if ts_ms is None:
+                    continue
+                session_id = obj.get("sessionId")
+                if session_id is not None and not isinstance(session_id, str):
+                    session_id = str(session_id)
+                project = obj.get("cwd") or obj.get("project") or ""
+                if not isinstance(project, str):
+                    project = str(project)
+
+                parts: list[str] = []
+                if isinstance(obj.get("content"), str):
+                    text = str(obj.get("content") or "").strip()
+                    if text:
+                        parts.append(text)
+
+                message = obj.get("message")
+                if isinstance(message, dict):
+                    parts.extend(_flatten_message_content(message.get("content")))
+
+                tool_use_result = obj.get("toolUseResult")
+                if isinstance(tool_use_result, dict):
+                    stdout = str(tool_use_result.get("stdout") or "").strip()
+                    stderr = str(tool_use_result.get("stderr") or "").strip()
+                    if stdout:
+                        parts.append(stdout)
+                    if stderr:
+                        parts.append(stderr)
+
+                text = "\n\n".join(part for part in parts if part).strip()
+                if not text:
+                    continue
+
+                records.append(
+                    Record(
+                        ts_ms=ts_ms,
+                        project=project,
+                        text=text,
+                        source=str(path),
+                        source_type="conv",
+                        session_id=session_id,
+                    )
+                )
+                continue
+
+            # Codex rollout/session JSONL schema (observed):
+            # { timestamp(iso), type, payload }
+            if "timestamp" in obj and isinstance(obj.get("payload"), dict):
+                ts_ms = _parse_ts_ms(obj.get("timestamp"))
+                if ts_ms is None:
+                    continue
+                parts = _flatten_codex_payload(obj.get("payload"))
+                text = "\n\n".join(parts).strip()
+                if not text:
+                    continue
+                records.append(
+                    Record(
+                        ts_ms=ts_ms,
+                        project="",
+                        text=text,
+                        source=str(path),
+                        source_type="conv",
                     )
                 )
                 continue

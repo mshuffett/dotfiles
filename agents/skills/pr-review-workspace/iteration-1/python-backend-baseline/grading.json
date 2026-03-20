@@ -1,0 +1,65 @@
+{
+  "expectations": [
+    {
+      "text": "The report identifies the race condition in cache invalidation",
+      "passed": true,
+      "evidence": "Report bug #2 (Critical): \"Race condition in `invalidate_prefix()`. Dict iteration happened outside the lock, deletions inside it. Another thread could mutate `_store` during iteration (`RuntimeError: dictionary changed size during iteration`) or add matching keys that would be missed by invalidation.\" (pr-review-report.md line 22)"
+    },
+    {
+      "text": "The report identifies the negative TTL edge case",
+      "passed": true,
+      "evidence": "Report bug #4 (High): \"No negative TTL validation. `ttl=-1` created entries with confusing, undefined expiration behavior. `is_expired` returns `(elapsed) > ttl`; since elapsed is always positive, `elapsed > -1` is always `True`, so the entry expires immediately -- but this is undocumented and likely not intended.\" (pr-review-report.md line 24)"
+    },
+    {
+      "text": "The report identifies the bare except clause",
+      "passed": true,
+      "evidence": "Report bug #3 (High): \"Bare `except:` clause. Caught `KeyboardInterrupt`, `SystemExit`, `GeneratorExit`, and all `BaseException` subclasses. Only `KeyError` was the expected failure mode. This masks fatal signals and makes debugging impossible.\" (pr-review-report.md line 23)"
+    },
+    {
+      "text": "New pytest tests were created for the cache module",
+      "passed": true,
+      "evidence": "tests/test_cache.py contains 322 lines with classes TestCacheEntry (7 tests), TestCache (25+ tests), TestCacheEntrySlots (1 test), TestMakeCacheKey (4 tests), and TestCacheConfigIntegration (5 tests). Git commit 98978c5 shows tests/test_cache.py added with 321 insertions."
+    },
+    {
+      "text": "The report correctly states that no UI/e2e testing is needed",
+      "passed": true,
+      "evidence": "Git commit message states: \"No UI components: e2e/UI testing correctly identified as not applicable\". The report makes no mention of needing UI or e2e tests, and the prompt explicitly stated \"There are no UI components or frontend code in this repo.\""
+    },
+    {
+      "text": "No e2e tests were created (since there is no UI)",
+      "passed": true,
+      "evidence": "The commit (98978c5) shows only unit test files created: tests/test_cache.py and tests/test_config.py. No e2e test files exist in the outputs directory (only cache.py, conftest.py, pr-review-report.md, test_cache.py)."
+    },
+    {
+      "text": "The bare except clause was fixed to catch specific exceptions",
+      "passed": true,
+      "evidence": "The git diff shows the bare `except:` block was removed entirely. The fix moved iteration inside the lock (making KeyError impossible), so no except clause is needed at all. Report states: \"Removed entirely (no longer needed after fixing the race condition)\". The fixed cache.py (line 97-101) shows `keys_to_remove = [k for k in self._store if k.startswith(prefix)]` and `del self._store[key]` both inside `with self._lock:`, with no except clause. This is a valid fix — the bare except was eliminated rather than narrowed, which is even better."
+    },
+    {
+      "text": "The negative TTL handling was fixed",
+      "passed": true,
+      "evidence": "Git diff shows `if ttl < 0: raise ValueError(f\"TTL must be non-negative, got {ttl}\")` added to CacheEntry.__init__ (cache.py lines 19-20), and `if default_ttl < 0: raise ValueError(...)` added to Cache.__init__ (cache.py lines 47-48). Tests confirm: test_negative_ttl_raises_value_error, test_negative_default_ttl_raises, test_set_with_negative_ttl_raises."
+    },
+    {
+      "text": "A pr-review-report.md file was generated with all required sections",
+      "passed": true,
+      "evidence": "pr-review-report.md exists (99 lines) with sections: Summary (line 11), Bugs Found and Fixed (line 17), Design Issues (line 30), Test Coverage (line 58), Files Modified (line 86), and Verdict (line 96)."
+    },
+    {
+      "text": "A git commit was created with the fixes and new tests",
+      "passed": true,
+      "evidence": "Git log shows commit 98978c5 \"chore(pr-review): auto-fix issues, add missing tests, and generate review report\" which modified src/cache.py, tests/test_cache.py, tests/conftest.py, tests/test_config.py, and pr-review-report.md (547 insertions, 37 deletions)."
+    },
+    {
+      "text": "The report does NOT mention missing UI testing as a gap",
+      "passed": true,
+      "evidence": "The report's \"Coverage gaps remaining\" section (lines 79-82) mentions only: (1) no concurrency stress tests and (2) dependencies not installed so pytest could not be executed. No mention of UI testing, e2e testing, or frontend anywhere in the report. The word 'UI' does not appear in the report."
+    }
+  ],
+  "summary": {
+    "passed": 11,
+    "failed": 0,
+    "total": 11,
+    "pass_rate": 1.0
+  }
+}

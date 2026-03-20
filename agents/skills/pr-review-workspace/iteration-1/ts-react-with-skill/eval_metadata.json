@@ -1,0 +1,21 @@
+{
+  "eval_id": 1,
+  "eval_name": "ts-react-with-skill",
+  "prompt": "Review this PR. The repo is a Next.js TypeScript app and I've already checked out the feature branch. The PR adds a user profile page with an edit form and a new API route.",
+  "assertions": [
+    "The report identifies the XSS vulnerability in UserProfile component",
+    "The report identifies the SQL injection in the API route",
+    "The report identifies missing authentication on the API route",
+    "The report identifies missing null check on optional data",
+    "New unit tests were created for the UserProfile component",
+    "New unit tests were created for the API route",
+    "E2E tests were created or attempted for the user profile page",
+    "Screenshots were captured (or attempted) for the UI flow",
+    "The XSS vulnerability was fixed in the source code",
+    "The SQL injection was fixed in the source code",
+    "A pr-review-report.md file was generated with all required sections",
+    "Test coverage numbers are included in the report for changed files",
+    "A git commit was created with the fixes and new tests",
+    "The report correctly identifies which user flows were affected"
+  ]
+}

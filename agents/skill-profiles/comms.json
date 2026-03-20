@@ -1,0 +1,13 @@
+{
+  "description": "Writing and communication stack on top of the daily baseline.",
+  "extends": ["daily"],
+  "include": [
+    "email-operations",
+    "email-reply-style",
+    "imagegen",
+    "notion-knowledge-capture",
+    "prose-diff-review",
+    "slides",
+    "writing-iteration-loop"
+  ]
+}
