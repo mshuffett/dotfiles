@@ -14,7 +14,6 @@
     "tavus"
   ],
   "hooks": {
-    "UserPromptSubmit": [],
     "Stop": [
       {
         "hooks": [
@@ -61,7 +60,30 @@
         ]
       }
     ],
-    "PermissionRequest": []
+    "PostToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/michael/.claude/hooks/gsd-context-monitor.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/michael/.claude/hooks/gsd-prompt-guard.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
   },
   "statusLine": {
     "type": "command",
@@ -105,10 +127,11 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "medium",
   "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true,
   "disabledMcpServers": [
-    "playwright"
+    "playwright",
+    "heyreach"
   ]
 }

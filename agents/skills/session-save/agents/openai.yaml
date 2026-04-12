@@ -1,0 +1,4 @@
+interface:
+  display_name: "Session Save"
+  short_description: "Capture runtime, directory, and session ids"
+  default_prompt: "Use $session-save to identify the current session or save a resumable handoff with the directory, session id, state, and next steps."

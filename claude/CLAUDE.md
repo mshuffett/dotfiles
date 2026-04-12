@@ -80,7 +80,7 @@ Skills are one of the primary methods I have for improving and remembering thing
 
 **Editing This File**
 
-Invoke `memory-placement` skill first when available; otherwise, be explicit about what belongs in this file vs a new skill, and keep changes small and reviewable. This file is symlinked to `~/.dotfiles/claude/CLAUDE.md` — commit changes there.
+Invoke `memory-placement` skill first when available; otherwise, be explicit about what belongs in this file vs a new skill, and keep changes small and reviewable. The Claude source of truth lives at `~/.dotfiles/claude/CLAUDE.md`.
 
 **Safety**
 

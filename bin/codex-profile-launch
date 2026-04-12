@@ -5,6 +5,8 @@ REAL_HOME="${HOME}"
 DOTFILES_DIR="${DOTFILES_DIR:-$REAL_HOME/.dotfiles}"
 STATE_FILE="$REAL_HOME/.config/skill-profile/state.json"
 OVERLAY_BASE_DIR="$REAL_HOME/.local/share/skill-profile/codex-homes"
+REPO_OVERRIDE_BASE_DIR="$DOTFILES_DIR/codex/profile-overrides"
+LOCAL_OVERRIDE_BASE_DIR="$REAL_HOME/.config/skill-profile/codex-overrides"
 REAL_CODEX_DIR="$REAL_HOME/.codex"
 REAL_AGENTS_DIR="$REAL_HOME/.agents"
 
@@ -36,6 +38,22 @@ link_children_except_skills() {
     if [[ -e "$dst_path" && ! -L "$dst_path" ]]; then
       continue
     fi
+    ensure_symlink "$child" "$dst_path"
+  done < <(find "$src_dir" -mindepth 1 -maxdepth 1 -print | sort)
+}
+
+link_override_children() {
+  local src_dir="$1"
+  local dst_dir="$2"
+
+  [[ -d "$src_dir" ]] || return 0
+  mkdir -p "$dst_dir"
+
+  while IFS= read -r child; do
+    local name
+    local dst_path
+    name="$(basename "$child")"
+    dst_path="$dst_dir/$name"
     ensure_symlink "$child" "$dst_path"
   done < <(find "$src_dir" -mindepth 1 -maxdepth 1 -print | sort)
 }
@@ -78,6 +96,25 @@ sync_profile_skills() {
   done < <("$DOTFILES_DIR/bin/skill-profile" resolve "$profile")
 }
 
+apply_profile_overrides() {
+  local profile="$1"
+  local overlay_home="$2"
+
+  link_override_children \
+    "$REPO_OVERRIDE_BASE_DIR/$profile/.codex" \
+    "$overlay_home/.codex"
+  link_override_children \
+    "$REPO_OVERRIDE_BASE_DIR/$profile/.agents" \
+    "$overlay_home/.agents"
+
+  link_override_children \
+    "$LOCAL_OVERRIDE_BASE_DIR/$profile/.codex" \
+    "$overlay_home/.codex"
+  link_override_children \
+    "$LOCAL_OVERRIDE_BASE_DIR/$profile/.agents" \
+    "$overlay_home/.agents"
+}
+
 build_overlay() {
   local profile="$1"
   local overlay_home="$2"
@@ -86,6 +123,7 @@ build_overlay() {
   link_children_except_skills "$REAL_CODEX_DIR" "$overlay_home/.codex"
   link_children_except_skills "$REAL_AGENTS_DIR" "$overlay_home/.agents"
   sync_profile_skills "$profile" "$overlay_home/.codex/skills"
+  apply_profile_overrides "$profile" "$overlay_home"
 }
 
 profile_override=""

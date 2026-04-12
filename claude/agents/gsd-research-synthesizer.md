@@ -3,8 +3,6 @@ name: gsd-research-synthesizer
 description: Synthesizes research outputs from parallel researcher agents into SUMMARY.md. Spawned by /gsd:new-project after 4 researcher agents complete.
 tools: Read, Write, Bash
 color: purple
-skills:
-  - gsd-synthesizer-workflow
 # hooks:
 #   PostToolUse:
 #     - matcher: "Write|Edit"
@@ -132,7 +130,7 @@ Identify gaps that couldn't be resolved and need attention during planning.
 
 **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Use template: /Users/michael/.claude/get-shit-done/templates/research-project/SUMMARY.md
+Use template: $HOME/.claude/get-shit-done/templates/research-project/SUMMARY.md
 
 Write to `.planning/research/SUMMARY.md`
 
@@ -152,7 +150,7 @@ Return brief confirmation with key points for the orchestrator.
 
 <output_format>
 
-Use template: /Users/michael/.claude/get-shit-done/templates/research-project/SUMMARY.md
+Use template: $HOME/.claude/get-shit-done/templates/research-project/SUMMARY.md
 
 Key sections:
 - Executive Summary (2-3 paragraphs)

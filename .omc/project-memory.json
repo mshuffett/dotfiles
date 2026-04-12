@@ -1,0 +1,423 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1775915687574,
+  "projectRoot": "/Users/michael/.dotfiles",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "bin",
+      "docs",
+      "src"
+    ],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "agents": {
+      "path": "agents",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687517,
+      "keyFiles": [
+        "README.md"
+      ]
+    },
+    "bin": {
+      "path": "bin",
+      "purpose": "Executable scripts",
+      "fileCount": 62,
+      "lastAccessed": 1775915687518,
+      "keyFiles": [
+        "add-secret",
+        "agent-recall",
+        "batch-wa",
+        "claude-continuous",
+        "claude-daily"
+      ]
+    },
+    "claude": {
+      "path": "claude",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1775915687518,
+      "keyFiles": [
+        "CLAUDE.backup.2025-11-06.md",
+        "CLAUDE.md",
+        "CLAUDE.personal.md",
+        "settings.json",
+        "statusline.sh"
+      ]
+    },
+    "claude-plugins": {
+      "path": "claude-plugins",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1775915687518,
+      "keyFiles": []
+    },
+    "clawd-founders": {
+      "path": "clawd-founders",
+      "purpose": null,
+      "fileCount": 9,
+      "lastAccessed": 1775915687518,
+      "keyFiles": [
+        "AGENTS.md",
+        "HEARTBEAT.md",
+        "IDENTITY.md",
+        "SOUL.md",
+        "TOOLS.md"
+      ]
+    },
+    "clawdbot": {
+      "path": "clawdbot",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1775915687518,
+      "keyFiles": [
+        "clawdbot.json",
+        "clawdbot.json.bak"
+      ]
+    },
+    "codex": {
+      "path": "codex",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687519,
+      "keyFiles": [
+        "config.toml"
+      ]
+    },
+    "colorls": {
+      "path": "colorls",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687519,
+      "keyFiles": [
+        "dark_colors.yaml"
+      ]
+    },
+    "completions": {
+      "path": "completions",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687519,
+      "keyFiles": [
+        "_dev"
+      ]
+    },
+    "config": {
+      "path": "config",
+      "purpose": "Configuration files",
+      "fileCount": 1,
+      "lastAccessed": 1775915687519,
+      "keyFiles": [
+        "notion-openapi.json"
+      ]
+    },
+    "dev-server": {
+      "path": "dev-server",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1775915687519,
+      "keyFiles": [
+        "Dockerfile",
+        "setup.sh"
+      ]
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1775915687519,
+      "keyFiles": []
+    },
+    "functions": {
+      "path": "functions",
+      "purpose": null,
+      "fileCount": 10,
+      "lastAccessed": 1775915687519,
+      "keyFiles": [
+        "_boom",
+        "_brew",
+        "_c",
+        "_git-rm",
+        "_h"
+      ]
+    },
+    "fzf": {
+      "path": "fzf",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687519,
+      "keyFiles": [
+        "fzf.zsh"
+      ]
+    },
+    "ghostty": {
+      "path": "ghostty",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1775915687520,
+      "keyFiles": [
+        "config",
+        "morning.config"
+      ]
+    },
+    "git": {
+      "path": "git",
+      "purpose": null,
+      "fileCount": 5,
+      "lastAccessed": 1775915687520,
+      "keyFiles": [
+        "aliases.zsh",
+        "gitconfig.symlink",
+        "gitconfig.symlink.example",
+        "gitignore.symlink",
+        "tigrc.symlink"
+      ]
+    },
+    "grml": {
+      "path": "grml",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687520,
+      "keyFiles": [
+        "grml.zsh"
+      ]
+    },
+    "homebrew": {
+      "path": "homebrew",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1775915687520,
+      "keyFiles": [
+        "brew-wrapper.zsh",
+        "homebrew.zsh"
+      ]
+    },
+    "host": {
+      "path": "host",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687521,
+      "keyFiles": [
+        "alias.zsh"
+      ]
+    },
+    "launchd": {
+      "path": "launchd",
+      "purpose": null,
+      "fileCount": 4,
+      "lastAccessed": 1775915687521,
+      "keyFiles": [
+        "com.michael.claude-evening.plist",
+        "com.michael.claude-morning.plist",
+        "com.michael.email-index.plist",
+        "com.mshuffett.wacli-sync.plist"
+      ]
+    },
+    "lazygit": {
+      "path": "lazygit",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687521,
+      "keyFiles": [
+        "config.yml"
+      ]
+    },
+    "nvim": {
+      "path": "nvim",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1775915687521,
+      "keyFiles": []
+    },
+    "p10k": {
+      "path": "p10k",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687521,
+      "keyFiles": [
+        "p10k.zsh"
+      ]
+    },
+    "plans": {
+      "path": "plans",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687521,
+      "keyFiles": [
+        "skill-migration-subagent-prompt.md"
+      ]
+    },
+    "projects": {
+      "path": "projects",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1775915687521,
+      "keyFiles": []
+    },
+    "raycast": {
+      "path": "raycast",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1775915687522,
+      "keyFiles": [
+        "ghostty-notmux.sh",
+        "script-command.template.sh"
+      ]
+    },
+    "ruby": {
+      "path": "ruby",
+      "purpose": null,
+      "fileCount": 3,
+      "lastAccessed": 1775915687522,
+      "keyFiles": [
+        "aliases.zsh",
+        "completion.zsh",
+        "rbenv.zsh"
+      ]
+    },
+    "script": {
+      "path": "script",
+      "purpose": null,
+      "fileCount": 12,
+      "lastAccessed": 1775915687522,
+      "keyFiles": [
+        "BOOTSTRAP_README.md",
+        "SCRIPTS_EXPLAINED.md",
+        "agent-regress",
+        "agent_regress.py",
+        "agents-skill-lint.sh"
+      ]
+    },
+    "sounds": {
+      "path": "sounds",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687522,
+      "keyFiles": [
+        "elevenlabs-notification-7.mp3"
+      ]
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1775915687522,
+      "keyFiles": []
+    },
+    "system": {
+      "path": "system",
+      "purpose": null,
+      "fileCount": 4,
+      "lastAccessed": 1775915687522,
+      "keyFiles": [
+        "aliases.zsh",
+        "env.zsh",
+        "grc.zsh",
+        "keys.zsh"
+      ]
+    },
+    "tmux": {
+      "path": "tmux",
+      "purpose": null,
+      "fileCount": 4,
+      "lastAccessed": 1775915687522,
+      "keyFiles": [
+        "cheatsheet.txt",
+        "install.sh",
+        "status-bar-options.md",
+        "tmux.conf.symlink"
+      ]
+    },
+    "todoist-automation": {
+      "path": "todoist-automation",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687522,
+      "keyFiles": [
+        "prompt-improvements.md"
+      ]
+    },
+    "vscode": {
+      "path": "vscode",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1775915687522,
+      "keyFiles": [
+        "README.md",
+        "extensions.txt"
+      ]
+    },
+    "wallpaper": {
+      "path": "wallpaper",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1775915687522,
+      "keyFiles": [
+        "TVDBMOt.png"
+      ]
+    },
+    "zsh": {
+      "path": "zsh",
+      "purpose": null,
+      "fileCount": 10,
+      "lastAccessed": 1775915687522,
+      "keyFiles": [
+        "aliases.zsh",
+        "completion.zsh",
+        "config.zsh",
+        "fpath.zsh",
+        "my-agnoster.zsh-theme"
+      ]
+    },
+    "claude/scripts": {
+      "path": "claude/scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 7,
+      "lastAccessed": 1775915687523,
+      "keyFiles": [
+        "capture-session-id.sh",
+        "check-claude-size.sh",
+        "list-command-descriptions.sh"
+      ]
+    },
+    "tmux/scripts": {
+      "path": "tmux/scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 3,
+      "lastAccessed": 1775915687524,
+      "keyFiles": [
+        "fuzzy-everything-preview.sh",
+        "fuzzy-everything.sh",
+        "tmux-sessions.sh"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}

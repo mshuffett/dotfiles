@@ -192,3 +192,8 @@ alias cw='claude-worktree'
 alias ...='cd ../..'
 alias cf='fresh --dangerously-skip-permissions'
 alias cm='cm --dangerously-skip-permissions'
+
+# oh-my-claudecode isolated sandbox — separate $CLAUDE_CONFIG_DIR so its
+# plugins/agents/skills/memory don't leak into the main ~/.claude.
+# Scratch project: ~/scratch/omc-test  (cd there before running for the cleanest test)
+comc() { CLAUDE_CONFIG_DIR=~/.claude-omc command claude --dangerously-skip-permissions "$@"; }

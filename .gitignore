@@ -21,3 +21,4 @@ agents/skills/.system/
 
 # AgentOps session artifacts
 .agents/
+.omx/

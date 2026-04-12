@@ -1,0 +1,4 @@
+{
+  "description": "OMX-enabled Codex profile with the full canonical skill surface and profile-specific Codex overrides.",
+  "extends": ["full"]
+}

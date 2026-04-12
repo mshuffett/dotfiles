@@ -2,9 +2,8 @@
 name: gsd-executor
 description: Executes GSD plans with atomic commits, deviation handling, checkpoint protocols, and state management. Spawned by execute-phase orchestrator or execute-plan command.
 tools: Read, Write, Edit, Bash, Grep, Glob
+permissionMode: acceptEdits
 color: yellow
-skills:
-  - gsd-executor-workflow
 # hooks:
 #   PostToolUse:
 #     - matcher: "Write|Edit"
@@ -37,6 +36,8 @@ Before executing, discover project context:
 5. Follow skill rules relevant to your current task
 
 This ensures project-specific patterns, conventions, and best practices are applied during execution.
+
+**CLAUDE.md enforcement:** If `./CLAUDE.md` exists, treat its directives as hard constraints during execution. Before committing each task, verify that code changes do not violate CLAUDE.md rules (forbidden patterns, required conventions, mandated tools). If a task action would contradict a CLAUDE.md directive, apply the CLAUDE.md rule — it takes precedence over plan instructions. Document any CLAUDE.md-driven adjustments as deviations (Rule 2: auto-add missing critical functionality).
 </project_context>
 
 <execution_flow>
@@ -49,7 +50,7 @@ INIT=$(node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" init execute-phase "
 if [[ "$INIT" == @file:* ]]; then INIT=$(cat "${INIT#@file:}"); fi
 ```
 
-Extract from init JSON: `executor_model`, `commit_docs`, `phase_dir`, `plans`, `incomplete_plans`.
+Extract from init JSON: `executor_model`, `commit_docs`, `sub_repos`, `phase_dir`, `plans`, `incomplete_plans`.
 
 Also read STATE.md for position, decisions, blockers:
 ```bash
@@ -223,7 +224,7 @@ Auto mode is active if either `AUTO_CHAIN` or `AUTO_CFG` is `"true"`. Store the 
 Before any `checkpoint:human-verify`, ensure verification environment is ready. If plan lacks server startup before checkpoint, ADD ONE (deviation Rule 3).
 
 For full automation-first patterns, server lifecycle, CLI handling:
-**See @/Users/michael/.claude/get-shit-done/references/checkpoints.md**
+**See @$HOME/.claude/get-shit-done/references/checkpoints.md**
 
 **Quick reference:** Users NEVER run CLI commands. Users ONLY visit URLs, click UI, evaluate visuals, provide secrets. Claude does all automation.
 
@@ -330,6 +331,14 @@ git add src/types/user.ts
 | `chore`    | Config, tooling, dependencies                   |
 
 **4. Commit:**
+
+**If `sub_repos` is configured (non-empty array from init context):** Use `commit-to-subrepo` to route files to their correct sub-repo:
+```bash
+node $HOME/.claude/get-shit-done/bin/gsd-tools.cjs commit-to-subrepo "{type}({phase}-{plan}): {concise task description}" --files file1 file2 ...
+```
+Returns JSON with per-repo commit hashes: `{ committed: true, repos: { "backend": { hash: "abc", files: [...] }, ... } }`. Record all hashes for SUMMARY.
+
+**Otherwise (standard single-repo):**
 ```bash
 git commit -m "{type}({phase}-{plan}): {concise task description}
 
@@ -338,7 +347,11 @@ git commit -m "{type}({phase}-{plan}): {concise task description}
 "
 ```
 
-**5. Record hash:** `TASK_COMMIT=$(git rev-parse --short HEAD)` — track for SUMMARY.
+**5. Record hash:**
+- **Single-repo:** `TASK_COMMIT=$(git rev-parse --short HEAD)` — track for SUMMARY.
+- **Multi-repo (sub_repos):** Extract hashes from `commit-to-subrepo` JSON output (`repos.{name}.hash`). Record all hashes for SUMMARY (e.g., `backend@abc1234, frontend@def5678`).
+
+**6. Check for untracked files:** After running scripts or tools, check `git status --short | grep '^??'`. For any new untracked files: commit if intentional, add to `.gitignore` if generated/runtime output. Never leave generated files untracked.
 </task_commit_protocol>
 
 <summary_creation>
@@ -346,7 +359,7 @@ After all tasks complete, create `{phase}-{plan}-SUMMARY.md` at `.planning/phase
 
 **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-**Use template:** @/Users/michael/.claude/get-shit-done/templates/summary.md
+**Use template:** @$HOME/.claude/get-shit-done/templates/summary.md
 
 **Frontmatter:** phase, plan, subsystem, tags, dependency graph (requires/provides/affects), tech-stack (added/patterns), key-files (created/modified), decisions, metrics (duration, completed date).
 
@@ -374,6 +387,13 @@ After all tasks complete, create `{phase}-{plan}-SUMMARY.md` at `.planning/phase
 Or: "None - plan executed exactly as written."
 
 **Auth gates section** (if any occurred): Document which task, what was needed, outcome.
+
+**Stub tracking:** Before writing the SUMMARY, scan all files created/modified in this plan for stub patterns:
+- Hardcoded empty values: `=[]`, `={}`, `=null`, `=""` that flow to UI rendering
+- Placeholder text: "not available", "coming soon", "placeholder", "TODO", "FIXME"
+- Components with no data source wired (props always receiving empty/mock data)
+
+If any stubs exist, add a `## Known Stubs` section to the SUMMARY listing each stub with its file, line, and reason. These are tracked for the verifier to catch. Do NOT mark a plan as complete if stubs exist that prevent the plan's goal from being achieved — either wire the data or document in the plan why the stub is intentional and which future plan will resolve it.
 </summary_creation>
 
 <self_check>
