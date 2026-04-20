@@ -12,12 +12,19 @@ Common commands:
 
 ```bash
 skill-profile list
-skill-profile resolve barebones
+skill-profile resolve recommended
+skill-profile apply recommended --runtime claude
 skill-profile apply barebones --runtime codex
-skill-profile apply full --runtime claude
 skill-profile status
 skill-profile restore --runtime codex
-claude --skill-profile barebones -p "What skills are available?"
+
+# Adaptive loop (human-in-the-loop skill self-improvement):
+skill-profile stats                 # firing counts, pending proposals
+skill-profile replay <skill>        # test against mistake corpus
+skill-profile reflect <skill>       # generate evidence-backed edit proposal
+skill-profile review                # read pending proposals
+
+claude --skill-profile recommended -p "What skills are available?"
 codex --skill-profile full exec "What skills are available?"
 ```
 
@@ -27,15 +34,24 @@ Profile format:
 {
   "description": "Human-readable summary",
   "extends": ["daily"],
+  "skillSources": ["canonical"],
   "include": ["coach", "todoist", "web-*"],
-  "exclude": ["imagegen", "slides"]
+  "exclude": ["imagegen", "slides"],
+  "includeArchived": false,
+  "enabledPlugins": {
+    "agentops@agentops-marketplace": false,
+    "ralph-loop@claude-plugins-official": false
+  }
 }
 ```
 
 Rules:
 
 - `extends` composes other profiles first.
+- `skillSources` defaults to `["canonical"]`. Use `["omx"]` to load upstream `oh-my-codex` skills instead of `agents/skills/`.
 - `include` and `exclude` accept exact skill names or `*` wildcards.
+- `includeArchived` defaults to `false`. Skills whose `SKILL.md` resolves outside `agents/skills/` (archive symlinks) are hidden unless a profile in the chain explicitly sets `true`.
+- `enabledPlugins` (Claude only) rewrites matching keys in `~/.claude/settings.json`. The tool snapshots the original map on first apply, applies new profiles as `baseline + overrides`, and restores the snapshot on `restore`. Codex ignores this field.
 - `full` is intended to track the complete canonical set.
 - Use `--runtime codex`, `--runtime claude`, or `--runtime both` to choose which runtime changes.
 - Use `--skill-profile <name>` on the shell `claude` or `codex` command for a one-off profile without changing the saved default.

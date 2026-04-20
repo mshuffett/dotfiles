@@ -6,6 +6,7 @@ import {
   readFileSync,
   readdirSync,
   readlinkSync,
+  realpathSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -13,6 +14,7 @@ import {
 import { homedir } from "node:os";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 
 type RuntimeName = "claude" | "codex";
 type RuntimeSelection = RuntimeName | "both";
@@ -22,11 +24,15 @@ type ProfileDefinition = {
   extends?: string[];
   include?: string[];
   exclude?: string[];
+  skillSources?: string[];
+  enabledPlugins?: Record<string, boolean>;
+  includeArchived?: boolean;
 };
 
 type RuntimeState = {
   currentProfile?: string;
   previousTarget?: string | null;
+  previousEnabledPlugins?: Record<string, boolean> | null;
   updatedAt?: string;
 };
 
@@ -42,6 +48,7 @@ const CONFIG_DIR = join(homedir(), ".config", "skill-profile");
 const LOCAL_PROFILE_DIR = join(CONFIG_DIR, "profiles");
 const STATE_FILE = join(CONFIG_DIR, "state.json");
 const DATA_DIR = join(homedir(), ".local", "share", "skill-profile");
+const CLAUDE_SETTINGS_FILE = join(homedir(), ".claude", "settings.json");
 
 const RUNTIMES: Record<
   RuntimeName,
@@ -91,9 +98,16 @@ Usage:
   skill-profile apply <profile> [--runtime codex|claude|both]
   skill-profile sync [--runtime codex|claude|both]
   skill-profile restore [--runtime codex|claude|both]
+  skill-profile stats [--since Nd]
+  skill-profile replay <skill> [--since Nd] [--corpus mistakes|keywords]
+  skill-profile reflect <skill>
+  skill-profile review
 
 Defaults:
   --runtime defaults to "both" for apply/sync/restore and status.
+
+Profiles can also declare "enabledPlugins" (Claude only) to toggle plugins
+in ~/.claude/settings.json. See agents/skill-profiles/README.md.
 
 Profiles are loaded from:
   ${PROFILE_DIR}
@@ -137,10 +151,77 @@ function resolveRuntimeNames(selection: RuntimeSelection): RuntimeName[] {
   return selection === "both" ? ["claude", "codex"] : [selection];
 }
 
-function listCanonicalSkills(): string[] {
-  return readdirSync(CANONICAL_SKILLS_DIR)
-    .filter((name) => existsSync(join(CANONICAL_SKILLS_DIR, name, "SKILL.md")))
-    .sort();
+function discoverOmxSkillsDir(): string {
+  const shell = process.env.SHELL || "/bin/bash";
+  const result = spawnSync(shell, ["-lc", "command -v omx"], {
+    encoding: "utf-8",
+    env: process.env,
+  });
+
+  const omxBin = result.status === 0 ? result.stdout.trim() : "";
+  if (!omxBin) {
+    die('Unable to locate `omx` on PATH for profile skillSources=["omx"].');
+  }
+
+  const omxRealBin = realpathSync(omxBin);
+  const skillsDir = resolve(dirname(omxRealBin), "..", "..", "skills");
+  if (!existsSync(skillsDir)) {
+    die(`Unable to find oh-my-codex skills directory at ${skillsDir}`);
+  }
+
+  return skillsDir;
+}
+
+function sourceDirFor(source: string): string {
+  switch (source) {
+    case "canonical":
+      return CANONICAL_SKILLS_DIR;
+    case "omx":
+      return discoverOmxSkillsDir();
+    default:
+      die(`Unknown skill source: ${source}`);
+  }
+}
+
+function isArchivedPath(path: string): boolean {
+  let resolved: string;
+  try {
+    resolved = realpathSync(path);
+  } catch {
+    return false;
+  }
+  return /[/.]archive[-./]|skills\.archive-/.test(resolved);
+}
+
+function archivedSkillNames(catalog: Map<string, string>): Set<string> {
+  const archived = new Set<string>();
+  for (const [name, path] of catalog.entries()) {
+    if (isArchivedPath(path)) archived.add(name);
+  }
+  return archived;
+}
+
+function buildSkillCatalog(sourceNames?: string[]): Map<string, string> {
+  const sources = sourceNames?.length ? sourceNames : ["canonical"];
+  const catalog = new Map<string, string>();
+
+  for (const source of sources) {
+    const dir = sourceDirFor(source);
+    const entries = readdirSync(dir)
+      .filter((name) => existsSync(join(dir, name, "SKILL.md")))
+      .sort();
+
+    for (const name of entries) {
+      const path = join(dir, name);
+      const existing = catalog.get(name);
+      if (existing && existing !== path) {
+        die(`Skill ${name} exists in multiple sources: ${existing} and ${path}`);
+      }
+      catalog.set(name, path);
+    }
+  }
+
+  return catalog;
 }
 
 function listProfileFiles(dir: string): string[] {
@@ -193,8 +274,14 @@ function expandProfile(
   name: string,
   profiles: Map<string, ProfileDefinition>,
   skills: string[],
+  archivedSkills: Set<string>,
   stack: string[] = []
-): { description: string; skills: string[] } {
+): {
+  description: string;
+  skills: string[];
+  enabledPlugins: Record<string, boolean>;
+  includeArchived: boolean;
+} {
   if (stack.includes(name)) {
     die(`Profile cycle detected: ${[...stack, name].join(" -> ")}`);
   }
@@ -205,18 +292,35 @@ function expandProfile(
   }
 
   const selected = new Set<string>();
+  const plugins: Record<string, boolean> = {};
+  let includeArchived = false;
 
   for (const parent of definition.extends ?? []) {
-    const expanded = expandProfile(parent, profiles, skills, [...stack, name]);
+    const expanded = expandProfile(parent, profiles, skills, archivedSkills, [
+      ...stack,
+      name,
+    ]);
     for (const skill of expanded.skills) selected.add(skill);
+    Object.assign(plugins, expanded.enabledPlugins);
+    if (expanded.includeArchived) includeArchived = true;
   }
 
   for (const skill of matchSkills(definition.include, skills)) selected.add(skill);
   for (const skill of matchSkills(definition.exclude, skills)) selected.delete(skill);
+  Object.assign(plugins, definition.enabledPlugins ?? {});
+  if (definition.includeArchived !== undefined) {
+    includeArchived = definition.includeArchived;
+  }
+
+  if (!includeArchived) {
+    for (const archived of archivedSkills) selected.delete(archived);
+  }
 
   return {
     description: definition.description ?? "",
     skills: [...selected].sort(),
+    enabledPlugins: plugins,
+    includeArchived,
   };
 }
 
@@ -234,6 +338,10 @@ function migrateState(raw: unknown): State {
         currentProfile: current.currentProfile,
         previousTarget:
           current.previousTarget === undefined ? undefined : current.previousTarget,
+        previousEnabledPlugins:
+          current.previousEnabledPlugins === undefined
+            ? undefined
+            : current.previousEnabledPlugins,
         updatedAt: current.updatedAt,
       };
     }
@@ -321,32 +429,133 @@ function capturePreviousTarget(state: State, runtime: RuntimeName) {
   }
 }
 
-function rebuildActiveDir(runtime: RuntimeName, skills: string[]) {
+function readClaudeSettings(): Record<string, unknown> | null {
+  if (!existsSync(CLAUDE_SETTINGS_FILE)) return null;
+  try {
+    return readJsonFile<Record<string, unknown>>(CLAUDE_SETTINGS_FILE);
+  } catch (error) {
+    die(`Failed to parse ${CLAUDE_SETTINGS_FILE}: ${(error as Error).message}`);
+  }
+}
+
+function writeClaudeSettings(settings: Record<string, unknown>) {
+  writeJsonFile(CLAUDE_SETTINGS_FILE, settings);
+}
+
+function applyClaudePlugins(
+  state: State,
+  pluginMap: Record<string, boolean>
+): { changed: number; managed: number } {
+  const settings = readClaudeSettings();
+  if (!settings) {
+    if (Object.keys(pluginMap).length > 0) {
+      console.warn(
+        `${yellow("Skipping plugin toggles:")} ${CLAUDE_SETTINGS_FILE} not found.`
+      );
+    }
+    return { changed: 0, managed: 0 };
+  }
+
+  const runtimeState = state.runtimes.claude;
+
+  if (runtimeState.previousEnabledPlugins !== undefined) {
+    if (runtimeState.previousEnabledPlugins === null) {
+      delete settings.enabledPlugins;
+    } else {
+      settings.enabledPlugins = { ...runtimeState.previousEnabledPlugins };
+    }
+  } else {
+    const currentPlugins =
+      (settings.enabledPlugins as Record<string, boolean> | undefined) ?? null;
+    runtimeState.previousEnabledPlugins =
+      currentPlugins === null ? null : { ...currentPlugins };
+  }
+
+  const baseline =
+    (settings.enabledPlugins as Record<string, boolean> | undefined) ?? {};
+  const merged = { ...baseline };
+  let changed = 0;
+  for (const [name, enabled] of Object.entries(pluginMap)) {
+    if (merged[name] !== enabled) changed += 1;
+    merged[name] = enabled;
+  }
+
+  if (Object.keys(merged).length > 0 || settings.enabledPlugins !== undefined) {
+    settings.enabledPlugins = merged;
+  }
+  writeClaudeSettings(settings);
+  return { changed, managed: Object.keys(pluginMap).length };
+}
+
+function restoreClaudePlugins(state: State) {
+  const runtimeState = state.runtimes.claude;
+  const previous = runtimeState.previousEnabledPlugins;
+  if (previous === undefined) return;
+
+  const settings = readClaudeSettings();
+  if (!settings) {
+    runtimeState.previousEnabledPlugins = undefined;
+    return;
+  }
+
+  if (previous === null) {
+    delete settings.enabledPlugins;
+  } else {
+    settings.enabledPlugins = previous;
+  }
+
+  writeClaudeSettings(settings);
+  runtimeState.previousEnabledPlugins = undefined;
+}
+
+function rebuildActiveDir(
+  runtime: RuntimeName,
+  skillCatalog: Map<string, string>,
+  skills: string[]
+) {
   const activeDir = RUNTIMES[runtime].activeDir;
   rmSync(activeDir, { recursive: true, force: true });
   ensureDir(activeDir);
 
   for (const skill of skills) {
-    symlinkSync(join(CANONICAL_SKILLS_DIR, skill), join(activeDir, skill));
+    const skillPath = skillCatalog.get(skill);
+    if (!skillPath) {
+      die(`Missing skill path for ${skill}`);
+    }
+    symlinkSync(skillPath, join(activeDir, skill));
   }
 }
 
 function applyProfile(profile: string, selection: RuntimeSelection) {
-  const skills = listCanonicalSkills();
   const profiles = loadProfiles();
-  const expanded = expandProfile(profile, profiles, skills);
+  const definition = profiles.get(profile);
+  if (!definition) {
+    die(`Unknown profile: ${profile}`);
+  }
+  const skillCatalog = buildSkillCatalog(definition.skillSources);
+  const archived = archivedSkillNames(skillCatalog);
+  const expanded = expandProfile(profile, profiles, [...skillCatalog.keys()], archived);
   const state = loadState();
 
   for (const runtime of resolveRuntimeNames(selection)) {
     capturePreviousTarget(state, runtime);
-    rebuildActiveDir(runtime, expanded.skills);
+    rebuildActiveDir(runtime, skillCatalog, expanded.skills);
     pointLink(RUNTIMES[runtime].linkPath, RUNTIMES[runtime].activeDir);
     state.runtimes[runtime].currentProfile = profile;
     state.runtimes[runtime].updatedAt = new Date().toISOString();
+
+    let pluginNote = "";
+    if (runtime === "claude") {
+      const { changed, managed } = applyClaudePlugins(state, expanded.enabledPlugins);
+      if (managed > 0) {
+        pluginNote = dim(` [plugins: ${changed} changed, ${managed} managed]`);
+      }
+    }
+
     console.log(
       `${green("Applied")} ${cyan(profile)} to ${RUNTIMES[runtime].label} ${dim(
         `(${expanded.skills.length} skills)`
-      )}`
+      )}${pluginNote}`
     );
   }
 
@@ -381,6 +590,10 @@ function restoreProfiles(selection: RuntimeSelection) {
       pointLink(RUNTIMES[runtime].linkPath, previous);
     }
 
+    if (runtime === "claude") {
+      restoreClaudePlugins(state);
+    }
+
     runtimeState.currentProfile = undefined;
     runtimeState.updatedAt = new Date().toISOString();
     console.log(`${green("Restored")} ${RUNTIMES[runtime].label}`);
@@ -407,15 +620,30 @@ function showStatus(selection: RuntimeSelection) {
       const managed = pointsAtManagedDir(runtime) ? green("managed") : dim("external");
       console.log(`  link: ${linkPath} -> ${rawTarget} ${dim(`(${managed})`)}`);
     }
+
+    if (runtime === "claude") {
+      const snapshot = currentState.previousEnabledPlugins;
+      if (snapshot === undefined) {
+        console.log(`  pluginSnapshot: ${dim("none (plugins unmanaged)")}`);
+      } else {
+        const count = snapshot === null ? 0 : Object.keys(snapshot).length;
+        console.log(`  pluginSnapshot: ${green(`captured (${count} entries)`)}`);
+      }
+    }
   }
 }
 
 function listProfiles() {
-  const skills = listCanonicalSkills();
   const profiles = loadProfiles();
 
   for (const name of [...profiles.keys()].sort()) {
-    const expanded = expandProfile(name, profiles, skills);
+    const definition = profiles.get(name);
+    if (!definition) {
+      die(`Unknown profile: ${name}`);
+    }
+    const skillCatalog = buildSkillCatalog(definition.skillSources);
+    const archived = archivedSkillNames(skillCatalog);
+    const expanded = expandProfile(name, profiles, [...skillCatalog.keys()], archived);
     console.log(
       `${name.padEnd(12)} ${String(expanded.skills.length).padStart(2)} skills  ${expanded.description}`
     );
@@ -423,9 +651,14 @@ function listProfiles() {
 }
 
 function showProfile(name: string) {
-  const skills = listCanonicalSkills();
   const profiles = loadProfiles();
-  const expanded = expandProfile(name, profiles, skills);
+  const definition = profiles.get(name);
+  if (!definition) {
+    die(`Unknown profile: ${name}`);
+  }
+  const skillCatalog = buildSkillCatalog(definition.skillSources);
+  const archived = archivedSkillNames(skillCatalog);
+  const expanded = expandProfile(name, profiles, [...skillCatalog.keys()], archived);
 
   console.log(`${cyan(name)} ${dim(`(${expanded.skills.length} skills)`)}`);
   if (expanded.description) {
@@ -435,12 +668,29 @@ function showProfile(name: string) {
   for (const skill of expanded.skills) {
     console.log(`- ${skill}`);
   }
+
+  const pluginEntries = Object.entries(expanded.enabledPlugins).sort(
+    ([a], [b]) => a.localeCompare(b)
+  );
+  if (pluginEntries.length > 0) {
+    console.log();
+    console.log(`${cyan("Plugins managed (Claude only):")}`);
+    for (const [plugin, enabled] of pluginEntries) {
+      const marker = enabled ? green("on ") : yellow("off");
+      console.log(`  ${marker} ${plugin}`);
+    }
+  }
 }
 
 function resolveProfile(name: string) {
-  const skills = listCanonicalSkills();
   const profiles = loadProfiles();
-  const expanded = expandProfile(name, profiles, skills);
+  const definition = profiles.get(name);
+  if (!definition) {
+    die(`Unknown profile: ${name}`);
+  }
+  const skillCatalog = buildSkillCatalog(definition.skillSources);
+  const archived = archivedSkillNames(skillCatalog);
+  const expanded = expandProfile(name, profiles, [...skillCatalog.keys()], archived);
 
   for (const skill of expanded.skills) {
     console.log(skill);
@@ -469,7 +719,7 @@ function parseRuntime(args: string[]): { runtime: RuntimeSelection; rest: string
   return { runtime, rest };
 }
 
-function main() {
+async function main() {
   const [, , command, ...args] = process.argv;
   const parsed = parseRuntime(args);
 
@@ -498,6 +748,26 @@ function main() {
     case "restore":
       restoreProfiles(parsed.runtime);
       return;
+    case "stats": {
+      const { cmdStats } = await import("./skill-adaptive");
+      cmdStats(parsed.rest);
+      return;
+    }
+    case "replay": {
+      const { cmdReplay } = await import("./skill-adaptive");
+      await cmdReplay(parsed.rest);
+      return;
+    }
+    case "reflect": {
+      const { cmdReflect } = await import("./skill-adaptive");
+      await cmdReflect(parsed.rest);
+      return;
+    }
+    case "review": {
+      const { cmdReview } = await import("./skill-adaptive");
+      await cmdReview();
+      return;
+    }
     case "-h":
     case "--help":
     case undefined:

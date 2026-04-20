@@ -1,0 +1,11 @@
+{
+  "description": "Curated Claude default: lived-in daily skills + tuned plugin toggles. Archived symlinks hidden automatically. Agentops disabled due to heavy overlap with canonical memory/learning stack.",
+  "extends": ["full"],
+  "includeArchived": false,
+  "exclude": [
+    "inbox-triage"
+  ],
+  "enabledPlugins": {
+    "agentops@agentops-marketplace": false
+  }
+}

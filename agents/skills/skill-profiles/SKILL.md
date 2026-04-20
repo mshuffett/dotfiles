@@ -78,6 +78,49 @@ bin/skill-profile show <profile>
 
 If the user wants a one-runtime experiment, apply the profile only to that runtime first instead of changing both.
 
+## Archived skill filtering
+
+Profiles hide any skill whose `SKILL.md` resolves outside the canonical `agents/skills/` directory (e.g. symlinked to `~/.agents/skills.archive-*`). Set `includeArchived: true` in a profile if you need to re-enable them.
+
+The filter is inherited through `extends`; child wins when explicitly set.
+
+## Adaptive loop commands
+
+Once telemetry and evidence accumulate, these commands let skills self-improve with human-in-the-loop review:
+
+```bash
+skill-profile stats [--since 30d]   # firing counts, tool usage, pending proposals
+skill-profile replay <skill>        # test against the mistake corpus (optional --proposed <file>)
+skill-profile reflect <skill>       # generate a diff proposal with evidence, writes to ~/.claude/skill-proposals/pending/
+skill-profile review                # read all pending proposals
+```
+
+Proposals are never auto-applied. Move files between `pending/`, `accepted/`, and `rejected/` manually. Accepted diffs should be applied with `skill-creator:skill-creator` (per CLAUDE.md).
+
+Replay uses an isolated Claude Haiku judge (via `claude -p`) to decide whether a skill's description would have fired on a known past event. Start with `--corpus mistakes` (default); extend to keywords/corrections as firing telemetry accumulates.
+
+## Plugin Toggles (Claude only)
+
+Profiles can also toggle Claude Code plugins by declaring an `enabledPlugins` map. Plugin IDs must match the keys under `enabledPlugins` in `~/.claude/settings.json` (format: `<plugin>@<marketplace>`).
+
+```json
+{
+  "description": "Daily default without heavy automation plugins.",
+  "extends": ["full"],
+  "enabledPlugins": {
+    "agentops@agentops-marketplace": false,
+    "ralph-loop@claude-plugins-official": false
+  }
+}
+```
+
+Semantics:
+
+- On `apply --runtime claude`, the tool snapshots the current `enabledPlugins` map (once, until restored), then rewrites it as **baseline + this profile's overrides**. Switching to another profile restores the baseline first, then overlays the new profile — so undeclared plugins are never "sticky" across profile switches.
+- `restore --runtime claude` puts the original map back and clears the snapshot.
+- Codex has no equivalent plugin concept, so the field is ignored for `--runtime codex`.
+- Plugin IDs are validated only by Claude Code at load time, not by this tool. Verify new IDs by inspecting `~/.claude/settings.json` after a real session has loaded them.
+
 ## Safety Rules
 
 - Do not delete skills from `agents/skills/` just to simplify a runtime surface.

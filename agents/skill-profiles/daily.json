@@ -1,6 +1,9 @@
 {
   "description": "Lower-conflict daily default: broad utility and coordination skills without the more niche labs surface.",
   "extends": ["full"],
+  "enabledPlugins": {
+    "agentops@agentops-marketplace": false
+  },
   "exclude": [
     "agent-teams",
     "develop-web-game",
