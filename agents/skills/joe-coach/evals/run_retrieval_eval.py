@@ -11,10 +11,10 @@ cases = json.loads((pathlib.Path(__file__).parent / "retrieval_cases.json").read
 emb, chunks = load_index()
 passed = 0
 for c in cases:
-    # k=10: "self-reliant" surfaces around position 8-9 for the self-reliance query;
-    # k=5 is too shallow to catch it. k=10 still makes retrieval a real guard
-    # (the correct material must rank in the top 10, not arbitrarily far down).
-    k = c.get("k", 10)
+    # k=8 matches the runtime default (retrieve.py --k 8 / SKILL.md), so this eval
+    # guards exactly what production retrieves. The "self-reliant" anchor surfaces at
+    # rank ~7 for the self-reliance query — caught at k=8 but missed at k=5.
+    k = c.get("k", 8)
     hits = rank(embed_query(c["query"]), emb, chunks, k=k)
     blob = " ".join(h["text"].lower() + " " + h["episode"].lower() for h in hits)
     ok = c["expect_substring"].lower() in blob

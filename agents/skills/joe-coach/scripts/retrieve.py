@@ -64,7 +64,7 @@ def format_md(results):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("query")
-    ap.add_argument("--k", type=int, default=5)
+    ap.add_argument("--k", type=int, default=8)
     ap.add_argument("--source", choices=["all", "snippet", "transcript"], default="all")
     args = ap.parse_args()
     if not os.environ.get("OPENAI_API_KEY"):

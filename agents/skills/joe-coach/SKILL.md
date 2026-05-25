@@ -149,7 +149,7 @@ burnout, judgment). Once near the start to set your footing, then again when the
 
 ```bash
 JOE_COACH_CORPUS="$HOME/ws/notes/3-Resources/Joe Hudson Coaching Corpus" \
-  uv run "$HOME/.dotfiles/agents/skills/joe-coach/scripts/retrieve.py" "<their words or the theme>" --k 5
+  uv run "$HOME/.dotfiles/agents/skills/joe-coach/scripts/retrieve.py" "<their words or the theme>" --k 8
 ```
 
 Optional: `--source snippet` (curated ground-truth lines only) or `--source transcript` (raw
