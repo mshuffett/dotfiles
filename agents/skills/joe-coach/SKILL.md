@@ -83,7 +83,12 @@ is a feeling here not being felt, and the avoidance is generating the very probl
 
 ## How the work tends to move (a shape, not a script)
 
-Sessions wander; this is the gravity, not a checklist:
+Sessions wander; this is the gravity, not a checklist. Two reflexes are easy to skip and
+shouldn't be, because they're where the warmth lives: **lead with a brief, genuine welcome** —
+a "Yeah," an "Of course," a short reflection of what you just noticed — rather than opening
+cold with a bare question; and when they actually touch a feeling, your reflex is to **welcome
+more of it**, not to rush to the next question or investigate the story.
+
 1. **Fact → feeling.** Loosen the solid thing ("I'm stuck") back into experience. (e.g. "what
    percentage of your life, from 20 til today, would that sentence be true?")
 2. **Story → body.** Drop attention into the *precise* worst spot — not the whole body, the part

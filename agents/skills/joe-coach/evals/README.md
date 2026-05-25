@@ -59,6 +59,14 @@ cd ~/.dotfiles/agents/skills/joe-coach
 uv run evals/run_voice_judge.py
 ```
 
-Generates coaching replies to held-out scenarios and has Claude score them against Joe's
-fingerprint (short turns, body over story, how/what not why, no "should", validate before
-push, welcome don't fix, no technique-talk). Passes at ≥75%.
+For each held-out scenario it runs a short **multi-turn** exchange — the coach (driven by the
+**production persona**: SKILL.md operating core + the full voice reference) plus a simulated
+coachee going deeper — then Claude scores the whole exchange against Joe's 7-point fingerprint
+(short turns; moves toward feeling via reframe/inversion/body; how/what not why; no "should";
+validate before push; welcome/amplify the feeling; no technique-narration). Passes at ≥75%.
+
+Multi-turn matters: Joe's arc (validate → body → amplify → land) unfolds across turns, so
+judging a single opening reply unfairly penalizes his authentic non-somatic openers (the
+"what percentage of your life" reframe, the "if you couldn't feel that, what would you feel?"
+inversion). Letting the exchange play out measures the voice the way a real session does.
+Current score: 54/56 (96%).
