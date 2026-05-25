@@ -5,18 +5,39 @@
 """Retrieve verbatim Joe-anchors relevant to a query.
 
 Usage:
-  uv run scripts/retrieve.py "feeling stuck and can't decide" [--k 5] [--source all|snippet|transcript]
+  uv run scripts/retrieve.py "feeling stuck and can't decide" [--k 8] [--source all|snippet|transcript]
 Env: OPENAI_API_KEY (required), JOE_COACH_CORPUS (optional override).
 """
 import argparse, json, os, pathlib, sys
 
-CORPUS = pathlib.Path(os.environ.get(
-    "JOE_COACH_CORPUS",
-    os.path.expanduser("~/ws/notes/3-Resources/Joe Hudson Coaching Corpus"),
-))
-INDEX = CORPUS / "index"
 MODEL = "text-embedding-3-small"
 SNIPPET_BOOST = 0.05   # small nudge: snippet bank is curated ground truth
+
+# Resolve the index dir across deploy shapes, in priority order:
+#   1. $JOE_COACH_CORPUS/index        — explicit override
+#   2. <skill-root>/index             — bundled alongside the skill (portable zip)
+#   3. ~/ws/notes/.../index           — the live vault corpus (refreshable)
+# This lets the same script work in-place (vault index) and from a self-contained
+# zip export (bundled index), without duplicating the index in the dotfiles checkout.
+_SKILL_ROOT = pathlib.Path(__file__).resolve().parent.parent
+_VAULT_DEFAULT = pathlib.Path(os.path.expanduser(
+    "~/ws/notes/3-Resources/Joe Hudson Coaching Corpus"))
+
+
+def _resolve_index() -> pathlib.Path:
+    candidates = []
+    env = os.environ.get("JOE_COACH_CORPUS")
+    if env:
+        candidates.append(pathlib.Path(env) / "index")
+    candidates.append(_SKILL_ROOT / "index")       # bundled (zip)
+    candidates.append(_VAULT_DEFAULT / "index")     # live vault
+    for c in candidates:
+        if (c / "chunks.jsonl").exists() and (c / "embeddings.npy").exists():
+            return c
+    return candidates[0]  # nonexistent → load_index raises a clear error
+
+
+INDEX = _resolve_index()
 
 
 def load_index():
