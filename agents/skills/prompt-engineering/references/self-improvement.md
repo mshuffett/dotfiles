@@ -1,8 +1,3 @@
----
-name: prompt-self-improvement
-description: Make any AI prompt self-improving through structured corrections, understanding development, and isolated testing. Use when a prompt produced wrong output and needs calibration, when reviewing corrections to improve a prompt, when bootstrapping a new prompt through iterative sessions, or when running a prompt improvement cycle. Covers the orchestrator/subagent isolation pattern, correction-as-test-case methodology, and prompt hygiene principles. Complements prompt-alignment (initial development) and eval-triage (automated classification testing).
----
-
 # Prompt Self-Improvement
 
 Make any prompt that processes inputs and produces correctable outputs into a self-improving system. Corrections become test cases, history becomes the test suite, the prompt is the code being improved.
@@ -38,7 +33,7 @@ Bad: "I classified it as action but it should have been reference."
 Good: "I treated 'could' as intent to act. In voice captures, modal language signals ideation, not commitment."
 
 ### Phase 3: Propose a Fix
-For each correction (or cluster): exact diff to the prompt with location, reasoning, and blast radius analysis. See [references/protocol.md](references/protocol.md) for the full proposal template.
+For each correction (or cluster): exact diff to the prompt with location, reasoning, and blast radius analysis. See [protocol.md](protocol.md) for the full proposal template.
 
 Options: strengthen existing language (preferred), add new instruction, add context/annotations to reference data, or no change needed (one-off ambiguity).
 
@@ -51,10 +46,10 @@ Run the updated prompt through isolated subagents. Three test case types require
 | **Similar cases** | Past items of same type | Improve or stay correct |
 | **Regression cases** | Random previously-correct items | Stay correct |
 
-For the Claude Code subagent pattern and alternative testing approaches (including LLM-as-judge via `eval-triage`), see [references/protocol.md](references/protocol.md).
+For the Claude Code subagent pattern and alternative testing approaches (including LLM-as-judge via `eval-triage`), see [protocol.md](protocol.md).
 
 ### Phase 5: Present & Apply
-Show the user an improvement log with: what was wrong, diagnosis, proposed edit, test results. User approves → apply. User rejects → iterate. See [references/protocol.md](references/protocol.md) for the log template.
+Show the user an improvement log with: what was wrong, diagnosis, proposed edit, test results. User approves → apply. User rejects → iterate. See [protocol.md](protocol.md) for the log template.
 
 ## Prompt Hygiene Principles
 
@@ -81,10 +76,10 @@ Always explicitly flag when no prompt edit is warranted, with reasoning.
 
 ## Related Skills
 
-- **prompt-alignment** — For initial prompt development (fit-to-generalize loops). Use self-improvement for ongoing calibration after deployment.
+- **Alignment mode** ([alignment.md](alignment.md)) — For initial prompt development (fit-to-generalize loops). Use self-improvement for ongoing calibration after deployment.
 - **eval-triage** — A concrete automated implementation of this pattern for Todoist classification. Uses LLM-as-judge (Opus evaluates Sonnet) rather than subagent isolation. Complements this protocol's Phase 2 (understanding development) which eval-triage doesn't fully cover.
 - **mistake-tracking** — For tracking operational mistakes by Claude itself. This skill tracks prompt output quality.
 
 ## Full Reference
 
-See [references/protocol.md](references/protocol.md) for: session folder structure, detailed phase instructions, subagent execution patterns, improvement log template, and adapting this protocol to a specific prompt.
+See [protocol.md](protocol.md) for: session folder structure, detailed phase instructions, subagent execution patterns, improvement log template, and adapting this protocol to a specific prompt.

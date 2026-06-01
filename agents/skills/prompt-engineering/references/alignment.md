@@ -1,8 +1,3 @@
----
-name: prompt-alignment
-description: Use when aligning ANY prompt, read-trigger description, or output style. Run fit-to-generalize loop iteratively and test with CLI.
----
-
 # Prompt Alignment
 
 Prompt-alignment learns a prompt by fitting example input-to-output mappings (X→Y) and testing generalization. It iteratively proposes the smallest effective changes until model(p, X) matches Y on known cases and holds on unseen X′.

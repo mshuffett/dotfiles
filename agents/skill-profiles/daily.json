@@ -1,6 +1,8 @@
 {
   "description": "Lower-conflict daily default: broad utility and coordination skills without the more niche labs surface.",
-  "extends": ["full"],
+  "extends": [
+    "full"
+  ],
   "enabledPlugins": {
     "agentops@agentops-marketplace": false
   },
@@ -12,7 +14,6 @@
     "notion-knowledge-capture",
     "pi-agent-rust",
     "playwright-interactive",
-    "prompt-self-improvement",
     "prose-diff-review",
     "provider-research",
     "ralph-orchestrator",
