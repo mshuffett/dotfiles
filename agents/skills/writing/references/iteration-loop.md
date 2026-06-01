@@ -11,7 +11,7 @@ Systematically improve prose through parallel dual-reviewer subagents that itera
 
 ## Prerequisites
 
-This skill depends on `writing-clearly-and-concisely` for style rules. If it's available as a project or global skill, reference it. If not, read `references/strunk-composition-rules.md` bundled with this skill for the core rules.
+This skill applies Strunk's composition rules (Elements of Style, rules 10–18). If the `writing-clearly-and-concisely` skill is available as a project or global skill, use it for the full ruleset; otherwise apply the composition principles directly: omit needless words, prefer the active voice, use parallel structure for parallel ideas, keep related words together, and write in the positive form.
 
 ## Workflow
 
@@ -38,7 +38,7 @@ Write findings to [filename]-notes.md
 
 Before the first revision, analyze the document against:
 
-1. **Style rules** — Read `writing-clearly-and-concisely` skill (or `references/strunk-composition-rules.md`). Focus on Rules 10-18 (composition principles). Flag specific violations.
+1. **Style rules** — Apply Strunk's composition rules 10–18 (use the `writing-clearly-and-concisely` skill if available). Flag specific violations.
 2. **Domain criteria** — Apply the relevant quality checklist (see Domain References).
 3. **Source alignment** — If source documents exist, identify gaps: terminology not used, requirements not addressed, data not deployed.
 
@@ -137,7 +137,7 @@ Additional cover letter signals to check:
 - **Named specifics**: Name the organization's programs, leaders, or initiatives rather than referring to them generically
 - **Economic/data case**: If source documents provide data (budgets, ROI, impact stats), deploy them in the letter — data persuades where assertions don't
 
-For the full cover letter framework, see the `cover-letter-generator` skill if installed, or `references/cover-letter-framework.md`.
+For the full cover letter framework, see the `cover-letter-generator` skill if installed.
 
 ### Essays / Reports
 
