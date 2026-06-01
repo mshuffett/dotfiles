@@ -1,6 +1,6 @@
 ---
 name: deep-research-fanout
-description: Run real Deep Research across ChatGPT, Claude, and Gemini in parallel using the user's own logged-in browser, save each original report to Notion, then write a synthesis. Use whenever the user wants "deep research", a "deep dive", a thorough multi-source investigation, or asks to research a topic across the models / compare what each finds / get a synthesized report. Triggers: "deep research", "run deep research", "research this deeply", "deep dive on X", "fan out research", "research across ChatGPT/Claude/Gemini". This drives the subscription Deep Research products via the Chrome extension (zero marginal cost), NOT the paid API. NOT for quick single-fact lookups or ordinary web search — use the web-search skill for those.
+description: Run real Deep Research across ChatGPT, Claude, and Gemini in parallel via the user's own logged-in browser (Chrome extension, zero API cost), save each original report to Notion, then synthesize. Use whenever the user wants a "deep dive", "deep research", a thorough multi-source investigation, or to research a topic across the models and compare what each finds. Drives the paid subscription products, NOT the API. NOT for single-fact lookups or ordinary web search — use web-search for those.
 allowed-tools: Bash, mcp__claude-in-chrome__*, mcp__claude_ai_Notion__*
 ---
 

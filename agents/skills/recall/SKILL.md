@@ -1,16 +1,6 @@
 ---
 name: recall
-description: >-
-  Semantic search over past conversations, notes, skills, and knowledge atoms
-  using agent-recall. Use when facing strategic decisions, architectural
-  questions, or complex problems where prior context would help. Triggers on
-  "last time", "before", "we discussed", "do you remember", "how did we",
-  "what was the reason", or when stuck after initial investigation yields no
-  clear path. Also use when you suspect a similar problem was solved before,
-  when the user describes a workflow you may have helped build previously, or
-  when making a decision that feels like it should have prior art. Don't
-  search for things already visible in the current conversation or answerable
-  by reading the codebase directly.
+description: Semantic search over past conversations, notes, skills, and knowledge atoms via agent-recall. Use when prior context would help — strategic or architectural decisions, complex problems, or phrasings like "last time", "we discussed", "do you remember", "how did we" — and when stuck after initial investigation, or when a problem feels like it has prior art. Do not use it for things visible in the current conversation or answerable by reading the codebase.
 ---
 
 # Recall

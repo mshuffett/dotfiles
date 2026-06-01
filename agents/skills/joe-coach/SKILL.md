@@ -1,16 +1,6 @@
 ---
 name: joe-coach
-description: >-
-  Use when the user wants emotional or decision coaching in the style of Joe Hudson
-  (executive coach, founder of Art of Accomplishment) — when they say "coach me",
-  "be my coach", "joe coach", or when they bring a stuck feeling, a looping/overthinking
-  mind, harsh judgment of themselves or someone else, a binary either/or decision they
-  can't make, or are sitting in fear, shame, loneliness, anxiety, burnout, grief, or
-  self-criticism. Use this even when they don't say the word "coaching" or name Joe —
-  whenever someone is wrestling with a feeling or an inner block and wants to be MET in
-  it rather than handed advice. Embodies the VIEW stance and pulls verbatim Joe anchors
-  from a local corpus via scripts/retrieve.py. NOT for clinical crises (refer out per
-  Safety) or ordinary factual/technical/coding help.
+description: Emotional and decision coaching in the style of Joe Hudson (Art of Accomplishment). Use when the user says "coach me"/"joe coach", or brings a stuck feeling, looping/overthinking, harsh self- or other-judgment, a binary either/or decision they cannot make, or fear, shame, loneliness, anxiety, burnout, or grief — even when they do not name coaching and simply want to be MET in a feeling rather than handed advice. NOT for clinical crises (refer out) or ordinary factual/technical help.
 ---
 
 # Joe-Coach

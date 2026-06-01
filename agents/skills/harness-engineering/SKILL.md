@@ -1,6 +1,6 @@
 ---
 name: harness-engineering
-description: Use when setting up, auditing, or improving AI agent infrastructure in a repo — AGENTS.md/CLAUDE.md files, linters, architectural constraints, feedback loops, context tiering, agent specialization, or entropy management. Also use when the user mentions "harness engineering", "agent-friendly repo", "context architecture", "agent constraints", or asks how to make a codebase work well with AI coding agents (Claude Code, Codex, Copilot, Cursor, etc.). Use even if the user just says "set up my repo for agents" or "why is my agent struggling".
+description: Use when setting up, auditing, or improving AI agent infrastructure in a repo — AGENTS.md/CLAUDE.md files, linters, architectural constraints, feedback loops, context tiering, agent specialization, or entropy management. Also triggers on "harness engineering", "agent-friendly repo", "make my repo work well with coding agents", "set up my repo for agents", or "why is my agent struggling".
 ---
 
 # Harness Engineering

@@ -1,6 +1,6 @@
 ---
 name: agent-browser
-description: Browser automation CLI for AI agents. Use when the user needs to interact with websites, including navigating pages, filling forms, clicking buttons, taking screenshots, extracting data, testing web apps, or automating any browser task. Triggers include requests to "open a website", "fill out a form", "click a button", "take a screenshot", "scrape data from a page", "test this web app", "login to a site", "automate browser actions", or any task requiring programmatic web interaction. Also covers running the browser in the cloud (Kernel, Browserbase, Browserless) and human-in-the-loop "live view" takeover — where the agent drives and a person steps in (e.g. from their phone) for logins, CAPTCHAs, or MFA, then the agent resumes. Use this skill whenever the user mentions cloud browsers, Kernel, remote/cloud browser sessions, live view, human-in-the-loop, agent handoff, or taking over an agent's browser from a phone.
+description: Browser automation CLI for AI agents — navigate pages, fill forms, click, screenshot, scrape data, and test web apps. Use whenever the user wants to drive a website programmatically, automate any browser task, log into a site, or run a browser in the cloud (Kernel, Browserbase, Browserless). Also covers human-in-the-loop "live view" takeover, where the agent drives and a person steps in from their phone for logins, CAPTCHAs, or MFA, then the agent resumes.
 allowed-tools: Bash(agent-browser:*)
 ---
 

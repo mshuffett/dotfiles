@@ -1,6 +1,6 @@
 ---
 name: pr-review
-description: Thorough automated PR review — finds bugs, checks test coverage (unit/integration/e2e/UI), writes missing tests, takes screenshots of UI changes, fixes all issues, and generates a markdown report. Use when a PR is checked out and needs comprehensive review, when the user says "review this PR", "check this PR", "PR review", "review the changes", or when running as part of CI/CD. Works for Python and TypeScript repos. Also use when the user wants to verify test coverage, check for missing e2e tests, or validate that UI changes have proper visual testing.
+description: Thorough automated PR review — finds bugs, checks test coverage (unit/integration/e2e/UI), writes missing tests, screenshots UI changes, fixes issues, and generates a markdown report. Use when a PR needs comprehensive review ("review this PR", "check this PR", "review the changes"), in CI/CD, or when the user wants to verify test coverage or missing e2e/UI tests. Works for Python and TypeScript repos.
 ---
 
 # PR Review
