@@ -1,16 +1,3 @@
----
-name: writing-iteration-loop
-description: >-
-  Use when iteratively improving any prose document through multiple revision
-  passes with dual-reviewer subagents. Especially useful for cover letters, but
-  works for essays, reports, grant applications, speeches, or any writing that
-  benefits from systematic refinement. Use when the user says "improve this",
-  "make this better", "iterate on this", "run it through reviewers", "polish
-  this writing", or "keep refining until it's ready". Invokes the
-  writing-clearly-and-concisely skill internally and uses parallel subagent
-  reviewers that iterate until convergence.
----
-
 # Writing Iteration Loop
 
 Systematically improve prose through parallel dual-reviewer subagents that iterate until the writing stabilizes. Each pass applies style rules (Strunk) and domain-specific quality criteria, producing a versioned trail of improvements.
@@ -124,8 +111,8 @@ Stop the loop when:
 After stabilization:
 
 1. **Final version**: `[document]-final.md`
-2. **Change report** (optional): Use `prose-diff-review` skill if available, or write a markdown change report comparing v1 to final
-3. **Diff review page** (optional): Generate the interactive HTML diff page per `prose-diff-review`
+2. **Change report** (optional): Use the diff-review mode ([diff-review.md](diff-review.md)), or write a markdown change report comparing v1 to final
+3. **Diff review page** (optional): Generate the interactive HTML diff page per [diff-review.md](diff-review.md)
 
 ## Domain References
 

@@ -1,15 +1,3 @@
----
-name: prose-diff-review
-description: >-
-  Use when comparing two versions of a document (original vs revised), creating
-  diff review pages, or when the user asks to "show me what changed", "create a
-  diff", "review the changes", or "compare versions". Works with cover letters,
-  essays, reports, emails, or any prose. Generates an interactive HTML diff
-  review page with inline diffs, side-by-side view, sidebar commentary, user
-  annotation support, and JSON export. Also use when the user wants a change
-  report explaining what was modified and why.
----
-
 # Prose Diff Review
 
 Generate interactive HTML diff review pages for comparing two versions of any prose document, with editorial commentary explaining each change.
@@ -19,7 +7,7 @@ Generate interactive HTML diff review pages for comparing two versions of any pr
 - Comparing an original document to a revised version
 - Creating a visual diff for prose (not code — use git diff for code)
 - The user asks "show me what changed" or "create a diff view"
-- After an iterative writing improvement process (pairs well with `writing-iteration-loop`)
+- After an iterative writing improvement process (pairs well with the iterate mode, [iteration-loop.md](iteration-loop.md))
 - When the user wants a change report with rationale
 
 ## Workflow
@@ -54,7 +42,7 @@ WHY:     [rationale]
 
 ### 3. Generate the HTML diff review page
 
-**A complete working template is at `references/diff-review-template.html`.** Read it and adapt it for the current document — replace the content (paragraphs, del/ins markup, comment cards, sidebar, stats) while keeping the full CSS, JS, annotation system, and view toggle intact. This is much faster than building from scratch.
+**A complete working template is at `diff-review-template.html`.** Read it and adapt it for the current document — replace the content (paragraphs, del/ins markup, comment cards, sidebar, stats) while keeping the full CSS, JS, annotation system, and view toggle intact. This is much faster than building from scratch.
 
 The template includes all of the following features:
 
@@ -150,7 +138,7 @@ If the user wants a written report (`change-report.md`), structure it as:
 
 | File | Description | When to Read |
 |------|-------------|--------------|
-| `references/diff-review-template.html` | Complete working HTML template (~700 lines) with all CSS, JS, views, annotations, and export | Always — adapt this for each new review page |
+| `diff-review-template.html` | Complete working HTML template (~700 lines) with all CSS, JS, views, annotations, and export | Always — adapt this for each new review page |
 
 ## Design Principles
 

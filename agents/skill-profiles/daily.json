@@ -14,12 +14,11 @@
     "notion-knowledge-capture",
     "pi-agent-rust",
     "playwright-interactive",
-    "prose-diff-review",
+    "writing",
     "provider-research",
     "ralph-orchestrator",
     "screen-recording",
     "slides",
-    "teleport",
-    "writing-iteration-loop"
+    "teleport"
   ]
 }
