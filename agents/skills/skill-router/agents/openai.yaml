@@ -1,3 +1,0 @@
-interface:
-  display_name: "Skill Router"
-  short_description: "Pick a deterministic skill chain with rpi as default"

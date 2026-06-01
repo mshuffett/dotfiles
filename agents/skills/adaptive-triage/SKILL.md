@@ -1,6 +1,6 @@
 ---
 name: adaptive-triage
-description: Interactive Todoist triage with preference learning. Use when the user says "triage", "process my inbox", "clean up tasks", "triage my todoist", "file these captures", or mentions inbox zero. Also use when the user has a batch of raw items (voice notes, links, ideas) that need classifying and routing to Todoist projects or Obsidian. This skill replaces inbox-triage with an interactive confirm/correct loop that learns over time.
+description: Interactive Todoist triage with preference learning. Use when the user says "triage", "process my inbox", "clean up tasks", "triage my todoist", "file these captures", or mentions inbox zero. Also use when the user has a batch of raw items (voice notes, links, ideas) that need classifying and routing to Todoist projects or Obsidian. Runs an interactive confirm/correct loop that learns your routing preferences over time.
 ---
 
 # Adaptive Triage

@@ -1,5 +1,5 @@
 {
-  "description": "Minimal operational profile for Codex: routing, safety, debugging, core shell workflow, and image generation.",
+  "description": "Minimal operational profile for Codex: safety, core shell workflow, harness, prompt alignment, and image generation.",
   "include": [
     "cli-tools",
     "env-secrets",
@@ -11,8 +11,6 @@
     "port-safety",
     "prompt-alignment",
     "skill-profiles",
-    "skill-router",
-    "test-debugging",
     "tmux-worktree-session"
   ]
 }

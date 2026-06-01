@@ -108,8 +108,7 @@ Profiles can also toggle Claude Code plugins by declaring an `enabledPlugins` ma
   "description": "Daily default without heavy automation plugins.",
   "extends": ["full"],
   "enabledPlugins": {
-    "agentops@agentops-marketplace": false,
-    "ralph-loop@claude-plugins-official": false
+    "agentops@agentops-marketplace": false
   }
 }
 ```

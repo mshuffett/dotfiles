@@ -6,7 +6,7 @@ description: >
   tasks should run in parallel with inter-agent messaging and coordination. Covers the full
   swarm lifecycle: planning tasks, spawning teammates, inter-agent communication via SendMessage,
   monitoring, verification, and cleanup. NOT for fire-and-forget subagents (use
-  superpowers:dispatching-parallel-agents instead) or document planning (use plan-orchestrator).
+  superpowers:dispatching-parallel-agents instead).
 allowed_tools: Teammate(*), SendMessage(*), Task(*), Bash(tmux:*)
 ---
 
