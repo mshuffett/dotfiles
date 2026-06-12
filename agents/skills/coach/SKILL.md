@@ -108,19 +108,22 @@ Concise, efficient. Proactive but not overbearing. Reference previous days natur
 
 ## Current Project Context
 
-Active project: **Everything AI - Demo Day**
+**Canonical source of current active projects:** `~/ws/notes/2-Areas/System/Active Projects.md`
 
-- Project homepage: `1-Projects/Everything AI - Demo Day/00-Start Here.md`
-- Checklist: `1-Projects/Everything AI - Demo Day/01-Planning/Everything AI - Demo Day - Pomodoro Checklist.md`
-- Product scope: `1-Projects/Everything AI - Demo Day/03-Scope/Strategy - Scope 1-week MVP (Pass 1).md`
-- Investor track: `1-Projects/Everything AI - Demo Day/04-Workstreams/Strategy - Investor + Demo Day track plan (timeline + checklist + weekly digest).md`
-- Coach log (trends/policies): `1-Projects/Everything AI - Demo Day/01-Planning/Coach Log (Trends + Decisions).md`
+Read this file at session start. It is maintained jointly with Michael and
+always reflects the current truth. Do not hardcode project pointers here —
+they drift. If the file is stale (no update in >2 weeks) or missing, ask
+Michael to re-state current active projects before planning or filing.
+
+Durable paths:
 - Daily notes: `Calendar/Daily/YYYY-MM-DD.md`
 - Weekly notes: `Calendar/Weekly/YYYY-Www.md`
+- Coach memory: `~/.dotfiles/agents/skills/coach/references/memory.md`
+- Session log / decisions: `logs/decisions.jsonl` (in workspace)
 
-Before advising on "on track?": skim recently modified notes in `1-Projects/Everything AI - Demo Day/` (especially `03-Scope/` and `04-Workstreams/`). If unsure what changed, ask: "What changed since yesterday?" (1 question, not an interview).
-
-> Update these links when the active project changes.
+Before advising on "on track?": open `Active Projects.md`, review recent
+changes to relevant project files. If unsure what changed, ask: "What changed
+since yesterday?" (1 question, not an interview).
 
 ---
 

@@ -46,11 +46,12 @@ Each task subpage must include:
 
 ## Canonical Session Files
 
-- Checklist: `1-Projects/Everything AI - Demo Day/01-Planning/Everything AI - Demo Day - Pomodoro Checklist.md`
-- Task subpages: Under the project folder (e.g. `02-Pitch/`, `03-Scope/`, `04-Workstreams/`)
-- Coach log: `1-Projects/Everything AI - Demo Day/01-Planning/Coach Log (Trends + Decisions).md`
+Pomodoro pointers derive from the currently active project. Get the active
+project list from `~/ws/notes/2-Areas/System/Active Projects.md`, then:
 
-> Update these paths when the active project changes.
+- Checklist: live in the active project's area (e.g. `1-Projects/<active project>/Pomodoro Checklist.md`) or inline in the daily note for lightweight days.
+- Task subpages: under the active project folder (`1-Projects/<active project>/`).
+- Coach log / trends / decisions: `~/.dotfiles/agents/skills/coach/references/memory.md`.
 
 ## Acceptance Checks
 

@@ -19,6 +19,7 @@ Create a TaskList from the steps below and guide Michael through them.
 3. Load today's daily note (`Calendar/Daily/YYYY-MM-DD.md`). Create from template if missing.
 4. Read yesterday's daily note for continuity — especially the "tomorrow plan" section.
 5. Read `references/memory.md` for persistent context.
+6. **Read `~/ws/notes/2-Areas/System/Active Projects.md`** — canonical list of current active projects with next-actions. If stale (>2 weeks since update) or missing, ask Michael to re-state current active projects before planning.
 
 ## Step 2: Context Gathering
 
@@ -29,9 +30,9 @@ Create a TaskList from the steps below and guide Michael through them.
 
 ## Step 3: Planning
 
-10. Confirm top outcomes for the day (1-3). Ask Michael to state them. Offer to suggest based on yesterday's tomorrow-plan and the active project checklist.
+10. Confirm top outcomes for the day (1-3). Ask Michael to state them. Offer to suggest based on yesterday's tomorrow-plan and `Active Projects.md`.
 11. Split into **must-do** (non-negotiable) vs **maybe-do** (if time/energy).
-12. Set first 1-2 pomodoros with explicit deliverables. Reference the active project checklist.
+12. Set first 1-2 pomodoros with explicit deliverables. Each pomodoro should ladder up to an active project's next-action.
 13. Define deep-work block(s): minimum 4 hours total, 1-line concrete objective per block.
 
 ## Step 4: Schedule Construction

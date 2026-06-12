@@ -42,11 +42,11 @@ Create a TaskList from the steps below and guide Michael through them.
 
 ## Step 5: Hill Status Update
 
-8. Update hill estimates for each active deliverable (product + investor tracks):
+8. Update hill estimates for each active project's current next-action:
    ```
-   Deliverable: uphill/downhill, ~X%, on track? y/n, note
+   Project / next-action: uphill/downhill, ~X%, on track? y/n, note
    ```
-   Source deliverables from the current weekly plan or project checklist.
+   Source: `~/ws/notes/2-Areas/System/Active Projects.md` and current weekly plan.
 
 ## Step 6: Calendar Lookahead
 
@@ -70,11 +70,10 @@ Create a TaskList from the steps below and guide Michael through them.
 
 ## Step 8: Coach Log Update
 
-14. Update the coach log (only if something real to record):
-    - File: `1-Projects/Everything AI - Demo Day/01-Planning/Coach Log (Trends + Decisions).md`
-    - **Trends**: Pattern noticed (one line)
-    - **Decisions/Policies**: Any new rule for tomorrow
-    - **Commitments**: Anything explicitly committed to
+14. Update `~/.dotfiles/agents/skills/coach/references/memory.md` (only if something real to record):
+    - **Trends / Patterns**: One-line observation (append under Patterns section)
+    - **Decisions/Policies**: Any new rule for tomorrow (append under Preferences or session-start protocol as appropriate)
+    - **Commitments**: Anything explicitly committed to (append under Session Log if kept, else skip)
 
 ## Step 9: Close-Down Checklist
 

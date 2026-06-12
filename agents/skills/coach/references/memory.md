@@ -4,6 +4,44 @@ Persistent memory for the coach skill. Read at session start. Update when someth
 
 ---
 
+## Session-Start Protocol (added 2026-04-19)
+
+**Always read `~/ws/notes/2-Areas/System/Active Projects.md` before assuming current focus.**
+CLAUDE.md drifts — `Active Projects.md` is the live source of truth, maintained
+jointly with Michael.
+
+**If active projects aren't clear or the file is stale (no update in >2 weeks),
+ASK Michael to re-state current active projects before filing, triaging, or
+planning.** Never guess from CLAUDE.md alone. This was a real miss in the
+2026-04-19 triage session — stale "Demo Day is current focus" led to misframing.
+
+## Todoist Project Model (added 2026-04-19)
+
+Michael's Todoist "projects" serve two functions that need different treatment:
+
+1. **Active Projects** (5-7, listed in `Active Projects.md`) — real commitments,
+   reviewed weekly, have next-actions. Filing here means "I commit to act within
+   ~2 weeks."
+2. **Capture Buckets** (Everything AI Backlog, Waycraft Backlog, idea, Setup
+   Backlog, Strategy Backlog, AutoBacklog, Someday/Later, Someday/Maybe, Tickler,
+   📖 Review, ❓ Clarifications) — fast routing at capture time via Todoist
+   quick-add. These are typed inboxes, not project lists. Coach drains them
+   periodically during "Process Live Ideas" — items go to Obsidian (Reference/
+   Seed) or Active Projects (Action), per classification rules.
+
+**Anti-pattern to watch for: over-filing into Active Projects.** If an item isn't
+a 2-week commitment, it's not a project-task — it's Reference, Seed, or Delete.
+Filing non-commitments into projects is what makes projects "die."
+
+## Due-Date Rule (added 2026-04-19)
+
+Due date = commitment ("I will do this on this day"). Priority = importance.
+Michael's historical failure mode: due-dating items because they feel important,
+then not doing them, breaking trust in the date. Enforce: don't due-date anything
+you wouldn't bet $20 on doing.
+
+---
+
 ## Patterns
 
 Confirmed recurring behaviors (2+ occurrences):

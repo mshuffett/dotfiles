@@ -47,37 +47,35 @@ Inbox clearing is NOT the identity of this review. Scale effort to inbox size.
 
 ## Phase 3: GTD Trigger-List Scan (15 min)
 
-8. Scan all active projects in `1-Projects/`:
+8. Open `~/ws/notes/2-Areas/System/Active Projects.md`. For each active project:
    - Still active? Next action clear? Any to archive?
-9. Check other active commitments (cofounder considerations, relationships, health) as trigger list.
-10. Check `@waiting` items for follow-ups.
-11. Review any stalled or orphaned items.
+   - Update the file with any changes.
+9. Scan `1-Projects/` folder for anything in-flight not reflected in the active list.
+10. Check other active commitments (cofounder considerations, relationships, health) as trigger list.
+11. Check `@waiting` items (in Todoist + daily notes) for follow-ups.
+12. Review any stalled or orphaned items.
 
-## Phase 4: Dual-Track Weekly Plan (60 min)
+## Phase 4: Weekly Plan by Active Project (60 min)
 
-This is the core of the review. Informed by the retro.
+This is the core of the review. Informed by the retro. Source of projects:
+`~/ws/notes/2-Areas/System/Active Projects.md`.
 
-### Product Track
+For each active project that needs focus this week:
 
-12. Define for this week:
-   - **In-scope** (bullets)
+13. Define:
+   - **In-scope** this week (bullets)
    - **Out-of-scope** (bullets) — be explicit about what you're NOT doing
-   - **Deliverables** (bullets)
+   - **Deliverables** this week (bullets)
    - **Top risks/unknowns** + mitigations
    - **Initial hill estimate per deliverable**: `uphill/downhill, ~X%, on track? y/n, note`
 
-Source: Active project scope doc (`1-Projects/Everything AI - Demo Day/03-Scope/`).
+Not every active project needs weekly focus — pick 2-4 that will actually get
+time this week. The others stay dormant for the week (still tracked, not worked).
 
-### Investor Track
+### Red-Team the Plan
 
-13. Same structure as Product Track:
-   - In-scope, out-of-scope, deliverables, risks/unknowns, hill estimates
-
-Source: Investor track plan (`1-Projects/Everything AI - Demo Day/04-Workstreams/Strategy - Investor + Demo Day track plan...md`).
-
-### Red-Team Both Plans
-
-14. Quick murphyjitsu per track: "What's the biggest risk to each plan this week? What's the weakest assumption?"
+14. Quick murphyjitsu per focused project: "What's the biggest risk to this plan
+    this week? What's the weakest assumption?"
 
 ## Phase 5: Schedule + Deep Work (30 min)
 
