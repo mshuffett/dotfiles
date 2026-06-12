@@ -130,6 +130,7 @@
   "effortLevel": "medium",
   "voiceEnabled": true,
   "skipDangerousModePermissionPrompt": true,
+  "teammateMode": "tmux",
   "disabledMcpServers": [
     "playwright",
     "heyreach"
