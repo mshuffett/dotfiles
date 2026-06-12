@@ -34,9 +34,9 @@ if [[ -r "$Z4H_FILE" ]]; then
   zstyle ':z4h:' auto-update-days '28'
   zstyle ':z4h:bindkey' keyboard  'mac'
 
-  # Start tmux if not already in tmux and not in cursor
-  if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" ]]; then
-    zstyle ':z4h:' start-tmux command tmux -u new -A -D -t main
+  # Start tmux if not already in tmux, not in cursor, and not opted out
+  if [[ -z "$TMUX" && -z "$CURSOR_TRACE_ID" && -z "$NO_AUTO_TMUX" ]]; then
+    zstyle ':z4h:' start-tmux command tmux -u new -A -t main
   else
     zstyle ':z4h:' start-tmux       no
   fi
@@ -453,3 +453,12 @@ export PATH="$PATH:/Users/michael/.lmstudio/bin"
 
 unalias br 2>/dev/null  # br installer - remove conflicting alias
 alias bd='br'  # beads_rust replaces beads (Go) — 10-20x faster
+
+# Added by Antigravity IDE
+export PATH="/Users/michael/.antigravity-ide/antigravity-ide/bin:$PATH"
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<

@@ -184,6 +184,7 @@ alias ls="${aliases[ls]:-ls} -A"
 alias lst="${aliases[lst]:-${aliases[ls]:-ls}} -A"
 alias claude="command claude --dangerously-skip-permissions"
 alias c="command claude --dangerously-skip-permissions"
+alias cb="CLAUDE_CODE_USE_BEDROCK=1 command claude --dangerously-skip-permissions"
 alias lg='lazygit'
 alias j='just'
 
@@ -197,3 +198,24 @@ alias cm='cm --dangerously-skip-permissions'
 # plugins/agents/skills/memory don't leak into the main ~/.claude.
 # Scratch project: ~/scratch/omc-test  (cd there before running for the cleanest test)
 comc() { CLAUDE_CONFIG_DIR=~/.claude-omc command claude --dangerously-skip-permissions "$@"; }
+
+# Juno — persistent Telegram-channel assistant (DM @hey_juno_bot from your phone).
+# Always lands in ONE fixed session under ~/ws, listening on the Juno bot.
+# `unset TELEGRAM_BOT_TOKEN` in the subshell strips the shell's Eve token so the
+# telegram plugin falls back to ~/.claude/channels/telegram/.env (Juno); the main
+# shell + clawdbot keep Eve untouched. First run creates the session, later runs resume it.
+juno() {
+  local sid=4e8b5a92-7c92-41b5-9a87-640d35249eb1
+  local sfile=$HOME/.claude/projects/-Users-michael-ws/$sid.jsonl
+  (
+    cd ~/ws || return 1
+    unset TELEGRAM_BOT_TOKEN
+    if [[ -f $sfile ]]; then
+      command claude --dangerously-skip-permissions --resume "$sid" \
+        --channels plugin:telegram@claude-plugins-official "$@"
+    else
+      command claude --dangerously-skip-permissions --session-id "$sid" \
+        --channels plugin:telegram@claude-plugins-official "$@"
+    fi
+  )
+}
