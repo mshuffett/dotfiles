@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1775915687574,
+  "lastScanned": 1776012623386,
   "projectRoot": "/Users/michael/.dotfiles",
   "techStack": {
     "languages": [],
@@ -40,7 +40,7 @@
       "path": "agents",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687517,
+      "lastAccessed": 1776012623345,
       "keyFiles": [
         "README.md"
       ]
@@ -49,7 +49,7 @@
       "path": "bin",
       "purpose": "Executable scripts",
       "fileCount": 62,
-      "lastAccessed": 1775915687518,
+      "lastAccessed": 1776012623345,
       "keyFiles": [
         "add-secret",
         "agent-recall",
@@ -62,7 +62,7 @@
       "path": "claude",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1775915687518,
+      "lastAccessed": 1776012623346,
       "keyFiles": [
         "CLAUDE.backup.2025-11-06.md",
         "CLAUDE.md",
@@ -75,14 +75,14 @@
       "path": "claude-plugins",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775915687518,
+      "lastAccessed": 1776012623346,
       "keyFiles": []
     },
     "clawd-founders": {
       "path": "clawd-founders",
       "purpose": null,
       "fileCount": 9,
-      "lastAccessed": 1775915687518,
+      "lastAccessed": 1776012623346,
       "keyFiles": [
         "AGENTS.md",
         "HEARTBEAT.md",
@@ -95,7 +95,7 @@
       "path": "clawdbot",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1775915687518,
+      "lastAccessed": 1776012623346,
       "keyFiles": [
         "clawdbot.json",
         "clawdbot.json.bak"
@@ -105,7 +105,7 @@
       "path": "codex",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687519,
+      "lastAccessed": 1776012623346,
       "keyFiles": [
         "config.toml"
       ]
@@ -114,7 +114,7 @@
       "path": "colorls",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687519,
+      "lastAccessed": 1776012623347,
       "keyFiles": [
         "dark_colors.yaml"
       ]
@@ -123,7 +123,7 @@
       "path": "completions",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687519,
+      "lastAccessed": 1776012623347,
       "keyFiles": [
         "_dev"
       ]
@@ -132,7 +132,7 @@
       "path": "config",
       "purpose": "Configuration files",
       "fileCount": 1,
-      "lastAccessed": 1775915687519,
+      "lastAccessed": 1776012623347,
       "keyFiles": [
         "notion-openapi.json"
       ]
@@ -141,7 +141,7 @@
       "path": "dev-server",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1775915687519,
+      "lastAccessed": 1776012623347,
       "keyFiles": [
         "Dockerfile",
         "setup.sh"
@@ -151,14 +151,14 @@
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 0,
-      "lastAccessed": 1775915687519,
+      "lastAccessed": 1776012623347,
       "keyFiles": []
     },
     "functions": {
       "path": "functions",
       "purpose": null,
       "fileCount": 10,
-      "lastAccessed": 1775915687519,
+      "lastAccessed": 1776012623347,
       "keyFiles": [
         "_boom",
         "_brew",
@@ -171,7 +171,7 @@
       "path": "fzf",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687519,
+      "lastAccessed": 1776012623347,
       "keyFiles": [
         "fzf.zsh"
       ]
@@ -180,7 +180,7 @@
       "path": "ghostty",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1775915687520,
+      "lastAccessed": 1776012623347,
       "keyFiles": [
         "config",
         "morning.config"
@@ -190,7 +190,7 @@
       "path": "git",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1775915687520,
+      "lastAccessed": 1776012623348,
       "keyFiles": [
         "aliases.zsh",
         "gitconfig.symlink",
@@ -203,7 +203,7 @@
       "path": "grml",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687520,
+      "lastAccessed": 1776012623348,
       "keyFiles": [
         "grml.zsh"
       ]
@@ -212,7 +212,7 @@
       "path": "homebrew",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1775915687520,
+      "lastAccessed": 1776012623348,
       "keyFiles": [
         "brew-wrapper.zsh",
         "homebrew.zsh"
@@ -222,7 +222,7 @@
       "path": "host",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687521,
+      "lastAccessed": 1776012623348,
       "keyFiles": [
         "alias.zsh"
       ]
@@ -231,7 +231,7 @@
       "path": "launchd",
       "purpose": null,
       "fileCount": 4,
-      "lastAccessed": 1775915687521,
+      "lastAccessed": 1776012623348,
       "keyFiles": [
         "com.michael.claude-evening.plist",
         "com.michael.claude-morning.plist",
@@ -243,7 +243,7 @@
       "path": "lazygit",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687521,
+      "lastAccessed": 1776012623348,
       "keyFiles": [
         "config.yml"
       ]
@@ -252,14 +252,14 @@
       "path": "nvim",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775915687521,
+      "lastAccessed": 1776012623348,
       "keyFiles": []
     },
     "p10k": {
       "path": "p10k",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687521,
+      "lastAccessed": 1776012623349,
       "keyFiles": [
         "p10k.zsh"
       ]
@@ -268,7 +268,7 @@
       "path": "plans",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687521,
+      "lastAccessed": 1776012623349,
       "keyFiles": [
         "skill-migration-subagent-prompt.md"
       ]
@@ -277,14 +277,14 @@
       "path": "projects",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775915687521,
+      "lastAccessed": 1776012623349,
       "keyFiles": []
     },
     "raycast": {
       "path": "raycast",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623349,
       "keyFiles": [
         "ghostty-notmux.sh",
         "script-command.template.sh"
@@ -294,7 +294,7 @@
       "path": "ruby",
       "purpose": null,
       "fileCount": 3,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623349,
       "keyFiles": [
         "aliases.zsh",
         "completion.zsh",
@@ -305,7 +305,7 @@
       "path": "script",
       "purpose": null,
       "fileCount": 12,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623349,
       "keyFiles": [
         "BOOTSTRAP_README.md",
         "SCRIPTS_EXPLAINED.md",
@@ -318,7 +318,7 @@
       "path": "sounds",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623349,
       "keyFiles": [
         "elevenlabs-notification-7.mp3"
       ]
@@ -327,14 +327,14 @@
       "path": "src",
       "purpose": "Source code",
       "fileCount": 0,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623349,
       "keyFiles": []
     },
     "system": {
       "path": "system",
       "purpose": null,
       "fileCount": 4,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623350,
       "keyFiles": [
         "aliases.zsh",
         "env.zsh",
@@ -346,7 +346,7 @@
       "path": "tmux",
       "purpose": null,
       "fileCount": 4,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623350,
       "keyFiles": [
         "cheatsheet.txt",
         "install.sh",
@@ -358,7 +358,7 @@
       "path": "todoist-automation",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623350,
       "keyFiles": [
         "prompt-improvements.md"
       ]
@@ -367,7 +367,7 @@
       "path": "vscode",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623350,
       "keyFiles": [
         "README.md",
         "extensions.txt"
@@ -377,7 +377,7 @@
       "path": "wallpaper",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623350,
       "keyFiles": [
         "TVDBMOt.png"
       ]
@@ -386,7 +386,7 @@
       "path": "zsh",
       "purpose": null,
       "fileCount": 10,
-      "lastAccessed": 1775915687522,
+      "lastAccessed": 1776012623350,
       "keyFiles": [
         "aliases.zsh",
         "completion.zsh",
@@ -399,7 +399,7 @@
       "path": "claude/scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 7,
-      "lastAccessed": 1775915687523,
+      "lastAccessed": 1776012623351,
       "keyFiles": [
         "capture-session-id.sh",
         "check-claude-size.sh",
@@ -410,7 +410,7 @@
       "path": "tmux/scripts",
       "purpose": "Build/utility scripts",
       "fileCount": 3,
-      "lastAccessed": 1775915687524,
+      "lastAccessed": 1776012623354,
       "keyFiles": [
         "fuzzy-everything-preview.sh",
         "fuzzy-everything.sh",
@@ -418,6 +418,307 @@
       ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "agents/skills/docker-test-env/SKILL.md",
+      "accessCount": 12,
+      "lastAccessed": 1776014768253,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/references/eval-strategy.md",
+      "accessCount": 5,
+      "lastAccessed": 1776014768892,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/references/codebase-analysis.md",
+      "accessCount": 5,
+      "lastAccessed": 1776014875924,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/ARCHITECTURE.md",
+      "accessCount": 4,
+      "lastAccessed": 1776014768611,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/assets/nextjs-postgres/docker-compose.yml",
+      "accessCount": 4,
+      "lastAccessed": 1776014774430,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/assets/node-express/docker-compose.yml",
+      "accessCount": 4,
+      "lastAccessed": 1776014775156,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/assets/python-django/docker-compose.yml",
+      "accessCount": 4,
+      "lastAccessed": 1776014775429,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/assets/go-api/docker-compose.yml",
+      "accessCount": 4,
+      "lastAccessed": 1776014775876,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/.system/skill-creator/SKILL.md",
+      "accessCount": 3,
+      "lastAccessed": 1776013211394,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/.system/skill-creator/scripts/init_skill.py",
+      "accessCount": 3,
+      "lastAccessed": 1776013228227,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills",
+      "accessCount": 3,
+      "lastAccessed": 1776013374017,
+      "type": "directory"
+    },
+    {
+      "path": "agents/skills/docker-test-env/references/test-repos.md",
+      "accessCount": 3,
+      "lastAccessed": 1776013430546,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/references/evals.json",
+      "accessCount": 3,
+      "lastAccessed": 1776014769410,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/inbox-triage/evals/evals.json",
+      "accessCount": 2,
+      "lastAccessed": 1776013212202,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/recall/evals/evals.json",
+      "accessCount": 2,
+      "lastAccessed": 1776013212345,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/.system/skill-creator/scripts/generate_openai_yaml.py",
+      "accessCount": 2,
+      "lastAccessed": 1776013236255,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/todoist/references/evals.md",
+      "accessCount": 2,
+      "lastAccessed": 1776013376663,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/references/docker-compose-spec.md",
+      "accessCount": 2,
+      "lastAccessed": 1776014782762,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/node-express-pg/package.json",
+      "accessCount": 2,
+      "lastAccessed": 1776014784684,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/node-express-pg/index.js",
+      "accessCount": 2,
+      "lastAccessed": 1776014784991,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/python-fastapi-celery/app/main.py",
+      "accessCount": 2,
+      "lastAccessed": 1776014785401,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/go-microservices/svc-a/main.go",
+      "accessCount": 2,
+      "lastAccessed": 1776014786062,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/.system/skill-creator/scripts/quick_validate.py",
+      "accessCount": 1,
+      "lastAccessed": 1776012992755,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/.system/skill-creator/references/openai_yaml.md",
+      "accessCount": 1,
+      "lastAccessed": 1776012994895,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/.system/skill-creator/agents/openai.yaml",
+      "accessCount": 1,
+      "lastAccessed": 1776013001041,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/agents/openai.yaml",
+      "accessCount": 1,
+      "lastAccessed": 1776013251761,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/notion-knowledge-capture/evaluations/README.md",
+      "accessCount": 1,
+      "lastAccessed": 1776013377248,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/recall-workspace/iteration-1/benchmark.json",
+      "accessCount": 1,
+      "lastAccessed": 1776013381419,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/node-express-pg/Dockerfile",
+      "accessCount": 1,
+      "lastAccessed": 1776013478926,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/node-express-pg/.env.example",
+      "accessCount": 1,
+      "lastAccessed": 1776013480308,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/python-fastapi-celery/requirements.txt",
+      "accessCount": 1,
+      "lastAccessed": 1776013483418,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/python-fastapi-celery/Dockerfile",
+      "accessCount": 1,
+      "lastAccessed": 1776013484395,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/python-fastapi-celery/.env.example",
+      "accessCount": 1,
+      "lastAccessed": 1776013485005,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/python-fastapi-celery/app/__init__.py",
+      "accessCount": 1,
+      "lastAccessed": 1776013485307,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/python-fastapi-celery/app/celery_worker.py",
+      "accessCount": 1,
+      "lastAccessed": 1776013489413,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/python-fastapi-celery/app/tasks.py",
+      "accessCount": 1,
+      "lastAccessed": 1776013490047,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/nextjs-prisma/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1776013495335,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/nextjs-prisma/next.config.js",
+      "accessCount": 1,
+      "lastAccessed": 1776013495871,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/nextjs-prisma/prisma/schema.prisma",
+      "accessCount": 1,
+      "lastAccessed": 1776013497099,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/nextjs-prisma/pages/api/ping.js",
+      "accessCount": 1,
+      "lastAccessed": 1776013498416,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/nextjs-prisma/.env.example",
+      "accessCount": 1,
+      "lastAccessed": 1776013500536,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/references/env-adaptation.md",
+      "accessCount": 1,
+      "lastAccessed": 1776013502089,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/nextjs-prisma/Dockerfile",
+      "accessCount": 1,
+      "lastAccessed": 1776013505407,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/go-microservices/svc-a/go.mod",
+      "accessCount": 1,
+      "lastAccessed": 1776013511953,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/go-microservices/svc-a/Dockerfile",
+      "accessCount": 1,
+      "lastAccessed": 1776013513885,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/go-microservices/svc-b/main.go",
+      "accessCount": 1,
+      "lastAccessed": 1776013516122,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/go-microservices/svc-b/go.mod",
+      "accessCount": 1,
+      "lastAccessed": 1776013517009,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/go-microservices/svc-b/Dockerfile",
+      "accessCount": 1,
+      "lastAccessed": 1776013518343,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/fixtures/go-microservices/.env.example",
+      "accessCount": 1,
+      "lastAccessed": 1776013520323,
+      "type": "file"
+    },
+    {
+      "path": "agents/skills/docker-test-env/references/health-checks.md",
+      "accessCount": 1,
+      "lastAccessed": 1776013528535,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }
