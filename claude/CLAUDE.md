@@ -77,6 +77,7 @@ Skills are one of the primary methods I have for improving and remembering thing
 - CLI: rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec, atuin, gcal (Google Calendar)
 - Obsidian vault at `~/ws/notes/` (PARA structure) — invoke `para-index` skill before filing notes or deciding where content belongs
 - Vercel: always use the `composeai` organization/scope (not personal `michael-shuffetts-projects`)
+- Workflows: never use the `fable` model for fan-out — do NOT pass `model: 'fable'` when spawning many agents (parallel/pipeline). Let agents inherit the main-loop model, or pick a deliberate per-task tier; fable is not a default for mass spawning.
 
 **Editing This File**
 
