@@ -22,3 +22,13 @@ agents/skills/.system/
 # AgentOps session artifacts
 .agents/
 .omx/
+
+# macOS
+.DS_Store
+
+# oh-my-claude runtime artifacts (project memory stays tracked)
+.omc/sessions/
+.omc/state/
+
+# Claude plugin orphan markers (runtime timestamps)
+**/.orphaned_at
