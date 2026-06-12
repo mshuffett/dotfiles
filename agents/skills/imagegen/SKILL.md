@@ -1,12 +1,25 @@
 ---
 name: "imagegen"
-description: "Use when generating or editing images. Primary tool: bundled `scripts/image_gen.py` (OpenAI GPT Image 1.5). For non-OpenAI providers (Gemini Pro, Gemini, Imagen), use the `generate-image` CLI. Covers generate, edit/inpaint/mask, background removal, transparent background, product shots, concept art, covers, and batch variants."
+description: "Use when generating or editing images. Primary tool: bundled `scripts/image_gen.py` (OpenAI GPT Image 2). For non-OpenAI providers (Gemini Pro, Gemini, Imagen), use the `generate-image` CLI. Covers generate, edit/inpaint/mask, background removal, product shots, concept art, covers, and batch variants."
 ---
 
 
 # Image Generation Skill
 
-Generates or edits images for the current project (e.g., website assets, game assets, UI mockups, product mockups, wireframes, logo design, photorealistic images, infographics). Defaults to `gpt-image-1.5` and the OpenAI Image API, and prefers the bundled CLI for deterministic, reproducible runs.
+Generates or edits images for the current project (e.g., website assets, game assets, UI mockups, product mockups, wireframes, logo design, photorealistic images, infographics). Defaults to `gpt-image-2` and the OpenAI Image API, and prefers the bundled CLI for deterministic, reproducible runs.
+
+## Model selection — read this before picking a model
+
+**The user names the model. Don't infer it from quality cues.**
+
+User shorthand → model mapping:
+- "image 2.0", "image-2", "gpt image", "gpt-image", "openai image", or no model specified → **gpt-image-2** (OpenAI). Use the bundled `scripts/image_gen.py` with `--quality high` for best results. This is the default — do not silently substitute another model.
+- "nano banana", "nano banana pro", "gemini image", "gemini 3 pro image" → `gemini-3-pro-image-preview` via `generate-image --provider gemini-pro`.
+- "imagen", "imagen 4", "google imagen" → `imagen-4.0-*` via `generate-image --provider imagen`.
+
+"High quality" / "high fidelity" / "the good one" is **not** a model selector — it's a `--quality high` flag on whatever model the user chose. If the user has not named a model, default to gpt-image-2 with `--quality high`. Only switch providers when the user names one.
+
+When in doubt about which model the user means, ask before generating.
 
 ## When to use
 - Generate a new image (concept art, product shot, cover, website hero)
@@ -68,7 +81,7 @@ generate-image "A sunset over mountains" --provider gemini-pro --size 2048x2048
 Full reference (providers, flags, input-image limits, sizes): `references/generate-image-cli.md`.
 
 ## Defaults & rules
-- Use `gpt-image-1.5` via `scripts/image_gen.py` unless the user explicitly asks for a non-OpenAI provider or a cheaper/faster model.
+- Use `gpt-image-2` via `scripts/image_gen.py` unless the user explicitly asks for a non-OpenAI provider or a cheaper/faster model.
 - For non-OpenAI providers (Gemini Pro, Gemini, Imagen), use `generate-image` CLI.
 - Assume the user wants a new image unless they explicitly ask for an edit.
 - Require `OPENAI_API_KEY` for OpenAI calls; `GEMINI_API_KEY` for Gemini/Imagen calls.
@@ -172,7 +185,7 @@ Constraints: change only the background; keep the product and its edges unchange
 - For edits, repeat invariants every iteration to reduce drift.
 - Iterate with single-change follow-ups.
 - For latency-sensitive runs, start with quality=low; use quality=high for text-heavy or detail-critical outputs.
-- For strict edits (identity/layout lock), consider input_fidelity=high.
+- For strict edits on models prior to `gpt-image-2`, consider `input_fidelity=high`. For `gpt-image-2`, omit it because the API always uses high-fidelity image inputs.
 - If results feel “tacky”, add a brief “Avoid:” line (stock-photo vibe; cheesy lens flare; oversaturated neon; harsh bloom; oversharpening; clutter) and specify restraint (“editorial”, “premium”, “subtle”).
 
 More principles: `references/prompting.md`. Copy/paste specs: `references/sample-prompts.md`.

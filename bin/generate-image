@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # AI Image Generator
-# Generates images using OpenAI GPT Image 1.5 or Google Gemini (nano-banana)
+# Generates images using OpenAI GPT Image 2 or Google Gemini (nano-banana)
 
 set -e
 
@@ -43,7 +43,7 @@ Options:
     -u, --url-only         Only output the URL, don't download the image (OpenAI only)
     -q, --quality QUALITY  Quality setting for OpenAI: low, high, auto (default: auto)
     -m, --model MODEL      Model to use (default varies by provider)
-                           OpenAI: gpt-image-1.5 (default), gpt-image-1, gpt-image-1-mini
+                           OpenAI: gpt-image-2 (default), gpt-image-1.5, gpt-image-1, gpt-image-1-mini
                            Gemini: gemini-2.5-flash-image (Nano Banana)
                            Gemini Pro: gemini-3-pro-image-preview (Nano Banana Pro)
                            Imagen: imagen-4.0-generate-001, imagen-4.0-ultra-generate-001,
@@ -66,7 +66,7 @@ Environment:
     GEMINI_API_KEY must be set for Gemini, Gemini Pro, and Imagen providers
 
 Providers:
-    openai     - OpenAI's GPT Image 1.5 (default, best quality, up to 16 input images)
+    openai     - OpenAI's GPT Image 2 (default, up to 16 input images)
     gemini-pro - Google's Gemini 3 Pro Image / Nano Banana Pro (up to 14 input images)
     gemini     - Google's Gemini 2.5 Flash Image / Nano Banana (up to 3 input images)
     imagen     - Google's Imagen 4.0 (generation only, no input images)
@@ -151,7 +151,7 @@ if [ "$PROVIDER" = "openai" ]; then
     fi
     # Set default model for OpenAI if not specified
     if [ -z "$MODEL" ]; then
-        MODEL="gpt-image-1.5"
+        MODEL="gpt-image-2"
     fi
     # Validate quality parameter
     if [[ ! "$QUALITY" =~ ^(low|high|auto)$ ]]; then

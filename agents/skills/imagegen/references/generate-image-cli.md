@@ -6,7 +6,7 @@ Bash script at `~/.dotfiles/bin/generate-image`. Supports multiple providers bey
 
 | Provider     | Model ID                       | Best For                         |
 |--------------|--------------------------------|----------------------------------|
-| `openai`     | gpt-image-1.5                  | Best quality, editing (default)  |
+| `openai`     | gpt-image-2                    | OpenAI default, conservative size set |
 | `gemini-pro` | gemini-3-pro-image-preview     | High-res (up to 4K), text rendering |
 | `gemini`     | gemini-2.5-flash-image         | Faster, general use              |
 | `imagen`     | imagen-4.0-generate-001        | Photorealistic                   |
@@ -14,7 +14,7 @@ Bash script at `~/.dotfiles/bin/generate-image`. Supports multiple providers bey
 ## Commands
 
 ```bash
-generate-image "prompt"                                    # 1024x1024 with GPT Image 1.5 (default)
+generate-image "prompt"                                    # 1024x1024 with GPT Image 2 (default)
 generate-image "prompt" --quality high                     # higher fidelity, slower
 generate-image "prompt" --provider gemini-pro              # uses Nano Banana Pro
 generate-image "prompt" --provider gemini-pro --size 2048x2048  # high-res with Pro

@@ -1,4 +1,4 @@
-# Prompting best practices (gpt-image-1.5)
+# Prompting best practices (GPT Image models)
 
 ## Contents
 - [Structure](#structure)
@@ -54,7 +54,7 @@
 ## Quality vs latency
 - For latency-sensitive runs, start at `quality=low` and only raise it if needed.
 - Use `quality=high` for text-heavy or detail-critical images.
-- For strict edits (identity preservation, layout lock), consider `input_fidelity=high`.
+- For strict edits on models prior to `gpt-image-2`, consider `input_fidelity=high`. For `gpt-image-2`, omit it because the model always uses high-fidelity image inputs.
 
 ## Use-case tips
 Generate:
@@ -69,7 +69,7 @@ Generate:
 
 Edit:
 - text-localization: Change only the text; preserve layout, typography, spacing, and hierarchy; no extra words or reflow unless needed.
-- identity-preserve: Lock identity (face, body, pose, hair, expression); change only the specified elements; match lighting and shadows; use `input_fidelity=high` if likeness drifts.
+- identity-preserve: Lock identity (face, body, pose, hair, expression); change only the specified elements; match lighting and shadows; on models prior to `gpt-image-2`, use `input_fidelity=high` if likeness drifts.
 - precise-object-edit: Specify exactly what to remove/replace; preserve surrounding texture and lighting; keep everything else unchanged.
 - lighting-weather: Change only environmental conditions (light, shadows, atmosphere, precipitation); keep geometry, framing, and subject identity.
 - background-extraction: Request transparent background; crisp silhouette; no halos; preserve label text exactly; optionally add a subtle contact shadow.

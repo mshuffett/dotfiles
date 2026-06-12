@@ -41,15 +41,15 @@ python "$IMAGE_GEN" generate --prompt "A cozy alpine cabin at dawn" --size 1024x
 - **Never modify** `scripts/image_gen.py`. If something is missing, ask the user before doing anything else.
 
 ## Defaults (unless overridden by flags)
-- Model: `gpt-image-1.5`
+- Model: `gpt-image-2`
 - Size: `1024x1024`
 - Quality: `auto`
 - Output format: `png`
-- Background: unspecified (API default). If you set `--background transparent`, also set `--output-format png` or `webp`.
+- Background: unspecified (API default). `gpt-image-2` currently supports `opaque` or `auto`, not `transparent`.
 
 ## Quality + input fidelity
 - `--quality` works for `generate`, `edit`, and `generate-batch`: `low|medium|high|auto`.
-- `--input-fidelity` is **edit-only**: `low|high` (use `high` for strict edits like identity or layout lock).
+- `--input-fidelity` is **edit-only**: `low|high` for models prior to `gpt-image-2`. Omit it for `gpt-image-2`, which always uses high-fidelity image inputs.
 
 Example:
 ```
@@ -122,8 +122,10 @@ python "$IMAGE_GEN" edit --image input.png --mask mask.png --prompt "Replace the
 ```
 
 ## CLI notes
-- Supported sizes: `1024x1024`, `1536x1024`, `1024x1536`, or `auto`.
-- Transparent backgrounds require `output_format` to be `png` or `webp`.
+- For `gpt-image-2`, `--size` accepts `auto` or any `WIDTHxHEIGHT` that satisfies the API constraints: each edge multiple of `16`, max edge `3840`, aspect ratio `<= 3:1`, total pixels between `655,360` and `8,294,400`.
+- Popular `gpt-image-2` sizes include `1024x1024`, `1536x1024`, `1024x1536`, `2048x2048`, and `3840x2160`.
+- Models prior to `gpt-image-2` keep the legacy size set: `1024x1024`, `1536x1024`, `1024x1536`, or `auto`.
+- Transparent backgrounds still require `output_format` to be `png` or `webp`, but `gpt-image-2` does not currently support `--background transparent`.
 - Default output is `output.png`; multiple images become `output-1.png`, `output-2.png`, etc.
 - Use `--no-augment` to skip prompt augmentation.
 
