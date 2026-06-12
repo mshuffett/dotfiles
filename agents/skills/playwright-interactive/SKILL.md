@@ -1,13 +1,42 @@
 ---
 name: "playwright-interactive"
-description: "Persistent browser and Electron interaction through `js_repl` for fast iterative UI debugging."
+description: "Persistent interactive Playwright sessions for fast iterative UI debugging — js_repl lane in Codex, tmux-REPL lane in Claude Code. Use whenever driving a browser incrementally beats edit-script-rerun loops, and ALWAYS consult the no-foreground policy before any Playwright launch."
 ---
 
 # Playwright Interactive Skill
 
-Use a persistent `js_repl` Playwright session to debug local web or Electron apps, keep the same handles alive across iterations, and run functional plus visual QA without restarting the whole toolchain unless the process ownership changed.
+Use a persistent Playwright session to debug web or Electron apps, keep the same handles alive across iterations, and run functional plus visual QA without restarting the whole toolchain unless the process ownership changed.
 
-## Preconditions
+## No-Foreground Policy (read first, applies to ALL Playwright use)
+
+Michael works on the same machine while sessions run. A browser window grabbing
+focus interrupts whatever he's doing — this is the single most disruptive
+failure mode of browser automation, so the default posture is invisible:
+
+1. **Default `headless: true`** (Chromium's new headless loads MV3 extensions —
+   "MV3 needs headed" is outdated folklore).
+2. **If headed is genuinely required** (e.g. Google blocks headless sign-in),
+   launch off-screen and treat visibility as opt-in, never opt-out:
+   `--window-position=-2800,0 --window-size=1400,1000` (negative-X off-screen,
+   real-sized — 1×1/minimized windows break layouts like Gmail compose), and
+   re-assert bounds via CDP `Browser.setWindowBounds` after launch since some
+   pages re-position themselves.
+3. **Never make a visible window the default** in helpers or test launchers —
+   accept a `background`/`headless` option that defaults to invisible.
+4. Skipping the test is not an acceptable way to satisfy this policy.
+
+## Runtime Lanes
+
+- **Codex** (`js_repl` tool available): use the js_repl lane below — it is the
+  original and richest lane.
+- **Claude Code** (no `js_repl`): use the **tmux REPL lane** in
+  `references/claude-code-tmux-repl.md`. Same philosophy — one persistent
+  Node REPL owns the browser; you send code line-by-line and read output and
+  screenshots between sends — implemented with `tmux send-keys` /
+  `capture-pane` instead of a kernel. Verified working pattern; do not fall
+  back to one-shot scripts when iterating.
+
+## Preconditions (js_repl lane)
 
 - `js_repl` must be enabled for this skill.
 - If `js_repl` is missing, enable it in `~/.codex/config.toml`:
