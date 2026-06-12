@@ -1,4 +1,5 @@
 {
-  "description": "OMX-enabled Codex profile with the full canonical skill surface and profile-specific Codex overrides.",
-  "extends": ["full"]
+  "description": "OMX-enabled Codex profile that loads upstream oh-my-codex skills with profile-specific Codex overrides.",
+  "skillSources": ["omx"],
+  "include": ["*"]
 }

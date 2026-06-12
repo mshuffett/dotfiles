@@ -9,6 +9,8 @@ REPO_OVERRIDE_BASE_DIR="$DOTFILES_DIR/codex/profile-overrides"
 LOCAL_OVERRIDE_BASE_DIR="$REAL_HOME/.config/skill-profile/codex-overrides"
 REAL_CODEX_DIR="$REAL_HOME/.codex"
 REAL_AGENTS_DIR="$REAL_HOME/.agents"
+OMX_BIN_PATH=""
+OMX_SKILLS_DIR=""
 
 current_profile() {
   if [[ ! -f "$STATE_FILE" ]] || ! command -v jq >/dev/null 2>&1; then
@@ -77,22 +79,72 @@ ensure_symlink() {
   ln -s "$target" "$link_path"
 }
 
+discover_omx_skills_dir() {
+  if [[ -n "$OMX_SKILLS_DIR" ]]; then
+    printf '%s\n' "$OMX_SKILLS_DIR"
+    return 0
+  fi
+
+  if ! OMX_BIN_PATH="$(command -v omx 2>/dev/null)"; then
+    echo 'ERROR: `omx` is not on PATH, so the `omx` profile cannot load oh-my-codex skills.' >&2
+    exit 1
+  fi
+
+  local omx_real_bin
+  omx_real_bin="$(node -e 'const fs=require("fs"); console.log(fs.realpathSync(process.argv[1]))' "$OMX_BIN_PATH")"
+  OMX_SKILLS_DIR="$(cd "$(dirname "$omx_real_bin")/../.." && pwd)/skills"
+
+  if [[ ! -d "$OMX_SKILLS_DIR" ]]; then
+    echo "ERROR: oh-my-codex skills directory not found at $OMX_SKILLS_DIR" >&2
+    exit 1
+  fi
+
+  printf '%s\n' "$OMX_SKILLS_DIR"
+}
+
+profile_skill_source_dir() {
+  local profile="$1"
+
+  case "$profile" in
+    omx)
+      discover_omx_skills_dir
+      ;;
+    *)
+      printf '%s\n' "$DOTFILES_DIR/agents/skills"
+      ;;
+  esac
+}
+
 sync_profile_skills() {
   local profile="$1"
   local skills_dir="$2"
+  local source_dir
+  local managed_roots=("$DOTFILES_DIR/agents/skills")
+  source_dir="$(profile_skill_source_dir "$profile")"
+
+  if [[ "$profile" == "omx" ]]; then
+    managed_roots+=("$source_dir")
+  fi
 
   mkdir -p "$skills_dir"
 
   while IFS= read -r existing; do
     local target
     target="$(readlink "$existing")"
-    [[ "$target" == "$DOTFILES_DIR/agents/skills/"* ]] || continue
+    local managed=0
+    for root in "${managed_roots[@]}"; do
+      if [[ "$target" == "$root/"* ]]; then
+        managed=1
+        break
+      fi
+    done
+    [[ "$managed" -eq 1 ]] || continue
     rm -f "$existing"
   done < <(find "$skills_dir" -mindepth 1 -maxdepth 1 -type l -print | sort)
 
   while IFS= read -r skill; do
     [[ -n "$skill" ]] || continue
-    ensure_symlink "$DOTFILES_DIR/agents/skills/$skill" "$skills_dir/$skill"
+    ensure_symlink "$source_dir/$skill" "$skills_dir/$skill"
   done < <("$DOTFILES_DIR/bin/skill-profile" resolve "$profile")
 }
 
