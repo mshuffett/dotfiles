@@ -1,0 +1,119 @@
+#!/bin/bash
+set -euo pipefail
+
+LABEL="com.michael.codex-as-api"
+DOMAIN="gui/$(id -u)"
+SERVICE="$DOMAIN/$LABEL"
+PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
+PORT="${CODEX_AS_API_PORT:-18080}"
+TUNNEL_HOST="${CODEX_AS_API_TUNNEL_HOST:-michael-dev-18080.geteverything.ai}"
+
+usage() {
+  cat <<EOF
+Usage: codex-as-api <command>
+
+Manage the local Codex OAuth -> OpenAI-compatible proxy.
+
+Commands:
+  start    Start the proxy (launchd, port $PORT)
+  stop     Stop the proxy
+  restart  Restart the proxy
+  status   Show service state and health checks
+  logs     Tail proxy logs
+
+The service does not start automatically at login.
+EOF
+}
+
+is_loaded() {
+  launchctl print "$SERVICE" >/dev/null 2>&1
+}
+
+is_listening() {
+  lsof -i ":$PORT" -sTCP:LISTEN >/dev/null 2>&1
+}
+
+cmd_start() {
+  if [[ ! -f "$PLIST" ]]; then
+    echo "Missing LaunchAgent plist: $PLIST" >&2
+    exit 1
+  fi
+
+  if ! is_loaded; then
+    launchctl bootstrap "$DOMAIN" "$PLIST"
+  fi
+
+  launchctl kickstart -k "$SERVICE"
+  sleep 1
+
+  if is_listening; then
+    echo "codex-as-api started on http://127.0.0.1:$PORT"
+    echo "Tunnel URL: https://$TUNNEL_HOST/v1"
+  else
+    echo "Failed to start codex-as-api. Check logs:" >&2
+    echo "  tail -f $HOME/Library/Logs/com.michael.codex-as-api.err.log" >&2
+    exit 1
+  fi
+}
+
+cmd_stop() {
+  if is_loaded; then
+    launchctl bootout "$SERVICE"
+    echo "codex-as-api stopped"
+  elif is_listening; then
+    lsof -ti ":$PORT" | xargs kill
+    echo "codex-as-api stopped"
+  else
+    echo "codex-as-api is not running"
+  fi
+}
+
+cmd_restart() {
+  cmd_stop
+  cmd_start
+}
+
+cmd_status() {
+  if is_loaded; then
+    launchctl print "$SERVICE" 2>/dev/null | rg 'state =|pid =|last exit code =' || true
+  else
+    echo "launchd: not loaded"
+  fi
+
+  echo
+  if is_listening; then
+    echo "Local health:"
+    curl -fsS "http://127.0.0.1:$PORT/health" | python3 -m json.tool
+
+    echo
+    echo "Local models:"
+    curl -fsS "http://127.0.0.1:$PORT/v1/models" | python3 -m json.tool
+
+    echo
+    echo "Tunnel health:"
+    curl -fsS "https://$TUNNEL_HOST/health" | python3 -m json.tool
+  else
+    echo "Proxy is not listening on port $PORT"
+    echo "Start with: codex-as-api start"
+  fi
+}
+
+cmd_logs() {
+  tail -f \
+    "$HOME/Library/Logs/com.michael.codex-as-api.out.log" \
+    "$HOME/Library/Logs/com.michael.codex-as-api.err.log"
+}
+
+case "${1:-}" in
+  start) cmd_start ;;
+  stop) cmd_stop ;;
+  restart) cmd_restart ;;
+  status) cmd_status ;;
+  logs) cmd_logs ;;
+  -h|--help|help|"") usage ;;
+  *)
+    echo "Unknown command: $1" >&2
+    usage >&2
+    exit 1
+    ;;
+esac
