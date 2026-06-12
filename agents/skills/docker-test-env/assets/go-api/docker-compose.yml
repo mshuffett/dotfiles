@@ -1,0 +1,65 @@
+# Go API + PostgreSQL
+# Multi-stage Dockerfile recommended: build binary in builder stage, run in minimal image
+# Usage: docker compose up -d --build --wait
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-goapp}?sslmode=disable
+      # sslmode=disable for local dev; remove for production
+      ENVIRONMENT: development
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-in-production}
+    env_file:
+      - path: .env
+        required: false
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health || curl -f http://localhost:8080/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    restart: unless-stopped
+
+  # One-shot migration service
+  # Replace command with your migration tool: golang-migrate, goose, atlas, ent, etc.
+  migrate:
+    build: .
+    # golang-migrate example:
+    command: ["migrate", "-path", "/app/migrations", "-database", "postgresql://postgres:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-goapp}?sslmode=disable", "up"]
+    # goose example:
+    # command: ["goose", "-dir", "migrations", "postgres", "postgresql://postgres:password@db:5432/goapp?sslmode=disable", "up"]
+    # custom script example:
+    # command: ["/app/migrate"]
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-goapp}?sslmode=disable
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-goapp}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

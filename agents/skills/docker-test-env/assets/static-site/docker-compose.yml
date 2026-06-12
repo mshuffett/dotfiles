@@ -1,0 +1,44 @@
+# Static site served via nginx
+# Builds static assets then serves them with nginx
+# Usage: docker compose up -d --build --wait
+
+services:
+  web:
+    build:
+      context: .
+      # Uses a multi-stage Dockerfile: build stage (Node) -> nginx stage
+      # See Dockerfile.example in this directory
+      target: serve
+    ports:
+      - "8080:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80/ || curl -f http://localhost:80/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    restart: unless-stopped
+
+# --- Dockerfile.example (multi-stage) ---
+# FROM node:20-alpine AS build
+# WORKDIR /app
+# COPY package*.json ./
+# RUN npm ci
+# COPY . .
+# RUN npm run build
+#
+# FROM nginx:alpine AS serve
+# COPY --from=build /app/dist /usr/share/nginx/html
+# # For SPAs (React/Vue/Svelte), add nginx rewrite config:
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# EXPOSE 80
+#
+# --- nginx.conf (SPA routing) ---
+# server {
+#   listen 80;
+#   root /usr/share/nginx/html;
+#   index index.html;
+#   location / {
+#     try_files $uri $uri/ /index.html;
+#   }
+# }

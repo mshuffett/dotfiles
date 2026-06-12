@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "fixture": "node-express-pg",
+    "fixture_path": "fixtures/node-express-pg",
+    "prompt": "Set up a docker-compose test environment for this codebase.",
+    "stack": {
+      "runtime": "node:20",
+      "framework": "express",
+      "db": "postgres:16"
+    },
+    "expected_services": ["app", "db"],
+    "expectations": [
+      "Generates a valid docker-compose.yml (passes docker compose config)",
+      "Includes a postgres service using image postgres:15 or postgres:16",
+      "app service has DATABASE_URL env var using db service name (not localhost)",
+      "db service has a healthcheck defined",
+      "app service has depends_on: db with condition: service_healthy",
+      "docker compose up --wait succeeds with all services healthy",
+      "GET http://localhost:3000/health returns 200 with {status: ok}"
+    ],
+    "common_failures": [
+      "DATABASE_URL uses localhost instead of db service name",
+      "Missing depends_on or healthcheck causes race condition on startup",
+      "Port in DATABASE_URL uses wrong value (5433 vs 5432)"
+    ]
+  },
+  {
+    "id": 2,
+    "fixture": "python-fastapi-celery",
+    "fixture_path": "fixtures/python-fastapi-celery",
+    "prompt": "Create a local test environment with docker-compose for this project.",
+    "stack": {
+      "runtime": "python:3.12",
+      "framework": "fastapi + celery",
+      "broker": "redis:7"
+    },
+    "expected_services": ["api", "worker", "redis"],
+    "expectations": [
+      "Generates a valid docker-compose.yml (passes docker compose config)",
+      "Includes api, worker, and redis services",
+      "worker service uses same image/build as api but different CMD (celery worker)",
+      "CELERY_BROKER_URL and CELERY_RESULT_BACKEND point to redis service name (not localhost)",
+      "worker depends_on redis with condition: service_healthy",
+      "redis has a healthcheck defined",
+      "docker compose up --wait succeeds with all services healthy",
+      "GET http://localhost:8000/health returns 200",
+      "POST http://localhost:8000/tasks returns 200 with task_id"
+    ],
+    "common_failures": [
+      "worker CMD not overridden — runs uvicorn instead of celery worker",
+      "CELERY_BROKER_URL uses localhost:6379 instead of redis:6379",
+      "redis missing healthcheck causes worker to start before broker ready"
+    ]
+  },
+  {
+    "id": 3,
+    "fixture": "nextjs-prisma",
+    "fixture_path": "fixtures/nextjs-prisma",
+    "prompt": "I need to run this app locally in docker for testing.",
+    "stack": {
+      "runtime": "node:20",
+      "framework": "next.js 14 + prisma",
+      "db": "postgres:16"
+    },
+    "expected_services": ["app", "db", "migrate"],
+    "expectations": [
+      "Generates a valid docker-compose.yml (passes docker compose config)",
+      "Includes a one-shot migrate service that runs: npx prisma migrate deploy",
+      "app service depends_on migrate with condition: service_completed_successfully",
+      "migrate service depends_on db with condition: service_healthy",
+      "DATABASE_URL in all services uses db service name (not localhost)",
+      "DATABASE_URL format is correct for Prisma: postgresql://user:pass@db:5432/dbname",
+      "docker compose up --wait succeeds with app healthy",
+      "GET http://localhost:3000/api/ping returns 200"
+    ],
+    "common_failures": [
+      "No migrate service — migrations not run, app crashes on first DB query",
+      "app depends_on db directly without waiting for migrations",
+      "DATABASE_URL missing ?sslmode=disable for local postgres (Prisma requires explicit SSL config)",
+      "Forgot to copy prisma/ directory into Docker build context"
+    ]
+  },
+  {
+    "id": 4,
+    "fixture": "go-microservices",
+    "fixture_path": "fixtures/go-microservices",
+    "prompt": "Set up a docker-compose environment for this multi-service Go repo.",
+    "stack": {
+      "runtime": "golang:1.22",
+      "services": ["svc-a", "svc-b"],
+      "db": "postgres:16"
+    },
+    "expected_services": ["svc-a", "svc-b", "db"],
+    "expectations": [
+      "Generates a valid docker-compose.yml (passes docker compose config)",
+      "svc-a and svc-b both defined with correct build contexts (./svc-a and ./svc-b)",
+      "svc-a has SVC_B_URL env var set to http://svc-b:8081 (service name, not localhost)",
+      "Services share a custom bridge network (or default compose network)",
+      "db has a healthcheck defined",
+      "docker compose up --wait succeeds with all services healthy",
+      "GET http://localhost:8080/health returns 200 from svc-a",
+      "GET http://localhost:8081/health returns 200 from svc-b",
+      "GET http://localhost:8080/ping-b returns 200 (svc-a successfully called svc-b)"
+    ],
+    "common_failures": [
+      "SVC_B_URL uses localhost:8081 — svc-a cannot reach svc-b this way inside Docker network",
+      "Both services mapped to same host port",
+      "build context wrong — Dockerfile not found because context points to repo root"
+    ]
+  }
+]

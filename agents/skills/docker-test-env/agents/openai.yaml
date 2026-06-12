@@ -1,0 +1,3 @@
+interface:
+  display_name: "Docker Test Env"
+  short_description: "Spin up docker-compose test environments for codebases"
