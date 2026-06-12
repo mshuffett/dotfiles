@@ -1,0 +1,88 @@
+#!/bin/bash
+# Generate a short-term Amazon Bedrock API key and copy it to the clipboard.
+#
+# Uses AWS credentials from the standard provider chain (env vars, profile, etc).
+# Keys start with "bedrock-api-key-" and expire in up to 12 hours.
+
+set -euo pipefail
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/bedrock-api-key-cli"
+COPY=true
+
+usage() {
+  cat <<'EOF'
+Usage: bedrock-api-key [options]
+
+Generate a short-term Amazon Bedrock API key from your current AWS credentials.
+
+Options:
+  -p, --print     Print the token to stdout instead of copying
+  -n, --no-copy   Generate the token but do not copy to clipboard
+  -h, --help      Show this help
+
+By default, the token is copied to the clipboard with pbcopy.
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -p|--print)
+      COPY=false
+      shift
+      ;;
+    -n|--no-copy)
+      COPY=false
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
+ensure_deps() {
+  if [[ ! -d "$CACHE_DIR/node_modules/@aws/bedrock-token-generator" ]]; then
+    mkdir -p "$CACHE_DIR"
+    echo "Installing @aws/bedrock-token-generator (one-time setup)..." >&2
+    (
+      cd "$CACHE_DIR"
+      npm init -y >/dev/null 2>&1
+      npm install @aws/bedrock-token-generator --silent
+    )
+  fi
+}
+
+ensure_deps
+
+TOKEN="$(
+  cd "$CACHE_DIR"
+  node -e "
+    const { getTokenProvider } = require('@aws/bedrock-token-generator');
+    (async () => {
+      const provideToken = getTokenProvider();
+      process.stdout.write(await provideToken());
+    })().catch((err) => {
+      console.error(err.message || err);
+      process.exit(1);
+    });
+  "
+)"
+
+if [[ -z "$TOKEN" ]]; then
+  echo "Failed to generate Bedrock API key" >&2
+  exit 1
+fi
+
+if [[ "$COPY" == true ]] && command -v pbcopy >/dev/null 2>&1; then
+  printf '%s' "$TOKEN" | pbcopy
+  REGION="${AWS_REGION:-${AWS_DEFAULT_REGION:-default AWS region}}"
+  echo "Copied bedrock-api-key to clipboard (${#TOKEN} chars, region: $REGION, expires in up to 12h)" >&2
+else
+  printf '%s\n' "$TOKEN"
+fi
