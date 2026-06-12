@@ -13,28 +13,40 @@ Michael works on the same machine while sessions run. A browser window grabbing
 focus interrupts whatever he's doing — this is the single most disruptive
 failure mode of browser automation, so the default posture is invisible:
 
-1. **Default `headless: true`** (Chromium's new headless loads MV3 extensions —
-   "MV3 needs headed" is outdated folklore).
-2. **If headed is genuinely required** (e.g. Google blocks headless sign-in),
-   launch off-screen and treat visibility as opt-in, never opt-out:
-   `--window-position=-2800,0 --window-size=1400,1000` (negative-X off-screen,
-   real-sized — 1×1/minimized windows break layouts like Gmail compose), and
-   re-assert bounds via CDP `Browser.setWindowBounds` after launch since some
-   pages re-position themselves.
-3. **Never make a visible window the default** in helpers or test launchers —
-   accept a `background`/`headless` option that defaults to invisible.
-4. Skipping the test is not an acceptable way to satisfy this policy.
+1. **`headless: true`, always.** Off-screen/minimized headed windows are NOT
+   an acceptable substitute — macOS activates the app on ANY headed Chromium
+   launch regardless of window position (this exact mistake recurred twice;
+   see mistakes log `e2e.foreground_steal_recurrence`).
+2. **The two folk reasons for headed are dead — both disproven 2026-06-12:**
+   - "MV3 extensions need headed Chrome": Playwright
+     `launchPersistentContext(dir, { headless: true, channel: "chromium" })`
+     (full build, not the headless shell) loads extension service workers.
+   - "Google blocks headless sign-in": a full Gmail TOTP login + extension
+     capture + BigQuery flush passed headless.
+3. **Before running any suite, audit its launch config** (`rg headless`
+   across tests + helpers) — env-var defaults matter
+   (`HEADLESS !== "false"` is safe; `=== "true"` defaults headed).
+4. If something truly fails headless, STOP and get explicit user OK before a
+   headed launch; off-screen real-sized window is then the fallback, knowing
+   it still flashes Dock activation.
+5. Skipping the test is not an acceptable way to satisfy this policy.
 
 ## Runtime Lanes
 
 - **Codex** (`js_repl` tool available): use the js_repl lane below — it is the
   original and richest lane.
-- **Claude Code** (no `js_repl`): use the **tmux REPL lane** in
-  `references/claude-code-tmux-repl.md`. Same philosophy — one persistent
-  Node REPL owns the browser; you send code line-by-line and read output and
-  screenshots between sends — implemented with `tmux send-keys` /
-  `capture-pane` instead of a kernel. Verified working pattern; do not fall
-  back to one-shot scripts when iterating.
+- **Claude Code, general web debugging**: prefer the **playwright MCP server**
+  (`mcp__playwright__*` tools — installed at user scope with `--headless`
+  forced). It keeps one browser session alive across tool calls (the
+  semi-REPL experience as native tools: snapshot, click, type, screenshot),
+  with none of the quoting gymnastics of send-keys.
+- **Claude Code, when MCP can't do it** (loading unpacked MV3 extensions,
+  `launchPersistentContext` args, CDP sessions, service-worker targets, raw
+  Playwright APIs): use the **tmux REPL lane** in
+  `references/claude-code-tmux-repl.md` — one persistent Node REPL owns the
+  browser; send code with `tmux send-keys`, read output/screenshots between
+  sends. Verified working. Do not fall back to one-shot scripts when
+  iterating.
 
 ## Preconditions (js_repl lane)
 
