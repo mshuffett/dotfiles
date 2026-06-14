@@ -2,6 +2,8 @@
 
 Reference for the coach skill. Loaded when Michael needs deep breakthrough work — not operational coaching (that's the daily routines), but fundamental pattern-interruption, meaning-reconnection, or entrenched paralysis that standard coaching can't break through.
 
+> **Relationship to the emotional engine.** [emotional-coaching.md](emotional-coaching.md) is the general *stance* for meeting a feeling (welcome it, don't fix it). This doc is the *map of Michael's specific patterns* — his wiring, the Loop, Cathedral Building, the permission problem, Ship to Beach. They work together: meet the feeling first (emotional engine); use this map to recognize his signature and to inform what you name and log. Don't lead with this map's confrontational lines while a feeling still wants to be felt.
+
 ## When to Activate
 
 The coach triggers this protocol when it detects:

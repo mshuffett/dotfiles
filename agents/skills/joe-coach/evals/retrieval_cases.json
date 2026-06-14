@@ -1,7 +1,0 @@
-[
-  {"query": "I feel completely stuck", "expect_substring": "stuck"},
-  {"query": "I am so lonely and isolated", "expect_substring": "lone"},
-  {"query": "I feel ashamed and want to prove I'm not bad", "expect_substring": "shame"},
-  {"query": "my inner critic won't shut up", "expect_substring": "critic"},
-  {"query": "I have to do everything myself, I can't ask for help", "expect_substring": "self-relian"}
-]

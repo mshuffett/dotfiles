@@ -1,0 +1,66 @@
+[
+  {
+    "query": "I feel stuck and I can't decide whether to take the job or stay. I've been going back and forth for weeks.",
+    "should_trigger": true
+  },
+  {
+    "query": "I keep harshly judging my cofounder. Every little thing he does irritates me and I don't know why.",
+    "should_trigger": true
+  },
+  {
+    "query": "coach me through this fear I have about launching",
+    "should_trigger": true
+  },
+  {
+    "query": "joe coach me",
+    "should_trigger": true
+  },
+  {
+    "query": "I'm so lonely lately. I can't stop thinking about it and I just loop and loop.",
+    "should_trigger": true
+  },
+  {
+    "query": "I'm ashamed of how I reacted to my team and I can't stop beating myself up about it.",
+    "should_trigger": true
+  },
+  {
+    "query": "I wake up every morning with this heavy dread and I don't even know what it's about",
+    "should_trigger": true
+  },
+  {
+    "query": "Be my coach. I need to work through something about my relationship with my dad.",
+    "should_trigger": true
+  },
+  {
+    "query": "write me a python script to parse CSV files and output them as JSON",
+    "should_trigger": false
+  },
+  {
+    "query": "what's on my calendar tomorrow morning",
+    "should_trigger": false
+  },
+  {
+    "query": "summarize this article about anxiety disorders and cognitive behavioral therapy",
+    "should_trigger": false
+  },
+  {
+    "query": "debug why my app is stuck on a loading spinner — it was working fine yesterday",
+    "should_trigger": false
+  },
+  {
+    "query": "help me write a sympathy card for a colleague who lost their mother",
+    "should_trigger": false
+  },
+  {
+    "query": "what are the main themes in the book The Body Keeps the Score",
+    "should_trigger": false
+  },
+  {
+    "query": "refactor this function for readability and add a docstring explaining what it does",
+    "should_trigger": false
+  },
+  {
+    "query": "I feel overwhelmed with everything on my plate — can you help me prioritize my task list for today",
+    "should_trigger": false
+  }
+]
