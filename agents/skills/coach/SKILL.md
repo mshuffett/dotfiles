@@ -120,6 +120,7 @@ Concise, efficient. Proactive but not overbearing. Reference previous days natur
 - **Emotional & Decision Coaching** (the Joe Hudson engine — meeting a feeling, the Golden Algorithm, VIEW; "coach me", stuck/looping/judgment/either-or, fear/shame/burnout): [references/emotional-coaching.md](references/emotional-coaching.md)
 - **Metacognitive Coaching** (deep breakthrough, pattern interruption, entrenched paralysis — Michael's specific avoidance map): [references/metacognitive-coaching.md](references/metacognitive-coaching.md)
 - **Memory** (patterns, preferences, trends, commitments): [references/memory.md](references/memory.md)
+- **Related Skills** (read both when a session touches tasks — the `todoist` skill is canonical for Todoist task triage + scheduling; coach owns notes/calendar/routines): [references/related-skills.md](references/related-skills.md)
 
 The emotional engine is backed by a bundled verbatim corpus under `corpus/` (87-line snippet
 bank + 66 session transcripts, embedded) with live semantic retrieval via `scripts/retrieve.py`
