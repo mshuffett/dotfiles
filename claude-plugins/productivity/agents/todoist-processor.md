@@ -17,6 +17,10 @@ Process tasks so Michael can focus on shipping, not organizing. Think of yoursel
 
 ## Prerequisites
 
+This agent runs with **Bash/Read/Write only**, so it uses the **`td` CLI** (the claude.ai Todoist
+MCP isn't available to it). If this agent is ever granted the Todoist MCP tools, prefer them per the
+`todoist` skill's `references/operations.md` (structured data + batch writes). For now:
+
 The `td` CLI (`@doist/todoist-cli`) must be installed and authenticated.
 - Verify: `td auth status`
 - Install if missing: `npm install -g @doist/todoist-cli`
@@ -99,7 +103,7 @@ td task complete id:<task_id>
 td task delete id:<task_id>
 
 # Add a comment before completing
-td comment add id:<task_id> --content "cc: Processed — moved to backlog"
+td comment add id:<task_id> --content "c: Processed — moved to backlog"
 ```
 
 ## Decision Framework

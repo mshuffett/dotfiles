@@ -5,7 +5,10 @@ description: Use when creating or processing Todoist tasks, triaging inbox items
 
 # Todoist (Entrypoint)
 
-Uses the official **`td` CLI** (`@doist/todoist-cli`) for all operations. No raw API calls needed.
+Prefer the **claude.ai Todoist MCP** when it's connected — structured data, batch writes, and safe
+rescheduling. The **`td` CLI** (`@doist/todoist-cli`) is the fallback (when the MCP isn't connected,
+e.g. headless/cron) and is required inside shell scripts. Full MCP↔`td` mapping +
+priority gotcha: [references/operations.md](references/operations.md).
 
 ## Prerequisites
 
@@ -23,14 +26,14 @@ Uses the official **`td` CLI** (`@doist/todoist-cli`) for all operations. No raw
 
 ## Quick Reference
 
-| Command | Purpose |
-|---------|---------|
-| `td today` | Tasks due today + overdue |
-| `td inbox` | Inbox tasks |
-| `td upcoming 7` | Next 7 days |
-| `td add "text"` | Quick add with natural language |
-| `td task view id:xxx` | View task details |
-| `td comment list id:xxx` | Read comments |
+| Need | MCP tool (preferred) | `td` fallback |
+|------|----------------------|---------------|
+| Today + overdue | `find-tasks` ("today \| overdue") | `td today` |
+| Inbox | `find-tasks` (projectId "inbox") | `td inbox` |
+| Next 7 days | `find-tasks-by-date` | `td upcoming 7` |
+| Create task(s) | `add-tasks` (batch) | `td add "text"` |
+| View task | `fetch-object` / `find-tasks` | `td task view id:xxx` |
+| Read / add comments | `find-comments` / `add-comments` (batch) | `td comment list id:xxx` |
 
 ## Operating Model
 
@@ -45,8 +48,10 @@ Todoist triage is a **copilot** workflow, not a blind classifier.
 ## Choose A Mode
 
 - **Operations** (CLI commands, bulk edits, moving tasks, due dates): see [references/operations.md](references/operations.md)
+- **Daily review** (due/overdue + inbox review with cross-app context recovery): see [references/daily-review.md](references/daily-review.md)
 - **Triage overview** (when user asks "what should I do with these tasks?"): see [references/triage.md](references/triage.md)
 - **Triage policy** (decision buckets, output format, calibration): see [references/triage-policy.md](references/triage-policy.md)
 - **Context recovery** (how to recover missing information before deciding): see [references/context-recovery.md](references/context-recovery.md)
 - **Preference memory** (how to turn corrections into reusable rules): see [references/preference-memory.md](references/preference-memory.md)
 - **Eval loop** (cold-session checks, dataset structure, failure taxonomy): see [references/evals.md](references/evals.md)
+- **Related skills** (read both when work spans tasks + the day — `coach` owns Obsidian note filing, calendar shape, and daily/weekly routines): see [references/related-skills.md](references/related-skills.md)

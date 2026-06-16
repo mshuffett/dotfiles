@@ -1,8 +1,33 @@
 # Todoist Operations (Reference)
 
-All operations use the official `td` CLI (`@doist/todoist-cli`).
+**Tooling — prefer the MCP, fall back to `td`.** When the **claude.ai Todoist MCP** is connected,
+use it for all operations: it returns structured data (no CLI-text parsing), does **batch** writes
+(one call, many items), and reschedules safely. Use the **`td` CLI** (`@doist/todoist-cli`) only as
+a fallback when the MCP isn't connected (e.g. headless/cron runs) and inside **shell scripts** (MCP
+tools can't be called from bash). The `td` reference further down stays valid for those cases.
 
 **CRITICAL**: Do NOT create tasks proactively without user request.
+
+## MCP ↔ `td` mapping (claude.ai Todoist)
+
+| Operation | MCP tool (preferred) | `td` fallback |
+|-----------|----------------------|---------------|
+| List today + overdue | `find-tasks` (filter "today \| overdue") / `find-tasks-by-date` | `td today` |
+| List inbox | `find-tasks` (projectId "inbox") / `get-overview` | `td inbox` |
+| Upcoming N days | `find-tasks-by-date` | `td upcoming 7` |
+| View a task | `fetch-object` / `find-tasks` | `td task view id:x` |
+| Create task(s) | `add-tasks` (array; p1–p4; dueString; labels) | `td add` / `td task add` |
+| Update task(s) | `update-tasks` (content/priority/labels/desc; due removal: dueString "remove") | `td task update` |
+| **Reschedule a due date** | **`reschedule-tasks`** (preserves recurrence — don't use `update` for this) | `td task update --due` |
+| Complete / reopen | `complete-tasks` / `uncomplete-tasks` (arrays) | `td task complete` |
+| Move project/section | `update-tasks` (projectId) / `project-move` | `td task move` |
+| Delete | `delete-object` | `td task delete` |
+| List / add comments | `find-comments` / `add-comments` (array — batches many tasks at once) | `td comment list` / `td comment add` |
+| Projects | `find-projects` / `add-projects` | `td project list` / `td project create` |
+| Completed / stats | `find-completed-tasks` / `get-productivity-stats` | `td completed` / `td stats` |
+
+**Priority gotcha:** the MCP uses `p1`=highest … `p4`=lowest (matches the Todoist UI). The `td` CLI
+**inverts** this (`--priority 4` = P1). Use the `p1`–`p4` strings with the MCP.
 
 ## Core Rules
 
@@ -27,7 +52,7 @@ Comments contain critical context — links, images, detailed notes.
 
 When a task has an assignee that isn't Michael, it's already delegated. Don't suggest "hiding" or "reassigning".
 
-## CLI Reference
+## `td` CLI Reference (fallback / for shell scripts)
 
 ### Output Formats
 
@@ -83,7 +108,7 @@ td task browse id:<id>
 
 ```bash
 td comment list id:<task_id>                         # List comments on task
-td comment add id:<task_id> --content "cc: Note"     # Add comment
+td comment add id:<task_id> --content "c: Note"      # Add comment (agent prefix c:)
 td comment update <comment_id> --content "Updated"   # Edit
 td comment delete <comment_id>                       # Delete
 ```
@@ -211,10 +236,10 @@ Use `--all` to fetch everything, or `--cursor` + `--limit 50` for manual paginat
 
 ## Comment Convention
 
-Always prefix automated comments with `cc:` to distinguish from human comments:
+Always prefix agent/automated comments with `c:` to distinguish from human comments:
 
 ```bash
-td comment add id:<id> --content "cc: Moved to Raw Ideas project"   # Correct
+td comment add id:<id> --content "c: Moved to Raw Ideas project"    # Correct
 td comment add id:<id> --content "Moved to Raw Ideas project"       # Wrong
 ```
 

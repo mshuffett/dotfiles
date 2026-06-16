@@ -36,7 +36,7 @@ This returns normalized context for:
 
 1. Never guess a session id. If the helper returns none, say it is unavailable.
 2. If both Codex and Claude identifiers are present, report both and label them.
-3. For Todoist actions, prefer `td task add` or other `td` commands over raw API calls.
+3. For Todoist actions, prefer the **claude.ai Todoist MCP** (e.g. `add-tasks`) when connected; use `td` commands as the fallback (and inside shell scripts). Avoid raw API calls.
 4. For resumable handoffs, always include:
    - directory
    - repo root

@@ -9,6 +9,11 @@ Interactive triage that learns your preferences. You present classified items in
 table, the user confirms or corrects, you execute and log everything. Corrections
 become rules that improve future sessions.
 
+> **Tooling:** prefer the **claude.ai Todoist MCP** for fetching/updating/completing tasks and
+> reading/adding comments when it's connected (structured data + batch ops; safe reschedule). The
+> `td` commands shown below are the fallback (and for shell scripting). See the `todoist` skill's
+> `references/operations.md` for the full MCP↔`td` mapping + the p1–p4 priority gotcha.
+
 ## Regression Check (before anything else)
 
 If session logs exist in `~/.dotfiles/projects/adaptive-triage/triage-sessions/`:
@@ -148,7 +153,7 @@ For each confirmed/corrected item:
 - Execute based on the corrected category
 
 **Clarify items (still unresolved):**
-- `td comment add id:<id> --content "cc: Needs clarification — <what context is missing>"`
+- `td comment add id:<id> --content "c: Needs clarification — <what context is missing>"`
 - Leave in inbox
 
 **Skip items:**
