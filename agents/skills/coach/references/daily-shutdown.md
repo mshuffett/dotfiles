@@ -16,7 +16,6 @@ Create a TaskList from the steps below and guide Michael through them.
 3. Ask Michael to provide (paste or dictate):
    - **What shipped today** (1-5 bullets)
    - **New risks/unknowns discovered** (0-3 bullets)
-   - **Time tracked today** (hours/minutes from Toggl)
    - **Productivity score** (0-10) + 1 sentence why
    - **Distractions** (one line)
    - **Improvements for tomorrow** (0-3 bullets)

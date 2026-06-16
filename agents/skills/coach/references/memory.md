@@ -143,7 +143,7 @@ Communication and workflow preferences learned from Michael:
 - Throughout day: quick capture, minimal friction
 - Timezone: America/Los_Angeles (San Francisco)
 - Default calendar: michael@geteverything.ai
-- Time tracking: Toggl (daily, review at shutdown)
+- Time tracking: **dropped (2026-06-16)** — no longer tracked; removed from the shutdown checklist.
 - Weekly planning: Saturday 12:00-16:00
 - **Paper planner is the daily source of truth** (not digital). Computer stays in bag until paper plan is done.
 - Paper planner format: 1 MIT + 2 secondary + 2 additional, with target poms per task
@@ -170,6 +170,7 @@ Multi-day/week observations:
 - **W08-W11 (Feb 16 – Mar 16):** Month-long gap in daily notes. System dropped entirely after Feb 16. Confirms the "milestone → break → system collapse" pattern — Demo Day prep consumed all bandwidth, daily tracking/planning system was abandoned.
 - **Demo Day (Mar 10):** Happened at Hanwha AI Center, SF. Michael presented as closing act. Strong audience energy. MongoDB $10K sponsor. But no term sheets or committed capital followed.
 - **Post-Demo Day mood (Mar 16):** Reflective, vulnerable. Evelisa surfaced a hard truth — building things around the thing, not the thing itself. Michael is grappling with whether the batch/event moved the needle enough.
+- **2026-06-15 (Mon, 8/10):** Productive, but the **scaffolding pattern recurred** — built a full Todoist triage+scheduling eval system (Personal OS, P2) while the **raise (P1) got zero direct motion**. Michael named it himself. Response: adopted the calendar forcing functions (see Commitments) + tomorrow's #1 = *define the investor approach in one doc*. Also: **Dave & Michelle shifted to project-basis**; Dave's daily sync is now a full hour (11–12) — flagged to renegotiate (30 min / 3×wk).
 
 ## Key People
 
@@ -199,6 +200,11 @@ Active commitments Michael has made (with dates):
 - (2026-02-15) Bedtime: 12:30 AM, screens off 11:30, stop work 10:30
 - ~~(2026-02-15) Work weekends until Demo Day (Mar 10)~~ — expired
 - ~~(2026-02-15) Information low diet through Demo Day~~ — expired
+- **(2026-06-16) Priority-protection forcing functions** (to counter the scaffolding/over-building pattern):
+  - Recurring **🎯 Top Priority block** (weekdays 12:15–14:30, calendar) — first deep-work on raise/Demo Day *before* any system/tooling work.
+  - Recurring **🛠 System/Admin capped slot** (weekdays 16:00–16:45); overflow → Setup Backlog.
+  - **Nightly #1-outcome pre-commit** at shutdown → becomes the next day's protected block (rename the recurring block to it).
+  - Representation rule: **calendar = when, Todoist = what**; don't add a third mechanism.
 
 ## Feedback
 
@@ -207,6 +213,7 @@ Session feedback log (rating 1-5 + improvement):
 - **2026-02-15 (weekly review):** 4/5. Improvement: tighter time management during the review itself — state the time budget per phase upfront, track it, maybe use a timer. We drifted and didn't finish all phases in the original window.
 - **2026-02-16 (morning):** Coach was time-blind — didn't notice 6-hour gap between check-ins (11:15 to 5:00 PM). Must check the clock at every interaction and flag elapsed time. Time awareness is a core coaching function, not optional.
 - **2026-03-16 (evening):** 4/5. Improvement: when assessing Michael's state, don't just name it and move on. Co-create a shared mental model — a structured snapshot (emotional, strategic, energy, decision-readiness) that we both agree on. Make it explicit and referenceable, not just a passing observation.
+- **2026-06-15 (evening):** Improvement: **always check task comments AND descriptions before acting/triaging** — critical context lives there and must not be lost (recurring ask; it's why the shutdown sweep mattered). Already encoded in operations.md / daily-review.md / triage-process.md; treat as a standing rule.
 
 ## Open Questions
 
