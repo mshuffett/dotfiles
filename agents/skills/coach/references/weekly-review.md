@@ -11,9 +11,29 @@ Create a TaskList from the phases below and guide Michael through them.
 
 ---
 
+## Phase 0: Align on State (5 min)
+
+Before reviewing, agree on the starting picture — **don't assume it.** This catches the
+failure mode where the coach plans off a stale or mis-read snapshot.
+
+1. Read `references/current-state.md` and pull the live Todoist **P1 / P2** priorities.
+2. Present them back as a **dated draft**: "Here's where I think things stand as of
+   <date> — P1/P2, focus themes, connections. Correct anything that's off."
+3. Once Michael confirms/corrects, record the agreed state (dated) in
+   `references/current-state.md`. That dated baseline is what the rest of the review uses.
+
 ## Phase 1: Retro (20 min)
 
 Start with what happened — context before planning.
+
+### Scan the Week (added 2026-06-15)
+
+Ground the retro in what actually happened, not just memory:
+- Skim the week's **conversations/threads** (coaching sessions, key chats), **completed
+  Todoist tasks**, and the **calendar** for recurring themes, decisions, and self-awareness moments.
+- **Assertiveness check** (a tracked pattern): note specific moments Michael asserted his real
+  opinion vs. swallowed it. Treat as evolving data, not a verdict. (See `memory.md` → Assertiveness.)
+- Feed what surfaces into Good/Bad/Start/Stop below.
 
 ### Plan vs Actual
 
@@ -47,9 +67,10 @@ Inbox clearing is NOT the identity of this review. Scale effort to inbox size.
 
 ## Phase 3: GTD Trigger-List Scan (15 min)
 
-8. Open `~/ws/notes/2-Areas/System/Active Projects.md`. For each active project:
+8. Pull the live Todoist **P1 / P2** priorities (the current project source — see
+   SKILL.md → Current Project Context). For each active project:
    - Still active? Next action clear? Any to archive?
-   - Update the file with any changes.
+   - Update Todoist (and `references/current-state.md` if the priority set changed).
 9. Scan `1-Projects/` folder for anything in-flight not reflected in the active list.
 10. Check other active commitments (cofounder considerations, relationships, health) as trigger list.
 11. Check `@waiting` items (in Todoist + daily notes) for follow-ups.
@@ -58,7 +79,7 @@ Inbox clearing is NOT the identity of this review. Scale effort to inbox size.
 ## Phase 4: Weekly Plan by Active Project (60 min)
 
 This is the core of the review. Informed by the retro. Source of projects:
-`~/ws/notes/2-Areas/System/Active Projects.md`.
+the live Todoist **P1 / P2** priorities (see SKILL.md → Current Project Context).
 
 For each active project that needs focus this week:
 

@@ -4,34 +4,64 @@ Persistent memory for the coach skill. Read at session start. Update when someth
 
 ---
 
-## Session-Start Protocol (added 2026-04-19)
+## Session-Start Protocol (updated 2026-06-15 — system of record moved)
 
-**Always read `~/ws/notes/2-Areas/System/Active Projects.md` before assuming current focus.**
-CLAUDE.md drifts — `Active Projects.md` is the live source of truth, maintained
-jointly with Michael.
+**The active loop moved off Obsidian to Todoist.** As of 2026-06-15 the working
+operating system is **Todoist** (tasks, P1/P2 priorities, cadence) + calendar — treat it
+as **primary**. **Notion "Waycraft OS" / Command Center is exploratory — not a committed
+migration, not yet operational ("not migrating to Notion yet, per se"), and not connected
+to the coach.** Do not depend on it. **Obsidian (`~/ws/notes`) is still the home for prose
+outputs** (daily/weekly notes, write-ups, captures — "still Obsidian for now"), but
+**project/task tracking moved to Todoist**: don't read `Active Projects.md` as the live
+project list, and treat existing vault files as stale unless confirmed.
 
-**If active projects aren't clear or the file is stale (no update in >2 weeks),
-ASK Michael to re-state current active projects before filing, triaging, or
-planning.** Never guess from CLAUDE.md alone. This was a real miss in the
-2026-04-19 triage session — stale "Demo Day is current focus" led to misframing.
+**At session start, read `references/current-state.md`** — the dated working baseline
+(connections, P1/P2 tree, focus themes, cadence). **Each block has a 1-week TTL: if it's
+>1 week old, re-confirm with Michael (or re-pull from Todoist/Notion) before filing,
+triaging, or planning.** Never guess current focus from CLAUDE.md or a stale file alone —
+that misfired in the 2026-04-19 triage (stale "Demo Day is current focus").
+
+**Align on state, don't assume it.** Present any read (Command Center / Todoist / memory)
+as a *dated draft* → Michael confirms/corrects → record the agreed state with a date →
+re-confirm later. (Now an explicit SOP step: weekly-review Phase 0 + the session-start ritual.)
 
 ## Todoist Project Model (added 2026-04-19)
 
 Michael's Todoist "projects" serve two functions that need different treatment:
 
-1. **Active Projects** (5-7, listed in `Active Projects.md`) — real commitments,
-   reviewed weekly, have next-actions. Filing here means "I commit to act within
-   ~2 weeks."
+1. **Active Projects** (the live **Todoist P1 / P2** containers — no longer
+   `Active Projects.md`) — real commitments, reviewed weekly, have next-actions.
+   Filing here means "I commit to act within ~2 weeks."
 2. **Capture Buckets** (Everything AI Backlog, Waycraft Backlog, idea, Setup
    Backlog, Strategy Backlog, AutoBacklog, Someday/Later, Someday/Maybe, Tickler,
    📖 Review, ❓ Clarifications) — fast routing at capture time via Todoist
    quick-add. These are typed inboxes, not project lists. Coach drains them
    periodically during "Process Live Ideas" — items go to Obsidian (Reference/
-   Seed) or Active Projects (Action), per classification rules.
+   Seed) or the Todoist P1/P2 projects (Action), per classification rules.
 
 **Anti-pattern to watch for: over-filing into Active Projects.** If an item isn't
 a 2-week commitment, it's not a project-task — it's Reference, Seed, or Delete.
 Filing non-commitments into projects is what makes projects "die."
+
+### Naming + Structure Conventions (added 2026-06-15)
+
+How Michael wants Todoist projects named (confirmed in the 2026-06-15 weekly review):
+
+- **Outcome-named, one outcome per project.** Nesting to show structure is encouraged.
+- **Imperative verbs** ("Write Pitch", "Book Demo Day Venue", "Build…", "Define…") —
+  NOT activity-noun names ("VC Strategy and Messaging"), NOT past-tense ("Pitch written").
+  Past tense is only for the big-rocks checklist.
+- **Headline projects encode the target + deadline** ("Raise $5M by July 28th", not "Raise the Round").
+- **MECE / de-dup.** He dislikes overlapping project sets — collapse duplicates.
+- Priority containers **P1 / P2** (favorited, ordered at root) hold ranked outcome sub-projects.
+  All other projects live under the PARA spine (`1-Projects` / `2-Areas` / `3-Resources`);
+  the P1/P2 parents at root are the approved exception. *(The live tree is in `current-state.md`.)*
+
+### OKR Cadence (added 2026-06-15)
+
+**Quarterly set, monthly reflow.** Set/revise OKRs quarterly; each month reflow projects +
+inbox items into tasks/projects *under* the OKRs. Review OKR-linked projects at least weekly.
+(Resolves the monthly-vs-quarterly tension Michael flagged.)
 
 ## Due-Date Rule (added 2026-04-19)
 
@@ -69,6 +99,37 @@ Confirmed recurring behaviors (2+ occurrences):
 - Hands off work to Michelle but doesn't specify: deadline, what "done" looks like, or escalation rule
 - Check-in frequency isn't the issue — it's the format/output expected back
 - Result: no visibility into what shipped vs didn't until too late
+- **(2026-06-15)** The *worry of not knowing what Michelle is working from* nearly exceeded the
+  benefit of delegating. Fix = the daily Michelle sync (12:00–12:15). Open to delegating more
+  across the batch (press, events, sponsorship) to willing owners.
+
+### Assertiveness (core, high-leverage — added 2026-06-15)
+Michael tends to **defer/absorb others' assertiveness rather than assert his own opinion.**
+Same root muscle shows up as: the Dave boundary issue; reacting to directive unsolicited advice
+(ref. a May 31 conversation about Dave advising during Evelisa's talk prep); and likely in
+fundraising rooms where conviction is the asset. **He wants this tracked weekly** — note moments
+he asserted his real opinion vs. swallowed it. Treat as evolving, not a verdict.
+
+### Dave-Conversation Drift (added 2026-06-15)
+Long unstructured talks with Dave derail his focus (one day went 9/10 → 6/10). He's practicing
+kind, direct boundary-setting (state the time boundary *up front*; appreciation + boundary +
+future-hook to exit). Check in during shutdowns/reviews. The containerized Dave daily sync (11am,
+Dave runs it) + the Michelle sync are the structural fixes.
+
+### Category-Collision (added 2026-06-15)
+He mixes **"DO the review" with "BUILD the agentic review system"** — distracting. Agreed
+resolution: **do the work; capture system-design ideas in a bucket; build them into next week's
+process.** The review is the objective; design insight is a byproduct.
+
+### Chat-as-Interface Friction (added 2026-06-15)
+He finds coaching-via-chat can be slower than doing it himself, and it can steer him / make it
+hard to ensure his *own* priorities get resolved. Implication for the coach: **be alignment-first,
+present reads as drafts to confirm, keep it light / one-thing-at-a-time, don't over-steer.**
+
+### Overwhelm + Over-Building (added 2026-06-15)
+Strong 0→1 builder who can stall near "done" and over-engineer structure (see also Scaffolding,
+above). **Explicitly asked: don't over-optimize.** Bias toward small, concrete, shippable steps
+that touch his real tools.
 
 ## Preferences
 
@@ -94,6 +155,10 @@ Communication and workflow preferences learned from Michael:
 - **"Capture it" means write it in a persistent note, not just acknowledge it.** Don't say "captured" unless it's written somewhere that won't get lost.
 - Weekly review: prefers retro FIRST (before planning). For large inboxes, quick scan for high-priority only.
 - When action items are on a single daily note, they get lost. Put them in the weekly note or a linked persistent doc.
+- **(2026-06-15) Daily scheduling:** 1–3 prioritized tasks/day + up to 5 quick ones, all with
+  priorities, filling available time. **Deep work in the morning** (afternoons are meeting-heavy
+  with Open Batch group syncs). Tag genuinely-quick items `@Quick/Easy`; deep tasks stay untagged.
+- **(2026-06-15) Todoist week starts Sunday.**
 
 ## Trends
 
@@ -109,7 +174,10 @@ Multi-day/week observations:
 ## Key People
 
 - **Evelisa** — Michael's wife. Sharp strategic thinker. Her feedback lands hard but constructively. Surfaced the scaffolding pattern directly (Mar 16).
-- **Michelle** — handles ops/delegation (investor emails, admin). Delegation clarity remains an issue.
+- **Michelle** (`michelle@compose.ai`) — handles ops/delegation (investor emails, admin). Delegation
+  clarity is the issue; fix = standing daily 12:00–12:15 sync (added 2026-06-15).
+- **Dave** — mentor/advisor; owed PE GTM work. Long unstructured talks drift his focus (see
+  Dave-Conversation Drift pattern). Containerized into a daily 11am sync Dave runs.
 
 ## Everything AI Status (as of Mar 16)
 

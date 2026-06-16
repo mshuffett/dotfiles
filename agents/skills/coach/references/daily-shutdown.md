@@ -46,7 +46,7 @@ Create a TaskList from the steps below and guide Michael through them.
    ```
    Project / next-action: uphill/downhill, ~X%, on track? y/n, note
    ```
-   Source: `~/ws/notes/2-Areas/System/Active Projects.md` and current weekly plan.
+   Source: the live Todoist P1/P2 priorities (+ `references/current-state.md`) and current weekly plan.
 
 ## Step 6: Calendar Lookahead
 

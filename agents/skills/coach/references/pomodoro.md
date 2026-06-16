@@ -47,7 +47,8 @@ Each task subpage must include:
 ## Canonical Session Files
 
 Pomodoro pointers derive from the currently active project. Get the active
-project list from `~/ws/notes/2-Areas/System/Active Projects.md`, then:
+project list from the live Todoist P1/P2 priorities (see SKILL.md → Current
+Project Context), then:
 
 - Checklist: live in the active project's area (e.g. `1-Projects/<active project>/Pomodoro Checklist.md`) or inline in the daily note for lightweight days.
 - Task subpages: under the active project folder (`1-Projects/<active project>/`).
