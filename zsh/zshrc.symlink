@@ -462,3 +462,14 @@ export PATH="$HOME/.grok/bin:$PATH"
 fpath=(~/.grok/completions/zsh $fpath)
 autoload -Uz compinit && compinit -C
 # <<< grok installer <<<
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/michael/.local/bin:$PATH"
+
+# Claude Code deferred MCP loading (added by Taskmaster)
+export ENABLE_EXPERIMENTAL_MCP_CLI='true'
+
+# Task Master aliases added on 6/15/2026
+alias tm='task-master'
+alias taskmaster='task-master'
