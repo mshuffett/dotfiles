@@ -18,6 +18,7 @@ Score:
 - action specificity
 - evidence use
 - task-to-note/project conversion quality
+- cross-app action readiness when the task requires Gmail / notes / Notion context
 
 ### 2. Calibration evals
 
@@ -32,6 +33,21 @@ Score:
 - names the missing information precisely
 - avoids fake certainty
 
+### 3. Cross-app recovery evals
+
+Question:
+
+- Given only a Todoist task, does the model recover the relevant people/project context from other systems and produce the right reversible next action?
+
+Score:
+
+- searches the right systems without being told the answer
+- identifies the named person and relationship context
+- connects recovered evidence to the task intent
+- drafts the outbound message when justified
+- prepares a task comment with reasoning and draft
+- asks before modifying Todoist or creating/sending email
+
 ## Failure taxonomy
 
 Tag each failure with one primary cause:
@@ -44,10 +60,12 @@ Tag each failure with one primary cause:
 | `memory_drift` | Preference memory failed to carry forward cleanly |
 | `overfit_rule` | A correction was promoted too broadly |
 | `format_only` | Output looked polished but did not improve decision quality |
+| `unsafe_action` | The model modified Todoist/Gmail without explicit approval |
 
 ## Dataset shape
 
-The v2 eval dataset lives at `fixtures/triage-evals.v2.json`.
+The v2 triage dataset lives at `fixtures/triage-evals.v2.json`.
+Cross-app recovery cases live at `fixtures/private/cross-app-context-evals.json` (gitignored — contains real PII).
 
 Each eval should include:
 
