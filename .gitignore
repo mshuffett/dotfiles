@@ -32,3 +32,7 @@ agents/skills/.system/
 
 # Claude plugin orphan markers (runtime timestamps)
 **/.orphaned_at
+
+# Todoist eval — real task data + oracle answers contain PII, NEVER commit
+agents/skills/todoist/fixtures/private/
+**/fixtures/private/
