@@ -23,6 +23,10 @@ interface Profile {
   instance_type: string;
   setup_script: string | null;
   setup_completed: boolean;
+  // When set (Tailscale-managed box), the SSH config HostName is pinned to this
+  // stable MagicDNS name instead of the ephemeral public IP. Public IP changes on
+  // stop/start; the tailnet name/IP do not, so we never clobber it on `start`.
+  tailscale_host?: string | null;
 }
 
 interface ProfileConfig {
@@ -132,12 +136,17 @@ function updateSshConfig(profile: Profile, ip: string): void {
   const marker = `# dev-managed: ${profile.name}`;
   const endMarker = `# /dev-managed: ${profile.name}`;
 
+  // Tailscale boxes use the stable MagicDNS name and keyless Tailscale SSH; the
+  // pem is unused (and the public IP is firewalled once locked down).
+  const hostName = profile.tailscale_host || ip;
   const newBlock = [
     marker,
     `Host ${profile.ssh_host}`,
-    `    HostName ${ip}`,
+    `    HostName ${hostName}`,
     `    User ${profile.ssh_user}`,
-    `    IdentityFile ~/.ssh/dev-server-aws.pem`,
+    ...(profile.tailscale_host
+      ? []
+      : [`    IdentityFile ~/.ssh/dev-server-aws.pem`]),
     `    StrictHostKeyChecking no`,
     endMarker,
   ].join("\n");
@@ -158,7 +167,7 @@ function updateSshConfig(profile: Profile, ip: string): void {
     const existingBlock = match[0];
     const updatedBlock = existingBlock.replace(
       /(HostName\s+)\S+/,
-      `$1${ip}`
+      `$1${hostName}`
     );
     config = config.replace(markerRegex, updatedBlock);
   } else {
@@ -240,6 +249,24 @@ async function syncCreds(profile: Profile, force = false): Promise<void> {
   }
 
   const creds = stdout.toString().trim();
+
+  // Don't clobber the box with an expired Keychain token. Modern Claude Code keeps
+  // multiple suffixed Keychain entries and refreshes in memory, so the legacy
+  // "Claude Code-credentials" entry is often stale. For remote boxes prefer a
+  // long-lived CLAUDE_CODE_OAUTH_TOKEN (see ~/.config/claude-env on the box).
+  try {
+    const o = (JSON.parse(creds) as any).claudeAiOauth ?? JSON.parse(creds);
+    if (o?.expiresAt && o.expiresAt < Date.now()) {
+      console.error(
+        "Skipping cred sync: Keychain token is expired. The box should use a " +
+          "long-lived CLAUDE_CODE_OAUTH_TOKEN (~/.config/claude-env) instead."
+      );
+      return;
+    }
+  } catch {
+    // Unexpected shape — fall through and sync as-is.
+  }
+
   const proc = Bun.spawn(
     [
       "ssh",
@@ -563,7 +590,7 @@ const main = defineCommand({
         ]);
 
         const { stdout: runOutput } =
-          await $`aws ec2 run-instances --image-id ami-0cf2b4e024cdb6960 --instance-type ${instanceType} --key-name dev-server-key --security-group-ids sg-0f155dd58de85c2ae --subnet-id subnet-0989be4d1cc95616c --block-device-mappings ${blockDeviceMappings} --tag-specifications ${tagSpecs} --region ${region} --output json`.quiet();
+          await $`aws ec2 run-instances --image-id ami-0cf2b4e024cdb6960 --instance-type ${instanceType} --key-name dev-server-key --security-group-ids sg-0f48d7fb34f72a2ea --subnet-id subnet-02493c820e0e60ac1 --block-device-mappings ${blockDeviceMappings} --tag-specifications ${tagSpecs} --region ${region} --output json`.quiet();
 
         const result = JSON.parse(runOutput.toString());
         const instanceId = result.Instances[0].InstanceId;
