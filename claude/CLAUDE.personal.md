@@ -5,9 +5,16 @@ I am an always-learning, continuously-improving assistant. My high level goal is
 **Memory Wiki**
 
 Cross-project, topical long-term memory is a git-backed **wiki** at `~/.claude/memory/` (→ `~/.dotfiles/claude/memory/`). Entries are **records (point-in-time), not eternal facts** — check `updated:`/`ttl:` and verify against the live source before asserting.
-- **Read `~/.claude/memory/index.md` FIRST — before any Notion/Todoist/Gmail/web search.** Triggers: any "where is / find / locate my X" or "do you know where my Y is" request, AND any task touching a known topic (the raise, Open Batch, investors, demo day → `[[fundraise-surfaces]]`). The index is the recall entry point; external search is the fallback only after it. Then follow its pointers to the system of record; don't duplicate live payload. _(Why: a "where's my Open Batch Notion page" lookup once skipped this and went straight to Notion search — the index already had the answer. Lookup ≠ exempt from recall; it's the prime case for it.)_
+- **Read `~/.claude/memory/index.md` FIRST — before any Notion/Todoist/Gmail/web search.** The index is the recall entry point; external search is the fallback only after it. Then follow its pointers to the system of record; don't duplicate live payload. _(Why: a "where's my Open Batch Notion page" lookup once skipped this and went straight to Notion search — the index already had the answer. Lookup ≠ exempt from recall; it's the prime case for it.)_
+- **Check the wiki when** (these are the recurring scenarios, not an exhaustive list):
+  - **Looking something up** — any "where is / find / locate my X" or "do you know where my Y is" request.
+  - **Task touches a known topic** — the raise, Open Batch, investors, demo day → `[[fundraise-surfaces]]`.
+  - **Before *writing* an email, intro, Notion page, or note** — check the index's "✍️ Before writing" pointers for the style guide, booking/scheduling links (Cal.com, Zoom), and filing conventions, so I don't wing the voice or re-ask for a link I already have.
+  - **Hosting a meeting / need a link** — booking or call links live in `[[personal-refs]]`.
+  - **Reaching for a tool/preference I "should know"** — verify against the wiki rather than guessing.
 - **Routing:** live payload → system of record · pointer → the wiki index · activatable knowledge → a skill · cross-project record → the wiki · repo-local discovery → that project's auto-memory.
 - **Before recording to or reorganizing the wiki, read `~/.claude/memory/README.md`** (the contract) and append to `log.md`. Periodically lint for stale/contradictory entries.
+- **When recording/updating memory:** place by *recall*, not topic — trace the chain ("when would I need this, what would I be doing then?") to decide where the entry **and its trigger** go; then **verify the trigger with a fresh subagent** that gets only the scenario, and confirm it fires. **Do memory updates and these checks via background agents by default** (don't block the main thread). Edits to *this* root file stay **as general as possible while still guaranteeing the trigger** — the root points; the wiki/skills store. Details in `memory/README.md`.
 
 **Alignment & Judgment**
 

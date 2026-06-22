@@ -42,3 +42,15 @@ ttl: <e.g. 30d | none>      # optional; when to re-verify
 
 ## When updating the wiki
 Re-read this README (the contract), keep `index.md` terse, and append to `log.md`. The always-on pointer to this wiki lives in `~/.claude/CLAUDE.md` (→ `CLAUDE.personal.md`).
+
+### Place by recall, not by topic
+Before writing or updating an entry, ask: **"In what future moment would I need this, and what would I be doing or searching for then?"** Then **trace that recall chain backwards** and put the entry — *and its trigger* — where that chain actually passes (the right `index.md` line, the right trigger phrasing, the page itself). Topical tidiness is worthless if no realistic recall path reaches the entry; a perfectly-written page nothing triggers is dead memory. Placement is a recall-engineering decision, not a filing decision.
+
+### Verify the trigger with a fresh subagent (eval-first)
+Don't assume a trigger fires — **test it.** After adding or rewording a trigger, spawn a subagent given *only* the triggering scenario (no extra context, no hints) and watch whether it actually reaches and uses the entry. If it doesn't fire, fix the **trigger wording/placement**, not the page body. This is the cheapest way to catch a memory that's correct but unreachable.
+
+### Do memory work via background agents by default
+Recording, the recall-chain placement, the trigger-verification check, and lint passes are all **offloaded to background agents** by default so they don't block the main thread. The main thread states the intent and the entry; a background agent does the write + the fresh-subagent trigger check and reports back. Inline only for trivial one-line touch-ups.
+
+### Root-file edits: as general as possible, trigger still guaranteed
+Edits to the always-on root (`CLAUDE.personal.md`) are expensive context every session pays for. Keep them **as general as they can be while still guaranteeing the trigger occurs** — the root should *point* (name the scenario, send to the wiki/skill), not *store* the specifics. Push detail down into the wiki or a skill; promote to the root only the minimal trigger that the recall chain requires.
