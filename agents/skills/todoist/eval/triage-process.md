@@ -78,6 +78,12 @@
   before giving up. (Round-2 miss: "Christina BCV" → should infer target investor at BCV.)
 - **No overdue survives.** Every overdue task must be rescheduled to a real future date.
 
+## Calibration reference (read before triaging)
+Real examples of how Michael wants items handled (his own corrections) live in
+`../fixtures/private/triage-calibration-*.md`. Review them first — they encode durable
+preferences (new P3 project containers, ticklers get future due dates, weekend/quick handling,
+delegate-to-Michelle, resolve logistics from Calendar, the emoji+header comment format, etc.).
+
 ## Global scheduling pass (after all tasks are triaged)
 See README "Scheduling & capacity" — a separate stage balances the triaged tasks across days
 (≤10/day, ≤5 non-quick), clears all overdue, and respects priority. The per-task spec only
