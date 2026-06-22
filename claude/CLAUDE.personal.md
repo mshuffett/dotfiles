@@ -84,10 +84,11 @@ Skills are one of the primary methods I have for improving and remembering thing
 - CLI: rg, fd, bat, eza, xh, yq, btop, lazydocker, lazygit, tldr, hyperfine, watchexec, atuin, gcal (Google Calendar)
 - Obsidian vault at `~/ws/notes/` (PARA structure) — invoke `para-index` skill before filing notes or deciding where content belongs
 - Vercel: always use the `composeai` organization/scope (not personal `michael-shuffetts-projects`)
+- Workflows: never use the `fable` model for fan-out — do NOT set `model: 'fable'` when spawning many agents (parallel/pipeline). Fable is the most expensive model (~2× Opus output cost) and slowest (always-on thinking, minute-long turns), so it's the wrong tier for mass spawning. **If the session itself is running on fable, you MUST explicitly set a different `model` on fan-out agents** — the Workflow default inherits the main-loop model, which would silently propagate fable to every spawned agent. Pick a deliberate cheaper per-task tier (e.g. haiku/sonnet) for fan-out.
 
 **Editing This File**
 
-Invoke `memory-placement` skill first when available; otherwise, be explicit about what belongs in this file vs a new skill, and keep changes small and reviewable. This file is symlinked to `~/.dotfiles/claude/CLAUDE.md` — commit changes there.
+Invoke `memory-placement` skill first when available; otherwise, be explicit about what belongs in this file vs a new skill, and keep changes small and reviewable. This file (`~/.dotfiles/claude/CLAUDE.personal.md`) is the canonical Claude source of truth and the actual load target; `~/.claude/CLAUDE.md` and `~/.dotfiles/claude/CLAUDE.md` are both symlinks to it — commit changes here.
 
 **Safety**
 
