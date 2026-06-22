@@ -16,7 +16,11 @@ Create a TaskList from the steps below and guide Michael through them.
 3. Ask Michael to provide (paste or dictate):
    - **What shipped today** (1-5 bullets)
    - **New risks/unknowns discovered** (0-3 bullets)
+   - **Hours worked today** (rough total)
+   - **Palmer Square arrival time** (target: by 10:00)
    - **Productivity score** (0-10) + 1 sentence why
+   - **Execution score (0–2):** did I ship the #1, or build a cathedral? (the focus metric — see `memory.md` → Focus & Execution Protocol)
+   - **Daily habits:** bed on time? (Y/N + time) · gym in the AM? (Y/N) · evening discipline — kept Switch/TV in check? (Y/N)
    - **Distractions** (one line)
    - **Improvements for tomorrow** (0-3 bullets)
    - **Out-of-scope work**: What was it? What triggered it?
@@ -57,7 +61,16 @@ Create a TaskList from the steps below and guide Michael through them.
 10. Paste the schedule into the review — Michael should not have to check it manually.
 11. Identify constraints, prep tasks, and conflicts for tomorrow.
 
-## Step 7: Tomorrow Plan
+## Step 7: Clear Today + Plan Tomorrow (with capacity cap)
+
+**Do the clear/cap FIRST — this is the step most often skipped (missed 6/15 and 6/16).**
+
+11a. Pull `overdue | today` and `tomorrow` (Todoist `find-tasks`). Show Michael the before counts.
+11b. **Clear today — nothing may stay overdue.** For each still-open task: complete it · `reschedule-tasks` to a real future day · drop the due date if it's an undated umbrella/reference · or demote a captured musing to the idea backlog.
+11c. **Cap tomorrow: ≤10 tasks/day, ≤5 non-quick** (mirrors the triage Global Scheduling Pass). Reconcile against the calendar — count the *actual* deep-work blocks; if tomorrow has one ~2h block, it gets ONE deep deliverable, not three. Defer the rest to genuinely lighter days (don't just pile onto the next day). `@Quick/Easy` items don't count toward the non-quick cap.
+11d. Show the after counts so the trim is visible.
+
+## Step 7b: Tomorrow Plan
 
 12. Draft tomorrow plan into `Calendar/Daily/<tomorrow>.md`:
     - **Top outcomes** (1-3)

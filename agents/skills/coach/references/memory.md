@@ -130,6 +130,27 @@ present reads as drafts to confirm, keep it light / one-thing-at-a-time, don't o
 Strong 0→1 builder who can stall near "done" and over-engineer structure (see also Scaffolding,
 above). **Explicitly asked: don't over-optimize.** Bias toward small, concrete, shippable steps
 that touch his real tools.
+**(2026-06-16) Prevention rule (his own):** before each block, write the ONE concrete deliverable
+in a sentence; do the PM by hand; reach for AI only for specific, well-scoped pieces — NOT the
+planning/tracking itself. Trigger: even on a focused 8/10 day he felt the PM/tooling layer (a venue
+CRM + Todoist restructuring) ran heavier than the deliverable required. Apply this when helping him
+plan or when an assist starts spawning structure (subtasks, CRMs, cross-links) beyond the ask.
+
+## Focus & Execution Protocol (added 2026-06-21, weekly review)
+The recurring **Cathedral Building** bug finally got a mechanism. Root: building systems + reflexive AI =
+productive-feeling avoidance of the raise's hard, finish-line work (permission problem; tight-throat tell).
+**AI is a new accelerant** — it makes cathedrals nearly free, so the avoidance scaled up this week.
+
+- **Core simplification:** write the **NEXT ACTION, not a detailed plan** — then execute.
+- **Focusing question (morning + before each block):** *"What's the ONE THING that creates momentum / moves this forward?"* → that's the day's #1.
+- **TAPs (when X → do Y):**
+  1. *Cathedral:* notice opening Todoist/Notion to restructure, or about to spin up a new system/doc mid-task → say "Cathedral," pause, ask "executing or avoiding the #1?", park the tangent in the queue, return to the deliverable **by hand**.
+  2. *Done=:* starting a block and can't state "Done = ___" in one sentence → write it first; touch nothing else until you can.
+  3. *Reflexive-AI:* hand moving to fire a vague message at AI → state the goal + why-AI-not-by-hand first; can't → do it by hand.
+  4. *Throat:* throat tightens / hear "should" → 3 breaths, "what's the one move from here?" → make it.
+- **Daily container:** Morning = gym (when possible) → Adderall → 5-min meditation/intention → the ONE THING → write the single next-action ("Done = ___"). Evening = structured wind-down + hard work-stop → **execution score 0–2** ("did I ship, or build a cathedral?") → review daily habits (bed on time · AM gym · evening discipline: Switch/TV in check) → pre-pick tomorrow's ONE THING.
+- **Meetings:** discretionary ones get a pre-set end-time + one outcome, or don't get booked (Clovis lesson).
+- **Coach's job:** enforce this — call "Cathedral" when you see it, don't help build scaffolding beyond the ask, protect the next-action.
 
 ## Preferences
 
@@ -143,7 +164,12 @@ Communication and workflow preferences learned from Michael:
 - Throughout day: quick capture, minimal friction
 - Timezone: America/Los_Angeles (San Francisco)
 - Default calendar: michael@geteverything.ai
-- Time tracking: **dropped (2026-06-16)** — no longer tracked; removed from the shutdown checklist.
+- Time tracking: no per-task Toggl. At shutdown, track **rough total hours worked** + **Palmer Square arrival time** (target by 10:00). (Updated 2026-06-16.)
+- **(2026-06-16) Morning momentum block:** 10:00–11:00 = clear inboxes + quick wins (incl. time-sensitive sends like Demo Day venue outreach). Hard-stop at 11 (Dave sync). It's a warm-up, NOT the priority — the #1 deep block still comes after.
+- **(2026-06-16) Weekend/Fun surfacing:** `@weekend` + `@Fun` labels + favorited filter **"Weekend & Fun"** (`@weekend | @Fun | #Personal OS`), reviewed Saturday / in downtime — beats Someday/Maybe (150 items, never checked). His inbox view is sorted **alphabetically**.
+- **(2026-06-16) Direction — Obsidian → Notion single "projects home":** wants ONE projects home in Notion (connected "Everything AI HQ"). Candidate = Command Center → 🚀 Active Projects DB. Target-investor list started in Notion. Confirm before depending on it.
+- **(2026-06-16) Agent comments: drop the `c:`/dot format → human-legible markdown** (Todoist renders bold/lists/blockquote/links; mobile plainer). Showing 3 formats (A/B/C) on sample tasks to pick; then standardize in operations.md/triage-process.md.
+- **(2026-06-16) Reviewing AI triage in Todoist is too slow** (can't see actions / batch-approve). Building faster surfaces: vim foldable dump + keyboard-driven HTML review UI (design-first); phone-accessible fun/personal backlog is high-priority. ALSO: agents make confident errors (V0/BCV mixup) → add a reviewer pass on agent output.
 - Weekly planning: Saturday 12:00-16:00
 - **Paper planner is the daily source of truth** (not digital). Computer stays in bag until paper plan is done.
 - Paper planner format: 1 MIT + 2 secondary + 2 additional, with target poms per task
@@ -170,6 +196,8 @@ Multi-day/week observations:
 - **W08-W11 (Feb 16 – Mar 16):** Month-long gap in daily notes. System dropped entirely after Feb 16. Confirms the "milestone → break → system collapse" pattern — Demo Day prep consumed all bandwidth, daily tracking/planning system was abandoned.
 - **Demo Day (Mar 10):** Happened at Hanwha AI Center, SF. Michael presented as closing act. Strong audience energy. MongoDB $10K sponsor. But no term sheets or committed capital followed.
 - **Post-Demo Day mood (Mar 16):** Reflective, vulnerable. Evelisa surfaced a hard truth — building things around the thing, not the thing itself. Michael is grappling with whether the batch/event moved the needle enough.
+- **2026-06-18 (Clovis sync — note for review):** Went OK but **ran over** and wasn't kept as contained as intended → Michael's read: "probably not quite the investment I wanted." His own meta-insight: he has good **intentions** on these things (meetings, scope, timeboxes) but needs **mechanisms / forcing functions**, not willpower, to hold them. Ties directly to the over-build + meetings-run-over patterns. → Candidate action at next weekly: design a containment mechanism for discretionary meetings (hard stop / pre-set agenda + end-time / "what's the one outcome" gate). Flagged BY Michael for later reflection.
+- **2026-06-16 (Tue, 8/10):** Better day — **hit the #1** (fundraise/investor-approach doc) AND moved the Demo Day venue workstream; arrived Palmer Square 9:30, strong schedule adherence. Wrinkle: PM/tooling **over-build recurred but milder** (venue CRM + Todoist restructuring heavier than needed) — priority still got done, unlike 6/15. Adopted his **deliverable-clarity rule** (see Over-Building). Tomorrow: P1 send venue emails (quick) · P2 define OB investor outreach process (deep block) · P3 finalize Waycraft skeleton.
 - **2026-06-15 (Mon, 8/10):** Productive, but the **scaffolding pattern recurred** — built a full Todoist triage+scheduling eval system (Personal OS, P2) while the **raise (P1) got zero direct motion**. Michael named it himself. Response: adopted the calendar forcing functions (see Commitments) + tomorrow's #1 = *define the investor approach in one doc*. Also: **Dave & Michelle shifted to project-basis**; Dave's daily sync is now a full hour (11–12) — flagged to renegotiate (30 min / 3×wk).
 
 ## Key People

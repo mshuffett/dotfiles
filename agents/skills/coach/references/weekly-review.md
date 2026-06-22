@@ -113,6 +113,7 @@ time this week. The others stay dormant for the week (still tracked, not worked)
 
 20. Create or update weekly note in `Calendar/Weekly/YYYY-Www.md`.
 21. Write "first day" plan: top outcomes + Pomodoro #1 + Pomodoro #2 in Monday's daily note.
+21b. **Update the recurring 🎯 weekly-target P1 Todoist task** (id `6gwHWj5CCXQ4Q53x`, daily-recurring in "Raise $5M by July 28th") to this week's ONE THING — it keeps the target in his face every day.
 22. Update coach log if trends/policies emerged.
 
 ## Phase 7: Memory Review

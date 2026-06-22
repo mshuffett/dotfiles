@@ -6,6 +6,13 @@ Create a TaskList from the steps below and guide Michael through them.
 
 ---
 
+## Step 0: Prime + the ONE THING (added 2026-06-21)
+Mechanism for the Cathedral-Building / over-planning pattern (see `memory.md` → Focus & Execution Protocol).
+- **Prime (~5 min):** gym if it's a gym morning → Adderall → 5-min meditation/intention.
+- **Focusing question:** *"What's the ONE THING that creates momentum / moves this forward?"* → that's today's #1.
+- **Write the NEXT ACTION, not a plan.** One sentence: "Done = ___" for the #1 (+ ≤2 secondary). Can't state "Done ="? You're about to over-plan — simplify. (#1 was pre-picked at last night's shutdown.)
+- TAPs are live (Cathedral / Done= / Reflexive-AI / Throat).
+
 ## Step 1: Pre-Flight
 
 1. Confirm date, time, and timezone:
