@@ -12,7 +12,7 @@
     "info": "tsx src/index.ts info"
   },
   "dependencies": {
-    "ai": "^4.3.0",
+    "ai": "^5.0.52",
     "@ai-sdk/anthropic": "^1.2.0",
     "zod": "^3.24.0",
     "commander": "^13.0.0",
