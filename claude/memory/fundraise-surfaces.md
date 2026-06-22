@@ -1,17 +1,19 @@
 ---
 name: fundraise-surfaces
-description: Where the Everything AI $5M raise / Open Batch outreach lives — Notion CRMs/DBs, Todoist projects, email accounts. Pointers, not payload.
+description: Where the Everything AI $5M raise / Open Batch lives — canonical dashboard hub, Notion CRMs/DBs, Todoist projects, email accounts. The "where's my Open Batch / raise / investor / demo day page" entry point. Pointers, not payload.
 type: pointer
-updated: 2026-06-18
+updated: 2026-06-22
 ttl: 30d
 ---
 
 Pointers into the systems of record for the raise. **Content lives there, not here** — verify against the live source before asserting status (it changes daily).
 
+## ⭐ Start here — canonical hub
+- **OpenBatch Company Raise — Project Dashboard** (the parent page; everything below hangs off it): <https://app.notion.com/p/OpenBatch-Company-Raise-Project-Dashboard-7a38c400565c4380aab4a2c856d5e3ad>
+
 ## Notion (Everything AI HQ workspace)
 - **Investors DB** (inline on the 💰 Target Investors page): <https://app.notion.com/p/38141187d56481a2b6a4d83c7b94ed3b> — the single investor tracker; fields incl. **Founder Dinner** + a "Founder Dinners" view.
 - **Demo Day Venue / Sponsor CRM**: <https://app.notion.com/p/38141187d56481e9ae44e29343013385> — venue hosts + sponsors; has a "🤖 Instructions for AI" toggle describing how to maintain it.
-- **OpenBatch Company Raise — dashboard** (parent hub): <https://app.notion.com/p/7a38c400565c4380aab4a2c856d5e3ad>
 - **Founder Dinners** page (now a linked view of the Investors DB): <https://app.notion.com/p/38341187d56481f3bdadc89a44a6c8e1>
 
 ## Todoist
