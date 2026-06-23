@@ -67,9 +67,17 @@ Inbox clearing is NOT the identity of this review. Scale effort to inbox size.
 
 ## Phase 3: GTD Trigger-List Scan (15 min)
 
-8. Pull the live Todoist **P1 / P2** priorities (the current project source — see
-   SKILL.md → Current Project Context). For each active project:
-   - Still active? Next action clear? Any to archive?
+8a. **Walk the raise dashboard (canonical Notion hub).** Open the
+   [OpenBatch Company Raise — Project Dashboard](https://app.notion.com/p/OpenBatch-Company-Raise-Project-Dashboard-7a38c400565c4380aab4a2c856d5e3ad)
+   and go through each surface in its **Investor Flow & Pipeline** section: the canonical Investor
+   Flow page, Custom Investor Onboarding, the Investors DB (Target Investors / Founder Dinners view),
+   and the deep-research target list. For each: is it current? what moved? what's stale or contradicts
+   the live source? Capture next actions into Todoist. (Pointer: memory wiki `[[fundraise-surfaces]]`;
+   records are point-in-time — verify against the live source.)
+8b. **Review the full Todoist project tree** (not just loose tasks): walk the **P1 / P2 / P3**
+   favorites and their subprojects (Raise → Write Pitch, Define Target Investors, Book Demo Day Venue,
+   Build Open Batch Investor Process, Demo Day; Manage Open Batch; etc.). For each active project:
+   - Still active? Next action clear? Anything to archive or reprioritize?
    - Update Todoist (and `references/current-state.md` if the priority set changed).
 9. Scan `1-Projects/` folder for anything in-flight not reflected in the active list.
 10. Check other active commitments (cofounder considerations, relationships, health) as trigger list.
