@@ -24,6 +24,21 @@ priority gotcha: [references/operations.md](references/operations.md).
 - **Always confirm before destructive actions** (delete, complete, archive).
 - When context is weak, do **not** guess. Prefer `needs_context` or `needs_user_judgment` over a polished but brittle answer.
 
+## Writing task content (human-readable)
+
+Task titles/descriptions/comments are read by a human glancing under time pressure — write for fast
+comprehension, not machine completeness. The habit to kill: raw IDs, one run-on line, bare URLs.
+
+1. **Structure, never run-on** — bold lead line, then bullets.
+2. **Legible references, never raw IDs** — **"Review the target list"**, not `(6gw…)`; `[Title](url)`, not bare UUIDs/URLs.
+3. **Lead with the action / current state**; context below.
+4. **`Done =`** line (or checklist) where the finish line is fuzzy.
+5. **Status markers (`✅/⏳`) on their own bullets**, not buried mid-sentence.
+6. **Link, don't dump** — point to the source of truth.
+
+Applies to subagent-written tasks too — put this style in their prompt. Full rules + before/after
+examples: [references/writing-task-content.md](references/writing-task-content.md).
+
 ## Quick Reference
 
 | Need | MCP tool (preferred) | `td` fallback |
@@ -48,6 +63,7 @@ Todoist triage is a **copilot** workflow, not a blind classifier.
 ## Choose A Mode
 
 - **Operations** (CLI commands, bulk edits, moving tasks, due dates): see [references/operations.md](references/operations.md)
+- **Writing task content** (human-readable titles/descriptions/comments — style rules + examples): see [references/writing-task-content.md](references/writing-task-content.md)
 - **Daily review** (due/overdue + inbox review with cross-app context recovery): see [references/daily-review.md](references/daily-review.md)
 - **Triage overview** (when user asks "what should I do with these tasks?"): see [references/triage.md](references/triage.md)
 - **Triage policy** (decision buckets, output format, calibration): see [references/triage-policy.md](references/triage-policy.md)
