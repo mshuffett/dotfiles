@@ -219,3 +219,6 @@ juno() {
     fi
   )
 }
+
+# Garry Tan stack — (re)start the isolated gstack+gbrain Claude remote session (this box only)
+alias gtan="$HOME/gtan/start-remote.sh"
