@@ -163,7 +163,10 @@ set -g history-limit 10000
 # set -g default-terminal "screen-256color"
 
 set -g mouse on
-bind -n WheelUpPane   select-pane -t= \; copy-mode -e \; send-keys -M
+# Wheel-up: if the app grabbed the mouse (Claude Code, vim, less, htop...), pass the
+# wheel through for native scroll; otherwise fall back to copy-mode scrollback in shells.
+# (Unconditional `copy-mode -e` here used to hijack the wheel from fullscreen apps.)
+bind -n WheelUpPane   if -Ft= "#{mouse_any_flag}" "send-keys -M" "select-pane -t= ; copy-mode -e ; send-keys -M"
 bind -n WheelDownPane select-pane -t= \;                 send-keys -M
 
 # attempting to fix slow tmux
