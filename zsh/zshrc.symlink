@@ -473,3 +473,5 @@ export ENABLE_EXPERIMENTAL_MCP_CLI='true'
 # Task Master aliases added on 6/15/2026
 alias tm='task-master'
 alias taskmaster='task-master'
+
+. "$HOME/.moon/bin/env"
