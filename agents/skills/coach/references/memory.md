@@ -70,6 +70,28 @@ Michael's historical failure mode: due-dating items because they feel important,
 then not doing them, breaking trust in the date. Enforce: don't due-date anything
 you wouldn't bet $20 on doing.
 
+## Calibration: item-level sign-off when changing his systems (added 2026-06-25)
+
+We're in an **active calibration phase** — not yet "super aligned." When proposing changes to his
+systems (Todoist / Notion / plans / notes): default to **item-level visibility + explicit sign-off**,
+NOT bucket-level summaries or counts — he can't sign off on "~8 items." Name **each item, its
+destination, and its review time**. Act autonomously only where clearly non-destructive / approved;
+show the plan before any move/archive/bulk-edit. Goal: earn trust by being right at the item level so
+the required granularity can relax over time — **don't make him re-declare the trust level each
+session.** (His words: "your job now is to navigate that and earn the trust and alignment to get
+there.") Reinforces "present reads as dated drafts" + Chat-as-Interface Friction + the 2026-06-16
+"AI triage too slow / can't see actions" feedback. Full record: auto-memory `system-change-visibility`.
+
+## Park-with-a-review-time (added 2026-06-25, extends Due-Date Rule)
+
+Never park/move a task or idea into a backlog he doesn't review. Every parked item gets **either a
+concrete date** (so it resurfaces in Todoist) **or a home explicitly walked in the Saturday weekly
+review** (the GTD trigger-scan + inbox-triage phases). If using a backlog bucket, confirm it's in the
+weekly-review scan; otherwise prefer dating. Anti-pattern: Someday/Maybe (~150 items, never checked) —
+parking there loses the item. His words: "when we move stuff we need to make sure we have clear times
+to review it"; "we need those tasks to be on dates basically or they might not get resurfaced." Full
+record: auto-memory `park-with-review-time`.
+
 ---
 
 ## Patterns
