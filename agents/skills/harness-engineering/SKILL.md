@@ -198,6 +198,16 @@ Agents replicate patterns that already exist in the repo — even uneven or subo
 
 Most of these PRs can be reviewed in under a minute and automerged. Human taste is captured once, then enforced continuously on every line of code.
 
+**Self-improvement loops (agent improves its OWN harness).** A special case of
+entropy management aimed at the harness's *own* skills/memory/instructions rather
+than the codebase: an eager per-session reviewer (e.g. a `SessionEnd` hook) that
+captures new skills/memory, paired with a slow-cadence curator that consolidates
+and decays them. See `references/self-improvement-loops.md` for the design
+invariants (off-critical-path, recursion guard, scoped commits, build-only-the-
+missing-half) and two key pitfalls — exempting the headless background reviewer
+from interactive-only guardrails, and confirming scope before tearing down a
+working subsystem on a terse "kill it."
+
 **Practical Entropy Prevention**:
 - Run linters on every commit, not just PRs
 - Schedule periodic cleanup sweeps (daily or per-sprint)
@@ -341,6 +351,7 @@ For each gap found, recommend the cheapest fix that provides the most constraint
 **Bundled references**:
 - `references/audit-checklist.md` — Detailed audit checklist with scoring (12 areas, 0-24 scale)
 - `references/agents-md-patterns.md` — Patterns, templates, and extraction hierarchy for AGENTS.md/CLAUDE.md files
+- `references/self-improvement-loops.md` — Designing an eager-reviewer + curator loop where the agent improves its own skills/memory/instructions (hermes-agent pattern), with invariants and pitfalls
 
 **Source articles** (this skill synthesizes these):
 - OpenAI: "Harness engineering: leveraging Codex in an agent-first world" (Feb 2026)
