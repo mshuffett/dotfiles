@@ -7,6 +7,14 @@ description: Use when drafting email replies for Michael, generating outbound em
 
 When generating email replies or drafts for Michael, follow this style guide.
 
+## Read the FULL thread first — never draft from snippets
+
+Before writing any reply, fetch and read the **complete thread — every message, full bodies** (e.g. `get_thread` with full content), not search-result snippets, previews, or a metadata/minimal view.
+
+Snippets truncate exactly where the important part usually is: the **proposed meeting times**, the **scheduling/calendar link**, **who's been looped in to coordinate**, and the **specific questions** the person asked. Drafting from a snippet produces a reply that ignores what they actually said — e.g. pushing Michael's own cal link when they already offered times or asked their teammate to schedule, or skipping a question entirely.
+
+If you catch yourself about to draft from a one-line preview or a list view: stop and pull the whole thread. The extra read is cheap; a reply that ignores their actual ask makes Michael look like he didn't read it.
+
 ## Email Direction Detection
 
 **FIRST, determine if this is OUTBOUND or INBOUND:**
@@ -241,6 +249,7 @@ When confirming meeting times:
 
 ## What NOT to Do
 
+- Don't draft from snippets or a partial/minimal thread view — read every message in the thread, in full, first (that's where proposed times, calendar links, and their real questions hide)
 - Don't use "Hi [Name]" - use "Hey [Name],"
 - Don't use elaborate sign-offs - just "Best," or "Thanks"
 - Don't forget to include relevant links when applicable
@@ -286,3 +295,5 @@ Each example includes: `to_name`, `to_email`, `subject`, `timestamp`, `is_reply`
 ### Corrections & Adjustments
 
 (Log corrections from Michael here to improve future replies)
+
+- **2026-06-27 — Read the whole thread, never snippets.** Drafted a Mochary Method reply pushing a 30-min cal link when Sabrina had asked for a 45-min call and looped in her teammate Karma to schedule; same pass missed Ayushman's co-working-space question and gave Sinan a generic reply that ignored his specific "bookface for the community" proposal. Root cause: drafted from `THREAD_VIEW_MINIMAL` snippets instead of full message bodies. Fix: the "Read the FULL thread first" section above — always pull full thread content before drafting.

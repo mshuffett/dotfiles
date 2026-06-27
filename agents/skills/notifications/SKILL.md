@@ -46,6 +46,17 @@ The `push` command is at `~/.dotfiles/bin/push`.
 osascript -e 'display notification "Message" with title "Title" sound name "default"'
 ```
 
+### 4. Confetti / Celebration Overlay (Visual Celebration)
+
+For a celebratory moment (a real win, a shipped feature, "celebrate this") — not a plain notification — use the native macOS confetti overlay:
+
+```bash
+confetti                                  # full-screen confetti across all displays
+celebrate "Shipped it!" -i 9 -d 5         # alias of confetti; optional message/intensity/duration
+```
+
+Both live at `~/.dotfiles/bin/` (`confetti` and `celebrate` are the same script). It self-compiles a Swift `CAEmitterLayer` overlay via `swiftc` on first run and caches the binary, so it needs `swiftc` (Xcode CLT). Flags: `-m/--message`, `-i/--intensity 1-10`, `-d/--duration seconds`. Use sparingly and only when a celebration is warranted, same as notifications.
+
 ## When to Use Which
 
 | Method | Use Case |
@@ -54,6 +65,7 @@ osascript -e 'display notification "Message" with title "Title" sound name "defa
 | Notifier (banner) | Quick transient notification |
 | push (Pushover) | Need notification on phone/all devices |
 | osascript | Quick one-off, no extra features needed |
+| confetti / celebrate | A genuine celebratory moment (win shipped), not just an FYI |
 
 ## Acceptance Checks
 

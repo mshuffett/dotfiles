@@ -183,6 +183,8 @@ This section is the canonical source for schedule rules. Do not fork competing r
 - **Time tracking**: Toggl (already set up).
 - **Calendar planning**: Plan together in daily note; calendar is the plan. Alarms via iPhone or G-Alarm as needed. Consider Reclaim.ai for automated deep work blocks.
 - **Calendar writes**: Propose schedule as text. Only create/update calendar events after Michael explicitly approves.
+- **Anchor on the live calendar first.** Before drafting OR placing any day schedule — including ad-hoc "schedule my Todoist items on my calendar now" requests, not just `/morning` — pull *all* of today's existing events (`gcal today`) and treat each real event as an immovable anchor. Building the day from Todoist alone and dropping existing meetings is a repeated miss (Michael had to ask "why aren't you including my 1pm / 4:40?"). Read the full calendar, place tasks in the gaps.
+- **Exclude the recurring blocks he skips.** Some events on the calendar are not real commitments — Michael does NOT attend Open Batch group/cohort check-ins ("G5 Check-In" etc.; see `references/memory.md`). Don't schedule around them or count them as fixed. When unsure whether a recurring block is real, ask rather than assume.
 
 ---
 
