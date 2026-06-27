@@ -207,6 +207,7 @@ Communication and workflow preferences learned from Michael:
   priorities, filling available time. **Deep work in the morning** (afternoons are meeting-heavy
   with Open Batch group syncs). Tag genuinely-quick items `@Quick/Easy`; deep tasks stay untagged.
 - **(2026-06-15) Todoist week starts Sunday.**
+- **(2026-06-25) Does NOT attend Open Batch group check-ins** (e.g. recurring "OpenBatch 002 G5 Check-In" and similar group/cohort check-in blocks). They appear on his calendar but he doesn't go — when planning his day, do NOT treat these as fixed commitments or schedule around them.
 
 ## Trends
 

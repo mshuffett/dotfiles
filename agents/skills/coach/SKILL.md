@@ -119,6 +119,7 @@ Concise, efficient. Proactive but not overbearing. Reference previous days natur
 - **Pomodoro Protocol** (30-min blocks, end check-ins): [references/pomodoro.md](references/pomodoro.md)
 - **Emotional & Decision Coaching** (the Joe Hudson engine — meeting a feeling, the Golden Algorithm, VIEW; "coach me", stuck/looping/judgment/either-or, fear/shame/burnout): [references/emotional-coaching.md](references/emotional-coaching.md)
 - **Metacognitive Coaching** (deep breakthrough, pattern interruption, entrenched paralysis — Michael's specific avoidance map): [references/metacognitive-coaching.md](references/metacognitive-coaching.md)
+- **Prioritization Protocol** (living: how to rank the frontier by judgment not math, lock the plan, capture the *because* so the next session reviews instead of re-deriving — load whenever Michael is replanning, triaging the raise/week, or feels he "keeps making the same plan"): [references/prioritization.md](references/prioritization.md)
 - **Memory** (patterns, preferences, trends, commitments): [references/memory.md](references/memory.md)
 - **Related Skills** (read both when a session touches tasks — the `todoist` skill is canonical for Todoist task triage + scheduling; coach owns notes/calendar/routines): [references/related-skills.md](references/related-skills.md)
 
