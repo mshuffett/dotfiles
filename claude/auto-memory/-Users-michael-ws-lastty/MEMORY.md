@@ -1,0 +1,1 @@
+- [Discord group chat addressing](feedback_discord_group_chat.md) — only reply when addressed; names are michaelbot/mbot/mb; "mb" often means "my bad"

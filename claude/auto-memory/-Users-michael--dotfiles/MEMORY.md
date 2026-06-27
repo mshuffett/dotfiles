@@ -1,0 +1,9 @@
+- [Timeline overestimation pattern](feedback_timeline.md) — Phased plans spanning weeks when hours would do; "thoroughness" hides from commitment.
+- [Measurement before pruning for skill/prompt systems](feedback_measurement_before_pruning.md) — Overlap isn't the problem. Not knowing what's helpful is.
+- [Adaptive skill-profile loop state](project_adaptive_loop.md) — Built 2026-04-20; telemetry + replay + reflect + review wired, gsd/superpowers kept, agentops disabled.
+- [Anthropic's shipped vs. unshipped self-improvement](project_claude_code_src_reference.md) — autoDream ships, SKILL_IMPROVEMENT/EXTRACT_MEMORIES stripped. Check here before reinventing.
+- [Subagent MCP retrieval is unreliable](feedback_subagent_mcp_retrieval.md) — a subagent's confident "not found" on Gmail/Notion may be a tool-access failure; verify in main thread.
+- [Devbox dev-default (AWS + Tailscale)](project_devbox.md) — remote Claude Code box; join via Remote Control (claude.ai/code or app, session "dev-default") or `dev connect default`; full `claude auth login` on box.
+- [Intro-blurb style](feedback_intro_blurb_style.md) — warm reconnect, connector-voice + forwardable verbatim, about the entity not his raise, low-friction close.
+- [System-change visibility (calibration phase)](feedback_system_change_visibility.md) — before reorganizing/moving/archiving/bulk-editing his Todoist/Notion/notes/plans (or proposing a workflow change): item-level sign-off, not bucket counts; he can't approve "~8 items." Earn trust; don't make him re-declare it.
+- [Park-with-a-review-time](feedback_park_with_review_time.md) — when filing/parking/triaging any Todoist/Obsidian item: every parked item gets a date (resurfaces in Todoist) OR a home walked in the Saturday weekly review. No unreviewed backlogs.

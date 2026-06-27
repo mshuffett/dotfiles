@@ -1,0 +1,4 @@
+- [Time awareness](feedback_time_awareness.md) — I'm time-blind; parallelize long-running work and don't block on builds
+- [Cloudflared UA block](feedback_cloudflared_ua.md) — Python urllib gets 403/1010 from Cloudflare tunnels; set browser UA
+- [Among Them bot architecture](project_among_them_arch.md) — thin Nim bot → FastAPI policy server + cloudflared tunnel; hot-reload strategies in 10s
+- [Among Them positional prior](project_among_them_positional_prior.md) — imposters cluster at vote slots 4,7 (~80%); offline eval validated 2.7× improvement

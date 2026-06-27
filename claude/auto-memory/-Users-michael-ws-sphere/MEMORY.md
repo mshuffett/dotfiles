@@ -1,0 +1,3 @@
+- [agent-device usage](agent_device_usage.md) — iOS simulator/device automation CLI, session lifecycle, ref syntax, device targeting
+- [FluidOrb shader fix](fluid_orb_shader.md) — Used Shader not RuntimeShader for custom GLSL in Skia Fill
+- [Verify before claiming](feedback_verify_before_claiming.md) — Always test outcomes before saying "should work"

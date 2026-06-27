@@ -1,0 +1,2 @@
+- [Imagegen text rendering is good now](feedback_imagegen_text.md) — bake copy into image prompts; don't reserve negative space for HTML overlay
+- [Deliberate visual-critical pass after every screenshot](feedback_visual_critical_pass.md) — hunt actively for "what's wrong" instead of stopping at "did it render"

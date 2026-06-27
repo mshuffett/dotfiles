@@ -1,0 +1,1 @@
+- [Embed knowledge = retrieval, not prompt distillation](embed-knowledge-means-retrieval.md) — when told to embed a doc's knowledge in an agent, build an index + page access, not just lenses in the prompt
