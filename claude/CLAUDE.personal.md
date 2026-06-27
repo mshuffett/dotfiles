@@ -84,6 +84,8 @@ Skills are one of the primary methods I have for improving and remembering thing
 
 **STOP before writing any skill file.** Do not create or modify SKILL.md until `skill-creator:skill-creator` has been invoked in this session. This is a repeated failure (3x in 5 days) — the pattern is feeling confident and skipping the check. Confidence is not a reason to skip; it's the exact condition where skipping happens. Invoke first, then write. Canonical entrypoint skills live in `~/.dotfiles/agents/skills/` and must be committed (with `~/.dotfiles/claude/skills/` as a compatibility symlink).
 
+**Exception — the background self-improvement reviewer.** This rule binds *you, the interactive agent*. The automated `SessionEnd` skill reviewer + weekly curator (`~/.dotfiles/claude/self-improve.md`) are the one sanctioned path that may create/modify SKILL.md *without* an interactive `skill-creator` call — their prompts already carry skill-creator's quality bar (class-level naming, required frontmatter + trigger, anti-slop list) and the curator consolidates/archives weekly as the safety net. In a live, interactive session you still invoke skill-creator first.
+
 **Preferences**
 
 - Vercel AI SDK over provider SDKs; fetch docs via Context7 (never rely on memory)
