@@ -58,6 +58,10 @@ if [ ! -x "$HOME/.bun/bin/bun" ]; then
 fi
 export PATH="$HOME/.bun/bin:$PATH"
 
+# global bun tools: openclaw (messaging gateway) + gbrain
+log "bun global tools (openclaw, gbrain)"
+"$HOME/.bun/bin/bun" add -g openclaw gbrain 2>&1 | tail -2 || echo "  (bun global install needs review)"
+
 # ---------- git auth for private repos ----------
 # Use gh's token (from ~/.config/gh/hosts.yml, delivered by dev-push-secrets.sh) so the
 # private clones below (platform, polylog, compose-monorepo) authenticate over https.

@@ -25,4 +25,11 @@ push devbox/hermes-rin-grok.env         ".hermes/profiles/rin-grok/.env"
 push devbox/hermes-rin-grok-config.yaml ".hermes/profiles/rin-grok/config.yaml"
 push devbox/todoist-claude.env          "platform/services/todoist-claude/.env"
 push devbox/gh-hosts.yml                 ".config/gh/hosts.yml"
+
+# openclaw agent identity/config workspace (tarball) — restores the SAME agent identity
+echo "  restoring openclaw workspace (identity/config) ..."
+if op document get "devbox/openclaw-workspace.tgz" --vault "$VAULT" 2>/dev/null \
+   | ssh "$HOST" "mkdir -p ~/.openclaw && tar xzf - -C ~/.openclaw"; then
+  echo "  pushed openclaw workspace"
+else echo "  FAIL: openclaw workspace"; fi
 echo "SECRETS_PUSHED"
