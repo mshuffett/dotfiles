@@ -47,6 +47,24 @@ gmail drafts create "to@example.com" "Subject" "Body"
 gmail drafts send <draft_id>
 ```
 
+## Reading large threads (Gmail MCP `get_thread` token-limit workaround)
+
+When using the **claude.ai Gmail MCP** tools (`get_thread`, not the `gmail` CLI), long threads frequently blow the tool-result token limit. You'll get:
+
+```
+Error: result (89,970 characters) exceeds maximum allowed tokens.
+Output has been saved to /Users/michael/.claude/projects/<project>/<session>/tool-results/mcp-claude_ai_Gmail-get_thread-<id>.txt
+```
+
+Do **not** give up or fall back to snippets (drafting from snippets is the #1 email mistake — see `email-reply-style`). The full thread is sitting in that saved `.txt` file as JSON. Extract just the message bodies with `jq`:
+
+```bash
+jq -r '.messages[] | "--- \(.date[0:10]) | FROM \(.sender) | TO \(.toRecipients // [] | join(",")) ---\n\(.plaintextBody[0:800])\n"' \
+  "/Users/michael/.claude/projects/<project>/<session>/tool-results/mcp-claude_ai_Gmail-get_thread-<id>.txt"
+```
+
+Schema of the saved JSON: top-level `.messages[]`, each with `.date`, `.sender`, `.toRecipients` (array), `.plaintextBody`. Slice `.plaintextBody[0:800]` to keep each message compact while still capturing the actual ask (proposed times, links, questions). Batch multiple saved files in a `for f in <id1> <id2>; do ... done` loop. This gives you every full message body without re-fetching or exceeding context.
+
 ## Search Query Syntax
 
 Gmail search supports these operators:

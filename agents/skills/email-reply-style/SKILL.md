@@ -15,6 +15,10 @@ Snippets truncate exactly where the important part usually is: the **proposed me
 
 If you catch yourself about to draft from a one-line preview or a list view: stop and pull the whole thread. The extra read is cheap; a reply that ignores their actual ask makes Michael look like he didn't read it.
 
+## When triaging a batch (offer the real next action, don't just draft around it)
+
+Triage isn't only writing replies. Many items imply concrete next steps — checking Michael's calendar for mutual times, researching a person/fund, pulling data from another doc, comparing options. When an item needs work like that, **name it and ask Michael whether he wants you to do it** (then run it in the background if he says yes) rather than silently skipping it or silently doing it. A draft that says "let me know some times" when you could have just found the times is a half-draft. Default to surfacing the action and offering to complete it.
+
 ## Email Direction Detection
 
 **FIRST, determine if this is OUTBOUND or INBOUND:**
