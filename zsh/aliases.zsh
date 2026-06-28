@@ -184,8 +184,12 @@ alias ls="${aliases[ls]:-ls} -A"
 alias lst="${aliases[lst]:-${aliases[ls]:-ls}} -A"
 # claude/c both default to Remote Control + skip-permissions (reach from claude.ai/code or the app).
 # RC forces an interactive session; use `command claude -p ...` for non-interactive/scripting.
-alias claude="command claude --dangerously-skip-permissions --remote-control"
-alias c="command claude --dangerously-skip-permissions --remote-control"
+# NOTE: --remote-control [name] takes an OPTIONAL name arg, so it must be followed by another
+# flag (not the prompt). Otherwise `c "my prompt"` makes the prompt the RC session name and the
+# prompt never runs. Keep --remote-control BEFORE --dangerously-skip-permissions so the next
+# token is a flag and RC falls back to its default hostname-based name.
+alias claude="command claude --remote-control --dangerously-skip-permissions"
+alias c="command claude --remote-control --dangerously-skip-permissions"
 alias cb="CLAUDE_CODE_USE_BEDROCK=1 command claude --dangerously-skip-permissions"
 alias lg='lazygit'
 alias j='just'
