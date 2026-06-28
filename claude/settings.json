@@ -29,6 +29,16 @@
             "command": "~/.dotfiles/claude/scripts/test-stop-hook-input.sh"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/claude/scripts/cc-window-title.sh",
+            "async": true,
+            "timeout": 20
+          }
+        ]
       }
     ],
     "Notification": [
