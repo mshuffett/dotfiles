@@ -1,0 +1,19 @@
+[Unit]
+Description=Todoist @claude -> Claude Code poller
+After=network-online.target
+Wants=network-online.target
+# Don't thrash if it crash-loops
+StartLimitIntervalSec=60
+StartLimitBurst=10
+
+[Service]
+# restart bounces only the watcher loop; in-flight sessions keep running
+KillMode=process
+Type=simple
+Environment=POLL_INTERVAL=180
+ExecStart=/bin/bash /home/ubuntu/platform/services/todoist-claude/poller.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

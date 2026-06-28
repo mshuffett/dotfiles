@@ -1,0 +1,15 @@
+[Unit]
+Description=OpenClaw gateway (Telegram + gbrain + gstack)
+After=network-online.target gbrain-http.service
+Wants=gbrain-http.service
+
+[Service]
+Type=simple
+Environment=PATH=/home/ubuntu/.bun/bin:/usr/local/bin:/usr/bin:/bin
+EnvironmentFile=/home/ubuntu/.config/agents/openclaw.env
+ExecStart=/home/ubuntu/.bun/bin/openclaw gateway run
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

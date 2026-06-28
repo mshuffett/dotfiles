@@ -87,25 +87,11 @@ fi
 # ---------- openclaw bun deps ----------
 [ -d "$HOME/.openclaw" ] && ( cd "$HOME/.openclaw" && bun install ) || true
 
-# ---------- secrets (restore from 1Password) ----------
-log "restore secrets from 1Password"
-restore(){ # $1 op document title, $2 dest path
-  mkdir -p "$(dirname "$2")"
-  if op document get "$1" --out-file "$2" >/dev/null 2>&1; then chmod 600 "$2"; echo "  restored $2"
-  else echo "  MISSING op doc: $1 (skip)"; fi
-}
-if command -v op >/dev/null 2>&1 && op account list >/dev/null 2>&1; then
-  restore "devbox/openclaw.env"                "$HOME/.config/agents/openclaw.env"
-  restore "devbox/gbrain.env"                  "$HOME/.config/agents/gbrain.env"
-  restore "devbox/claude-credentials"          "$HOME/.claude/.credentials.json"
-  restore "devbox/hermes.env"                  "$HOME/.hermes/.env"
-  restore "devbox/hermes-config.yaml"          "$HOME/.hermes/config.yaml"
-  restore "devbox/hermes-rin-grok.env"         "$HOME/.hermes/profiles/rin-grok/.env"
-  restore "devbox/hermes-rin-grok-config.yaml" "$HOME/.hermes/profiles/rin-grok/config.yaml"
-  restore "devbox/todoist-claude.env"          "$HOME/platform/services/todoist-claude/.env"
-else
-  echo "  op not authed — skipping secrets (run 'op signin' then re-run dev-provision.sh)"
-fi
+# ---------- secrets ----------
+# Secrets are delivered separately by bin/dev-push-secrets.sh, run from the AUTHED MAC
+# (op stays on the trusted machine; nothing secret lives on the box image). `dev create`
+# runs it automatically after this script.
+log "secrets: deliver with 'dev-push-secrets.sh <host>' from your op-authed mac"
 
 # ---------- systemd user services ----------
 log "systemd user services"
