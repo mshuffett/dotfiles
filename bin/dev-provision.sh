@@ -58,6 +58,11 @@ if [ ! -x "$HOME/.bun/bin/bun" ]; then
 fi
 export PATH="$HOME/.bun/bin:$PATH"
 
+# ---------- git auth for private repos ----------
+# Use gh's token (from ~/.config/gh/hosts.yml, delivered by dev-push-secrets.sh) so the
+# private clones below (platform, polylog, compose-monorepo) authenticate over https.
+command -v gh >/dev/null 2>&1 && gh auth setup-git 2>/dev/null || true
+
 # ---------- repos ----------
 log "clone repos"
 clone(){ [ -d "$2/.git" ] || git clone --quiet "$1" "$2" || echo "  (clone failed: $1 — may need auth/access)"; }
