@@ -79,6 +79,16 @@ set -ga terminal-overrides ",xterm-256color:Tc"
 set -ga terminal-overrides ",xterm-ghostty:Tc:RGB"
 # Allow passthrough for Kitty graphics protocol (required for image display in Ghostty)
 set -g allow-passthrough on
+# Forward terminal focus in/out events to programs (Claude Code recommends this for focus tracking)
+set -g focus-events on
+
+# Window naming: Claude Code sets its node process.title to its version, so the default
+# automatic-rename ("#{pane_current_command}") labels CC windows "2.1.195" instead of "claude".
+# CC's built-in terminal-title (re-enabled by removing CLAUDE_CODE_DISABLE_TERMINAL_TITLE) lands
+# in pane_title. This format keeps every existing label (command name, [tmux] copy-mode, [dead])
+# and ONLY swaps to pane_title for panes whose command looks like a version (i.e. Claude Code).
+# Requires automatic-rename to stay ON (it's the global default) — the format is what it evaluates.
+setw -g automatic-rename-format '#{?pane_in_mode,[tmux],#{?#{m:[0-9]*.[0-9]*.[0-9]*,#{pane_current_command}},#{pane_title},#{pane_current_command}}}#{?pane_dead,[dead],}'
 
 # configure contents of status bar (managed by Catppuccin plugin)
 set -g status-left-length 300

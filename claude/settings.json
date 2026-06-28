@@ -1,7 +1,6 @@
 {
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "attribution": {
     "commit": "",
@@ -113,7 +112,7 @@
     "claude-md-management@claude-plugins-official": true,
     "ralph-loop@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "tmux-titles@michaels-world": true,
+    "tmux-titles@michaels-world": false,
     "open-batch-coach@openbatch-skills": true,
     "agentops@agentops-marketplace": true,
     "rust-analyzer-lsp@claude-plugins-official": true
