@@ -20,6 +20,9 @@ owner: michael
 5. **Wire into `dev.ts`** — run provision after harden in `dev create`.
 6. **Verify** — recreate a throwaway box end-to-end, confirm services run, terminate.
 
+## Verification result (2026-06-28)
+Recreated a fresh t3.large end-to-end (harden → push-secrets → provision), auto-terminated. **PASS (foundation):** toolchain (node22, docker, gh, pnpm, claude, bun), hardening (swap+earlyoom+swappiness), secret delivery from op (files landed at correct paths), all 4 systemd units installed, public repos cloned. **Remaining (service layer):** add `gh auth setup-git` to dev-provision (private clones platform/polylog); add `~/.openclaw` + other service repos to the clone manifest; verify per-service builds (hermes venv, openclaw bun) and full secret set so all 4 services reach `active`. Also: push dotfiles to origin so `dev create`'s clone is self-sufficient (blocked on user's uncommitted claude/memory/* + remote ahead 21).
+
 ## Repo manifest
 | path | remote |
 |---|---|
