@@ -33,6 +33,7 @@ The mechanism is: author or use a pursuit workflow, run it on a sandbox where "d
 ## Known limits
 
 - Sandbox tasks are contrived (counters). They test loop correctness and honesty, not messy real goals end to end.
-- PC2 tested one authored shape (milestone). The parallel and measure-act shapes are not yet eval-covered.
+- PC2: the parallel and measure-act shapes were authored from the reference and pass the 5-rule lint, but were not run at runtime yet. Only the milestone shape is runtime-verified. The two authored scripts are in scripts/ patterns; run them on a sandbox when validating.
 - Lift is n=1 per arm. Baseline is high variance. Run each arm ~3x for a reliable number.
-- Triggering is not yet tuned. "goal" collides with the built-in /goal command and the agentops goals skill. Run the description optimizer before relying on auto-trigger.
+- Triggering description set is in trigger-eval.json (10 should-fire persistent-pursuit queries, 10 tricky negatives). The current description was hand-aligned to the "keep going until X" shape.
+- WARNING: the skill-creator description optimizer (run_loop) was tried once and is NOT recommended here as-is. It fans out many headless `claude -p` processes in parallel and spiked the machine, and in that run its triggering harness reported recall=0% across ALL queries (0/3 trigger rate everywhere), i.e. it never actually invoked the skill, so its numbers were invalid. If retried, throttle concurrency and first confirm the harness can trigger the skill at all.

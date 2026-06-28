@@ -1,0 +1,22 @@
+[
+  {"query": "keep going until the onboarding e2e suite is green in CI, don't stop until it actually passes even if it takes a bunch of iterations", "should_trigger": true},
+  {"query": "i want you to just grind on the flaky tests until the whole suite runs reliably 10x in a row", "should_trigger": true},
+  {"query": "work on the postgres migration until every table is moved and the row counts match between old and new, however long it takes", "should_trigger": true},
+  {"query": "broad goal here: get our p95 checkout latency under 200ms and keep iterating until we're there", "should_trigger": true},
+  {"query": "don't quit until the slide deck renders cleanly and all 14 slides are present with no missing assets", "should_trigger": true},
+  {"query": "pursue getting test coverage on packages/payments above 80% and keep at it until the coverage gate passes", "should_trigger": true},
+  {"query": "I keep meaning to finally get the docs site to zero broken links, can you just keep fixing until link-check is clean", "should_trigger": true},
+  {"query": "set a goal to clear the entire p0 bug backlog and work through it until none are left open", "should_trigger": true},
+  {"query": "iterate on the parser until the fuzzer stops finding crashes, run it until it's clean for 60s", "should_trigger": true},
+  {"query": "keep refining the auth refactor until typecheck and the full test suite both pass, then stop", "should_trigger": true},
+  {"query": "fix the null pointer deref in src/checkout/cart.ts around line 88", "should_trigger": false},
+  {"query": "run /goals measure and show me the repo fitness dashboard", "should_trigger": false},
+  {"query": "add a `goal` column to the users table in the next migration", "should_trigger": false},
+  {"query": "/goal", "should_trigger": false},
+  {"query": "set up a GOALS.yaml with build-passing and test-passing gates for this repo", "should_trigger": false},
+  {"query": "i scored the winning goal in my rec league game last night lol, log it in my journal note", "should_trigger": false},
+  {"query": "make a todoist task to renew my passport next week", "should_trigger": false},
+  {"query": "keep going", "should_trigger": false},
+  {"query": "explain how OKRs work and give me a quarterly template", "should_trigger": false},
+  {"query": "what's a good framework for setting personal life goals?", "should_trigger": false}
+]
