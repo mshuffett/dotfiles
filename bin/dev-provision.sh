@@ -82,15 +82,15 @@ clone https://github.com/compose-ai/compose-monorepo.git  "$HOME/compose-monorep
 # ---------- dotfiles symlinks ----------
 [ -x "$HOME/.dotfiles/script/bootstrap" ] && "$HOME/.dotfiles/script/bootstrap" || true
 
-# ---------- hermes python venv ----------
+# ---------- hermes python venv (uv + python 3.11, per pyproject requires-python + uv.lock) ----------
 if [ -d "$HOME/.hermes/hermes-agent" ] && [ ! -x "$HOME/.hermes/hermes-agent/venv/bin/python" ]; then
-  log "hermes venv"
-  python3 -m venv "$HOME/.hermes/hermes-agent/venv"
-  PIP="$HOME/.hermes/hermes-agent/venv/bin/pip"
-  "$PIP" install -q -U pip
-  "$PIP" install -q -e "$HOME/.hermes/hermes-agent" \
-    || "$PIP" install -q -r "$HOME/.hermes/hermes-agent/requirements.txt" \
-    || echo "  (hermes pip install needs review)"
+  log "hermes venv (uv, python 3.11)"
+  command -v uv >/dev/null 2>&1 || curl -LsSf https://astral.sh/uv/install.sh | sh
+  export PATH="$HOME/.local/bin:$PATH"
+  ( cd "$HOME/.hermes/hermes-agent" \
+    && uv venv --python 3.11 venv \
+    && VIRTUAL_ENV="$PWD/venv" uv pip install -e . ) 2>&1 | tail -3 \
+    || echo "  (hermes uv install needs review)"
 fi
 
 # ---------- openclaw bun deps ----------

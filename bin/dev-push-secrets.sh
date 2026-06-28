@@ -28,7 +28,7 @@ push devbox/gh-hosts.yml                 ".config/gh/hosts.yml"
 
 # openclaw agent identity/config workspace (tarball) — restores the SAME agent identity
 echo "  restoring openclaw workspace (identity/config) ..."
-if op document get "devbox/openclaw-workspace.tgz" --vault "$VAULT" 2>/dev/null \
+if op document get "devbox/openclaw-workspace.tgz" --vault "$VAULT" 2>/dev/null | base64 -d \
    | ssh "$HOST" "mkdir -p ~/.openclaw && tar xzf - -C ~/.openclaw"; then
   echo "  pushed openclaw workspace"
 else echo "  FAIL: openclaw workspace"; fi
