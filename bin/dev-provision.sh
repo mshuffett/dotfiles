@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+# dev-provision.sh — rebuild the dev box's toolchain, repos, and services from scratch.
+# Run AFTER bin/dev-harden.sh, as the `ubuntu` user, on a fresh Ubuntu 24.04 box.
+# Idempotent (safe to re-run). Secrets restore from 1Password (`op`); non-secret
+# systemd unit files come from this dotfiles repo (dev-server/systemd/).
+#
+# Reproducibility for the box that OOM-died 2026-06-27. Install methods captured
+# from the original box's apt history. See plans/dev-box-full-reproducibility.md.
+set -uo pipefail
+log(){ echo -e "\n== $* =="; }
+export DEBIAN_FRONTEND=noninteractive
+
+# ---------- base apt packages (from original box apt history) ----------
+log "apt base packages"
+sudo apt-get update -qq
+sudo apt-get install -y -qq \
+  zsh git curl wget unzip build-essential ca-certificates gnupg \
+  ripgrep fd-find bat fzf jq direnv neovim btop tmux less locales \
+  python3 python3-pip python3-dev libffi-dev ffmpeg \
+  postgresql postgresql-16-pgvector postgresql-client zoxide || true
+
+# ---------- node 22 (nodesource) ----------
+if ! command -v node >/dev/null 2>&1 || ! node -v 2>/dev/null | grep -q '^v22'; then
+  log "node 22 (nodesource)"
+  curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+  sudo apt-get install -y -qq nodejs
+fi
+
+# ---------- pnpm + claude code (npm global) ----------
+log "pnpm + claude code (npm -g)"
+sudo npm install -g pnpm @anthropic-ai/claude-code
+
+# ---------- github cli (apt repo) ----------
+if ! command -v gh >/dev/null 2>&1; then
+  log "github cli"
+  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+    | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg status=none
+  echo "deb [signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+    | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+  sudo apt-get update -qq && sudo apt-get install -y -qq gh
+fi
+
+# ---------- docker-ce (apt repo) ----------
+if ! command -v docker >/dev/null 2>&1; then
+  log "docker-ce"
+  sudo install -m0755 -d /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+    | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
+  sudo apt-get update -qq
+  sudo apt-get install -y -qq docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-buildx-plugin
+  sudo usermod -aG docker "$USER" || true
+fi
+
+# ---------- bun (user installer) ----------
+if [ ! -x "$HOME/.bun/bin/bun" ]; then
+  log "bun"; curl -fsSL https://bun.sh/install | bash
+fi
+export PATH="$HOME/.bun/bin:$PATH"
+
+# ---------- repos ----------
+log "clone repos"
+clone(){ [ -d "$2/.git" ] || git clone --quiet "$1" "$2" || echo "  (clone failed: $1 — may need auth/access)"; }
+clone https://github.com/mshuffett/dotfiles.git           "$HOME/.dotfiles"
+clone https://github.com/mshuffett/platform.git           "$HOME/platform"
+clone https://github.com/mshuffett/polylog.git            "$HOME/polylog"
+clone https://github.com/mshuffett/tana-clone.git         "$HOME/tana-clone"
+clone https://github.com/mshuffett/pomodoro-vibe.git      "$HOME/pomodoro-app"
+clone https://github.com/NousResearch/hermes-agent.git    "$HOME/.hermes/hermes-agent"
+# compose-monorepo + openclaw: private/org — clone if `gh auth` has access
+clone https://github.com/compose-ai/compose-monorepo.git  "$HOME/compose-monorepo-review"
+
+# ---------- dotfiles symlinks ----------
+[ -x "$HOME/.dotfiles/script/bootstrap" ] && "$HOME/.dotfiles/script/bootstrap" || true
+
+# ---------- hermes python venv ----------
+if [ -d "$HOME/.hermes/hermes-agent" ] && [ ! -x "$HOME/.hermes/hermes-agent/venv/bin/python" ]; then
+  log "hermes venv"
+  python3 -m venv "$HOME/.hermes/hermes-agent/venv"
+  PIP="$HOME/.hermes/hermes-agent/venv/bin/pip"
+  "$PIP" install -q -U pip
+  "$PIP" install -q -e "$HOME/.hermes/hermes-agent" \
+    || "$PIP" install -q -r "$HOME/.hermes/hermes-agent/requirements.txt" \
+    || echo "  (hermes pip install needs review)"
+fi
+
+# ---------- openclaw bun deps ----------
+[ -d "$HOME/.openclaw" ] && ( cd "$HOME/.openclaw" && bun install ) || true
+
+# ---------- secrets (restore from 1Password) ----------
+log "restore secrets from 1Password"
+restore(){ # $1 op document title, $2 dest path
+  mkdir -p "$(dirname "$2")"
+  if op document get "$1" --out-file "$2" >/dev/null 2>&1; then chmod 600 "$2"; echo "  restored $2"
+  else echo "  MISSING op doc: $1 (skip)"; fi
+}
+if command -v op >/dev/null 2>&1 && op account list >/dev/null 2>&1; then
+  restore "devbox/openclaw.env"                "$HOME/.config/agents/openclaw.env"
+  restore "devbox/gbrain.env"                  "$HOME/.config/agents/gbrain.env"
+  restore "devbox/claude-credentials"          "$HOME/.claude/.credentials.json"
+  restore "devbox/hermes.env"                  "$HOME/.hermes/.env"
+  restore "devbox/hermes-config.yaml"          "$HOME/.hermes/config.yaml"
+  restore "devbox/hermes-rin-grok.env"         "$HOME/.hermes/profiles/rin-grok/.env"
+  restore "devbox/hermes-rin-grok-config.yaml" "$HOME/.hermes/profiles/rin-grok/config.yaml"
+  restore "devbox/todoist-claude.env"          "$HOME/platform/services/todoist-claude/.env"
+else
+  echo "  op not authed — skipping secrets (run 'op signin' then re-run dev-provision.sh)"
+fi
+
+# ---------- systemd user services ----------
+log "systemd user services"
+loginctl enable-linger "$USER" 2>/dev/null || true
+mkdir -p "$HOME/.config/systemd/user"
+UNITS_SRC="$HOME/.dotfiles/dev-server/systemd"
+[ -d "$UNITS_SRC" ] && cp "$UNITS_SRC"/*.service "$HOME/.config/systemd/user/" 2>/dev/null || true
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+systemctl --user daemon-reload 2>/dev/null || true
+for svc in hermes-gateway hermes-gateway-rin-grok openclaw-gateway todoist-claude; do
+  if [ -f "$HOME/.config/systemd/user/$svc.service" ]; then
+    systemctl --user enable --now "$svc" 2>/dev/null && echo "  started $svc" || echo "  $svc failed to start (check secrets/deps)"
+  else echo "  unit $svc.service not present (skip)"; fi
+done
+
+echo -e "\nPROVISION_DONE"
