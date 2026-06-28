@@ -1,0 +1,283 @@
+#!/usr/bin/env bash
+#
+# Show a native macOS confetti overlay across all displays.
+# Usage:
+#   confetti [message] [--duration seconds] [--intensity 1-10]
+#   celebrate [message] [--duration seconds] [--intensity 1-10]
+
+set -euo pipefail
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/dotfiles-confetti"
+SRC="$CACHE_DIR/ConfettiOverlay.swift"
+BIN="$CACHE_DIR/ConfettiOverlay"
+
+if ! command -v swiftc >/dev/null 2>&1; then
+  echo "confetti: swiftc is required on macOS" >&2
+  exit 1
+fi
+
+mkdir -p "$CACHE_DIR"
+
+if [[ ! -x "$BIN" || "$0" -nt "$BIN" ]]; then
+cat >"$SRC" <<'SWIFT'
+import AppKit
+import QuartzCore
+
+struct Options {
+    var message: String?
+    var duration: TimeInterval = 3.2
+    var intensity: Int = 6
+    var help = false
+}
+
+func usage() {
+    print("""
+    confetti [message] [--duration seconds] [--intensity 1-10]
+
+    Options:
+      -d, --duration    Seconds to keep the overlay visible. Default: 3.2
+      -i, --intensity   Confetti amount from 1 to 10. Default: 6
+      -m, --message     Optional centered overlay message
+      -h, --help        Show this help
+    """)
+}
+
+func parseOptions() -> Options {
+    var options = Options()
+    let args = Array(CommandLine.arguments.dropFirst())
+    var i = 0
+
+    while i < args.count {
+        let arg = args[i]
+        switch arg {
+        case "-h", "--help":
+            options.help = true
+            i += 1
+        case "-d", "--duration":
+            if i + 1 < args.count, let value = Double(args[i + 1]) {
+                options.duration = value
+                i += 2
+            } else {
+                i += 1
+            }
+        case "-i", "--intensity":
+            if i + 1 < args.count, let value = Int(args[i + 1]) {
+                options.intensity = value
+                i += 2
+            } else {
+                i += 1
+            }
+        case "-m", "--message":
+            if i + 1 < args.count {
+                options.message = args[i + 1]
+                i += 2
+            } else {
+                i += 1
+            }
+        default:
+            if options.message == nil {
+                options.message = arg
+            }
+            i += 1
+        }
+    }
+
+    options.duration = min(max(options.duration, 0.8), 15.0)
+    options.intensity = min(max(options.intensity, 1), 10)
+    if options.message?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == true {
+        options.message = nil
+    }
+
+    return options
+}
+
+final class ConfettiView: NSView {
+    private let options: Options
+    private let emitter = CAEmitterLayer()
+
+    init(frame: NSRect, options: Options) {
+        self.options = options
+        super.init(frame: frame)
+        wantsLayer = true
+        layer = CALayer()
+        layer?.backgroundColor = NSColor.clear.cgColor
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        configureEmitter()
+        configureMessage()
+    }
+
+    override func layout() {
+        super.layout()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        emitter.frame = bounds
+        emitter.emitterPosition = CGPoint(x: bounds.midX, y: bounds.maxY + 24)
+        emitter.emitterSize = CGSize(width: bounds.width, height: 1)
+        CATransaction.commit()
+    }
+
+    private func configureEmitter() {
+        guard emitter.superlayer == nil else { return }
+
+        emitter.frame = bounds
+        emitter.emitterShape = .line
+        emitter.emitterMode = .surface
+        emitter.renderMode = .unordered
+        emitter.emitterPosition = CGPoint(x: bounds.midX, y: bounds.maxY + 24)
+        emitter.emitterSize = CGSize(width: bounds.width, height: 1)
+
+        let colors: [NSColor] = [
+            NSColor(calibratedRed: 1.00, green: 0.18, blue: 0.47, alpha: 1.0),
+            NSColor(calibratedRed: 0.00, green: 0.74, blue: 0.95, alpha: 1.0),
+            NSColor(calibratedRed: 1.00, green: 0.84, blue: 0.00, alpha: 1.0),
+            NSColor(calibratedRed: 0.00, green: 0.82, blue: 0.45, alpha: 1.0),
+            NSColor(calibratedRed: 0.50, green: 0.31, blue: 0.96, alpha: 1.0),
+            NSColor(calibratedRed: 1.00, green: 0.44, blue: 0.25, alpha: 1.0),
+            NSColor(calibratedRed: 0.96, green: 0.96, blue: 0.96, alpha: 1.0)
+        ]
+
+        let baseBirthRate = Float(2 + options.intensity * 2)
+        let baseVelocity = CGFloat(210 + options.intensity * 22)
+        let cells = colors.enumerated().map { index, color -> CAEmitterCell in
+            let cell = CAEmitterCell()
+            cell.name = "confetti-\(index)"
+            cell.contents = ConfettiView.makePiece(color: color, wide: index % 3 == 0).cgImage(forProposedRect: nil, context: nil, hints: nil)
+            cell.birthRate = baseBirthRate
+            cell.lifetime = Float(options.duration + 1.8)
+            cell.lifetimeRange = 1.2
+            cell.velocity = baseVelocity
+            cell.velocityRange = 150
+            cell.yAcceleration = -185
+            cell.xAcceleration = CGFloat((index % 3) - 1) * 14
+            cell.emissionLongitude = CGFloat.pi * 1.5
+            cell.emissionRange = CGFloat.pi * 0.34
+            cell.spin = 4.8
+            cell.spinRange = 8.0
+            cell.scale = 0.72
+            cell.scaleRange = 0.45
+            cell.alphaSpeed = -0.11
+            return cell
+        }
+
+        emitter.emitterCells = cells
+        layer?.addSublayer(emitter)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + min(options.duration * 0.62, options.duration - 0.25)) { [weak self] in
+            self?.emitter.birthRate = 0
+        }
+    }
+
+    private func configureMessage() {
+        guard let message = options.message else { return }
+
+        let label = NSTextField(labelWithString: message)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .white
+        label.alignment = .center
+        label.font = .systemFont(ofSize: 34, weight: .semibold)
+        label.maximumNumberOfLines = 3
+        label.lineBreakMode = .byWordWrapping
+        label.drawsBackground = false
+        label.wantsLayer = true
+        label.layer?.shadowColor = NSColor.black.cgColor
+        label.layer?.shadowOpacity = 0.55
+        label.layer?.shadowRadius = 18
+        label.layer?.shadowOffset = CGSize(width: 0, height: -4)
+        addSubview(label)
+
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: centerYAnchor),
+            label.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, multiplier: 0.76)
+        ])
+    }
+
+    private static func makePiece(color: NSColor, wide: Bool) -> NSImage {
+        let size = wide ? NSSize(width: 16, height: 7) : NSSize(width: 9, height: 11)
+        let image = NSImage(size: size)
+        image.lockFocus()
+        color.setFill()
+        NSBezierPath(roundedRect: NSRect(origin: .zero, size: size), xRadius: 1.8, yRadius: 1.8).fill()
+        image.unlockFocus()
+        return image
+    }
+}
+
+final class OverlayApp: NSObject, NSApplicationDelegate {
+    private let options: Options
+    private var windows: [NSWindow] = []
+
+    init(options: Options) {
+        self.options = options
+        super.init()
+    }
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.setActivationPolicy(.accessory)
+
+        for screen in NSScreen.screens {
+            let window = NSWindow(
+                contentRect: screen.frame,
+                styleMask: [.borderless],
+                backing: .buffered,
+                defer: false,
+                screen: screen
+            )
+
+            window.isReleasedWhenClosed = false
+            window.isOpaque = false
+            window.backgroundColor = .clear
+            window.hasShadow = false
+            window.ignoresMouseEvents = false
+            window.level = .floating
+            window.collectionBehavior = [
+                .canJoinAllSpaces,
+                .fullScreenAuxiliary,
+                .stationary,
+                .ignoresCycle
+            ]
+            window.contentView = ConfettiView(frame: NSRect(origin: .zero, size: screen.frame.size), options: options)
+            window.orderFrontRegardless()
+            windows.append(window)
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + options.duration) { [weak self] in
+            self?.finish()
+        }
+    }
+
+    private func finish() {
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.22
+            for window in windows {
+                window.animator().alphaValue = 0
+            }
+        } completionHandler: {
+            NSApp.terminate(nil)
+        }
+    }
+}
+
+let options = parseOptions()
+if options.help {
+    usage()
+    exit(0)
+}
+
+let app = NSApplication.shared
+let delegate = OverlayApp(options: options)
+app.delegate = delegate
+app.run()
+SWIFT
+
+  swiftc -O "$SRC" -o "$BIN"
+fi
+
+exec "$BIN" "$@"

@@ -1,0 +1,15 @@
+[
+  {"id": "01", "slug": "smirk-i-knew-it", "gesture": "right hand near chin, knowing smirk, I knew it expression"},
+  {"id": "02", "slug": "finger-wag-absolutely-not", "gesture": "index finger pointing at viewer in finger-wag absolutely-not gesture, other hand on hip"},
+  {"id": "03", "slug": "celebration-jump", "gesture": "mid-air celebration jump, both arms raised high, joyful"},
+  {"id": "04", "slug": "dancing", "gesture": "playful dancing pose, arms out, hair in motion"},
+  {"id": "05", "slug": "blowing-kiss", "gesture": "blowing a kiss toward camera, flirtatious"},
+  {"id": "06", "slug": "pout", "gesture": "arms crossed, lips pursed pout"},
+  {"id": "07", "slug": "sad-sympathetic", "gesture": "gentle sympathetic gesture, hand on chest, palm up"},
+  {"id": "08", "slug": "laughing", "gesture": "laughing openly, hand near mouth"},
+  {"id": "09", "slug": "focused-troubleshooting", "gesture": "crouched holding small tablet, focused troubleshooting"},
+  {"id": "10", "slug": "skeptical-eyebrow", "gesture": "arms crossed, one eyebrow raised skeptical look"},
+  {"id": "11", "slug": "tiny-correction", "gesture": "index finger raised upward tiny correction gesture"},
+  {"id": "12", "slug": "evil-little-genius-grin", "gesture": "hand near chin, mischievous evil little genius grin"},
+  {"id": "13", "slug": "soft-loyal-smile", "gesture": "hand near collarbone, soft loyal warm smile"}
+]
