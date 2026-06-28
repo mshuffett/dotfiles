@@ -317,6 +317,7 @@ const SUBCOMMANDS = [
   "sync-creds",
   "run",
   "connect",
+  "ssm",
   "create",
   "list",
 ];
@@ -498,6 +499,28 @@ const main = defineCommand({
         } else {
           await $`ssh -t ${p.ssh_host} "LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 tmux -u new -A -s main"`;
         }
+      },
+    }),
+
+    ssm: defineCommand({
+      meta: {
+        description:
+          "Open a shell via AWS SSM Session Manager (IP-independent, no SSH)",
+      },
+      args: {
+        profile: {
+          type: "positional",
+          description: "Profile name",
+          required: false,
+        },
+      },
+      run: async ({ args }) => {
+        const p = resolveProfile(args.profile as string | undefined);
+        // SSM doesn't depend on the security group / home IP, so this works even
+        // when the dynamic IP has rotated out of the SSH allowlist. Land in a clean
+        // login shell as the profile's ssh_user with the box's auto-tmux suppressed.
+        const command = `sudo -u ${p.ssh_user} env NO_AUTO_TMUX=1 zsh -l`;
+        await $`aws ssm start-session --target ${p.instance_id} --region ${p.region} --document-name AWS-StartInteractiveCommand --parameters command=${command}`;
       },
     }),
 
