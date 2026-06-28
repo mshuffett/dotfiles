@@ -183,7 +183,9 @@ fi
 alias ls="${aliases[ls]:-ls} -A"
 alias lst="${aliases[lst]:-${aliases[ls]:-ls}} -A"
 alias claude="command claude --dangerously-skip-permissions"
-alias c="command claude --dangerously-skip-permissions"
+# `c` defaults to Remote Control on (reach it from claude.ai/code or the app), like the dev box.
+# Bare --remote-control auto-names by hostname (unique per session); use `claude` for non-interactive/-p.
+alias c="command claude --dangerously-skip-permissions --remote-control"
 alias cb="CLAUDE_CODE_USE_BEDROCK=1 command claude --dangerously-skip-permissions"
 alias lg='lazygit'
 alias j='just'
