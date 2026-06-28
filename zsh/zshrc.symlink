@@ -473,3 +473,7 @@ export ENABLE_EXPERIMENTAL_MCP_CLI='true'
 # Task Master aliases added on 6/15/2026
 alias tm='task-master'
 alias taskmaster='task-master'
+
+# Host-local overrides (not version-controlled) — e.g. ~/.zshrc.local on the dev box
+# makes `claude`/`c` default to Remote Control. No-op where the file doesn't exist.
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
