@@ -590,7 +590,7 @@ const main = defineCommand({
         ]);
 
         const { stdout: runOutput } =
-          await $`aws ec2 run-instances --image-id ami-0cf2b4e024cdb6960 --instance-type ${instanceType} --key-name dev-server-key --security-group-ids sg-0f48d7fb34f72a2ea --subnet-id subnet-02493c820e0e60ac1 --block-device-mappings ${blockDeviceMappings} --tag-specifications ${tagSpecs} --region ${region} --output json`.quiet();
+          await $`aws ec2 run-instances --image-id ami-0cf2b4e024cdb6960 --instance-type ${instanceType} --key-name dev-server-key --security-group-ids sg-0f48d7fb34f72a2ea --subnet-id subnet-02493c820e0e60ac1 --iam-instance-profile Name=dev-server-ssm-profile --block-device-mappings ${blockDeviceMappings} --tag-specifications ${tagSpecs} --region ${region} --output json`.quiet();
 
         const result = JSON.parse(runOutput.toString());
         const instanceId = result.Instances[0].InstanceId;
@@ -627,6 +627,13 @@ const main = defineCommand({
 
         console.log(`Waiting for SSH on ${sshHost} (${ip})...`);
         await waitForSsh(sshHost);
+
+        // Harden the box (swap + earlyoom + sysctls) so a memory spike can't OOM-livelock
+        // the way dev-default did on 2026-06-27. See bin/dev-harden.sh. Idempotent.
+        console.log("Hardening box (swap, earlyoom, sysctls)...");
+        const hardenScript = `${import.meta.dir}/dev-harden.sh`;
+        await $`scp -o StrictHostKeyChecking=no ${hardenScript} ${sshHost}:/tmp/dev-harden.sh`.nothrow();
+        await $`ssh ${sshHost} ${"chmod +x /tmp/dev-harden.sh && sudo /tmp/dev-harden.sh"}`.nothrow();
 
         console.log(`\nProfile "${name}" created successfully.`);
         console.log(`  Instance: ${instanceId}`);
