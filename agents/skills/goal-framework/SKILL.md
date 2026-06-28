@@ -1,6 +1,6 @@
 ---
 name: goal-framework
-description: Turn a fuzzy intention into a goal with a checkable definition of done, track it in a file, and optionally pursue it with an autonomous loop. Use whenever the user wants to set, sharpen, track, or pursue a goal or objective, turn a vague intention into something with a clear "done", run a loop toward an outcome, or check progress on a goal. Triggers on "set a goal", "make a goal for", "track this", "I want to finally X", "help me get X done", "where is goal X at", OKRs, and accountability or progress tracking. Use it even when the user does not say the word "goal" but is describing an outcome they want to reach and track.
+description: Turn a broad or open-ended goal into a checkable definition of done, track it, and autonomously pursue it until that "done" verifies. Use this whenever the user signals PERSISTENT PURSUIT toward an outcome: "keep going until X", "don't stop until Y", "iterate until it passes", "work on this until it's actually done", or any broad goal that clearly wants sustained work toward a stopping condition rather than a single one-off action. The "until X" becomes the falsifiable success criterion and the loop's exit condition. Also use it when the user wants to set up, sharpen, or track a goal of that kind, or asks where such a goal stands. Do NOT use it for a concrete one-off task that should just be done, for repo CI fitness gates (that is the agentops goals skill, GOALS.yaml / ao), or when the user explicitly typed the built-in /goal command.
 ---
 
 # Goal Framework
