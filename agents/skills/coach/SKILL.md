@@ -214,6 +214,18 @@ This section is the canonical source for schedule rules. Do not fork competing r
 3. Log both to `references/memory.md` under Feedback.
 4. If the same improvement is requested 2+ times, promote it to a permanent behavior change.
 
+### Non-Blocking Execution During Agendas
+During any structured agenda (weekly review, `/morning`, `/evening`), keep the thread moving
+through the agenda — don't stall it on side-work that doesn't need Michael in the loop. When an
+action is mechanical or parallelizable (calendar edits, Todoist reschedules, file updates,
+research), dispatch it to a background agent and continue the agenda rather than waiting.
+
+Every background action passes a two-stage review gate: (1) **you** check the agent's output for
+correctness first; then (2) surface it to Michael **at item level** for his sign-off before it
+counts as final — never "~8 items done." Make background work reversible by default: instruct the
+agent to log original values (old due date, prior file contents) so any item can be reverted if
+Michael's review flags it.
+
 ---
 
 ## Daily Note Operations
