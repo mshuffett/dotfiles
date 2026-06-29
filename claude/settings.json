@@ -1,5 +1,7 @@
 {
+  "skillListingBudgetFraction": 0.02,
   "env": {
+    "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "attribution": {
@@ -7,18 +9,102 @@
     "pr": ""
   },
   "permissions": {
-    "defaultMode": "dontAsk"
+    "defaultMode": "auto"
   },
   "enabledMcpjsonServers": [
     "tavus"
   ],
   "hooks": {
-    "Stop": [
+    "PostToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/bin/node\" \"/Users/michael/.claude/hooks/gsd-context-monitor.js\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/bin/node\" \"/Users/michael/.claude/hooks/gsd-read-injection-scanner.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"/Users/michael/.claude/hooks/gsd-phase-boundary.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/bin/node\" \"/Users/michael/.claude/hooks/gsd-prompt-guard.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/bin/node\" \"/Users/michael/.claude/hooks/gsd-read-guard.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/bin/node\" \"/Users/michael/.claude/hooks/gsd-workflow-guard.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"/Users/michael/.claude/hooks/gsd-validate-commit.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "command -v afplay >/dev/null 2>&1 && afplay ~/.dotfiles/sounds/elevenlabs-notification-7.mp3"
+            "command": "\"/Users/michael/.local/share/fnm/node-versions/v24.11.0/installation/bin/node\" \"/Users/michael/.claude/hooks/gsd-check-update.js\""
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{ [ \"$AITERM_PORT\" = \"11550\" ] || [ -z \"$AITERM_PORT\" ]; } && [ -n \"$AITERM_TAB_ID\" ] && AITERM_SID=$(cat | sed -n 's/.*\"session_id\" *: *\"\\([^\"]*\\)\".*/\\1/p' | head -1) && echo 'Your aiTerm tab ID is '$AITERM_TAB_ID'. Your session ID is '$AITERM_SID'. You MUST immediately call the aiterm-dev initSession tool with this tabId and sessionId before responding to the user. This is required for correct tab targeting.' || true",
+            "timeout": 5
           }
         ]
       },
@@ -26,7 +112,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.dotfiles/claude/scripts/test-stop-hook-input.sh"
+            "command": "bash \"/Users/michael/.claude/hooks/gsd-session-state.sh\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.dotfiles/claude/scripts/skill-firing-hook.sh",
+            "timeout": 5
           }
         ]
       },
@@ -41,91 +138,52 @@
         ]
       }
     ],
-    "Notification": [
+    "SessionEnd": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "command -v afplay >/dev/null 2>&1 && afplay /System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Portal-EncoreInfinitum.caf"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "command -v afplay >/dev/null 2>&1 && afplay /System/Library/PrivateFrameworks/ToneLibrary.framework/Versions/A/Resources/AlertTones/EncoreInfinitum/Welcome-EncoreInfinitum.caf"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"/Users/michael/.claude/hooks/gsd-check-update.js\""
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash|Edit|Write|MultiEdit|Agent|Task",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"/Users/michael/.claude/hooks/gsd-context-monitor.js\"",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"/Users/michael/.claude/hooks/gsd-prompt-guard.js\"",
-            "timeout": 5
+            "command": "bash \"$HOME/.dotfiles/claude/scripts/self-improve-skill-review.sh\""
           }
         ]
       }
     ]
+  },
+  "worktree": {
+    "baseRef": "fresh"
   },
   "statusLine": {
     "type": "command",
     "command": "~/.dotfiles/claude/statusline.sh"
   },
   "enabledPlugins": {
+    "agent-sdk-dev@claude-code-plugins": true,
+    "agentops@agentops-marketplace": false,
+    "claude-md-management@claude-plugins-official": true,
+    "claude-meta@local-plugins": true,
+    "context7@claude-plugins-official": true,
+    "dev@local-plugins": true,
+    "everything-loop@local-plugins": true,
     "feature-dev@claude-code-plugins": true,
     "frontend-design@claude-code-plugins": true,
-    "plugin-dev@claude-code-plugins": true,
-    "everything-loop@local-plugins": true,
-    "claude-meta@local-plugins": true,
-    "dev@local-plugins": true,
-    "media@local-plugins": true,
-    "productivity@local-plugins": true,
-    "terminal@local-plugins": true,
-    "plan-orchestrator@local-plugins": true,
-    "swift-lsp@claude-plugins-official": true,
-    "security-guidance@claude-code-plugins": true,
-    "context7@claude-plugins-official": true,
-    "agent-sdk-dev@claude-code-plugins": true,
     "hookify@claude-code-plugins": false,
+    "media@local-plugins": true,
+    "notion-workspace-plugin@notion-plugin-marketplace": true,
+    "open-batch-coach@openbatch-skills": true,
+    "plan-orchestrator@local-plugins": true,
     "plannotator@plannotator": true,
     "playground@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true,
-    "superpowers@claude-plugins-official": true,
-    "notion-workspace-plugin@notion-plugin-marketplace": true,
-    "claude-md-management@claude-plugins-official": true,
+    "plugin-dev@claude-code-plugins": true,
+    "productivity@local-plugins": true,
     "ralph-loop@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "security-guidance@claude-code-plugins": true,
     "skill-creator@claude-plugins-official": true,
-    "tmux-titles@michaels-world": false,
-    "open-batch-coach@openbatch-skills": true,
-    "agentops@agentops-marketplace": true,
-    "rust-analyzer-lsp@claude-plugins-official": true
+    "superpowers@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true,
+    "terminal@local-plugins": true,
+    "tmux-titles@michaels-world": true,
+    "typescript-lsp@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "agentops-marketplace": {
@@ -133,13 +191,27 @@
         "source": "github",
         "repo": "boshu2/agentops"
       }
+    },
+    "honcho": {
+      "source": {
+        "source": "github",
+        "repo": "plastic-labs/claude-honcho"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "medium",
-  "voiceEnabled": true,
+  "effortLevel": "high",
+  "tui": "fullscreen",
+  "autoMemoryEnabled": true,
+  "autoDreamEnabled": true,
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
+  "theme": "auto",
+  "verbose": false,
   "teammateMode": "tmux",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true,
   "disabledMcpServers": [
     "playwright",
     "heyreach"
