@@ -8,6 +8,18 @@ version: 1.0.0
 
 Gmail CLI tool for reading, sending, and managing emails.
 
+## Never determine status from snippets — read the full thread
+
+When you search email to answer **did they reply / what's the status / did they decline / did they confirm / what did they say**, the flow is always: **search → `get_thread` (FULL content) → read EVERY message in the thread, full bodies, start to finish → then judge status.** Do NOT conclude from search-result snippets, a list/preview view, or a metadata/minimal thread view — a decline, a "yes", or the one key condition is usually an ordinary message that the snippet truncates or buries.
+
+Read the **entire** thread, every message — not just the latest reply. Status is set by the full back-and-forth, and a decline or key condition often sits *mid-thread* (before a later logistics or auto-reply message), so reading only the most recent message still gets it wrong. Read all of it, start to finish, before you assert anything.
+
+**Auto-replies never determine status.** An out-of-office / vacation / "I'm away until X" bounce is not an answer — ignore it and read the human messages in the thread. "OOO" means *keep reading*, not "still pending."
+
+This holds even for a "quick check." The extra read is cheap; reporting the wrong status (warm when they've declined, pending when they've confirmed) sends Michael down the wrong path and is hard to walk back.
+
+> Canonical miss (2026-06-29): reported Okta/Auth0 as "still warm / out-of-office" for the Demo Day venue from search snippets + a Jun-27 out-of-office auto-reply — when they had actually **declined** in an ordinary Jun-26 reply ("our team is unfortunately unable to support this event"). The full thread was never opened. This is the same failure as the `email-reply-style` "read the full thread, never snippets" rule, applied to status-determination instead of drafting.
+
 ## Quick Reference
 
 ```bash
