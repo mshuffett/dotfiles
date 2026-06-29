@@ -6,6 +6,17 @@ Create a TaskList from the steps below and guide Michael through them.
 
 ---
 
+## Checklist (don't skip)
+
+Lightweight backstop — tick each before close:
+- [ ] **Clear today** — nothing stays overdue (Step 7)
+- [ ] **Quick Todoist inbox sweep** — clear the day's captures from the Inbox so nothing strays untriaged (Step 7)
+- [ ] **Cap tomorrow** — ≤10 tasks, ≤5 non-quick, reconciled to calendar (Step 7)
+- [ ] **Tomorrow plan written** — top outcomes + Pomodoro #1/#2 + deep-work target (Step 7b)
+- [ ] **Close-down checklist** — tabs, agents, `evening_review` checked (Step 9)
+
+---
+
 ## Step 1: Review Actual vs Planned
 
 1. Open today's daily note and compare planned outcomes to what actually happened.
@@ -69,6 +80,7 @@ Create a TaskList from the steps below and guide Michael through them.
 11b. **Clear today — nothing may stay overdue.** For each still-open task: complete it · `reschedule-tasks` to a real future day · drop the due date if it's an undated umbrella/reference · or demote a captured musing to the idea backlog.
 11c. **Cap tomorrow: ≤10 tasks/day, ≤5 non-quick** (mirrors the triage Global Scheduling Pass). Reconcile against the calendar — count the *actual* deep-work blocks; if tomorrow has one ~2h block, it gets ONE deep deliverable, not three. Defer the rest to genuinely lighter days (don't just pile onto the next day). `@Quick/Easy` items don't count toward the non-quick cap.
 11d. Show the after counts so the trim is visible.
+11e. **Quick Todoist inbox sweep:** pull the Todoist Inbox and clear the day's captures — file each to its project, schedule it, or drop it. Keep it fast (a capture sweep, not full GTD); park anything heavy for the weekly review. The point is the Inbox doesn't quietly accumulate between weekly reviews.
 
 ## Step 7b: Tomorrow Plan
 

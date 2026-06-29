@@ -6,6 +6,17 @@ Create a TaskList from the steps below and guide Michael through them.
 
 ---
 
+## Checklist (don't skip)
+
+Lightweight backstop — tick each before "let's go":
+- [ ] The **ONE THING** named + next-action written ("Done = ___") (Step 0)
+- [ ] Calendar + daily note pulled (Step 1)
+- [ ] **Quick Todoist inbox sweep** — clear overnight captures from the Inbox so nothing strays untriaged (Step 1)
+- [ ] First 1-2 pomodoros set with deliverables (Step 3)
+- [ ] Deep-work block + objective defined (Step 3)
+
+---
+
 ## Step 0: Prime + the ONE THING (added 2026-06-21)
 Mechanism for the Cathedral-Building / over-planning pattern (see `memory.md` → Focus & Execution Protocol).
 - **Prime (~5 min):** gym if it's a gym morning → Adderall → 5-min meditation/intention.
@@ -27,6 +38,7 @@ Mechanism for the Cathedral-Building / over-planning pattern (see `memory.md` �
 4. Read yesterday's daily note for continuity — especially the "tomorrow plan" section.
 5. Read `references/memory.md` for persistent context.
 6. **Read `references/current-state.md`** (dated baseline) and **pull the live Todoist P1/P2 priorities** — the current project/task source (tracking moved off Obsidian; see SKILL.md → Current Project Context). If `current-state.md` is >1 week stale, re-confirm current priorities with Michael before planning.
+7. **Quick Todoist inbox sweep:** pull the Todoist Inbox and clear overnight captures — file each to its project, schedule it, or drop it. Keep it fast (a capture sweep, not full GTD); anything heavy gets parked for the weekly review. The point is the Inbox doesn't quietly accumulate between weekly reviews.
 
 ## Step 2: Context Gathering
 

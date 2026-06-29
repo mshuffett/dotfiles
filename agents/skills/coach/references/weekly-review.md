@@ -11,6 +11,22 @@ Create a TaskList from the phases below and guide Michael through them.
 
 ---
 
+## Checklist (don't skip)
+
+Scan this at session start and tick each before close — it's the hard-to-skip backstop for the steps that silently drop under time pressure (this list exists because **clearing the Todoist inbox kept getting forgotten** when it lived as buried prose). Each item maps to a phase below:
+
+- [ ] **Retro** — plan-vs-actual + Good/Bad/Start/Stop (Phase 1)
+- [ ] **Clear the notes inbox** (`+Inbox/`) (Phase 2)
+- [ ] **Clear the Todoist Inbox to zero** — every item GTD-clarified, not date-shuffled (Phase 2)
+- [ ] **GTD scan of the P1/P2 project tree** — raise dashboard + Todoist favorites (Phase 3)
+- [ ] **@waiting scan** — follow-ups in Todoist + daily notes (Phase 3)
+- [ ] **Weekly plan + the ONE THING** — in-scope/out-of-scope per focused project (Phase 4)
+- [ ] **Schedule deep-work blocks** — ≥3 blocks of 2+ hours (Phase 5)
+- [ ] **Update the 🎯 weekly-target Todoist task** to this week's ONE THING (Phase 6)
+- [ ] **Write the W-note** — `Calendar/Weekly/YYYY-Www.md` + Monday first-day plan (Phase 6)
+
+---
+
 ## Phase 0: Align on State (5 min)
 
 Before reviewing, agree on the starting picture — **don't assume it.** This catches the
@@ -63,8 +79,8 @@ Inbox clearing is NOT the identity of this review. Scale effort to inbox size.
 - **Small inbox (<15 items):** Process fully to PARA using `references/inbox-processing.md`.
 - **Large inbox (15+ items):** Quick scan for high-priority / time-sensitive items only. Process those. Park or bulk-archive the rest — don't let a stale backlog eat the strategic window.
 
-5. Triage notes inbox (`+Inbox/`).
-6. Triage Todoist inbox.
+5. **Clear the notes inbox** (`+Inbox/`) to zero.
+6. **Clear the Todoist Inbox to zero** — process every item per the GTD clarify step above (actionable? → reference/someday/trash OR project vs concrete next-action; merge duplicates; surface unknowns), then file/date each. "Zero" means no item left unprocessed in the Inbox, not that everything is done. This is the step that historically gets forgotten — don't leave it implicit.
 7. Brain dump: Ask Michael for any uncommitted thoughts — capture to `+Inbox/` or daily note.
 
 ## Phase 3: GTD Trigger-List Scan (15 min)
