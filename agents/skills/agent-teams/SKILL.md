@@ -164,6 +164,31 @@ Shutdown requests are **graceful** - teammates can reject them. To force:
 tmux kill-pane -t %PANE_ID
 ```
 
+### Closing teammate panes safely (don't kill the wrong pane)
+
+When the user asks to "close the panes" / tear down the team, **never** loop-kill
+by guesswork — you can kill your own pane or an unrelated session and lose the
+lead. Enumerate first, then kill ONLY the teammate pane IDs by explicit id:
+
+```bash
+# 1. Your own pane, read fresh (NEVER kill this one)
+echo "MY pane: $TMUX_PANE"
+# 2. Enumerate every pane with id + location + title so you can eyeball which is which
+tmux list-panes -a -F '#{pane_id} | #{session_name}:#{window_index}.#{pane_index} | title=[#{pane_title}]'
+# 3. Kill ONLY the known teammate ids, verifying each by title before killing
+for p in %40 %41; do            # the specific teammate pane ids, not a range
+  t=$(tmux display-message -p -t "$p" '#{pane_title}' 2>/dev/null)
+  [ -n "$t" ] && { echo "killing $p ($t)"; tmux kill-pane -t "$p"; } || echo "$p gone, skip"
+done
+# 4. Re-list and confirm your pane + bystander panes survived
+tmux list-panes -a -F '#{pane_id} | title=[#{pane_title}]'
+```
+
+Rules: read `$TMUX_PANE` fresh (per CLAUDE.md tmux safety — never a cached id);
+target teammate panes by their captured `%id`, never by index range or "all but
+mine"; verify the title matches the teammate before each kill; re-list afterward
+as proof you didn't take out the wrong pane.
+
 ### Agent Hallucination
 
 Agents may report work as "done" before files exist. Always verify:
