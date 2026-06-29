@@ -58,6 +58,8 @@ Each Start/Stop item becomes a concrete action item for next week's plan.
 
 Inbox clearing is NOT the identity of this review. Scale effort to inbox size.
 
+**CLARIFY before you date — don't date-shuffle.** For each item, run the GTD clarify step *before* assigning any date: (1) **Actionable?** No → reference / someday / trash. Yes → (2) **project or single next-action?** name the concrete next action. (3) **Merge duplicates** — collapse overlapping items (esp. investor-DB / outreach). (4) **Then** date it (park-with-review). And: if an item's **importance or deadline is unknown, SURFACE and flag it** (check its comments/description first, then ask) — never defer-to-hide by dating it forward. Rescheduling a date without clarifying/merging/surfacing is the anti-pattern. See `memory.md` → **GTD Processing — clarify, don't just shuffle** and **Don't hide unknowns — surface them**.
+
 - **Small inbox (<15 items):** Process fully to PARA using `references/inbox-processing.md`.
 - **Large inbox (15+ items):** Quick scan for high-priority / time-sensitive items only. Process those. Park or bulk-archive the rest — don't let a stale backlog eat the strategic window.
 

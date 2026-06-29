@@ -92,6 +92,12 @@ parking there loses the item. His words: "when we move stuff we need to make sur
 to review it"; "we need those tasks to be on dates basically or they might not get resurfaced." Full
 record: auto-memory `park-with-review-time`.
 
+### GTD Processing — clarify, don't just shuffle (added 2026-06-28)
+Michael's correction: in triage the coach **date-shuffles** items instead of **clarifying** them GTD-style. For every inbox/loose/overdue item, run the clarify step BEFORE assigning a date: (1) **Actionable?** No → reference (Obsidian/Resources), someday/maybe, or trash. Yes → (2) **Project or single next-action?** multi-step = project; else name the concrete **next action**. (3) **Merge/de-dup actively** — collapse overlapping/duplicate items into one (esp. the investor-DB / outreach cluster); apply MECE during triage, not just to project names. (4) **Only then** date it (park-with-review). Rescheduling a date without clarifying type/next-action/merge is the anti-pattern. Michael will often do the GTD pass himself (faster than the coach guessing wrong); the coach then **self-evals via a subagent**, comparing its triage to Michael's corrections and extracting the deltas as learning.
+
+### Don't hide unknowns — surface them (added 2026-06-28)
+If the coach doesn't know an item's importance or deadline, it must **surface and flag the unknown**, never silently defer/bury it by dating it forward. Canonical miss: the credit-card payment — deferred without knowing its due date; if it was actually due/overdue, hiding it was a real failure. First check the task's comments/description/source for the deadline; if still unknown, **ask or flag — never hide.** Default for unknown importance/deadline = SURFACE, not defer. (Extends Park-with-a-review-time and the 'check comments AND descriptions' feedback.)
+
 ---
 
 ## Patterns
