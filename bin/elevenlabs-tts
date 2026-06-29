@@ -1,0 +1,244 @@
+#!/usr/bin/env node
+
+/**
+ * ElevenLabs TTS CLI
+ *
+ * Usage:
+ *   elevenlabs-tts "Your text here"
+ *   elevenlabs-tts "Your text here" --voice female --output custom.mp3
+ *   elevenlabs-tts "Your text here" --voice gVRtHWWOc8ncKIMrDIom --model eleven_v3
+ *
+ * Multi-speaker dialogue (one request, one combined audio):
+ *   elevenlabs-tts --dialogue \
+ *     --speaker "Me=me" --speaker "Her=female" \
+ *     "Me: Hey, did it work?
+ *      Her: It did — two voices, one clip."
+ *   elevenlabs-tts --dialogue --speaker "Me=me" --speaker "Her=female" --script chat.txt
+ *
+ * Audio tags (ElevenLabs v3):
+ *   Inline bracket tags pass straight through the text, e.g.
+ *     elevenlabs-tts "That is hilarious [laughs] I can't believe it."
+ *     elevenlabs-tts "[whispers] Don't tell anyone. [sighs] It's a secret."
+ *   Common tags: [laughs], [whispers], [sighs], [excited], [sarcastic]
+ *
+ * Options:
+ *   --voice, -v          Voice alias or ID (default: me)
+ *   --dialogue, -D       Multi-speaker mode (text uses "Name: line" prefixes)
+ *   --speaker            Speaker mapping "Name=aliasOrId" (repeatable, dialogue mode)
+ *   --script             Read dialogue/text from a file instead of an argument
+ *   --model, -m          Model ID (default: eleven_v3)
+ *   --output, -o         Output filename (default: output.mp3)
+ *   --help, -h           Show this help message
+ *
+ * Voice aliases:
+ *   me, male   → gVRtHWWOc8ncKIMrDIom  (Michael's cloned male voice)
+ *   female     → MClEFoImJXBTgLwdLI5n
+ *   Any other value is treated as a literal ElevenLabs voice_id.
+ */
+
+import fs from 'fs';
+import { parseArgs } from 'util';
+
+// Voice aliases so you never have to remember raw IDs.
+// Any value not in this map is treated as a literal ElevenLabs voice_id.
+const VOICE_ALIASES = {
+  me: 'gVRtHWWOc8ncKIMrDIom',
+  male: 'gVRtHWWOc8ncKIMrDIom',
+  female: 'MClEFoImJXBTgLwdLI5n',
+};
+
+function resolveVoice(aliasOrId) {
+  return VOICE_ALIASES[aliasOrId] || aliasOrId;
+}
+
+// Parse "Name=aliasOrId" speaker specs into a Map of name -> resolved voice_id
+function parseSpeakers(specs) {
+  const map = new Map();
+  for (const spec of specs) {
+    const idx = spec.indexOf('=');
+    const name = idx === -1 ? '' : spec.slice(0, idx).trim();
+    const id = idx === -1 ? '' : spec.slice(idx + 1).trim();
+    if (!name || !id) {
+      throw new Error(`Invalid --speaker "${spec}". Use the form Name=aliasOrId.`);
+    }
+    map.set(name, resolveVoice(id));
+  }
+  return map;
+}
+
+// Parse a "Name: line" script into ElevenLabs dialogue inputs, one per labeled line.
+// Unprefixed lines continue the previous speaker's input.
+function parseDialogue(script, speakerMap) {
+  const inputs = [];
+  for (const rawLine of script.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    const m = line.match(/^([^:]+):\s*(.*)$/);
+    if (m && speakerMap.has(m[1].trim())) {
+      const name = m[1].trim();
+      inputs.push({
+        text: m[2],
+        voice_id: speakerMap.get(name),
+      });
+    } else if (inputs.length > 0) {
+      const last = inputs[inputs.length - 1];
+      last.text += (last.text ? ' ' : '') + line;
+    } else {
+      throw new Error(
+        `No recognized speaker prefix on line: "${line}"\n` +
+        `Define speakers with --speaker "Name=aliasOrId".`
+      );
+    }
+  }
+  if (inputs.length === 0) {
+    throw new Error('No dialogue lines parsed. Each line should look like "Name: text".');
+  }
+  return inputs;
+}
+
+// Parse command line arguments
+const { values, positionals } = parseArgs({
+  args: process.argv.slice(2),
+  options: {
+    voice: { type: 'string', short: 'v', default: 'me' },
+    dialogue: { type: 'boolean', short: 'D', default: false },
+    speaker: { type: 'string', multiple: true },
+    script: { type: 'string' },
+    model: { type: 'string', short: 'm', default: 'eleven_v3' },
+    output: { type: 'string', short: 'o', default: 'output.mp3' },
+    help: { type: 'boolean', short: 'h', default: false },
+  },
+  allowPositionals: true,
+});
+
+// Show help
+if (values.help) {
+  console.log(`
+ElevenLabs TTS CLI (single-speaker + multi-speaker dialogue, model eleven_v3)
+
+Usage:
+  elevenlabs-tts "Your text here"
+  elevenlabs-tts "Your text here" --voice female --output custom.mp3
+  elevenlabs-tts "Your text here" --voice gVRtHWWOc8ncKIMrDIom --model eleven_v3
+
+Options:
+  --voice, -v          Voice alias or ID (default: me)
+  --dialogue, -D       Multi-speaker mode (text uses "Name: line" prefixes)
+  --speaker            Speaker mapping "Name=aliasOrId" (repeatable, dialogue mode)
+  --script             Read dialogue/text from a file instead of an argument
+  --model, -m          Model ID (default: eleven_v3)
+  --output, -o         Output filename (default: output.mp3)
+  --help, -h           Show this help message
+
+Voice aliases:
+  me, male   → gVRtHWWOc8ncKIMrDIom  (Michael's cloned male voice)
+  female     → MClEFoImJXBTgLwdLI5n
+  Any other value is treated as a literal ElevenLabs voice_id.
+
+Audio tags (ElevenLabs v3):
+  Inline bracket tags pass straight through the text — no special handling:
+    elevenlabs-tts "That is hilarious [laughs] I can't believe it."
+    elevenlabs-tts "[whispers] Don't tell anyone. [sighs] It's a secret."
+  Common tags: [laughs], [whispers], [sighs], [excited], [sarcastic]
+
+Multi-speaker dialogue (one request → one combined audio):
+  elevenlabs-tts --dialogue \\
+    --speaker "Me=me" --speaker "Her=female" \\
+    "Me: Hey, did it work?
+     Her: It did — two voices, one clip. [laughs]"
+  # ...or read the script from a file:
+  elevenlabs-tts --dialogue --speaker "Me=me" --speaker "Her=female" --script chat.txt
+
+Environment variables:
+  ELEVEN_LABS_API_KEY  Your ElevenLabs API key
+`);
+  process.exit(0);
+}
+
+// Get text from --script file or positional arguments
+let text;
+if (values.script) {
+  try {
+    text = fs.readFileSync(values.script, 'utf8');
+  } catch (error) {
+    console.error(`Error: could not read --script file "${values.script}": ${error.message}`);
+    process.exit(1);
+  }
+} else {
+  text = positionals.join(' ');
+}
+
+if (!text || !text.trim()) {
+  console.error('Error: No text provided');
+  console.error('Usage: elevenlabs-tts "Your text here"  (or --dialogue --speaker ... --script chat.txt)');
+  process.exit(1);
+}
+
+// Check for API key
+if (!process.env.ELEVEN_LABS_API_KEY) {
+  console.error('Error: ELEVEN_LABS_API_KEY environment variable not set');
+  console.error('Add it to your ~/.env.zsh file');
+  process.exit(1);
+}
+
+// Build the request (single-speaker by default, multi-speaker in --dialogue mode)
+let url;
+let requestBody;
+let summary;
+try {
+  if (values.dialogue) {
+    if (!values.speaker || values.speaker.length === 0) {
+      throw new Error('--dialogue requires at least one --speaker "Name=aliasOrId"');
+    }
+    const speakerMap = parseSpeakers(values.speaker);
+    const inputs = parseDialogue(text, speakerMap);
+    url = 'https://api.elevenlabs.io/v1/text-to-dialogue';
+    requestBody = { model_id: values.model, inputs };
+    summary = `${inputs.length}-line dialogue across ${speakerMap.size} speaker(s)`;
+  } else {
+    const voiceId = resolveVoice(values.voice);
+    url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
+    requestBody = { text, model_id: values.model };
+    summary = `voice "${values.voice}" (${voiceId})`;
+  }
+} catch (error) {
+  console.error(`Error: ${error.message}`);
+  process.exit(1);
+}
+
+const options = {
+  method: 'POST',
+  headers: {
+    'xi-api-key': process.env.ELEVEN_LABS_API_KEY,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(requestBody),
+};
+
+console.log(`Generating speech with ${summary} using model "${values.model}"...`);
+
+try {
+  const response = await fetch(url, options);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+  }
+
+  // ElevenLabs returns raw MP3 bytes (not base64/JSON) for both endpoints
+  const audioBuffer = Buffer.from(await response.arrayBuffer());
+  fs.writeFileSync(values.output, audioBuffer);
+
+  console.log(`✓ Audio saved to ${values.output}`);
+  if (values.dialogue) {
+    console.log(`  Mode: dialogue (${summary})`);
+  } else {
+    console.log(`  Text: "${text}"`);
+    console.log(`  Voice: ${summary}`);
+  }
+  console.log(`  Model: ${values.model}`);
+  console.log(`  Size: ${(audioBuffer.length / 1024).toFixed(1)} KB`);
+} catch (error) {
+  console.error('Error generating speech:', error.message);
+  process.exit(1);
+}

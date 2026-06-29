@@ -61,6 +61,8 @@ Prefer solutions that remain understandable and robust months later.
 - Clean up temporary scaffolding (scripts/flags/debug prints) before finishing unless it's intentionally kept and documented
 - Keep the repo clean: don't leave stray debug files, scratch scripts, downloaded artifacts, or one-off notes checked in unless explicitly intended
 - Remove temporary/untracked artifacts created during debugging (throwaway scripts, scratch files, downloaded fixtures) before finishing unless explicitly intended and documented
+- Durable-by-default: after any one-off command/script that *worked* (a curl/API call, a snippet, a manual sequence), before moving to the next subtask ask "is this reusable?" — if yes, turn it into a committed, documented artifact (a `bin/` tool + a skill) in the same pass; don't leave it ephemeral in session state, and document as I go rather than relying on transient context to persist
+- Parallelize non-blocking meta-work (docs, memory, skills) via background agents so it never blocks the primary objective
 
 **Don't Forget**
 

@@ -8,9 +8,20 @@
  *   hume-tts "Your text here" --description "warm and friendly voice"
  *   hume-tts "Your text here" --voice ITO --output custom.mp3
  *
+ * Multi-speaker dialogue (one request, one combined audio):
+ *   hume-tts --dialogue \
+ *     --speaker "Alice=<voiceId>" --speaker "Bob=<voiceId>" \
+ *     "Alice: Hey, did it work?
+ *      Bob: It did — two voices, one clip."
+ *   hume-tts --dialogue --speaker "Alice=..." --speaker "Bob=..." --script chat.txt
+ *
  * Options:
  *   --voice, -v          Voice ID (default: dynamic generation)
  *   --description, -d    Voice style description (e.g., "warm and friendly")
+ *   --dialogue, -D       Multi-speaker mode (text uses "Name: line" prefixes)
+ *   --speaker            Speaker mapping "Name=voiceId" (repeatable, dialogue mode)
+ *   --script             Read dialogue/text from a file instead of an argument
+ *   --provider           Voice provider: HUME_AI or CUSTOM_VOICE (default: HUME_AI)
  *   --speed, -s          Playback speed multiplier (default: 1.0)
  *   --output, -o         Output filename (default: output.mp3)
  *   --format, -f         Audio format: mp3, wav, pcm (default: mp3)
@@ -25,12 +36,62 @@
 import fs from 'fs';
 import { parseArgs } from 'util';
 
+// Parse "Name=voiceId" speaker specs into a Map
+function parseSpeakers(specs) {
+  const map = new Map();
+  for (const spec of specs) {
+    const idx = spec.indexOf('=');
+    const name = idx === -1 ? '' : spec.slice(0, idx).trim();
+    const id = idx === -1 ? '' : spec.slice(idx + 1).trim();
+    if (!name || !id) {
+      throw new Error(`Invalid --speaker "${spec}". Use the form Name=voiceId.`);
+    }
+    map.set(name, id);
+  }
+  return map;
+}
+
+// Parse a "Name: line" script into Hume utterances, one per labeled line.
+// Unprefixed lines continue the previous speaker's utterance.
+function parseDialogue(script, speakerMap, { speed, provider }) {
+  const utterances = [];
+  for (const rawLine of script.split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    const m = line.match(/^([^:]+):\s*(.*)$/);
+    if (m && speakerMap.has(m[1].trim())) {
+      const name = m[1].trim();
+      utterances.push({
+        text: m[2],
+        speed,
+        voice: { id: speakerMap.get(name), provider },
+      });
+    } else if (utterances.length > 0) {
+      const last = utterances[utterances.length - 1];
+      last.text += (last.text ? ' ' : '') + line;
+    } else {
+      throw new Error(
+        `No recognized speaker prefix on line: "${line}"\n` +
+        `Define speakers with --speaker "Name=voiceId".`
+      );
+    }
+  }
+  if (utterances.length === 0) {
+    throw new Error('No dialogue lines parsed. Each line should look like "Name: text".');
+  }
+  return utterances;
+}
+
 // Parse command line arguments
 const { values, positionals } = parseArgs({
   args: process.argv.slice(2),
   options: {
     voice: { type: 'string', short: 'v' },
     description: { type: 'string', short: 'd' },
+    dialogue: { type: 'boolean', short: 'D', default: false },
+    speaker: { type: 'string', multiple: true },
+    script: { type: 'string' },
+    provider: { type: 'string', default: 'HUME_AI' },
     speed: { type: 'string', short: 's', default: '1.0' },
     output: { type: 'string', short: 'o', default: 'output.mp3' },
     format: { type: 'string', short: 'f', default: 'mp3' },
@@ -53,11 +114,23 @@ Usage:
 Options:
   --voice, -v          Voice ID (default: dynamic generation)
   --description, -d    Voice style description (e.g., "warm and friendly")
+  --dialogue, -D       Multi-speaker mode (text uses "Name: line" prefixes)
+  --speaker            Speaker mapping "Name=voiceId" (repeatable, dialogue mode)
+  --script             Read dialogue/text from a file instead of an argument
+  --provider           Voice provider: HUME_AI or CUSTOM_VOICE (default: HUME_AI)
   --speed, -s          Playback speed multiplier (default: 1.0)
   --output, -o         Output filename (default: output.mp3)
   --format, -f         Audio format: mp3, wav, pcm (default: mp3)
   --instant            Use instant mode for faster processing
   --help, -h           Show this help message
+
+Multi-speaker dialogue (one request → one combined audio):
+  hume-tts --dialogue \\
+    --speaker "Alice=d8ab67c6-..." --speaker "Bob=b270ea4b-..." \\
+    "Alice: Hey, did it work?
+     Bob: It did — two voices, one clip."
+  # ...or read the script from a file:
+  hume-tts --dialogue --speaker "Alice=..." --speaker "Bob=..." --script chat.txt
 
 Voice Library:
   Use voice UUIDs from Hume's Voice Library or your saved voices
@@ -75,12 +148,22 @@ Environment variables:
   process.exit(0);
 }
 
-// Get text from positional arguments
-const text = positionals.join(' ');
+// Get text from --script file or positional arguments
+let text;
+if (values.script) {
+  try {
+    text = fs.readFileSync(values.script, 'utf8');
+  } catch (error) {
+    console.error(`Error: could not read --script file "${values.script}": ${error.message}`);
+    process.exit(1);
+  }
+} else {
+  text = positionals.join(' ');
+}
 
-if (!text) {
+if (!text || !text.trim()) {
   console.error('Error: No text provided');
-  console.error('Usage: hume-tts "Your text here"');
+  console.error('Usage: hume-tts "Your text here"  (or --dialogue --speaker ... --script chat.txt)');
   process.exit(1);
 }
 
@@ -91,31 +174,48 @@ if (!process.env.HUME_API_KEY) {
   process.exit(1);
 }
 
-// Build utterance object
-const utterance = {
-  text: text,
-  speed: parseFloat(values.speed),
-};
-
-// Add voice or description if provided
-if (values.voice) {
-  utterance.voice = {
-    id: values.voice,
-    provider: "HUME_AI"
-  };
-}
-if (values.description) {
-  utterance.description = values.description;
+// Build the utterances array (single-speaker by default, multi-speaker in --dialogue mode)
+let utterances;
+let summary;
+try {
+  if (values.dialogue) {
+    if (!values.speaker || values.speaker.length === 0) {
+      throw new Error('--dialogue requires at least one --speaker "Name=voiceId"');
+    }
+    const speakerMap = parseSpeakers(values.speaker);
+    utterances = parseDialogue(text, speakerMap, {
+      speed: parseFloat(values.speed),
+      provider: values.provider,
+    });
+    summary = `${utterances.length}-line dialogue across ${speakerMap.size} speaker(s)`;
+  } else {
+    const utterance = { text, speed: parseFloat(values.speed) };
+    if (values.voice) {
+      utterance.voice = { id: values.voice, provider: values.provider };
+    }
+    if (values.description) {
+      utterance.description = values.description;
+    }
+    utterances = [utterance];
+    summary = values.voice
+      ? `voice "${values.voice}"`
+      : values.description
+        ? `dynamic voice (${values.description})`
+        : 'dynamic voice';
+  }
+} catch (error) {
+  console.error(`Error: ${error.message}`);
+  process.exit(1);
 }
 
 // Make API request
 const url = 'https://api.hume.ai/v0/tts';
 
-// Octave v2 requires a voice, v1 supports dynamic generation
-const version = values.voice ? "2" : "1";
+// Octave v2 is required when an explicit voice is used; v1 supports dynamic generation
+const version = (values.voice || values.dialogue) ? "2" : "1";
 
 const requestBody = {
-  utterances: [utterance],
+  utterances: utterances,
   format: {
     type: values.format
   },
@@ -135,13 +235,7 @@ const options = {
   body: JSON.stringify(requestBody)
 };
 
-const voiceDesc = values.voice
-  ? `voice "${values.voice}"`
-  : values.description
-    ? `dynamic voice (${values.description})`
-    : 'dynamic voice';
-
-console.log(`Generating speech with ${voiceDesc}...`);
+console.log(`Generating speech with ${summary}...`);
 
 try {
   const response = await fetch(url, options);
@@ -166,13 +260,17 @@ try {
   fs.writeFileSync(values.output, audioBuffer);
 
   console.log(`✓ Audio saved to ${values.output}`);
-  console.log(`  Text: "${text}"`);
-  console.log(`  Voice: ${values.voice || 'dynamic'}`);
-  if (values.description) {
-    console.log(`  Description: ${values.description}`);
+  if (values.dialogue) {
+    console.log(`  Mode: dialogue (${summary})`);
+  } else {
+    console.log(`  Text: "${text}"`);
+    console.log(`  Voice: ${values.voice || 'dynamic'}`);
+    if (values.description) {
+      console.log(`  Description: ${values.description}`);
+    }
   }
   console.log(`  Duration: ${generation.duration.toFixed(2)}s`);
-  console.log(`  Generation ID: ${generation.id}`);
+  console.log(`  Generation ID: ${generation.generation_id}`);
 } catch (error) {
   console.error('Error generating speech:', error.message);
   process.exit(1);
