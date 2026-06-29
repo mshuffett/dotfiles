@@ -36,3 +36,6 @@ agents/skills/.system/
 # Todoist eval — real task data + oracle answers contain PII, NEVER commit
 agents/skills/todoist/fixtures/private/
 **/fixtures/private/
+
+# generated demo media (audio)
+output/*.mp3
