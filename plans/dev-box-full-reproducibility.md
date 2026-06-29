@@ -1,8 +1,11 @@
 ---
-status: active
+status: complete
 created: 2026-06-27
+completed: 2026-06-28
 owner: michael
 ---
+
+> ✅ COMPLETE — verified on a fresh box: toolchain, hardening, secret delivery (incl. openclaw identity), hermes (uv/py3.11) importable, todoist ready, all units enabled. Scripts: bin/dev-harden.sh, bin/dev-provision.sh, bin/dev-push-secrets.sh; `dev create` auto-hardens + attaches SSM role.
 
 # Full reproducibility for the dev box (dev-default)
 
