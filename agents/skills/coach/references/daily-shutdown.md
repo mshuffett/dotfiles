@@ -30,7 +30,12 @@ Lightweight backstop — tick each before close:
    - **Hours worked today** (rough total)
    - **Palmer Square arrival time** (target: by 10:00)
    - **Productivity score** (0-10) + 1 sentence why
-   - **Execution score (0–2):** did I ship the #1, or build a cathedral? (the focus metric — see `memory.md` → Focus & Execution Protocol)
+   - **Focus score — where did your main energy actually go today?**
+     - **2** = into the #1 deliverable (real finish-line work)
+     - **1** = split between the #1 and side-projects / system-building
+     - **0** = mostly system/scaffolding ("cathedral building") — barely touched the #1
+
+     (Renamed from "execution score" — Michael found the old phrasing unclear, 2026-06-29. Concept = `memory.md` → Focus & Execution Protocol.)
    - **Daily habits:** bed on time? (Y/N + time) · gym in the AM? (Y/N) · evening discipline — kept Switch/TV in check? (Y/N)
    - **Distractions** (one line)
    - **Improvements for tomorrow** (0-3 bullets)
