@@ -142,6 +142,7 @@ Michael
 ## Key Resources (Auto-Include When Relevant)
 
 - **15-min meeting**: https://cal.com/everythingai/15min
+- **Open Batch 20-min**: https://cal.com/everythingai/open-batch-20min — use for Open Batch / Demo Day discussions (partners, venues, investors). Close phrasing: "Feel free to grab a time here to discuss further (or ask me any other questions here): [link]"
 - **30-min meeting**: https://cal.com/everythingai/30min
 - **Demo Day Event**: https://luma.com/7wf4iwk5
 - **Batch Meetup Location**: Avalon at Mission Bay, 255 King St, San Francisco CA 94107
