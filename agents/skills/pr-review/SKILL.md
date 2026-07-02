@@ -60,6 +60,26 @@ fi
 MERGE_BASE=$(git merge-base "$BASE" HEAD)
 ```
 
+### Verify the Working Tree Is on the PR Head
+
+**Do not assume the local checkout is the PR you're reviewing.** When reviewing from a shared checkout, a worktree, or as a dispatched sub-reviewer, the working tree can be sitting on an *unrelated* branch — reading working-tree files then reviews the wrong code entirely and every line number is wrong.
+
+```bash
+# Confirm HEAD actually matches the PR head before Reading/Grepping any file
+gh pr view <PR> --json headRefName -q .headRefName   # e.g. release/v2.2.0
+git rev-parse --abbrev-ref HEAD                        # must match, else DON'T trust the working tree
+```
+
+If HEAD does **not** match the PR head (or you can't switch to it — dirty tree, parallel review), review the PR head via git refs instead of the working tree:
+
+```bash
+git show origin/<pr-branch>:<path>                    # PR head file contents
+git show origin/<base-branch>:<path>                  # base contents
+git grep -n '<pattern>' origin/<pr-branch> -- '<glob>' # search at PR head
+```
+
+Cite line numbers as they appear at `origin/<pr-branch>`, not the working tree. A pre-saved unified diff of the PR remains canonical regardless of what branch the tree is on.
+
 ### Changed Files
 
 ```bash

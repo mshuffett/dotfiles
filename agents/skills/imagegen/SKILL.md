@@ -176,6 +176,16 @@ Primary request: replace the background with a warm sunset gradient
 Constraints: change only the background; keep the product and its edges unchanged; no text; no watermark
 ```
 
+## Text-heavy deliverables (slides, covers, posters) — composite, don't prompt the text
+For any deliverable where crisp headline/wordmark/label type matters — deck slides, deck
+covers, posters, infographics with real copy, hero images with a tagline — do **not** ask
+the image model to render the words. Generate the **art only** (with negative space where
+type will land and `no text` in the avoid list), then composite the real typography over
+it with an HTML file rendered to PNG via headless Chrome, using the project's actual fonts
+and brand CSS. AI models render text unreliably and a bare AI image reads as an image, not
+a finished slide. Full recipe (HTML skeleton, headless-Chrome command, cheap art-swap
+variants): `references/text-over-art-compositing.md`.
+
 ## Prompting best practices (short list)
 - Structure prompt as scene -> subject -> details -> constraints.
 - Include intended use (ad, UI mock, infographic) to set the mode and polish level.
@@ -205,5 +215,6 @@ Asset-type templates (website assets, game assets, wireframes, logo) are consoli
 - **`references/image-api.md`**: what knobs exist at the API level (parameters, sizes, quality, background, edit-only fields).
 - **`references/prompting.md`**: prompting principles (structure, constraints/invariants, iteration patterns).
 - **`references/sample-prompts.md`**: copy/paste prompt recipes (generate + edit workflows; examples only).
+- **`references/text-over-art-compositing.md`**: generate art-only + composite real type via HTML→headless-Chrome PNG for slides/covers/posters; cheap art-swap variants.
 - **`references/batch-workflow.md`**: batch generation workflow patterns.
 - **`references/codex-network.md`**: environment/sandbox/network-approval troubleshooting.

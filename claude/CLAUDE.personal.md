@@ -103,6 +103,7 @@ Invoke `memory-placement` skill first when available; otherwise, be explicit abo
 
 **Safety**
 
+- **Browser testing must never steal the foreground.** Default to fully headless. When headed is genuinely required (e.g. MV3 extensions), launch WITHOUT activating the app: on macOS use `open -g -j -na <App> --args --window-position=9999,9999 ...` (`-g` = don't bring to foreground, `-j` = launch hidden; a bare `open -na` or direct binary launch WILL pop the app up and steal focus). Don't minimize (kills IntersectionObserver/visibility); position offscreen instead, and avoid `page.bringToFront()`-style activation unless the user explicitly asked to see the browser.
 - Never git stash unfamiliar changes without asking
 - Never kill a port process you didn't start
 - If the user says they didn't start the port process, explicitly acknowledge that fact and ask for permission before killing anything

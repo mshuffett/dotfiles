@@ -18,7 +18,8 @@ metadata:
 **How to apply:**
 - Before running ANY e2e suite: `rg "headless" <test files + helpers>` and confirm every launch resolves headless. Suites' env defaults matter (`HEADLESS !== "false"` good, `=== "true"` bad).
 - compose-monorepo: all lanes (puppeteer + Playwright Gmail) default headless as of `3552489` on `release/v2.2.0-prep`.
-- If a flow genuinely fails headless: stop and ask before launching headed; off-screen+headed is a last resort that still flashes Dock activation.
+- If a flow genuinely fails headless: stop and ask before launching headed.
+- **Sanctioned headed fallback (Michael, 2026-07-01):** when headed is needed (or the user asked to see the browser and then wants it backgrounded), launch WITHOUT app activation: `open -g -j -na <App> --args --window-position=9999,9999 ...`. Verified: `-g -j` prevents the macOS activation that a bare `open -na` or direct binary exec causes. Avoid `page.bringToFront()` unless the user asked to look. Note: IntersectionObserver-driven code ('shown' metrics) does NOT fire in hidden/backgrounded tabs — activate the tab within the offscreen window instead. Global rule now in ~/.dotfiles/claude/CLAUDE.personal.md (Safety).
 - Interactive work: `playwright-interactive` skill (tmux-REPL lane for Claude Code) — headless there too.
 - Skipping the test is never the fix.
 - Related: [[feedback_screenshot_debugging]].

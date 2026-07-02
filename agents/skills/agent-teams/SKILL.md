@@ -25,8 +25,25 @@ Requires experimental flag:
 
 ## Quick Decision: Teams vs Subagents
 
-Use **subagents** when workers report results back (lower tokens, simpler).
-Use **teams** when workers need to message each other, share findings, and self-coordinate (higher tokens).
+**Default to fire-and-forget subagents. Teams are the exception, not the default.**
+If workers just do independent work and report back, that is subagents — use
+`superpowers:dispatching-parallel-agents`, NOT a team. **"3+ parallel tasks" by
+itself does NOT justify a team** — parallelism is a subagent property too. Reach
+for a team ONLY when workers must **message each other and self-coordinate
+mid-run** (share findings live, hand off, negotiate file ownership). If you can't
+name a concrete mid-run message one worker must send another, you want subagents.
+
+Why the wrong choice bites (this is a recurring miss): a team costs more tokens
+and forces you into lifecycle overhead you didn't need — idle notifications to
+babysit, graceful-shutdown negotiation, and manual tmux pane cleanup (with its
+own kill-the-wrong-pane hazard, see below).
+
+**Delivery-mode tripwire (applies to plain subagents too):** naming an
+`Agent`/`Task` call flips it from fire-and-forget (final report auto-returned as
+the tool result) into teammate/mailbox mode (report NOT auto-returned; the idle
+agent waits for a `SendMessage` nudge). Dispatch independent parallel subagents
+**UNNAMED**; pass `name` only when you have a concrete reason to message that
+agent mid-run — which is also the signal you may actually want this skill.
 
 ## Key Controls
 
