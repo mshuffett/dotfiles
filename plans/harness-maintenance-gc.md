@@ -29,9 +29,10 @@ summary: Recurring cleaning/GC for the self-improving harness — extend the exi
 - `agent-recall index` refresh (recall plan R0) — incremental at session end; full rebuild weekly (answers the coupling question).
 - Emit/update health JSON counters (eval plan Phase 0 digest).
 
-### Cadence B — Weekly curator (exists: Sun 03:30 launchd). Upgrade, in order:
-1. **Delta-merge discipline (highest priority — closes our biggest exposure).** Curator LLM *proposes* itemized changes (add/patch/archive per skill, with reasons); a deterministic script *applies* them. Never a full-file rewrite of any skill/memory file. Add **dry-run preview** (hermes `curator.py:1434` pattern) writing a proposal report before applying.
-2. **Usage-decay lifecycle.** Feed `~/.claude/skill-firing.jsonl` (already collected!) into active→stale (30d unused)→archived (90d) transitions. Archived = moved out of the loaded set, recoverable, never deleted. Pinned skills exempt. This also manages the 16k description budget structurally instead of by lint failure.
+### Cadence B — Weekly curator (exists; MOVE to Friday night ~21:00 per Michael 2026-07-01, so output lands before Saturday weekly review). Upgrade, in order:
+0. **Weekly self-improvement report → Todoist inbox (Michael's explicit ask, do first).** Each Friday-night run compiles: sessions this week (count, notable ones), skills created/patched/archived (with the reviewer's one-line summaries), mistakes logged + recurrences, eval/regression status, notable insights, and budget/health counters — and files it to the Todoist inbox via `td` CLI (`TODOIST_API_TOKEN` in `~/.env.zsh`; task due Saturday, report body in description or a linked file) so it surfaces in the Saturday weekly review. Data sources already exist: skill-review logs, git log, mistakes.jsonl, skill-firing.jsonl, reviewed/ markers. This absorbs the eval plan's Phase 0 digest as its weekly rollup.
+1. **Usage-decay lifecycle.** Feed `~/.claude/skill-firing.jsonl` (already collected!) into active→stale (30d unused)→archived (90d) transitions. Archived = moved out of the loaded set, recoverable, never deleted. Pinned skills exempt. This also manages the 16k description budget structurally instead of by lint failure. [Michael: approved direction.]
+2. **Rewrite-safety, right-sized (DOWNGRADED from "delta-merge engine" after Michael pushback).** The research risk (ACE "context collapse": an LLM asked to rewrite a whole knowledge file can return a drastically shorter one, losing detail) is real but our exposure is low: every curator change is a git commit, so collapse is visible in the diff and revertible. So: no merge engine. Just (a) curator rule "make targeted Edits; never regenerate a whole file", (b) dry-run proposal report reviewed before apply, (c) a guard in the wrapper flagging any single-run shrink >40% of a file for the weekly report instead of auto-committing it.
 3. **Structural supersession pass** over CLAUDE.md bullets + memory wiki: extract (subject, relation)-style rule keys; same key + conflicting guidance → newer supersedes, older archived to a graveyard section with date. Deterministic where possible; LLM only for triple extraction from prose (open question from research — start crude: per-topic bullet keys).
 4. **Mechanical sweeps** (deterministic, no LLM):
    - Hooks: smoke-test every command hook (sample payload → exit 0 + valid JSON); flag orphans (wired-but-missing script, script-but-not-wired).
@@ -44,10 +45,11 @@ summary: Recurring cleaning/GC for the self-improving harness — extend the exi
 Per week: skills active/stale/archived counts · adds by route (extend/create/skip) · CLAUDE.md + description-budget headroom · supersessions applied · orphan hooks · stale plans · regression flips (target 0) · repeat-miss rate (target ↓).
 
 ## Sequencing
-1. Curator prompt+wrapper → delta-proposal + dry-run + usage-decay (one sitting; touches existing `self-improve-skill-curator.{sh,md}`).
-2. Mechanical sweeps script (deterministic, easy) + digest counters.
-3. Supersession pass (needs key-extraction design).
-4. Replay-test wiring (blocked on replay-eval harness — in flight).
+1. Move curator to Friday night + weekly report → Todoist inbox (Michael's ask; one sitting; touches `self-improve-skill-curator.{sh,md}` + launchd plist).
+2. Usage-decay lifecycle + shrink-guard + dry-run (same files).
+3. Mechanical sweeps script (deterministic, easy), feeding the report.
+4. Supersession pass (needs key-extraction design; Michael not yet sold — propose with examples first).
+5. Replay-test wiring (blocked on replay-eval harness — in flight).
 
 ## Non-goals
 - No new daemon/third cadence; no auto-delete anywhere; no embedding-based contradiction detection; auto-dream keeps owning auto-memory files.
