@@ -2,7 +2,7 @@
 name: fundraise-surfaces
 description: Where the Everything AI $5M raise / Open Batch lives — canonical dashboard hub, Notion CRMs/DBs, Todoist projects, email accounts. The "where's my Open Batch / raise / investor / demo day page" entry point. Pointers, not payload.
 type: pointer
-updated: 2026-06-27
+updated: 2026-07-01
 ttl: 30d
 ---
 
@@ -18,6 +18,10 @@ Pointers into the systems of record for the raise. **Content lives there, not he
 - **Demo Day Venue / Sponsor CRM**: <https://app.notion.com/p/38141187d56481e9ae44e29343013385> — venue hosts + sponsors; has a "🤖 Instructions for AI" toggle describing how to maintain it.
 - **Founder Dinners** page (now a linked view of the Investors DB): <https://app.notion.com/p/38341187d56481f3bdadc89a44a6c8e1>
 - **📥 Investor Intro & Reply Policy (v1 — DRAFT, refining)** — how to handle warm investor intros/inbounds: <https://app.notion.com/p/38c41187d56481eb9e99ef8b05514720> (subpage of the Investor Flow — Canonical page). Rule: warm intro → thank + BCC the connector, 1-line OpenBatch context + ask + Cal.com link, **log to the Investors DB with the intro source**, and **draft-don't-send by default** (Michael reviews before send). v1 draft, still being refined.
+- **Deck-thesis PR/investor leads (from metrics research, 2026-07-01)** — 4 people surfaced by the cost-of-a-company deck research, filed by lane (before outreach/PR work, check here so they aren't re-surfaced or mis-approached):
+  - **Mark Suster** (Upfront GP, *investor*) → row in the **🎯 Investors DB** (Tier 1). Angle: his own 2011 cost-collapse thesis, extended.
+  - **Christine Dare-Bryan** (Forbes journalist, *PR*) → row in the **🗞️ Press Outreach Candidates DB** (under the Press Outreach Brief). Wrote the Griffel piece; covers the beat.
+  - **Mattan Griffel** (validator) + **Peter Walker** (Carta data-ally) → *Deck-thesis Validators & Data Allies* subpage under the Press Outreach Brief: <https://app.notion.com/p/39141187d564810caa22cfc39e4b4849> (they fit neither DB — amplification/validation, not journalists or investors). Full context: `waycraft-web/plans/deck-narrative.md` § "People surfaced by the metrics research".
 
 ## Open Batch operational sheets (Google Sheets)
 - **OB002 Founder Goal Tracker** (canonical per-founder tracker): <https://docs.google.com/spreadsheets/d/1X50G1Rc23epl77qGF2pKrt8XpIRhIbrCg1V13-cRtKQ/edit?gid=0> — OB002 founder roster + biweekly goals/progress. Columns: Group, Company, Short Description, Names (with emails), Demo Day Goal, Day-0 state, and 2-week goal/progress pairs through Demo Day. **Publicly readable via CSV export**: `https://docs.google.com/spreadsheets/d/1X50G1Rc23epl77qGF2pKrt8XpIRhIbrCg1V13-cRtKQ/export?format=csv&gid=<gid>`.
