@@ -11,6 +11,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
   "enabledMcpjsonServers": [
     "tavus"
   ],
@@ -48,16 +49,6 @@
       }
     ],
     "PreToolUse": [
-      {
-        "matcher": "Agent|Task",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.dotfiles/claude/scripts/agent-name-mode-advisory.sh",
-            "timeout": 5
-          }
-        ]
-      },
       {
         "matcher": "Write|Edit",
         "hooks": [
@@ -142,8 +133,8 @@
           {
             "type": "command",
             "command": "~/.dotfiles/claude/scripts/cc-window-title.sh",
-            "async": true,
-            "timeout": 20
+            "timeout": 20,
+            "async": true
           }
         ]
       }
@@ -193,7 +184,8 @@
     "swift-lsp@claude-plugins-official": true,
     "terminal@local-plugins": true,
     "tmux-titles@michaels-world": true,
-    "typescript-lsp@claude-plugins-official": true
+    "typescript-lsp@claude-plugins-official": true,
+    "paper-desktop@paper": true
   },
   "extraKnownMarketplaces": {
     "agentops-marketplace": {
@@ -207,6 +199,12 @@
         "source": "github",
         "repo": "plastic-labs/claude-honcho"
       }
+    },
+    "paper": {
+      "source": {
+        "source": "github",
+        "repo": "paper-design/agent-plugins"
+      }
     }
   },
   "alwaysThinkingEnabled": true,
@@ -218,7 +216,6 @@
   "skipWorkflowUsageWarning": true,
   "theme": "auto",
   "verbose": false,
-  "teammateMode": "tmux",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": true,

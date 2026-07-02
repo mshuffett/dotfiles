@@ -1,17 +1,17 @@
 """CLI for the transcript-replay regression-eval harness.
 
-Example (the agent-name-mode miss):
+Example:
 
     replay-eval \
       --source ~/.claude/projects/-Users-michael--dotfiles/<session>.jsonl \
-      --truncate-before '"name":"hermes-code"' \
-      --hook-script ~/.dotfiles/claude/scripts/agent-name-mode-advisory.sh \
+      --truncate-before '"name":"some-marker"' \
+      --hook-script /path/to/your-guardrail-hook.sh \
       --arm red:claude-sonnet-4-5:2 \
       --arm green:claude-sonnet-4-5:2 \
       --out verdicts.json
 
 Arm spec: condition:model:runs[:max_turns].  condition is red|green (red
-suppresses the advisory + defaults max_turns=1; green lets it fire + defaults
+suppresses the guardrail + defaults max_turns=1; green lets it fire + defaults
 max_turns=3).
 """
 

@@ -9,7 +9,7 @@ This is the WRITE/verify companion to the self-improve loop
 (`plans/self-improve-mistake-eval-loop.md` §7.7): a valid regression eval must
 show a real **red→green** transition, or it proves nothing.
 
-## How it works
+## How it works (the reusable skeleton)
 
 1. **Truncate** the source `.jsonl` to end just BEFORE the line matching
    `--truncate-before` (the assistant message that contained the mistake).
@@ -27,13 +27,13 @@ show a real **red→green** transition, or it proves nothing.
    invoked for `Agent`/`Task` — the CLI auto-approves them — so relying on it
    alone lets forked runs actually launch real subagents. The PreToolUse
    hook-deny is the only reliable block.
-4. **Measure** `name` directly off every `Agent`/`Task` `tool_use` block the
-   model emits — that param is the miss (naming a fire-and-forget dispatch flips
-   it into teammate/mailbox mode).
-5. **RED vs GREEN** differ ONLY by the `AGENT_NAME_ADVISORY_DISABLE` env var
-   handed to the **real committed hook** (`claude/scripts/agent-name-mode-advisory.sh`),
-   invoked from an in-process PreToolUse callback. RED suppresses the advisory;
-   GREEN lets it fire. The harness exercises the actual guardrail, not a copy.
+4. **Measure** the misbehavior directly off the `tool_use` blocks the model
+   emits (structural grading, never prose string-matching), and grade a
+   mechanical `verdict` per run.
+5. **RED vs GREEN** differ ONLY by whether the guardrail under test is active,
+   toggled via an env var passed to a user-supplied `--hook-script`. RED
+   suppresses the guardrail; GREEN lets it fire. The harness exercises the actual
+   guardrail hook, not a copy.
 
 The synthetic session file is always deleted after each run.
 
@@ -42,8 +42,8 @@ The synthetic session file is always deleted after each run.
 ```bash
 replay-eval \
   --source ~/.claude/projects/-Users-michael--dotfiles/<session>.jsonl \
-  --truncate-before '"name":"hermes-code"' \
-  --hook-script ~/.dotfiles/claude/scripts/agent-name-mode-advisory.sh \
+  --truncate-before '"name":"some-marker"' \
+  --hook-script /path/to/your-guardrail-hook.sh \
   --arm red:claude-sonnet-4-5:2 \
   --arm green:claude-sonnet-4-5:2 \
   --arm red:claude-fable-5:1 \
@@ -51,13 +51,20 @@ replay-eval \
 ```
 
 Arm spec: `condition:model:runs[:max_turns]`.
-- `condition` = `red` | `green`. RED → advisory suppressed, default `max_turns=1`.
-  GREEN → advisory fires, default `max_turns=3` (so a named first attempt can be
+- `condition` = `red` | `green`. RED → guardrail suppressed, default `max_turns=1`.
+  GREEN → guardrail fires, default `max_turns=3` (so a first attempt can be
   corrected on a later turn).
 
-## Verdicts
+## Current grader
 
-Per-run JSON with `agent_calls: [{turn, tool, name_set, name_value}]` plus a
+The grader as-written targets one concrete miss — an `Agent`/`Task` call that
+sets `name` (which flips a fire-and-forget dispatch into teammate/mailbox mode).
+That measurement (`name_set` / `name_value` per tool call) and its verdict table
+are the **extension point**: to eval a different guardrail, swap the measurement
+in `core.py` and the env-var toggle handed to your `--hook-script`. The
+truncate/materialize/drive/red-green skeleton above is guardrail-agnostic.
+
+Per-run JSON carries `agent_calls: [{turn, tool, name_set, name_value}]` plus a
 mechanical `verdict`:
 
 | condition | verdict | meaning |
@@ -65,13 +72,12 @@ mechanical `verdict`:
 | red | `reproduced` | a first-turn Agent/Task call had `name` set (the miss) |
 | red | `not_reproduced_unnamed` | dispatched, but unnamed (miss did NOT recur) |
 | red | `no_dispatch` | model investigated instead of dispatching |
-| green | `corrected_after_advisory` | named early, dropped `name` after the advisory |
-| green | `persisted_named` | stayed named despite the advisory |
+| green | `corrected_after_advisory` | named early, dropped `name` after the guardrail fired |
+| green | `persisted_named` | stayed named despite the guardrail |
 | green | `clean_unnamed` | never named; nothing to correct |
 | green | `no_dispatch` | model investigated instead of dispatching |
 
-`text_mentions_advisory` is a weak heuristic only; the verdict is graded from
-tool-call structure, never from prose string-matching.
+Verdicts are graded from tool-call structure, never from prose string-matching.
 
 ## Regression-eval invariant
 
@@ -82,29 +88,12 @@ short resume prompt can't fully recreate), the eval can't discriminate the fix
 from no-fix, and you're measuring model priors, not the guardrail. Report the
 RED rate honestly.
 
-## Reference experiment (2026-07, agent-name-mode miss)
-
-Session 44ff9820: fable, after "…orchestrate some opus or sonnet agents",
-dispatched 4 **named** fire-and-forget agents (wrong — naming = mailbox mode).
-
-- **RED fable → `reproduced`**: dispatched 4 named agents
-  (`hermes-reader`, `recall-auditor`, `eval-inventory`, `external-researcher`) —
-  a clear reproduction of the miss for the original model.
-- **RED sonnet ×2 → `no_dispatch`**: sonnet investigates (Read/Bash) instead of
-  orchestrating. The miss does NOT reproduce for sonnet.
-- **GREEN → inconclusive**: high run-to-run variance on "continue" (fable
-  dispatched in RED but investigated in the clean GREEN run), plus a structural
-  finding — a **PreToolUse advisory fires too late to stop a same-turn parallel
-  dispatch** (the model commits all N names in one generation; the advisory can
-  only affect a *subsequent* turn). To exercise GREEN reliably you need a run
-  where the model re-dispatches after the first denial.
-
-Takeaways: (1) this class of "salience" miss is model-specific and reproduces
-only for the original model, matching the prediction in
-`plans/self-improve-mistake-eval-loop.md` §7.7; (2) an advisory-style guardrail
-that fires at the tool boundary can't prevent the *first* parallel dispatch —
-prevention has to move earlier (into the decision/skill context) or the eval has
-to score the retry.
+Empirically, "salience" misses tend to be **model-specific** — they reproduce
+for the model that originally erred and not for others — and a guardrail that
+fires at the tool boundary can't prevent the *first* same-turn parallel dispatch
+(the model commits all N tool calls in one generation; a PreToolUse hook can only
+affect a *subsequent* turn). Prevention has to move earlier (into the
+decision/skill context), or the eval has to score the retry.
 
 ## Fidelity caveats (measured, not fixed)
 
@@ -112,6 +101,6 @@ to score the retry.
   repo state, not the state at the time of the miss.
 - The resume prompt (`continue`) is a small context delta vs the original
   spontaneous continuation; behavior on it is high-variance (run k≥2).
-- Denying execution means GREEN observes advisory-then-denial, whereas in
-  production the advisory rides alongside a real spawn. RED denies identically,
-  so RED↔GREEN still isolate the advisory's effect.
+- Denying execution means GREEN observes guardrail-then-denial, whereas in
+  production the guardrail rides alongside a real spawn. RED denies identically,
+  so RED↔GREEN still isolate the guardrail's effect.
