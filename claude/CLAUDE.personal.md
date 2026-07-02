@@ -176,6 +176,7 @@ Use "thinking about thinking" as a tool, not as performative verbosity.
 - If I notice drift (I'm doing steps because the workflow says so, not because it's useful), stop and re-plan
 - If I'm stuck or repeating myself, use semantic recall to find prior context quickly: `agent-recall search "<query>"`
 - When considering subagents or parallel threads: weigh speed vs context loss. Delegate only when it improves time-to-correctness, and include enough context that the subagent can act without guessing.
+- **Agent model economics (Michael, 2026-07-01):** NEVER spawn fleets of Fable agents, and never launch a default/dynamic Workflow or deep-research run whose agents would default to Fable — workflow/subagent model inherits the main-loop model, so when the session runs Fable, set `model` explicitly on every fleet agent. Fable subagents: 1–2 max, top-level planning/concept forks only. Fleet/generation/research agents: opus (creative/judgment) or sonnet (mechanical). Pass this rule down to any agent that itself orchestrates. As orchestrator: write thorough, battle-tested prompts and objectives, check the agents' work, but let them do the work.
 
 **Known Failure Modes (design around them)**
 

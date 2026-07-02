@@ -74,6 +74,8 @@ Don't assume the fix works — verify it. See [references/testing.md](references
 3. Run the eval — spawn a subagent with the scenario prompt, grade against expectations
 4. If it fails → the guardrail is insufficient, iterate (strengthen wording, add specificity, rerun)
 
+**A green eval only counts if it once went red→green.** A pass proves nothing unless the same eval demonstrably *failed* against pre-fix behavior. Two traps make a false green look real: the subagent reads the already-patched file off disk (filesystem backdoor), or the mistake is a behavioral/attention-under-load class that clean context can't reproduce (needs a forcing function, not a rule). Author the eval + capture the RED baseline *before the fix lands* — once committed, the patched environment contaminates the test. Full procedure: [references/testing.md](references/testing.md#redgreen-proving-the-eval-actually-catches-the-bug).
+
 **For script/tooling changes**:
 1. Run the script against real data (not synthetic)
 2. Verify the output catches the pattern that was missed

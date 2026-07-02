@@ -1,6 +1,6 @@
 ---
 name: paper-decks
-description: Build multi-slide presentation/investor decks (or any multi-artboard layout) in Paper via the paper-desktop MCP, grounded in an existing codebase's design system. Use when the user says "start/make a deck in Paper", "design a deck/presentation in Paper", "build slides in Paper from this repo/homepage/design", or wants a Paper file whose look matches a live app. This is the Paper counterpart to the `slides` skill (which is PptxGenJS/.pptx); for a single non-deck design use the protected `paper-desktop:code-to-design` plugin skill instead.
+description: Build multi-slide presentation/investor decks (or any multi-artboard layout) in Paper, grounded in an existing codebase's design system. Use when the user says "start/make a deck in Paper", "design a deck/presentation in Paper", "build slides in Paper from this repo/homepage/design", wants a Paper file whose look matches a live app, OR wants to import/implement a claude.ai/design `.dc.html` design component and iterate on it in a real app. Covers both Paper surfaces — the paper-desktop MCP and the claude.ai/design web tool (the `claude_design`/DesignSync MCP). This is the Paper counterpart to the `slides` skill (which is PptxGenJS/.pptx); for a single non-deck design use the protected `paper-desktop:code-to-design` plugin skill instead.
 ---
 
 # Paper decks (paper-desktop MCP)
@@ -10,6 +10,30 @@ system, then sequence and export. The `paper-desktop` plugin owns the canonical
 tool reference — **call `get_guide({topic:"paper-mcp-instructions"})` once at the
 start**; this skill adds the deck workflow and the runtime gotchas that the guide
 doesn't spell out.
+
+**Two Paper surfaces.** paper-desktop MCP (this skill's default) and the
+claude.ai/design web tool via the `claude_design`/DesignSync MCP are the same
+Paper product and the same `.dc.html` format. When the task is "import/implement
+a claude.ai/design `.dc.html`" or "pull these slides into the app," read
+`references/design-in-codebase.md` — it covers the import→strip-runtime→serve→
+push round-trip, the `wc-chart`/`wc-type` double-render fix, image-based hero
+slides, and building a side-by-side variant gallery.
+
+## Present, don't just save — Michael has to SEE it
+
+Design work is judged by eye. Every generated artifact — a slide, an image, a
+keyframe, a comparison board — must be **opened and put in front of Michael in
+the same turn you create it**, not left as a file path he has to chase. In the
+deck session he had to ask "open it for me," "did you open them," "where do I see
+these," "open those html files," and "put these in a view I can see closer to
+full screen" over and over. That is the failure to avoid.
+
+- After generating: `open` the file (browser/Preview), or serve it and give the
+  exact URL, or build a full-screen gallery/contact sheet — then say where it is.
+- Prefer a viewable presentation (local URL, Preview, HTML gallery with iframes)
+  over terminal-only chafa for anything design-quality is being judged on.
+- **Explore variants in parallel, not sequentially**, and hand him one
+  comparison view to cross-pick from (see the reference).
 
 ## Workflow
 

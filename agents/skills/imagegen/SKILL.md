@@ -40,6 +40,7 @@ When in doubt about which model the user means, ask before generating.
 6. For complex edits/generations, inspect outputs (open/view images) and validate: subject, style, composition, text accuracy, and invariants/avoid items.
 7. Iterate: make a single targeted change (prompt or mask), re-run, re-check.
 8. Save/return final outputs and note the final prompt + flags used.
+9. **Open the results for the user in the same turn — don't just cite paths.** `open` the image(s) in Preview, or lay several out in a contact sheet / HTML gallery so they can be judged side by side. Michael repeatedly had to ask "where do I see these, can you open them"; presenting the artifact is part of the task, not a follow-up.
 
 ## Temp and output conventions
 - Use `tmp/imagegen/` for intermediate files (for example JSONL batches); delete when done.

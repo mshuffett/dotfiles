@@ -103,6 +103,31 @@ The `dev` CLI scales EBS IOPS on start/stop to save costs:
 - **Start**: 16,000 IOPS / 1,000 MB/s throughput
 - **Stop**: 3,000 IOPS / 125 MB/s throughput (gp3 baseline, free)
 
+## Cost & Credits
+
+**The AWS account (636160605813) runs on a large AWS credit pool, so per-service `UnblendedCost` reads ~$0 — that is NOT the real spend.** `aws ce get-cost-and-usage ... --metrics UnblendedCost --group-by SERVICE` will show near-zero because credits net it out. To see the actual burn you must split by `RECORD_TYPE`:
+
+```bash
+# TRUE usage cost for a month, by usage type (dev box shows as USW2-BoxUsage:<type>)
+aws ce get-cost-and-usage \
+  --time-period Start=2026-06-01,End=2026-07-01 \
+  --granularity MONTHLY --metrics UnblendedCost UsageQuantity \
+  --filter '{"Dimensions":{"Key":"RECORD_TYPE","Values":["Usage"]}}' \
+  --group-by Type=DIMENSION,Key=USAGE_TYPE \
+  --region us-east-1 --output json     # CE endpoint is always us-east-1
+
+# Credits consumed per month (how fast the pool is draining)
+aws ce get-cost-and-usage \
+  --time-period Start=2026-01-01,End=2026-07-01 \
+  --granularity MONTHLY --metrics UnblendedCost \
+  --filter '{"Dimensions":{"Key":"RECORD_TYPE","Values":["Credit"]}}' \
+  --region us-east-1 --output json
+```
+
+- **The dev box line item is `USW2-BoxUsage:r7i.8xlarge`.** Running 24/7, `r7i.8xlarge` ≈ **$1,550/mo** on-demand; its cost scales with hours the instance is `running` (stopped = $0 compute, EBS still bills).
+- **Remaining credit balance is NOT in Cost Explorer** — it's on the Billing console *Credits* page (`aws ce` can't read the balance, only consumption). Ask the user for the balance/expiry if you need runway math.
+- **Before advising "stop the box to save money," check the credit runway first.** With a large pool expiring on a fixed date, the real risk is usually *forfeiting unused credits*, not overspending — so cost is not a reason to keep the box stopped; hygiene/security (idle attack surface, OOM) is. Current balance, expiry, and burn rate live in the `project_devbox` auto-memory — read it before making any cost recommendation.
+
 ## Credential Sync
 
 `dev connect` automatically syncs Claude Code OAuth credentials from the local macOS Keychain (`Claude Code-credentials`) to `~/.claude/.credentials.json` on the remote instance. This runs at most every 30 minutes.
