@@ -10,6 +10,19 @@ so **do NOT write memory here** — skills only.
 
 ## Step 0 — Read the session
 
+**Tools + transcript size (read this first):** there is no Bash in this context
+— you have ONLY Read, Write, Edit, Glob, Grep, so never attempt a Bash call or a
+`wc`/`head`/shell command. Session transcripts routinely exceed Read's 256KB
+limit, so do NOT open the whole file. First `Grep` the transcript for ALL real
+user turns (`"type":"user"` lines), then `Read` with `offset`/`limit` around
+those hits and judge each turn semantically. Do NOT use a keyword list as the
+gate for what you read — corrections often arrive as neutral QUESTIONS ("why
+are you using X vs Y?", "did you check…?", "how did you decide…?") or as
+follow-up asks ("can you root cause that?") that contain no complaint token. A
+user turn that probes a choice you made is a correction candidate until you've
+read it and ruled it out. (Phrases like "don't", "stop", "actually", "instead",
+"you should have" are useful *extra* hits, not the filter.)
+
 Read the transcript at the path given to you. Understand what the user asked
 for, where you (the prior agent) struggled, what got corrected, and what
 non-trivial technique or fix emerged.
@@ -43,6 +56,35 @@ update.
   pattern emerged** that a future session would benefit from. Capture it.
 - **A skill that was loaded or consulted this session turned out wrong, missing
   a step, or outdated.** Patch it NOW.
+
+## Mistake capture → `~/.claude/mistakes.jsonl` (do this for EVERY detected miss)
+
+Skills are one output; the mistake log is the other. For each moment where the
+user caught, corrected, or probed a mistake/miss (including neutral-question
+corrections), or where you see an operational near-miss the user didn't call
+out:
+
+1. **Dedupe first.** `Grep` `~/.claude/mistakes.jsonl` for candidate
+   `mistake_id`s and for this session's id. If this incident was already logged
+   (in-session or by another pass), do NOT double-log — stop here for this item.
+2. **Reuse ids.** Prefer an existing `mistake_id` from the log or
+   `~/.dotfiles/agents/skills/mistake-tracking/references/common-antipatterns.md`
+   over inventing a new one. If the id already has past entries, mark
+   `RECURRENCE of <date>` in `notes` — recurrences matter more than new misses.
+3. **Root-cause in `notes`, briefly:** was the governing rule IN CONTEXT when
+   the miss happened? If yes (a salience failure), say so and state that a
+   doc/skill patch alone is likely insufficient — recommend point-of-use
+   placement or a forcing function (hook) in `notes`. You cannot make that fix
+   yourself (CLAUDE.md and hooks are protected) — the log line IS your routing
+   signal to the interactive session and the digest.
+4. **Append ONE line** of valid JSON matching the existing entries' schema
+   (`ts`, `repo`, `mistake_id` dot-format, `scope`, `detector`:"user" or
+   "self", `type`, `severity`, `guide`, `condition`, `notes`, `action_taken`).
+   Read the file's tail first, then Edit-append; re-read your line to confirm
+   it parses as one JSON object on one line.
+
+Log durable, first-class corrections only — not routine turns, not preferences
+already captured as a skill edit this pass (then `action_taken` should say so).
 
 ## Preference order — pick the EARLIEST that fits
 
@@ -122,5 +164,5 @@ scale.
 ## Finish
 
 Make your edits/creations via the file tools, then end with a single line:
-`SKILL REVIEW: <one-line summary of what changed>` or `SKILL REVIEW: nothing to
-update`.
+`SKILL REVIEW: <one-line summary of what changed; include "N mistakes logged"
+if any>` or `SKILL REVIEW: nothing to update`.

@@ -17,6 +17,11 @@ set -euo pipefail
 
 input=$(cat)
 
+# A/B test escape hatch: when AGENT_NAME_ADVISORY_DISABLE=1, consume stdin and
+# exit silently so the RED arm of a red/green replay eval sees pre-fix behavior
+# (no advisory injected). GREEN leaves it unset so the advisory fires normally.
+[ "${AGENT_NAME_ADVISORY_DISABLE:-}" = "1" ] && exit 0
+
 name=$(printf '%s' "$input" | jq -r '.tool_input.name // empty' 2>/dev/null || true)
 [ -z "$name" ] && exit 0
 
