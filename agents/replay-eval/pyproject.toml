@@ -1,0 +1,14 @@
+[project]
+name = "replay-eval"
+version = "0.1.0"
+description = "Transcript-replay regression-eval harness on the Claude Agent SDK"
+requires-python = ">=3.11"
+dependencies = [
+  "claude-agent-sdk>=0.1.20",
+]
+
+[project.scripts]
+replay-eval = "replay_eval.__main__:main"
+
+[tool.setuptools]
+packages = ["replay_eval"]

@@ -1,0 +1,17 @@
+#!/bin/bash
+# replay-eval — recreate the exact context of a past mistake from a session
+# transcript and measure whether a target misbehavior reproduces across a
+# condition matrix (e.g. RED = guardrail off, GREEN = guardrail on).
+#
+# See agents/replay-eval/README.md for the method and examples.
+set -euo pipefail
+
+REPO="${HOME}/.dotfiles"
+PROJECT_DIR="${REPO}/agents/replay-eval"
+
+if ! command -v uv >/dev/null 2>&1; then
+  echo "ERROR: uv is required for replay-eval (https://github.com/astral-sh/uv)" 1>&2
+  exit 1
+fi
+
+exec uv run --project "$PROJECT_DIR" --directory "$PROJECT_DIR" python -m replay_eval "$@"
